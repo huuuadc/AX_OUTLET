@@ -20,13 +20,13 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'ax_ecom' );
+define( 'DB_NAME', 'rexar628_ax_ecom' );
 
 /** Database username */
-define( 'DB_USER', 'root' );
+define( 'DB_USER', 'rexar628_ax_ecom' );
 
 /** Database password */
-define( 'DB_PASSWORD', '1' );
+define( 'DB_PASSWORD', ';QTh?v4=q],X' );
 
 /** Database hostname */
 define( 'DB_HOST', 'localhost' );
