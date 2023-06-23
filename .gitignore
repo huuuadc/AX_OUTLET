@@ -16,7 +16,7 @@
 wp-config.php
 
 # Uploads
-/wp-content/uploads/
+#/wp-content/uploads/
 
 # Log files
 *.log
@@ -39,3 +39,4 @@ wp-config.php
 #npm
 package.json
 package-lock.json
+/node_modules

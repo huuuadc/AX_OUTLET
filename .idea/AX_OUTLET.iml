@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/wp-content/plugins/buy-now-woo/includes" isTestSource="false" packagePrefix="Buy_Now_Woo" />
+      <sourceFolder url="file://$MODULE_DIR$/wp-content/plugins/nextend-facebook-connect" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wp-content/plugins/tiktok-for-business" isTestSource="false" packagePrefix="tiktok" />
+      <sourceFolder url="file://$MODULE_DIR$/wp-content/plugins/woo-discount-rules-pro" isTestSource="false" packagePrefix="WDRPro" />
+      <sourceFolder url="file://$MODULE_DIR$/wp-content/plugins/woo-discount-rules/v2" isTestSource="false" packagePrefix="Wdr" />
+      <sourceFolder url="file://$MODULE_DIR$/wp-content/plugins/woocommerce/packages/action-scheduler/classes" isTestSource="false" packagePrefix="Action_Scheduler" />
+      <sourceFolder url="file://$MODULE_DIR$/wp-content/plugins/wp-security-audit-log/classes" isTestSource="false" packagePrefix="WSAL" />
+      <sourceFolder url="file://$MODULE_DIR$/wp-content/plugins/yaysmtp/includes" isTestSource="false" packagePrefix="YaySMTP" />
+      <sourceFolder url="file://$MODULE_DIR$/wp-content/themes/flatsome/inc/builder/core/server/src" isTestSource="false" packagePrefix="UxBuilder" />
+      <sourceFolder url="file://$MODULE_DIR$/wp-includes" isTestSource="false" packagePrefix="PHPMailer" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
