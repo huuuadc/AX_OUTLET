@@ -11,7 +11,7 @@
 /license.txt
 /wp-*.php
 /xmlrpc.php
-
+/database
 # Configuration
 wp-config.php
 
