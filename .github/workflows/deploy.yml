@@ -2,7 +2,7 @@ name: Publish Website to CPanel
 on:
   push:
     branches:
-      - develop
+      - staging
 jobs:
   FTP-Deploy-Action:
     name: FTP-Deploy-Action
