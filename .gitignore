@@ -13,7 +13,7 @@
 /xmlrpc.php
 /database
 # Configuration
-# wp-config.php
+wp-config.php
 
 # Uploads
 #/wp-content/uploads/
@@ -40,4 +40,3 @@
 package.json
 package-lock.json
 /node_modules
-/database
