@@ -1,2 +1,3 @@
 <?php
-// Add custom Theme Functions here
+// Add custom Code Functions here
+require 'inc/init.php';
