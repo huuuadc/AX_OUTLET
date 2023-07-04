@@ -40,3 +40,5 @@ wp-config.php
 package.json
 package-lock.json
 /node_modules
+test.php
+/database
