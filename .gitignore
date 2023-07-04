@@ -13,7 +13,7 @@
 /xmlrpc.php
 /database
 # Configuration
-# wp-config.php
+wp-config.php
 
 # Uploads
 #/wp-content/uploads/
