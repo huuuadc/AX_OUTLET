@@ -1,6 +1,7 @@
 <?php
 
-namespace wp\them\class\classLS_API;
+namespace LS;
+
 class LS_API
 {
 
@@ -14,33 +15,29 @@ class LS_API
 
     public string $env = 'test';
 
-    public array $baseURL = array(
-        'dev' => 'localhost:8080',
-        'test' => 'http://dafc_ecom.dafc.com.vn:1818/api',
-        'live' => 'https://jql_online.dafc.com.vn/api'
-    );
+    public string $baseURL = '';
 
     public array $URI = array(
 
-        'get_token' => '/user/loginInput',
+        'get_token' => '/api/user/loginInput',
 
-        'get_member_info' => '/member/MemberInformation',
-        'get_member_his' => '/member/MemberHistory',
-        'get_member_check' => '/member/CheckMember',
-        'post_member_create' => '/member/MemberCreate',
-        'post_member_update' => '/member/MemberUpdate',
-        'post_member_outlet' => '/member/CheckMemberOutlet',
+        'get_member_info' => '/api/member/MemberInformation',
+        'get_member_his' => '/api/member/MemberHistory',
+        'get_member_check' => '/api/member/CheckMember',
+        'post_member_create' => '/api/member/MemberCreate',
+        'post_member_update' => '/api/member/MemberUpdate',
+        'post_member_outlet' => '/api/member/CheckMemberOutlet',
 
-        'get_product_master_file' => '/product/GetMasterFile',
-        'get_product_inventory' => '/product/GetInventory',
-        'get_product_check_stock2' => '/product/CheckStockV2',
-        'post_product_check_stock' => '/product/CheckStock',
-        'post_product_check_price' => '/product/CheckPrice',
+        'get_product_master_file' => '/api/product/GetMasterFile',
+        'get_product_inventory' => '/api/product/GetInventory',
+        'get_product_check_stock2' => '/api/product/CheckStockV2',
+        'post_product_check_stock' => '/api/product/CheckStock',
+        'post_product_check_price' => '/api/product/CheckPrice',
 
-        'get_promotion' => '/promotion/GetPromotion',
+        'get_promotion' => '/api/promotion/GetPromotion',
 
-        'post_transaction' => '/transactions/Transaction_Outlet',
-        'post_payment' => '/transactions/Payment_Outlet',
+        'post_transaction' => '/api/transactions/Transaction_Outlet',
+        'post_payment' => '/api/transactions/Payment_Outlet',
 
     );
 
@@ -75,8 +72,20 @@ class LS_API
             $this->user_pass = $opts["user_pass"];
         }
 
-        $this->api_token = $this->getLsToken();
+        $this->baseURL = get_option('wc_settings_tab_ls_api_url');
 
+        if (isset($opts) && !empty($opts["base_url"])) {
+            $this->baseURL = $opts["base_url"];
+        }
+
+        if ($this->api_token == ''){
+            $this->api_token = $this->getLsToken();
+        }
+
+    }
+
+    function notification_ls(){
+        return 'Lõi chưa cài đặt';
     }
 
     /**
@@ -107,7 +116,7 @@ class LS_API
      *
      */
 
-    public function sendRequestToLS($url, $data = '', $method = 'GET'): array
+    public function sendRequestToLS($url, $data = '', $method = 'GET')
     {
 
         try {
@@ -143,8 +152,9 @@ class LS_API
 
             return json_decode($result);
         } catch (\Throwable $th) {
-            writeAPIErrorLog('SendRequest: ', $th->getMessage());
-            return [];
+
+            write_log( $th->getMessage());
+            return false;
         }
     }
 
@@ -158,6 +168,13 @@ class LS_API
         ));
     }
 
+    /**
+     * @param $string
+     * @param $key
+     * @return string
+     *
+     */
+
     public function encrypt($string, $key): string
     {
 
@@ -170,6 +187,13 @@ class LS_API
         }
         return base64_encode($result);
     }
+
+    /**
+     * @param $string
+     * @param $key
+     * @return string
+     *
+     */
 
     public function decrypt($string, $key): string
     {
@@ -186,6 +210,11 @@ class LS_API
         return $result;
     }
 
+    /**
+     * @return string
+     *
+     */
+
     public function getLsToken(): string
     {
 
@@ -194,7 +223,7 @@ class LS_API
             return base64_decode($_COOKIE[$this->LS_TOKEN]);
         }
 
-        $url = $this->baseURL[$this->env] . $this->URI['get_token'] . '?UserNames=' . $this->user_name . '&Password=' . $this->user_pass;
+        $url = $this->baseURL . $this->URI['get_token'] . '?UserNames=' . $this->user_name . '&Password=' . $this->user_pass;
 
         $response = $this->sendRequestToLS($url, '', 'POST');
 
@@ -203,27 +232,59 @@ class LS_API
             $ls_token = substr($response->token, 7, strlen($response->token));
         } else {
             $ls_token = '';
-            writeAPIErrorLog('Login', json_encode($response));
+            write_log('Login'. json_encode($response));
         }
 
-        // setcookie($this->LS_TOKEN, base64_encode($ls_token), time() + (1800), "/",httponly: true, secure: true ); // 86400 = 1 day  php > 8.
-        setcookie($this->LS_TOKEN, base64_encode($ls_token), time() + (1800), "/"); // 86400 = 1 day  php > 8.
+        if (version_compare(phpversion(),'8.0.0') >= 0) {
+//            setcookie($this->LS_TOKEN, base64_encode($ls_token), time() + (1800), "/","/", secure: true,httponly: true ); // 86400 = 1 day  php > 8.
+            setcookie($this->LS_TOKEN, base64_encode($ls_token), time() + (1800), "/");
+        }
+        if (version_compare(phpversion(),'8.0.0') < 0) {
+            setcookie($this->LS_TOKEN, base64_encode($ls_token), time() + (1800), "/"); // 86400 = 1 day  php > 8.
+        }
+
+
 
         return $ls_token;
 
     }
 
-    /*
-     *
-     *
-     *
-     *
-     * **/
+    /**
+     * @return string
+     */
 
+    public function checkLsToken(): array
+    {
+
+        $status = false;
+
+        $url = $this->baseURL . $this->URI['get_token'] . '?UserNames=' . $this->user_name . '&Password=' . $this->user_pass;
+
+        $response = $this->sendRequestToLS($url, '', 'POST');
+
+
+        if (isset($response->status) && $response->status == 200) {
+            $status = true;
+            $ls_token = substr($response->token, 7, strlen($response->token));
+        } else {
+            $ls_token = json_encode($response);
+        }
+
+
+        return array('status'=>$status, 'rep'=>$ls_token);
+
+    }
+
+    /**
+     * @param $page_size
+     * @param $account_no
+     * @return array|false|string[]
+     *
+     */
     public function get_member_information($page_size = 10, $account_no = '')
     {
 
-        $url = $this->baseURL[$this->env] . $this->URI['get_member_info'] . '?PageSize=' . $page_size;
+        $url = $this->baseURL . $this->URI['get_member_info'] . '?PageSize=' . $page_size;
 
         if ($account_no) {
             $url = $url . '&AccountNo=' . $account_no;
@@ -243,7 +304,7 @@ class LS_API
     public function get_member_history($account_no = '')
     {
 
-        $url = $this->baseURL[$this->env] . $this->URI['get_member_his'] . '?AccountNo=' . $account_no;
+        $url = $this->baseURL . $this->URI['get_member_his'] . '?AccountNo=' . $account_no;
         return $this->sendRequestToLS($url, '', 'GET');
 
     }
@@ -260,7 +321,7 @@ class LS_API
     {
         try {
 
-            $url = $this->baseURL[$this->env] . $this->URI['get_member_check'] . '?Phone=' . $number_phone . '&ClubCode=' . $club_code;
+            $url = $this->baseURL . $this->URI['get_member_check'] . '?Phone=' . $number_phone . '&ClubCode=' . $club_code;
 
             return $this->sendRequestToLS($url, '', 'GET');
 
@@ -269,31 +330,25 @@ class LS_API
         }
     }
 
-
-    /*
-     *
-     *
-     *
-     *
-     * **/
+    /**
+     * @return void
+     */
 
     public function user_request()
     {
 
     }
 
-    /*
-     *
-     *
-     *
-     *
-     * **/
+    /**
+     * @param $user_info
+     * @return array|false|string[]
+     */
 
     public function post_member_create($user_info = [])
     {
         try {
 
-            $url = $this->baseURL[$this->env] . $this->URI['post_member_create'];
+            $url = $this->baseURL . $this->URI['post_member_create'];
 
 //            $data = array(
 //                'LoginID'       =>  $user_info['LoginID'],
@@ -330,7 +385,7 @@ class LS_API
 
         } catch (\Throwable $th) {
 
-            writeAPIErrorLog('Member', $th->getMessage());
+            write_log('Member'. $th->getMessage());
             return false;
 
         }
