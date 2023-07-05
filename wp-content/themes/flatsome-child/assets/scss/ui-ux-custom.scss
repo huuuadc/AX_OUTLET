@@ -41,11 +41,23 @@ h1,h2,h3,h4,h5,h6, .heading-font, .off-canvas-center .nav-sidebar.nav-vertical >
     margin-left: auto;
     margin-right: auto;
 }
-.wrapper, .header-bottom > .container {
+.page__wrapper, .header-bottom > .container {
     padding-left: 4% !important;
     padding-right: 4% !important;
     width: 1920px;
-    max-width: 100%;
+    max-width: 100% !important;
+}
+.page__wrapper {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+@media screen and (min-width:1920px){
+    .page__wrapper {
+        &.mx-0 {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+    }
 }
 .header:not(.transparent) .header-bottom-nav.nav > li > a {
     text-transform: uppercase;
@@ -74,6 +86,46 @@ h1,h2,h3,h4,h5,h6, .heading-font, .off-canvas-center .nav-sidebar.nav-vertical >
     }
     .nav-dropdown {
         transition: none !important;
+    }
+    .wishlist-icon[data-icon-label]:after {
+        width: 17px;
+        left: auto;
+    }
+    &-nav {
+        .sub-menu.nav-dropdown {
+            background-color: #f7f7f7;
+            box-shadow: 0 5px 10px -10px rgba(0,0,0,.5);
+        }
+    }
+    &__submenu {
+        &--title {
+            h3, a {
+                color: #000 !important;
+                font-size: 14px;
+            }
+            a {
+                display: inline-flex;
+                margin-bottom: 5px;
+            }
+            a:hover {
+                opacity: 0.8;
+            }
+        }
+        .ux-menu {
+            &-link__link {
+                display: block;
+                &:hover {
+                    color: #000 !important;
+                }
+            }
+            &-link__icon {
+                vertical-align: middle !important;
+                margin-top: -3px !important;
+            }
+            &-link__text {
+                padding-left: 0 !important;
+            }
+        }
     }
 }
 .has-off-canvas .current-lightbox-clicked {
@@ -450,6 +502,9 @@ h1,h2,h3,h4,h5,h6, .heading-font, .off-canvas-center .nav-sidebar.nav-vertical >
             }
         }
     }
+    .yith-wcwl-add-to-wishlist {
+        display: none;
+    }
 }
 .product__slider {
     &.slider {
@@ -502,7 +557,7 @@ h1,h2,h3,h4,h5,h6, .heading-font, .off-canvas-center .nav-sidebar.nav-vertical >
         font-size: 16px;
         margin: 0 0 15px 0;
     }
-    .wrapper {
+    .page__wrapper {
         > .col.medium-4 {
             padding-left: 0;
         }
