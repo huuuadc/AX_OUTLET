@@ -35,11 +35,21 @@ body, .nav > li > a, .mobile-sidebar-levels-2 .nav > li > ul > li > a, h1, h2, h
   margin-left: auto;
   margin-right: auto;
 }
-.wrapper, .header-bottom > .container {
+.page__wrapper, .header-bottom > .container {
   padding-left: 4% !important;
   padding-right: 4% !important;
   width: 1920px;
-  max-width: 100%;
+  max-width: 100% !important;
+}
+.page__wrapper {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+@media screen and (min-width: 1920px) {
+  .page__wrapper.mx-0 {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
 }
 .header:not(.transparent) .header-bottom-nav.nav > li > a {
   text-transform: uppercase;
@@ -65,6 +75,38 @@ body, .nav > li > a, .mobile-sidebar-levels-2 .nav > li > ul > li > a, h1, h2, h
 }
 .header .nav-dropdown {
   transition: none !important;
+}
+.header .wishlist-icon[data-icon-label]:after {
+  width: 17px;
+  left: auto;
+}
+.header-nav .sub-menu.nav-dropdown {
+  background-color: #f7f7f7;
+  box-shadow: 0 5px 10px -10px rgba(0, 0, 0, 0.5);
+}
+.header__submenu--title h3, .header__submenu--title a {
+  color: #000 !important;
+  font-size: 14px;
+}
+.header__submenu--title a {
+  display: inline-flex;
+  margin-bottom: 5px;
+}
+.header__submenu--title a:hover {
+  opacity: 0.8;
+}
+.header__submenu .ux-menu-link__link {
+  display: block;
+}
+.header__submenu .ux-menu-link__link:hover {
+  color: #000 !important;
+}
+.header__submenu .ux-menu-link__icon {
+  vertical-align: middle !important;
+  margin-top: -3px !important;
+}
+.header__submenu .ux-menu-link__text {
+  padding-left: 0 !important;
 }
 .has-off-canvas .current-lightbox-clicked {
   opacity: 1 !important;
@@ -404,6 +446,9 @@ body, .nav > li > a, .mobile-sidebar-levels-2 .nav > li > ul > li > a, h1, h2, h
 .product-small .box-text .price del span {
   font-size: 14px;
 }
+.product-small .yith-wcwl-add-to-wishlist {
+  display: none;
+}
 .product__slider.slider:hover .flickity-prev-next-button {
   opacity: 0.4;
 }
@@ -446,10 +491,10 @@ body, .nav > li > a, .mobile-sidebar-levels-2 .nav > li > ul > li > a, h1, h2, h
   font-size: 16px;
   margin: 0 0 15px 0;
 }
-.footer-wrapper .wrapper > .col.medium-4 {
+.footer-wrapper .page__wrapper > .col.medium-4 {
   padding-left: 0;
 }
-.footer-wrapper .wrapper > .col.medium-8 {
+.footer-wrapper .page__wrapper > .col.medium-8 {
   padding-right: 0;
 }
 .footer-wrapper .ux-logo-link {
