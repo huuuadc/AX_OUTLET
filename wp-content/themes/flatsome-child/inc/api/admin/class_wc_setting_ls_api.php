@@ -46,6 +46,7 @@ class WC_Settings_Tab_Ls_Api {
 
     public static function output_button($value){
         echo '<div id="toast"></div>';
+        echo '<div class="modal_loading"></div>';
         echo '<tr valign="top">';
         echo '<th scope="row" class="titledesc"></th>';
         echo '<td><input type="button" name="test_connect" class="button-primary" value="Test Connect Tại Đây" onclick="send_test_connect_ls()" /></td>';

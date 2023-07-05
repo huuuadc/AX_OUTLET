@@ -17,7 +17,6 @@
             },
             success: function (rep){
                 try {
-                    console.log(rep)
                     if (!isJsonString(rep)) return console.log(rep)
                     let {status, messenger, data} = JSON.parse(rep)
                     if (status == '200'){

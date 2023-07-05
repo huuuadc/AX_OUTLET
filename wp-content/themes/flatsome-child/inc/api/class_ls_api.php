@@ -253,7 +253,7 @@ class LS_API
      * @return string
      */
 
-    public function checkLsToken(): array
+    public function checkConnectLs(): array
     {
 
         $status = false;
@@ -294,12 +294,10 @@ class LS_API
 
     }
 
-    /*
-     *
-     *
-     *
-     *
-     * **/
+    /**
+     * @param $account_no
+     * @return array|false|string[]
+     */
 
     public function get_member_history($account_no = '')
     {
@@ -310,12 +308,11 @@ class LS_API
     }
 
 
-    /*
-     *
-     *
-     *
-     *
-     * **/
+    /**
+     * @param $number_phone
+     * @param $club_code
+     * @return array|false|string[]|void
+     */
 
     public function get_member_check($number_phone = '', $club_code = 'DAFC')
     {
@@ -344,7 +341,7 @@ class LS_API
      * @return array|false|string[]
      */
 
-    public function post_member_create($user_info = [])
+    public function post_member_create($user_info)
     {
         try {
 

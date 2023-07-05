@@ -23,7 +23,7 @@ function check_connect_ls(){
 
     $api_ls = new \LS\LS_API($payload_login);
 
-    $token = $api_ls->checkLsToken();
+    $token = $api_ls->checkConnectLs();
 
     if ($token['status']){
         echo json_encode(array(
