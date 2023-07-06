@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/rexar628/test.rexarcade.com.vn/
+    - /bin/cp -R * $DEPLOYPATH
+    
