@@ -42,3 +42,4 @@ package-lock.json
 /node_modules
 test.php
 /database
+/wp-content/uploads/
