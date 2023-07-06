@@ -20,13 +20,13 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'rexar628_ax_ecom' );
+define( 'DB_NAME', 'ax_ecom' );
 
 /** Database username */
-define( 'DB_USER', 'rexar628_ax_ecom' );
+define( 'DB_USER', 'root' );
 
 /** Database password */
-define( 'DB_PASSWORD', ';QTh?v4=q],X' );
+define( 'DB_PASSWORD', '1' );
 
 /** Database hostname */
 define( 'DB_HOST', 'localhost' );
@@ -79,7 +79,8 @@ $table_prefix = 'ecom_';
  *
  * @link https://wordpress.org/documentation/article/debugging-in-wordpress/
  */
-define( 'WP_DEBUG', false );
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
