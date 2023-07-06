@@ -12,6 +12,7 @@
       <sourceFolder url="file://$MODULE_DIR$/wp-content/plugins/yaysmtp/includes" isTestSource="false" packagePrefix="YaySMTP" />
       <sourceFolder url="file://$MODULE_DIR$/wp-content/themes/flatsome/inc/builder/core/server/src" isTestSource="false" packagePrefix="UxBuilder" />
       <sourceFolder url="file://$MODULE_DIR$/wp-includes" isTestSource="false" packagePrefix="PHPMailer" />
+      <excludeFolder url="file://$MODULE_DIR$/database" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
