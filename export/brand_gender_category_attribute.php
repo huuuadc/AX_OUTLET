@@ -170,17 +170,13 @@ $brands = $wpdb->get_results($sql);
 
     foreach($brands as $brand) {
 
-        if($brand->meta_key == 'offline_id' || $brand->meta_key == '') {
-
-
-
 //        $parent_cat = get_category_parents( $brand->term_id);
 
-            $parent_name = get_term((int) $brand->parent);
+        $parent_name = get_term((int) $brand->parent);
 
 
 
-            echo "<tr>
+        echo "<tr>
 
 			<td>$brand->name</td>
 
@@ -195,8 +191,6 @@ $brands = $wpdb->get_results($sql);
 			<td>$parent_name->name </td>
 
 		</tr>";
-
-        }
 
     }
 
