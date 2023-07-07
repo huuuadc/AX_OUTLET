@@ -416,8 +416,8 @@ body, .nav > li > a, .mobile-sidebar-levels-2 .nav > li > ul > li > a, h1, h2, h
 }
 .product-small .box-image .wishlist-button {
   position: absolute;
-  top: 0;
-  right: 10px;
+  top: -5px;
+  right: 20px;
   border: none;
   font-size: 15px;
   margin: 0 !important;
@@ -432,7 +432,6 @@ body, .nav > li > a, .mobile-sidebar-levels-2 .nav > li > ul > li > a, h1, h2, h
   color: #111;
 }
 .product-small .box-image .wishlist-button:hover {
-  color: #fff;
   background-color: #111 !important;
 }
 .product-small .box-text {
@@ -701,4 +700,16 @@ body, .nav > li > a, .mobile-sidebar-levels-2 .nav > li > ul > li > a, h1, h2, h
 }
 .woocommerce-page .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > a:hover, .woocommerce-page .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > label > a:hover {
   color: #000;
+}
+.shop-page-title .category-page-title, .shop-page-title #main {
+  max-width: 1920px;
+  width: 100%;
+  padding-left: 4%;
+  padding-right: 4%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.shop-page-title .category-page-title .page-title-inner, .shop-page-title #main .page-title-inner {
+  padding-left: 0;
+  padding-right: 0;
 }

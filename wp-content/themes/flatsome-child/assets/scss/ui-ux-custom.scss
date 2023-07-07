@@ -473,8 +473,8 @@ h1,h2,h3,h4,h5,h6, .heading-font, .off-canvas-center .nav-sidebar.nav-vertical >
         }
         .wishlist-button {
             position: absolute;
-            top: 0;
-            right: 10px;
+            top: -5px;
+            right: 20px;
             border: none;
             font-size: 15px;
             margin: 0 !important;
@@ -488,7 +488,6 @@ h1,h2,h3,h4,h5,h6, .heading-font, .off-canvas-center .nav-sidebar.nav-vertical >
             border: none !important;
             color: #111;
             &:hover {
-                color: #fff;
                 background-color: #111 !important;
             }
         }
@@ -793,5 +792,19 @@ h1,h2,h3,h4,h5,h6, .heading-font, .off-canvas-center .nav-sidebar.nav-vertical >
     }
     .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > a:hover, .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > label > a:hover {
         color: #000;
+    }
+}
+.shop-page-title {
+    .category-page-title, #main {
+        max-width: 1920px;
+        width: 100%;
+        padding-left: 4%;
+        padding-right: 4%;
+        margin-left: auto;
+        margin-right: auto;
+        .page-title-inner {
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
 }
