@@ -170,8 +170,10 @@ $brands = $wpdb->get_results($sql);
 
     foreach($brands as $brand) {
 
-//        $parent_cat = get_category_parents( $brand->term_id);
+    if($brand->meta_key == 'thumbnail_id' || $brand->meta_key == '') {
 
+//        $parent_cat = get_category_parents( $brand->term_id);
+        if ($brand->parent == 0) continue;
         $parent_name = get_term((int) $brand->parent);
 
 
@@ -185,6 +187,7 @@ $brands = $wpdb->get_results($sql);
 			<td>$brand->meta_value</td>
 
 			<td>$brand->parent</td>
+		
 
 			<td>$parent_name->name</td>
 
@@ -192,6 +195,7 @@ $brands = $wpdb->get_results($sql);
 
 		</tr>";
 
+    }
     }
 
     ?>
