@@ -170,7 +170,9 @@ $brands = $wpdb->get_results($sql);
 
     foreach($brands as $brand) {
 
+      
     if($brand->meta_key == 'offline_id' || $brand->meta_key == '') {
+
 
         $parent_name = get_term((int) $brand->parent);
 
