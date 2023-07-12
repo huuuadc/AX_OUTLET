@@ -130,6 +130,7 @@ html *::-webkit-scrollbar-thumb {
 }
 .header__submenu .ux-menu-link__link {
   display: block;
+  font-size: 14px;
 }
 .header__submenu .ux-menu-link__link:hover {
   color: #000 !important;
@@ -732,12 +733,15 @@ html *::-webkit-scrollbar-thumb {
 .woocommerce-page .yith-wcan-filter .filter-items.filter-checkbox {
   padding-top: 10px;
 }
+.woocommerce-page .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item {
+  margin: 3px 0;
+}
 .woocommerce-page .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > a {
-  color: #666;
+  color: #333;
 }
 .woocommerce-page .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item.active > a, .woocommerce-page .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item.active > label > a {
   color: #000;
-  border-bottom: solid 1px #333;
+  border-bottom: solid 1px #111;
 }
 .woocommerce-page .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > a:hover, .woocommerce-page .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > label > a:hover {
   color: #000;

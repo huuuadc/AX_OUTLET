@@ -147,6 +147,7 @@ html *::-webkit-scrollbar-thumb{
         .ux-menu {
             &-link__link {
                 display: block;
+                font-size: 14px;
                 &:hover {
                     color: #000 !important;
                 }
@@ -833,12 +834,17 @@ html *::-webkit-scrollbar-thumb{
             padding-top: 10px;
         }
     }
-    .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > a {
-        color: #666;
+    .yith-wcan-filters .yith-wcan-filter .filter-items {
+        .filter-item {
+            margin: 3px 0;
+            > a {
+                color: #333;
+            }
+        }
     }
     .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item.active > a, .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item.active > label > a, {
         color: #000;
-        border-bottom: solid 1px #333;
+        border-bottom: solid 1px #111;
     }
     .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > a:hover, .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > label > a:hover {
         color: #000;
