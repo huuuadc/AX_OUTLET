@@ -551,13 +551,13 @@ html *::-webkit-scrollbar-thumb{
             font-size: 16px;
             .badge-container {
                 position: absolute;
-                margin: 0 0 0 10px;
+                margin: 0 0 0 5px;
                 top: 2px;
                 left: 100%;
                 .badge {
                     height: auto;
-                    color: #111;
-                    font-size: 16px;
+                    color: #c00;
+                    font-size: 15px;
                     font-weight: 600;
                     background-color: transparent;
                     * {
@@ -796,7 +796,7 @@ html *::-webkit-scrollbar-thumb{
         margin-bottom: 35px;
         .filter-title {
             color: #111 !important;
-            text-transform: uppercase;
+            text-transform: unset;
             font-weight: bold;
             &:after {
                 content: "";
@@ -850,8 +850,11 @@ html *::-webkit-scrollbar-thumb{
         color: #000;
     }
 }
-.shop-page-title {
-    .category-page-title, #main {
+.woocommerce-page {
+    .page-title {
+        background-color: #eee;
+    }
+    .category-page-title, #main, .shop-page-title {
         max-width: 1920px;
         width: 100%;
         padding-left: 4%;
@@ -859,19 +862,17 @@ html *::-webkit-scrollbar-thumb{
         margin-left: auto;
         margin-right: auto;
         .page-title-inner {
-            padding-left: 0;
-            padding-right: 0;
+            min-height: unset;
+            padding: 15px 0 !important;
         }
     }
-    .page-title-inner {
-        min-height: unset;
-        padding: 15px 0 !important;
+    .product-page-title {
+        margin-bottom: 20px;
     }
     .woocommerce-result-count, .woocommerce-ordering {
         display: none !important;
     }
 }
-
 .category__page {
     &--title {
         display: flex;
