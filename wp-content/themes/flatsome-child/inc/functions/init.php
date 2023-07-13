@@ -10,5 +10,5 @@ require (__DIR__.'/register_scripts.php');
 require (__DIR__.'/product/product-register-term-brand.php');
 require (__DIR__.'/product/product-register-term-gender.php');
 require (__DIR__.'/product/product-register-term-shop-by.php');
-include_once 'add-waypoints-js.php';
+require (__DIR__.'/order/register_order_status.php');
 

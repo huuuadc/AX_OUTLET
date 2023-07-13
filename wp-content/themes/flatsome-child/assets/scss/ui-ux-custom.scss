@@ -527,6 +527,9 @@ html *::-webkit-scrollbar-thumb{
             color: #999;
             display: block;
             margin: 0 0 5px 0;
+            a {
+                outline: none;
+            }
         }
         .product-title {
             margin: 0;
@@ -646,6 +649,7 @@ html *::-webkit-scrollbar-thumb{
 }
 /* footer */
 .footer-wrapper {
+    z-index: 0;
     * {
         color: #444;
     }
@@ -945,7 +949,25 @@ html *::-webkit-scrollbar-thumb{
 }
 /* product detail */
 .single-product {
+    overflow-x: hidden;
+    .product__page--header {
+        background-color: #eee;
+        margin-left: -5%;
+        margin-right: -5%;
+        padding-left: 5%;
+        padding-right: 5%;
+        width: auto;
+        .page-title-inner {
+            .title-content {
+                margin-left: 0;
+                margin-right: auto;
+            }
+        }
+    }
     .product {
+        .product-title {
+            font-size: 24px;
+        }
         .product-gallery {
             .badge-container {
                 display: none;
@@ -1014,6 +1036,137 @@ html *::-webkit-scrollbar-thumb{
                     transform: translateY(-50%);
                     .badge {
                         font-size: 14px;
+                    }
+                }
+            }
+        }
+    }
+    .product__gallery {
+        .badge-container {
+            display: none;
+        }
+        > .col-inner {
+            > .row {
+                flex-direction: row-reverse;
+            }
+        }
+    }
+    *::-webkit-scrollbar{
+        width: 4px !important;
+    }
+    *::-webkit-scrollbar-track, *::-webkit-scrollbar-thumb {
+        border-radius: 5px !important;
+    }
+    @media(min-width:850px){
+        .vertical-thumbnails .col {
+            padding-bottom: 9px !important;
+        }
+    }
+    &.woocommerce-page.single-product #main {
+        .product__page--header {
+            .page-title-inner {
+                padding: 0 !important;
+            }
+        }
+    }
+}
+.product-lightbox {
+    .product {
+        .product-gallery {
+            .badge-container {
+                display: none;
+            }
+        }
+        .price-wrapper {
+            display: inline-flex;
+            flex-direction: column;
+            position: relative;
+        
+            .price {
+                display: flex;
+                flex-direction: column;
+                font-size: 18px;
+                margin: 0 0 15px 0;
+                position: relative;
+            
+                del {
+                    margin-bottom: 5px;
+                }
+            
+                br {
+                    display: none;
+                }
+            }
+        
+            .badge-container {
+                position: absolute;
+                top: 3px;
+                left: 100%;
+                margin: 0 0 0 10px;
+            
+                .badge {
+                    height: auto;
+                    color: #c00;
+                    font-size: 16px;
+                    font-weight: 600;
+                    background-color: transparent;
+                
+                    * {
+                        color: inherit;
+                        background-color: transparent;
+                        padding: 0;
+                        font-size: inherit;
+                        font-weight: inherit;
+                    }
+                }
+            }
+        
+            .percent__label {
+                position: absolute;
+                top: 2px;
+                left: calc(100% + 5px);
+                color: #c00;
+                font-size: 15px;
+                display: none;
+                font-weight: 500;
+            
+                &:first-child {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+.product {
+    .product-info {
+        position: relative;
+        padding-top: 30px;
+        .product__brand {
+            position: absolute;
+            top: 0;
+            left: 15px;
+            a {
+                color: #666;
+                outline: none;
+                &:hover {
+                    color: #000;
+                }
+            }
+        }
+    }
+    .product__info {
+        > .col-inner {
+            position: relative;
+            padding-top: 30px !important;
+            .product__brand {
+                position: absolute;
+                top: 0;
+                left: 20px;
+                a {
+                    color: #666;
+                    outline: none;
+                    &:hover {
+                        color: #000;
                     }
                 }
             }
