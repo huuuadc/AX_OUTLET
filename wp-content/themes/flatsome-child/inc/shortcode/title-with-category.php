@@ -120,13 +120,6 @@ function title_with_cat_shortcode( $atts, $content = null ){
     if ( $product_categories ) {
         foreach ( $product_categories as $category ) {
             $term_link = get_term_link( $category );
-            $thumbnail_id = get_term_meta( $category->term_id, 'thumbnail_id', true  );
-            if ( $thumbnail_id ) {
-                $image = wp_get_attachment_image_src( $thumbnail_id, $thumbnail_size);
-                $image = $image[0];
-            } else {
-                $image = wc_placeholder_img_src();
-            }
             $html_show_cat .= '<div class="ux-menu-link flex menu-item"><a href="'.$term_link.'" class="ux-menu-link__link flex"><i class="ux-menu-link__icon text-center icon-angle-right"></i><span class="ux-menu-link__text">'.$category->name.'</span></a></div>';
         }
     }
