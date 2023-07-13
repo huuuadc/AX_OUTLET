@@ -1,6 +1,4 @@
-<?php
-<!-- Navbar -->
-echo '<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -8,9 +6,6 @@ echo '<nav class="main-header navbar navbar-expand navbar-white navbar-light">
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a href="#" class="nav-link">Admin Dashboard</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">About</a>
         </li>
     </ul>
 
