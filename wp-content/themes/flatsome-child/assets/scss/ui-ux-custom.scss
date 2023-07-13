@@ -812,7 +812,7 @@ html *::-webkit-scrollbar-thumb{
                 }
                 &.filter-tax {
                     .filter-content {
-                        > .filter-items {
+                        > .filter-items:not(.filter-checkbox) {
                             > .filter-item {
                                 position: relative;
                                 padding-left: 15px;
@@ -993,7 +993,7 @@ html *::-webkit-scrollbar-thumb{
             .woocommerce-ordering {
                 background: none !important;
                 margin: 13px 0 0 0;
-                width: 170px;
+                width: 140px;
             }
             select {
                 height: 36px;
@@ -1002,7 +1002,7 @@ html *::-webkit-scrollbar-thumb{
                 border-bottom: solid 1px #333;
                 padding: 0 20px 0 5px !important;
                 box-shadow: none;
-                width: auto !important;
+                width: 100% !important;
                 min-width: auto !important;
                 margin: 0 !important;
                 color: #333;

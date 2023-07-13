@@ -712,11 +712,11 @@ html *::-webkit-scrollbar-thumb {
   background-size: 12px;
   background-position: right 0 top 50%;
 }
-.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter.filter-tax .filter-content > .filter-items > .filter-item {
+.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter.filter-tax .filter-content > .filter-items:not(.filter-checkbox) > .filter-item {
   position: relative;
   padding-left: 15px;
 }
-.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter.filter-tax .filter-content > .filter-items > .filter-item:before {
+.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter.filter-tax .filter-content > .filter-items:not(.filter-checkbox) > .filter-item:before {
   content: "";
   position: absolute;
   top: 15px;
@@ -874,7 +874,7 @@ html *::-webkit-scrollbar-thumb {
 .category__page--title .category__sort .woocommerce-ordering {
   background: none !important;
   margin: 13px 0 0 0;
-  width: 170px;
+  width: 140px;
 }
 .category__page--title .category__sort select {
   height: 36px;
@@ -883,7 +883,7 @@ html *::-webkit-scrollbar-thumb {
   border-bottom: solid 1px #333;
   padding: 0 20px 0 5px !important;
   box-shadow: none;
-  width: auto !important;
+  width: 100% !important;
   min-width: auto !important;
   margin: 0 !important;
   color: #333;

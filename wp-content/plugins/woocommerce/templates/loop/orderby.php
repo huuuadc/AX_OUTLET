@@ -27,6 +27,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                 $option_name = esc_html( $name );
                 $option_name = str_replace('Thứ tự theo giá','Giá',$option_name);
                 $option_name = str_replace('Thứ tự theo mức độ phổ biến','Phổ biến nhất',$option_name);
+                $option_name = str_replace('cao xuống thấp','Cao xuống thấp',$option_name);
+                $option_name = str_replace('thấp đến cao','Thấp đến cao',$option_name);
             ?>
 			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $orderby, $id ); ?>><?php echo $option_name; ?></option>
 		<?php endforeach; ?>
