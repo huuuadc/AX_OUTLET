@@ -604,6 +604,10 @@ html *::-webkit-scrollbar-thumb{
         left: calc(100% + 5px);
         color: #c00;
         font-size: 15px;
+        display: none;
+        &:first-child {
+            display: block;
+        }
     }
 }
 .product__slider {
@@ -956,6 +960,7 @@ html *::-webkit-scrollbar-thumb{
                 flex-direction: column;
                 font-size: 18px;
                 margin: 0 0 15px 0;
+                position: relative;
                 del {
                     margin-bottom: 5px;
                 }
@@ -981,6 +986,18 @@ html *::-webkit-scrollbar-thumb{
                         font-size: inherit;
                         font-weight: inherit;
                     }
+                }
+            }
+            .percent__label {
+                position: absolute;
+                top: 2px;
+                left: calc(100% + 5px);
+                color: #c00;
+                font-size: 15px;
+                display: none;
+                font-weight: 500;
+                &:first-child {
+                    display: block;
                 }
             }
         }
