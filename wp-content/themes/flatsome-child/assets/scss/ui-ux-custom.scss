@@ -148,6 +148,7 @@ html *::-webkit-scrollbar-thumb{
             &-link__link {
                 display: block;
                 font-size: 14px;
+                min-height: unset !important;
                 &:hover {
                     color: #000 !important;
                 }
@@ -614,6 +615,7 @@ html *::-webkit-scrollbar-thumb{
     }
 }
 .product__slider {
+    max-width: unset !important;
     &.slider {
         &:hover {
             .flickity-prev-next-button {
@@ -633,11 +635,11 @@ html *::-webkit-scrollbar-thumb{
             }
         }
         .flickity-prev-next-button.previous {
-            left: 10px;
+            left: 15px;
             right: auto;
         }
         .flickity-prev-next-button.next {
-            right: 10px;
+            right: 15px;
         }
     }
 }
@@ -775,6 +777,59 @@ html *::-webkit-scrollbar-thumb{
     .sidebar-inner {
         .filters-container {
             max-width: 350px;
+            .yith-wcan-filter {
+                border-bottom: solid 1px #ddd;
+                margin-bottom: 0;
+                .filter-title {
+                    margin: 0;
+                    padding: 15px 0;
+                    text-transform: uppercase;
+                    font-weight: 500;
+                    &:after {
+                        background-color: transparent;
+                        right: 0;
+                        top: 33%;
+                        width: 13px;
+                    }
+                    &.opened {
+                    }
+                }
+                .filter-content {
+                    margin-top: 0;
+                    border-top: solid 1px #eee;
+                    padding: 10px 0 20px 0;
+                    .filter-items {
+                        .filter-item {
+                            font-size: 15px;
+                            .toggle-handle {
+                                height: 27px;
+                                width: 50px;
+                                background-size: 12px;
+                                background-position: right 0 top 50%;
+                            }
+                        }
+                    }
+                }
+                &.filter-tax {
+                    .filter-content {
+                        > .filter-items {
+                            > .filter-item {
+                                position: relative;
+                                padding-left: 15px;
+                                &:before {
+                                    content: "";
+                                    position: absolute;
+                                    top: 15px;
+                                    left: 0;
+                                    width: 5px;
+                                    height: 1px;
+                                    background-color: #999;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     .category-page-title, #main {
@@ -879,6 +934,16 @@ html *::-webkit-scrollbar-thumb{
     .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > a:hover, .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > label > a:hover {
         color: #000;
     }
+    @media(min-width: 1400px){
+        .products {
+            margin-left: -15px !important;
+            margin-right: -15px !important;
+            > .product-small {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+    }
 }
 .woocommerce-page {
     .page-title {
@@ -899,8 +964,10 @@ html *::-webkit-scrollbar-thumb{
     .product-page-title {
         margin-bottom: 20px;
     }
-    .woocommerce-result-count, .woocommerce-ordering {
-        display: none !important;
+    .shop-page-title {
+        .woocommerce-result-count, .woocommerce-ordering {
+            display: none !important;
+        }
     }
 }
 .category__page {
@@ -933,7 +1000,7 @@ html *::-webkit-scrollbar-thumb{
                 border: none;
                 background-position: right 0 top 50%;
                 border-bottom: solid 1px #333;
-                padding: 0 5px;
+                padding: 0 20px 0 5px !important;
                 box-shadow: none;
                 width: auto !important;
                 min-width: auto !important;
