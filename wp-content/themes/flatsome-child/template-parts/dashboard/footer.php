@@ -21,9 +21,8 @@
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' ?>"></script>
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/summernote/summernote-bs4.min.js' ?>"></script>
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/overlayScrollbars/js/jquery.overlayScrollbars.min.js' ?>"></script>
-    <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/dist/js/adminlte.js' ?>"></script>
-    <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/dist/js/demo.js' ?>"></script>
-    <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/dist/js/pages/dashboard.js' ?>"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/js/adminlte.min.js"></script>
+
 </footer>
 </body>
 </html>
