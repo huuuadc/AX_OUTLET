@@ -24,21 +24,25 @@ function et_print_brands(){
     }
 }
 
-// add sale badge html beside price
-add_filter( 'woocommerce_get_price_suffix', 'add_price_suffix_sale', 9999, 4 );
-function add_price_suffix_sale( $html, $product ) {
-    if ( ! is_admin() && is_object( $product ) && $product->is_on_sale() ) {
-        $html .= wc_get_template_html( 'single-product/sale-flash.php' );
+add_action( 'woocommerce_before_shop_loop_item', 'add_percent_discount', 10 );
+function add_percent_discount( $product ) {
+    global $product;
+    $discounted_rule = apply_filters('advanced_woo_discount_rules_get_product_discount_price_from_custom_price', false, $product, 1, 0, 'all', true);
+    if ($discounted_rule) {
+        echo '<span class="sale__label">New to sale</span>';
     }
-    return $html;
 }
 
 /* add sale label product */
-add_action( 'woocommerce_before_shop_loop_item', 'add_label_sale', 10 );
+add_filter( 'woocommerce_get_price_suffix', 'add_label_sale', 9999, 10 );
 function add_label_sale( $product ) {
     global $product;
-    if ( ! is_admin() && is_object( $product ) && $product->is_on_sale() ) {
-        echo '<span class="sale__label">New to sale</span>';
+    $discounted = apply_filters('advanced_woo_discount_rules_get_product_discount_price_from_custom_price', false, $product, 1, 0, 'all', true);
+    if ($discounted) {
+        $initial_price = $discounted['initial_price'];
+        $discounted_price = $discounted['discounted_price'];
+        $price_discount = ceil(($initial_price-$discounted_price)*100/$initial_price);
+        echo '<span class="percent__label">-'.$price_discount.'%</span>';
     }
 }
 
