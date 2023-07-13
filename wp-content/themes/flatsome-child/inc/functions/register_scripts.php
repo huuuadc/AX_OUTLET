@@ -15,3 +15,11 @@ function admin_css_custom() {
 }
 
 add_action('admin_head', 'admin_css_custom');
+
+
+function yith_raq_image_fix() {
+    ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.5/waypoints.min.js" defer></script>
+    <?php
+}
+add_action( 'wp_footer', 'yith_raq_image_fix', 999999 );
