@@ -527,6 +527,9 @@ html *::-webkit-scrollbar-thumb{
             color: #999;
             display: block;
             margin: 0 0 5px 0;
+            a {
+                outline: none;
+            }
         }
         .product-title {
             margin: 0;
@@ -1015,6 +1018,92 @@ html *::-webkit-scrollbar-thumb{
                     .badge {
                         font-size: 14px;
                     }
+                }
+            }
+        }
+    }
+}
+.product-lightbox {
+    .product {
+        .product-gallery {
+            .badge-container {
+                display: none;
+            }
+        }
+    
+        .price-wrapper {
+            display: inline-flex;
+            flex-direction: column;
+            position: relative;
+        
+            .price {
+                display: flex;
+                flex-direction: column;
+                font-size: 18px;
+                margin: 0 0 15px 0;
+                position: relative;
+            
+                del {
+                    margin-bottom: 5px;
+                }
+            
+                br {
+                    display: none;
+                }
+            }
+        
+            .badge-container {
+                position: absolute;
+                top: 3px;
+                left: 100%;
+                margin: 0 0 0 10px;
+            
+                .badge {
+                    height: auto;
+                    color: #c00;
+                    font-size: 16px;
+                    font-weight: 600;
+                    background-color: transparent;
+                
+                    * {
+                        color: inherit;
+                        background-color: transparent;
+                        padding: 0;
+                        font-size: inherit;
+                        font-weight: inherit;
+                    }
+                }
+            }
+        
+            .percent__label {
+                position: absolute;
+                top: 2px;
+                left: calc(100% + 5px);
+                color: #c00;
+                font-size: 15px;
+                display: none;
+                font-weight: 500;
+            
+                &:first-child {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+.product {
+    .product-info {
+        position: relative;
+        padding-top: 30px;
+        .product__brand {
+            position: absolute;
+            top: 0;
+            left: 15px;
+            a {
+                color: #666;
+                outline: none;
+                &:hover {
+                    color: #000;
                 }
             }
         }
