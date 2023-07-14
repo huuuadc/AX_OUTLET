@@ -405,14 +405,22 @@ html *::-webkit-scrollbar-thumb {
   opacity: 1;
   background-color: rgba(0, 0, 0, 0.15);
 }
-.product-small .sale__label {
+.product-small .badge-container {
   position: absolute;
   left: 10px;
   top: 10px;
   z-index: 10;
+  pointer-events: none;
+  margin: 0;
+}
+.product-small .badge-container .badge {
+  height: auto;
+  width: auto;
+}
+.product-small .badge-container .new-bubble-auto {
   font-size: 11px;
   border: solid 1px #999;
-  padding: 3px 5px 2px 5px;
+  padding: 5px;
   background-color: rgba(0, 0, 0, 0.1);
   color: #000;
   border-radius: 3px;
@@ -712,19 +720,6 @@ html *::-webkit-scrollbar-thumb {
   background-size: 12px;
   background-position: right 0 top 50%;
 }
-.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter.filter-tax .filter-content > .filter-items:not(.filter-checkbox) > .filter-item {
-  position: relative;
-  padding-left: 15px;
-}
-.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter.filter-tax .filter-content > .filter-items:not(.filter-checkbox) > .filter-item:before {
-  content: "";
-  position: absolute;
-  top: 15px;
-  left: 0;
-  width: 5px;
-  height: 1px;
-  background-color: #999;
-}
 .woocommerce-page .category-page-title, .woocommerce-page #main {
   max-width: 1920px;
   width: 100%;
@@ -855,7 +850,7 @@ html *::-webkit-scrollbar-thumb {
 .category__page--title {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 .category__page--title .title {
   margin: 0 0 2px 0;
@@ -867,30 +862,66 @@ html *::-webkit-scrollbar-thumb {
   color: #999;
   font-size: 14px;
 }
-.category__page--title .category__sort span {
+.category__page--title .category__sort .yith-wcan-active-filters, .category__page--title .category__sort .yith-wcan-reset-filters {
+  display: none;
+}
+.category__page--title .category__sort .yith-wcan-filters {
+  margin: 12px 0 0 0;
+}
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter {
+  position: relative;
+  margin: 0;
+}
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .filter-title {
+  position: absolute;
+  top: 0;
+  right: 100%;
+  margin: 0 10px 0 0;
+  left: auto;
+  width: auto;
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 38px;
+}
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .filter-title:after {
+  display: none;
+}
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .filter-content {
+  margin: 0;
+}
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .yith-wcan-dropdown {
+  padding: 6px 30px 6px 12px;
+  font-size: 15px;
+  color: #555;
+  min-width: 180px;
+}
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .yith-wcan-dropdown:after {
+  right: 12px;
+}
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .yith-wcan-dropdown .dropdown-wrapper .matching-items {
+  overflow: hidden;
+  max-height: unset;
+}
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .filter-items {
+  margin: 0;
+}
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item {
+  display: block;
+  line-height: 1.4;
+  font-size: 15px;
+  padding: 3px 0;
   color: #666;
-  font-size: 14px;
 }
-.category__page--title .category__sort .woocommerce-ordering {
-  background: none !important;
-  margin: 13px 0 0 0;
-  width: 140px;
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > a {
+  color: inherit;
+  display: inline-flex;
+  white-space: nowrap;
+  border-bottom: solid 1px transparent;
 }
-.category__page--title .category__sort select {
-  height: 36px;
-  border: none;
-  background-position: right 0 top 50%;
-  border-bottom: solid 1px #333;
-  padding: 0 20px 0 5px !important;
-  box-shadow: none;
-  width: 100% !important;
-  min-width: auto !important;
-  margin: 0 !important;
-  color: #333;
-  font-size: 14px;
-}
-.category__page--title .category__sort select:focus {
-  border-color: #666;
+.category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item.active > a, .category__page--title .category__sort .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item:hover > a {
+  border-color: #999;
+  color: #111;
 }
 /* product detail */
 .single-product {
