@@ -11,6 +11,17 @@
 
     $order_query = new WP_Query($filter_order);
 
+    $status_badge = array(
+            'trash' => 'badge-danger',
+            'on-hold' => 'badge-danger',
+            'pending' => 'badge-warning',
+            'processing' => 'badge-primary',
+            'completed' => 'badge-success',
+            'shipping' => 'badge-info',
+            'canceled' => 'badge-danger',
+            'b' => 'badge-danger',
+    );
+
 ?>
 
 <div class="card">
@@ -47,12 +58,23 @@
                 <td><?php echo $order->get_date_created()?></td>
                 <td><?php echo $order->get_billing_last_name() . ' ' . $order->get_billing_first_name()?></td>
                 <td><?php echo $order->get_item_count()?></td>
-                <td><?php echo $order->get_total()?></td>
+                <td class="text-right"><?php echo number_format( $order->get_total(),0,',','.')?> VNĐ</td>
                 <td><?php echo $order->get_customer_id()?></td>
                 <td><?php echo $order->get_payment_method_title()?></td>
                 <td><?php echo $order->get_customer_id()?></td>
-                <td><?php echo $order->get_status()?></td>
-                <td><?php echo ''?></td>
+                <td><span class="badge <?php echo $status_badge[$order->get_status()] ?>"><?php echo $order->get_status()?></span></td>
+                <td><div class="btn-group">
+                        <button type="button" class="btn btn-default">Action</button>
+                        <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list?order_id='.get_the_ID()?>">View</a>
+                            <a class="dropdown-item" href="#">Call Shipper</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Canceled</a>
+                        </div>
+                    </div></td>
             </tr>
 
         <?php endwhile;?>
