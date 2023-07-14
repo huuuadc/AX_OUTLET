@@ -1,3 +1,4 @@
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -17,11 +18,20 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <?php if( get_query_var('pagename') == 'order-list' ) {?>
+    <?php if(  get_query_var('pagename') == 'order-list' && !isset($_GET['order_id'])) {?>
     <section class="content">
         <?php get_template_part('template-parts/dashboard/order','list') ?>
     </section>
     <?php }?>
+
+    <?php if( get_query_var('pagename') == 'order-list' && isset($_GET['order_id']) ) {
+        $order_id = $_GET['order_id'];
+        ?>
+        <section class="content">
+            <?php get_template_part('template-parts/dashboard/order','detail',$order_id) ?>
+        </section>
+    <?php }?>
+
     <!-- ./main content -->
 
 

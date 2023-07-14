@@ -1,4 +1,4 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -118,13 +118,22 @@
 <!--                <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>-->
 <!--            </div>-->
         </li>
+        <li>
+            <div class="theme-switch-wrapper nav-link">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </li>
+
         <li class="nav-item">
             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                 <i class="fas fa-expand-arrows-alt"></i>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="<?php echo wp_logout_url( home_url() ); ?>" role="button">
+            <a class="nav-link" href="<?php echo wp_logout_url( home_url() ); ?>" role="button">
                 <i class="fas fa-sign-out-alt"></i>
             </a>
         </li>
