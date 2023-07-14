@@ -30,7 +30,6 @@
             <?php get_template_part('template-parts/dashboard/order','detail',$order_id) ?>
         </section>
     <?php }?>
-
     <!-- ./main content -->
 
 

@@ -720,6 +720,7 @@ html *::-webkit-scrollbar-thumb {
   background-size: 12px;
   background-position: right 0 top 50%;
 }
+
 .woocommerce-page .category-page-title, .woocommerce-page #main {
   max-width: 1920px;
   width: 100%;
