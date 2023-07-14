@@ -25,7 +25,11 @@ if ( ! defined( 'YITH_WCAN' ) ) {
 		<?php do_action( 'yith_wcan_before_active_filters' ); ?>
 
 		<?php if ( ! empty( $labels_heading ) && ! empty( $active_filters ) ) : ?>
-			<h4><?php echo esc_html( $labels_heading ); ?></h4>
+            <?php
+            $label_active = esc_html( $labels_heading );
+            $label_active = str_replace('Active filters','Lọc theo',$label_active);
+            ?>
+			<h4 class="filter-title-active"><?php echo $label_active; ?></h4>
 		<?php endif; ?>
 
 		<?php foreach ( $active_filters as $filter => $options ) : ?>
@@ -36,7 +40,13 @@ if ( ! defined( 'YITH_WCAN' ) ) {
 			?>
 			<div class="active-filter">
 				<?php if ( $show_titles ) : ?>
-					<b><?php echo esc_html( $options['label'] ); ?>:</b>
+                    <?php
+                    $label = esc_html( $options['label'] );
+                    $label = str_replace('Sản phẩm','',$label);
+                    $label = str_replace('Color','Màu sắc',$label);
+                    $label = str_replace('Size','Kích thước',$label);
+                    ?>
+					<b><?php echo $label; ?>:</b>
 				<?php endif; ?>
 				<?php foreach ( $options['values'] as $value ) : ?>
 					<span class="active-filter-label" data-filters="<?php echo esc_attr( wp_json_encode( $value['query_vars'] ) ); ?>">

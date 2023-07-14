@@ -323,7 +323,7 @@ function flatsome_new_flash( $html, $post, $product, $badge_style ) {
 	$days_in_seconds   = 60 * 24 * 60 * $days;
 
 	if ( $time_delta < $days_in_seconds ) {
-		$html .= apply_filters( 'flatsome_new_flash_html', '<div class="badge callout badge-' . $badge_style . '"><div class="badge-inner is-small new-bubble-auto">' . esc_html__( 'New', 'flatsome' ) . '</div></div>', $post, $product, $badge_style );
+		$html .= apply_filters( 'flatsome_new_flash_html', '<div class="badge callout badge-' . $badge_style . '"><div class="badge-inner is-small new-bubble-auto">' . esc_html__( 'New to sale', 'flatsome' ) . '</div></div>', $post, $product, $badge_style );
 	}
 
 	return $html;
