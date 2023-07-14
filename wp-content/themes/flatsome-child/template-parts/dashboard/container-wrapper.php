@@ -23,7 +23,6 @@
         <?php get_template_part('template-parts/dashboard/order','list') ?>
     </section>
     <?php }?>
-
     <?php if( get_query_var('pagename') == 'order-list' && isset($_GET['order_id']) ) {
         $order_id = $_GET['order_id'];
         ?>
