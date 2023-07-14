@@ -9,8 +9,6 @@ function dashboard_register_page_endpoint(){
     add_rewrite_endpoint('customer-report', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('customer-list', EP_ROOT | EP_PAGES );
 
-    wc_get_endpoint_url('view-order','15559','http://devdafc.com.vn/admin-dashboard');
-
 }
 
 add_action('template_include','dashboard_register_template');
