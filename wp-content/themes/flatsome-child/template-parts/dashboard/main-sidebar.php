@@ -1,3 +1,4 @@
+
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Sidebar -->
@@ -34,17 +35,16 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link active">
+                <li class="nav-item">
+                    <a href="#" class="nav-link <?php echo get_query_var('pagename') == 'admin-dashboard' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Dashboard
-                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,8) == 'customer' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo substr(get_query_var('pagename'),0,8) == 'customer' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-address-book"></i>
                         <p>
                             Customers
@@ -53,15 +53,21 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="pages/layout/top-nav.html" class="nav-link">
+                            <a href="/admin-dashboard/customer-list" class="nav-link <?php echo get_query_var('pagename') == 'customer-list' ? 'active' : ''; ?>">
                                 <i class="fas fa-clipboard-list nav-icon"></i>
                                 <p>List</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/customer-witchlist" class="nav-link <?php echo get_query_var('pagename') == 'customer-witchlist' ? 'active' : ''; ?>">
+                                <i class="fa fa-heart nav-icon"></i>
+                                <p>Witchlist</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-boxes "></i>
                         <p>
                             Orders
@@ -70,19 +76,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="pages/layout/top-nav.html" class="nav-link">
+                            <a href="/admin-dashboard/order-list" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
                                 <i class="fas fa-clipboard-list nav-icon"></i>
                                 <p>List Orders</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
-                                <i class="fa fa-heart nav-icon"></i>
-                                <p>Witchlist</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
+                            <a href="/admin-dashboard/order-report" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
                                 <i class="fa fa-list-alt nav-icon"></i>
                                 <p>Report Order</p>
                             </a>
