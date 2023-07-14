@@ -11,4 +11,5 @@ require (__DIR__.'/product/product-register-term-brand.php');
 require (__DIR__.'/product/product-register-term-gender.php');
 require (__DIR__.'/product/product-register-term-shop-by.php');
 require (__DIR__.'/order/register_order_status.php');
+require (__DIR__.'/dashboard/register_endpoint.php');
 

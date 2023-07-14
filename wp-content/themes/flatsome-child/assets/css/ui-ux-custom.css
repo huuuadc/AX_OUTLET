@@ -131,6 +131,7 @@ html *::-webkit-scrollbar-thumb {
 .header__submenu .ux-menu-link__link {
   display: block;
   font-size: 14px;
+  min-height: unset !important;
 }
 .header__submenu .ux-menu-link__link:hover {
   color: #000 !important;
@@ -541,6 +542,9 @@ html *::-webkit-scrollbar-thumb {
 .product-small .percent__label:first-child {
   display: block;
 }
+.product__slider {
+  max-width: unset !important;
+}
 .product__slider.slider:hover .flickity-prev-next-button {
   opacity: 0.4;
 }
@@ -557,11 +561,11 @@ html *::-webkit-scrollbar-thumb {
   opacity: 1;
 }
 .product__slider.slider .flickity-prev-next-button.previous {
-  left: 10px;
+  left: 15px;
   right: auto;
 }
 .product__slider.slider .flickity-prev-next-button.next {
-  right: 10px;
+  right: 15px;
 }
 .policy__icon--box .icon-box {
   text-align: center;
@@ -678,6 +682,49 @@ html *::-webkit-scrollbar-thumb {
 .woocommerce-page .sidebar-inner .filters-container {
   max-width: 350px;
 }
+.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter {
+  border-bottom: solid 1px #ddd;
+  margin-bottom: 0;
+}
+.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter .filter-title {
+  margin: 0;
+  padding: 15px 0;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter .filter-title:after {
+  background-color: transparent;
+  right: 0;
+  top: 33%;
+  width: 13px;
+}
+.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter .filter-content {
+  margin-top: 0;
+  border-top: solid 1px #eee;
+  padding: 10px 0 20px 0;
+}
+.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter .filter-content .filter-items .filter-item {
+  font-size: 15px;
+}
+.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter .filter-content .filter-items .filter-item .toggle-handle {
+  height: 27px;
+  width: 50px;
+  background-size: 12px;
+  background-position: right 0 top 50%;
+}
+.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter.filter-tax .filter-content > .filter-items:not(.filter-checkbox) > .filter-item {
+  position: relative;
+  padding-left: 15px;
+}
+.woocommerce-page .sidebar-inner .filters-container .yith-wcan-filter.filter-tax .filter-content > .filter-items:not(.filter-checkbox) > .filter-item:before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 5px;
+  height: 1px;
+  background-color: #999;
+}
 .woocommerce-page .category-page-title, .woocommerce-page #main {
   max-width: 1920px;
   width: 100%;
@@ -774,6 +821,16 @@ html *::-webkit-scrollbar-thumb {
 .woocommerce-page .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > a:hover, .woocommerce-page .yith-wcan-filters .yith-wcan-filter .filter-items .filter-item > label > a:hover {
   color: #000;
 }
+@media (min-width: 1400px) {
+  .woocommerce-page .products {
+    margin-left: -15px !important;
+    margin-right: -15px !important;
+  }
+  .woocommerce-page .products > .product-small {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
 .woocommerce-page .page-title {
   background-color: #eee;
 }
@@ -792,7 +849,7 @@ html *::-webkit-scrollbar-thumb {
 .woocommerce-page .product-page-title {
   margin-bottom: 20px;
 }
-.woocommerce-page .woocommerce-result-count, .woocommerce-page .woocommerce-ordering {
+.woocommerce-page .shop-page-title .woocommerce-result-count, .woocommerce-page .shop-page-title .woocommerce-ordering {
   display: none !important;
 }
 .category__page--title {
@@ -817,16 +874,16 @@ html *::-webkit-scrollbar-thumb {
 .category__page--title .category__sort .woocommerce-ordering {
   background: none !important;
   margin: 13px 0 0 0;
-  width: 170px;
+  width: 140px;
 }
 .category__page--title .category__sort select {
   height: 36px;
   border: none;
   background-position: right 0 top 50%;
   border-bottom: solid 1px #333;
-  padding: 0 5px;
+  padding: 0 20px 0 5px !important;
   box-shadow: none;
-  width: auto !important;
+  width: 100% !important;
   min-width: auto !important;
   margin: 0 !important;
   color: #333;
