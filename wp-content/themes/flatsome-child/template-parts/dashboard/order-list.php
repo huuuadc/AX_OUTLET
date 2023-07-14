@@ -49,7 +49,7 @@
                 <td><?php echo $order->get_item_count()?></td>
                 <td><?php echo $order->get_total()?></td>
                 <td><?php echo $order->get_customer_id()?></td>
-                <td><?php echo $order->get_payment_method()?></td>
+                <td><?php echo $order->get_payment_method_title()?></td>
                 <td><?php echo $order->get_customer_id()?></td>
                 <td><?php echo $order->get_status()?></td>
                 <td><?php echo ''?></td>

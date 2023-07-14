@@ -17,9 +17,11 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
+    <?php if( get_query_var('pagename') == 'order-list' ) {?>
     <section class="content">
-        <?php get_template_part('template-parts/dashboard/list','orders') ?>
+        <?php get_template_part('template-parts/dashboard/order','list') ?>
     </section>
+    <?php }?>
     <!-- ./main content -->
 
 
