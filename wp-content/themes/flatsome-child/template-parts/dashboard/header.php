@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/overlayScrollbars/css/OverlayScrollbars.min.css'?>">
     <link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/daterangepicker/daterangepicker.css'?>">
     <link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/summernote/summernote-bs4.min.css'?>">
+    <link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/bootstrap-slider/css/bootstrap-slider.min.css'?>">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
 </head>
 
