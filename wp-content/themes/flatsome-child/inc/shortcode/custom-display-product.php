@@ -24,15 +24,6 @@ function et_print_brands(){
     }
 }
 
-add_action( 'woocommerce_before_shop_loop_item', 'add_percent_discount', 10 );
-function add_percent_discount( $product ) {
-    global $product;
-    $discounted_rule = apply_filters('advanced_woo_discount_rules_get_product_discount_price_from_custom_price', false, $product, 1, 0, 'all', true);
-    if ($discounted_rule) {
-        echo '<span class="sale__label">New to sale</span>';
-    }
-}
-
 /* add sale label product */
 add_filter( 'woocommerce_get_price_suffix', 'add_label_sale', 9999, 10 );
 function add_label_sale( $product ) {
@@ -54,6 +45,7 @@ function add_text(){
     echo '</h1>';
     echo '<div class="count">'.wc_get_loop_prop( 'total' ). ' sản phẩm</div></div>';
     echo '<div class="category__sort">';
-    woocommerce_catalog_ordering();
+    //woocommerce_catalog_ordering();
+    echo do_shortcode('[yith_wcan_filters slug="draft-preset-2"]');
     echo '</div></div>';
 }

@@ -26,7 +26,15 @@ if ( ! defined( 'YITH_WCAN' ) ) {
 	<div class="filter-content">
 		<select class="filter-order-by filter-dropdown filter-items <?php echo esc_attr( $filter->get_items_container_classes() ); ?>" name="filter[<?php echo esc_attr( $preset->get_id() ); ?>][<?php echo esc_attr( $filter->get_id() ); ?>]" id="filter_<?php echo esc_attr( $preset->get_id() ); ?>_<?php echo esc_attr( $filter->get_id() ); ?>">
 			<?php foreach ( $filter->get_formatted_order_options() as $sorting_order => $label ) : ?>
-				<option class="filter-item" value="<?php echo esc_attr( $sorting_order ); ?>" <?php selected( $filter->is_order_active( $sorting_order ) ); ?>><?php echo esc_html( $label ); ?></option>
+                <?php
+                    $option_name = esc_html( $label );
+                    $option_name = str_replace('Default sorting','Mặc định',$option_name);
+                    $option_name = str_replace('Sort by popularity','Mức độ phổ biến',$option_name);
+                    $option_name = str_replace('Sort by latest','Mới nhất',$option_name);
+                    $option_name = str_replace('Sort by price: low to high','Giá: thấp đến cao',$option_name);
+                    $option_name = str_replace('Sort by price: high to low','Giá: cao xuống thấp',$option_name);
+                ?>
+				<option class="filter-item" value="<?php echo esc_attr( $sorting_order ); ?>" <?php selected( $filter->is_order_active( $sorting_order ) ); ?>><?php echo $option_name; ?></option>
 			<?php endforeach; ?>
 		</select>
 	</div>
