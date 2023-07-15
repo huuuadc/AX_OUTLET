@@ -3,6 +3,23 @@
     $order = wc_get_order($order_id);
 ?>
 
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Order Detail</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -77,7 +94,7 @@
                                     <td><?php echo $item->get_name() ?></td>
                                     <td><?php echo get_post_meta( $item['variation_id'], '_sku', true ) ?></td>
                                     <td><?php echo $item->get_order_id() ?></td>
-                                    <td><?php echo number_format( $item->get_total(), 2,',','.') ?></td>
+                                    <td><?php echo number_format( $item->get_total(), '0',',','.') ?> VNĐ</td>
                                 </tr>
                                 <?php endforeach; ?>
                                 </tbody>
@@ -100,19 +117,19 @@
                                 <table class="table">
                                     <tr>
                                         <th style="width:50%">Subtotal:</th>
-                                        <td style="text-align: right; padding-right: 30px "><?php echo number_format($order->get_total() / 1.08, '2', ',', '.'); ?> VNĐ</td>
+                                        <td style="text-align: right; padding-right: 30px "><?php echo number_format($order->get_total() - $order->get_shipping_total(), '0', ',', '.'); ?> VNĐ</td>
                                     </tr>
-                                    <tr>
-                                        <th>Tax (8%)</th>
-                                        <td style="text-align: right; padding-right: 30px"><?php echo number_format($order->get_total() * 0.08 / 1.08, '2', ',', '.')?> VNĐ</td>
-                                    </tr>
+<!--                                    <tr>-->
+<!--                                        <th>Tax (8%)</th>-->
+<!--                                        <td style="text-align: right; padding-right: 30px">--><?php //echo number_format($order->get_total() * 0.08 / 1.08, '0', ',', '.')?><!-- VNĐ</td>-->
+<!--                                    </tr>-->
                                     <tr>
                                         <th>Shipping:</th>
-                                        <td style="text-align: right; padding-right: 30px"><?php echo number_format($order->get_shipping_total(), '2', ',', '.')?> VNĐ</td>
+                                        <td style="text-align: right; padding-right: 30px"><?php echo number_format($order->get_shipping_total(), '0', ',', '.')?> VNĐ</td>
                                     </tr>
                                     <tr>
                                         <th>Total:</th>
-                                        <td style="text-align: right; padding-right: 30px"><?php echo number_format($order->get_total() , '2', ',', '.')?> VNĐ</td>
+                                        <td style="text-align: right; padding-right: 30px"><?php echo number_format($order->get_total() , '0', ',', '.')?> VNĐ</td>
                                     </tr>
                                 </table>
                             </div>

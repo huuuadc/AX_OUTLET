@@ -24,16 +24,33 @@
 
 ?>
 
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Orders</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">List Order</h3>
+        <h3 class="card-title">Orders</h3>
     </div>
     <!-- /.card-header -->
-    <table id="list_order" class="table table-bordered table-striped" style="display: block; overflow-x: auto">
+    <table id="list_order" class="table table-bordered table-striped" style="display: block ;overflow-x: scroll; overflow-y: clip;">
         <thead>
             <tr style="white-space: nowrap">
                 <th>Index</th>
                 <th>Order id</th>
+                <th>Order key</th>
                 <th>Order date</th>
                 <th>Customer name</th>
                 <th>Qty item</th>
@@ -55,6 +72,7 @@
             <tr>
                 <td><?php echo $count?></td>
                 <td><?php the_ID();?></td>
+                <td><?php echo $order->get_order_key()?></td>
                 <td><?php echo $order->get_date_created()?></td>
                 <td><?php echo $order->get_billing_last_name() . ' ' . $order->get_billing_first_name()?></td>
                 <td><?php echo $order->get_item_count()?></td>
