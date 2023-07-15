@@ -1,5 +1,17 @@
 <?php
 
+add_action( 'init', 'dashboard_register_query_vars' );
+
+function dashboard_register_query_vars( $vars ) {
+    $vars[] = 'order-list';
+    $vars[] = 'order-report';
+    $vars[] = 'customer-witchlist';
+    $vars[] = 'customer-report';
+    $vars[] = 'customer-list';
+
+    return $vars;
+}
+
 add_action('init','dashboard_register_page_endpoint');
 function dashboard_register_page_endpoint(){
 
