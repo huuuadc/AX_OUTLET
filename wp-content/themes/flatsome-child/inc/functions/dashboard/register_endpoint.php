@@ -2,6 +2,7 @@
 
 add_action( 'query_vars', 'dashboard_register_query_vars' );
 
+
 function dashboard_register_query_vars( $vars ) {
     $vars[] = 'order-list';
     $vars[] = 'order-report';
