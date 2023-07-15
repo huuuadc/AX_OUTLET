@@ -1,4 +1,8 @@
-
+<?php
+    global $wp;
+    var_dump($wp->query_vars);
+    var_dump(get_query_var('pagename'));
+?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
