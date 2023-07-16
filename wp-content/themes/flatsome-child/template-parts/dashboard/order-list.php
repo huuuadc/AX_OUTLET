@@ -97,11 +97,10 @@
                                     </button>
                                     <div class="dropdown-menu" role="menu">
                                         <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list?order_id='.get_the_ID()?>">View</a>
-                                        <a class="dropdown-item" href="#">Call Shipper</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Canceled</a>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
                                         <div class="dropdown-divider"></div>
-                                        <button onclick="send(<?php echo get_the_ID() ?>)">Click me</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
                                     </div>
                                 </div></td>
                         </tr>
@@ -135,12 +134,14 @@
     </div>
 </div>
 <script>
-    function send(id){
+    function send(id = '', status = ''){
+
         $.ajax({
             type: 'POST',
             url: '<?php echo admin_url('admin-ajax.php');?>',
             data:{
-                action:'post_order_update_status',
+                action: 'post_order_update_status',
+                payload_action: 'order_status_' + status,
                 order_id: id
 
             },

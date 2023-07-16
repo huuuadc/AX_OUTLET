@@ -20,7 +20,7 @@ function order_update_status(){
         'confirm-goods' => 'badge-primary',
     );
 
-    if(!isset($_POST['action']) && $_POST['action'] !== 'order_status_reject') {
+    if(!isset($_POST['action']) && !isset($_POST['payload_action'])) {
         echo json_encode(array(
             'status' => '500',
             'messenger' => 'No action map',
@@ -29,17 +29,43 @@ function order_update_status(){
         exit;
     }
 
-    $order_id = $_POST['order_id'];
+    if ($_POST['payload_action'] == 'order_status_reject'){
 
-    $order = wc_get_order($order_id);
+        $order_id = $_POST['order_id'];
 
-    $order->update_status('wc-reject');
+        $order = wc_get_order($order_id);
 
-    echo json_encode(array(
-        'status' => '200',
-        'messenger' => 'success',
-        'data' => ['<span class="badge '. $status_badge[$order->get_status()] .'">'. $order->get_status().'</span>']
-    ));
+        $order->update_status('wc-reject');
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'success',
+            'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+        ));
+
+
+    }
+
+    if ($_POST['payload_action'] == 'order_status_confirm'){
+
+        $order_id = $_POST['order_id'];
+
+        $order = wc_get_order($order_id);
+
+        $order->update_status('wc-confirm');
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'success',
+            'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+        ));
+
+
+    }
+
+
+
+
     exit;
 
 
