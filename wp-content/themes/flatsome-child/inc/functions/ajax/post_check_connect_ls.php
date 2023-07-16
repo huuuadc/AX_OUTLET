@@ -4,8 +4,6 @@ add_action( 'wp_ajax_post_check_connect_ls', 'check_connect_ls' );
 add_action( 'wp_ajax_nopriv_post_check_connect_ls', 'check_connect_ls' );
 function check_connect_ls(){
 
-    write_log($_POST);
-
     if(!isset($_POST['action']) && $_POST['action'] !== 'post_check_connect_ls') {
             echo json_encode(array(
                 'status' => '500',
