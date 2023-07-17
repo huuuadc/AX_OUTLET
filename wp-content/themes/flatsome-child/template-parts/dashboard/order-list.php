@@ -155,8 +155,14 @@
             },
             success: function (data){
                 const rep = JSON.parse(data);
-                console.log(rep);
                 $(`#order_status_${id}`).html(rep.data)
+                $(document).Toasts('create', {
+                    title: 'Success',
+                    body: `Update status: ${rep.data}`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
             },
             complete: function (){
                 $('#card_orders>.overlay').remove()

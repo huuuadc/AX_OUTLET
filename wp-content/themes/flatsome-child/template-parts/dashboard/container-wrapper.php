@@ -4,7 +4,6 @@
 //    var_dump($wp->query_vars);
 ?>
 <div class="content-wrapper">
-
     <?php if (get_query_var('pagename') == 'admin-dashboard' && isset($wp->query_vars['page'])) :?>
         <section class="content">
             <?php get_template_part('template-parts/dashboard/dashboard','') ?>

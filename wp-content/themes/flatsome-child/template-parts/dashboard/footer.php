@@ -23,6 +23,7 @@
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/overlayScrollbars/js/jquery.overlayScrollbars.min.js' ?>"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/js/adminlte.min.js"></script>
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/bootstrap-slider/bootstrap-slider.min.js' ?>"></script>
+<!--    <script type="text/javascript" src="--><?php //echo get_stylesheet_directory_uri().'/assets/js/toast.js' ?><!--"/>-->
     <script>
         let toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
         let currentTheme = localStorage.getItem('theme');
