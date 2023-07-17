@@ -3,8 +3,8 @@
     $filter_order = array(
         'post_status' => 'completed',
         'post_type' => 'shop_order',
-        'posts_per_page' => 2,
-        'paged' => $_GET['paged'] ?? 1,
+        'posts_per_page' => 5,
+        'paged' => $_GET['offset'] ?? 1,
         'order_by' => 'modified',
         'order' => 'DESC'
     );
@@ -124,7 +124,7 @@
                     <ul class="pagination" style="justify-content: flex-end;">
                         <?php for($page=0; $page < $order_query->max_num_pages; $page++):?>
                         <li class="paginate_button page-item <?php echo ($page+1) == $order_query->query_vars['paged']? 'active': ''?>">
-                            <a href="/admin-dashboard/order-list?paged=<?php echo $page+1?>" aria-controls="list_order" data-dt-idx="<?php echo $page+1 ?>" tabindex="<?php echo $page ?>" class="page-link"><?php echo $page+1 ?></a>
+                            <a href="/admin-dashboard/order-list?offset=<?php echo $page+1?>" aria-controls="list_order" data-dt-idx="<?php echo $page+1 ?>" tabindex="<?php echo $page ?>" class="page-link"><?php echo $page+1 ?></a>
                         </li>
                         <?php endfor;?>
                    </ul>
