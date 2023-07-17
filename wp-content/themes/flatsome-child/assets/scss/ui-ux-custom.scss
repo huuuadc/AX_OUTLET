@@ -1264,4 +1264,30 @@ html *::-webkit-scrollbar-thumb{
             }
         }
     }
+    &-tabs {
+        &.nav, &.links {
+            border-bottom: solid 1px #ddd;
+            display: inline-block;
+            width: auto;
+            > li {
+                &:not(:first-child){
+                    margin-left: 15px;
+                }
+                > a {
+                    font-size: 14px;
+                    &:before {
+                        height: 1px;
+                        top: auto;
+                        bottom: -1px;
+                    }
+                }
+                &.active > a {
+                    color: #111;
+                    &:before {
+                        background-color: #111;
+                    }
+                }
+            }
+        }
+    }
 }

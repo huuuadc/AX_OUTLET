@@ -720,7 +720,6 @@ html *::-webkit-scrollbar-thumb {
   background-size: 12px;
   background-position: right 0 top 50%;
 }
-
 .woocommerce-page .category-page-title, .woocommerce-page #main {
   max-width: 1920px;
   width: 100%;
@@ -1115,4 +1114,26 @@ html *::-webkit-scrollbar-thumb {
 }
 .product .product__info > .col-inner .product__brand a:hover {
   color: #000;
+}
+.product-tabs.nav, .product-tabs.links {
+  border-bottom: solid 1px #ddd;
+  display: inline-block;
+  width: auto;
+}
+.product-tabs.nav > li:not(:first-child), .product-tabs.links > li:not(:first-child) {
+  margin-left: 15px;
+}
+.product-tabs.nav > li > a, .product-tabs.links > li > a {
+  font-size: 14px;
+}
+.product-tabs.nav > li > a:before, .product-tabs.links > li > a:before {
+  height: 1px;
+  top: auto;
+  bottom: -1px;
+}
+.product-tabs.nav > li.active > a, .product-tabs.links > li.active > a {
+  color: #111;
+}
+.product-tabs.nav > li.active > a:before, .product-tabs.links > li.active > a:before {
+  background-color: #111;
 }
