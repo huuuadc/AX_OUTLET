@@ -1,6 +1,10 @@
-
+<style>
+    .layout-fixed .main-sidebar-custom .sidebar {
+        height: calc(100% - ((3.5rem + 0rem) + 1px));
+    }
+</style>
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
@@ -94,4 +98,8 @@
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
+    <div class="sidebar-custom">
+        <a href="/admin-dashboard/setting" class="btn btn-link"><i class="fas fa-cogs"></i></a>
+        <a href="#" class="btn btn-secondary hide-on-collapse pos-right">Cứu tôi!</a>
+    </div>
 </aside>

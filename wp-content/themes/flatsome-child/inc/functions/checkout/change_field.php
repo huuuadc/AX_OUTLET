@@ -14,17 +14,24 @@ function checkout_add_change_fields($fields){
 
     }
 
+    $fields['billing']['billing_phone']['priority'] = 30;
+    $fields['billing']['billing_email']['priority'] = 35;
+    $fields['billing']['billing_address_1']['priority'] = 90;
+
+    global $wpdb;
+
+    $arg_city[''] = __( 'Tỉnh/Thành Phố' );
+    $arg_districts[''] = __('Quận/Huyện');
+    $arg_wards[''] = __('Phường/Xã');
+
+    $data_city = $wpdb->get_results("Select province_id,tiki_code,province_name from {$wpdb->prefix}woocommerce_province");
+    foreach ($data_city as $value_city){
+        $arg_city[$value_city->tiki_code] = $value_city->province_name;
+    }
+
     $city_args = wp_parse_args( array(
         'type' => 'select',
-        'options' => array(
-            '' => __( 'Select city' ),
-            'HoChiMinh' => 'HoChiMinh',
-            'HaNoi' => 'HaNoi',
-            'CaoBang'   => 'CaoBang',
-            'LongAn' => 'LongAn',
-            'SocTrang'    => 'SocTrang',
-            'BacLieu'  => 'BacLieu',
-        ),
+        'options' => $arg_city,
         'input_class' => array(
             'country_select',
         )
@@ -32,20 +39,28 @@ function checkout_add_change_fields($fields){
 
     $fields['billing']['billing_city'] = $city_args;
 
-    $city_args1 = array(
+    $district = array(
         'type' => 'select',
-        'options' => array(
-            '' => __( 'Select District' ),
-            'AnGiang' => 'An Giang',
-        ),
+        'options' => $arg_districts,
         'input_class' => array(
             'country_select',
-        )
+        ),
+        'priority' => 75
     ) ;
 
-    $fields['billing']['billing_district'] = $city_args1;
+    $fields['billing']['billing_district'] = $district;
 
-    write_log($fields);
+    $ward = array(
+        'type' => 'select',
+        'options' => $arg_wards,
+        'input_class' => array(
+            'country_select',
+        ),
+        'priority' => 80
+    ) ;
+
+    $fields['billing']['billing_ward'] = $ward;
+
 
     return $fields;
 }
