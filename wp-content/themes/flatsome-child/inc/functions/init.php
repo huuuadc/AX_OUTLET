@@ -15,4 +15,5 @@ require (__DIR__.'/dashboard/register_endpoint.php');
 require (__DIR__.'/product/product_tabs.php');
 require (__DIR__.'/ajax/order_update_status.php');
 require (__DIR__.'/product-category/storage-instructions.php');
+require (__DIR__.'/checkout/change_field.php');
 
