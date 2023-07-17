@@ -1330,6 +1330,30 @@ html *::-webkit-scrollbar-thumb{
     .quantity .button:hover {
         background-color: #eee;
     }
+    .pa_color {
+        display: none;
+    }
+    .variations {
+        margin-bottom: 25px;
+        th, td {
+            display: inline-block;
+        }
+        .label {
+            padding-right: 10px;
+            font-size: 14px;
+            label {
+                font-size: inherit;
+            }
+        }
+        select {
+            padding: 0 20px 0 5px;
+            border: none;
+            border-bottom: solid 1px #333;
+            box-shadow: none;
+            background-position: right 0 top 50%;
+            margin: 0;
+        }
+    }
 }
 .btn.reset-filters {
     display: block;
