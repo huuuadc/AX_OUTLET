@@ -1177,6 +1177,30 @@ html *::-webkit-scrollbar-thumb {
 .product .quantity .button:hover {
   background-color: #eee;
 }
+.product .pa_color {
+  display: none;
+}
+.product .variations {
+  margin-bottom: 25px;
+}
+.product .variations th, .product .variations td {
+  display: inline-block;
+}
+.product .variations .label {
+  padding-right: 10px;
+  font-size: 14px;
+}
+.product .variations .label label {
+  font-size: inherit;
+}
+.product .variations select {
+  padding: 0 20px 0 5px;
+  border: none;
+  border-bottom: solid 1px #333;
+  box-shadow: none;
+  background-position: right 0 top 50%;
+  margin: 0;
+}
 .btn.reset-filters {
   display: block;
   background-color: #f5f5f5;
