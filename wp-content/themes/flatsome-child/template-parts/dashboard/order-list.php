@@ -97,9 +97,13 @@
                                     </button>
                                     <div class="dropdown-menu" role="menu">
                                         <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list?order_id='.get_the_ID()?>">View</a>
-                                        <div class="dropdown-divider"></div>
                                         <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
-                                        <div class="dropdown-divider"></div>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Request</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
                                         <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
                                     </div>
                                 </div></td>

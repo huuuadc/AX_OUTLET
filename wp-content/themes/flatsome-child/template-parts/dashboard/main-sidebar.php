@@ -1,6 +1,10 @@
-
+<style>
+    .layout-fixed .main-sidebar-custom .sidebar {
+        height: calc(100% - ((3.5rem + 0rem) + 1px));
+    }
+</style>
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
@@ -89,9 +93,243 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-boxes "></i>
+                        <p>
+                            Setting Options
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/information-company" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Information Company</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/install-project" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Install Project</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-boxes "></i>
+                        <p>
+                            Setting Options
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/information-company" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Information Company</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/install-project" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Install Project</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-boxes "></i>
+                        <p>
+                            Setting Options
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/information-company" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Information Company</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/install-project" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Install Project</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-boxes "></i>
+                        <p>
+                            Setting Options
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/information-company" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Information Company</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/install-project" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Install Project</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-boxes "></i>
+                        <p>
+                            Setting Options
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/information-company" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Information Company</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/install-project" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Install Project</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-boxes "></i>
+                        <p>
+                            Setting Options
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/information-company" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Information Company</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/install-project" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Install Project</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-boxes "></i>
+                        <p>
+                            Setting Options
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/information-company" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Information Company</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/install-project" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Install Project</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-boxes "></i>
+                        <p>
+                            Setting Options
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/information-company" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Information Company</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/install-project" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Install Project</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-boxes "></i>
+                        <p>
+                            Setting Options
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/information-company" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Information Company</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/install-project" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Install Project</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-boxes "></i>
+                        <p>
+                            Setting Options
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/information-company" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Information Company</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/install-project" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Install Project</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
+    <div class="sidebar-custom">
+        <a href="/admin-dashboard/setting" class="btn btn-link"><i class="fas fa-cogs"></i></a>
+        <a href="#" class="btn btn-secondary hide-on-collapse pos-right">Cứu tôi!</a>
+    </div>
 </aside>

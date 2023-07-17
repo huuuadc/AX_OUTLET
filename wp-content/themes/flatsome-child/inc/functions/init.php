@@ -16,4 +16,6 @@ require (__DIR__.'/product/product_tabs.php');
 require (__DIR__.'/ajax/order_update_status.php');
 require (__DIR__.'/product-category/storage-instructions.php');
 require (__DIR__.'/checkout/change_field.php');
+require (__DIR__.'/database/create_table.php');
+require (__DIR__.'/ajax/generate_database_address.php');
 
