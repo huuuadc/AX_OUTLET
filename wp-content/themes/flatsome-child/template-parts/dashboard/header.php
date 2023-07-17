@@ -13,8 +13,8 @@
     <link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/summernote/summernote-bs4.min.css'?>">
     <link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/bootstrap-slider/css/bootstrap-slider.min.css'?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!--    <link rel="stylesheet" href="--><?php //echo get_stylesheet_directory_uri().'/assets/css/toast.css'?><!--">-->
 
 </head>
-
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">

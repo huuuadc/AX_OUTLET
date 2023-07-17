@@ -97,9 +97,13 @@
                                     </button>
                                     <div class="dropdown-menu" role="menu">
                                         <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list?order_id='.get_the_ID()?>">View</a>
-                                        <div class="dropdown-divider"></div>
                                         <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
-                                        <div class="dropdown-divider"></div>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Request</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
                                         <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
                                     </div>
                                 </div></td>
@@ -151,8 +155,14 @@
             },
             success: function (data){
                 const rep = JSON.parse(data);
-                console.log(rep);
                 $(`#order_status_${id}`).html(rep.data)
+                $(document).Toasts('create', {
+                    title: 'Success',
+                    body: `Update status: ${rep.data}`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
             },
             complete: function (){
                 $('#card_orders>.overlay').remove()

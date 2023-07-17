@@ -1,8 +1,9 @@
 <?php
     global $wp;
+//    var_dump(get_query_var('pagename') );
+//    var_dump($wp->query_vars);
 ?>
 <div class="content-wrapper">
-
     <?php if (get_query_var('pagename') == 'admin-dashboard' && isset($wp->query_vars['page'])) :?>
         <section class="content">
             <?php get_template_part('template-parts/dashboard/dashboard','') ?>
@@ -21,6 +22,13 @@
         ?>
         <section class="content">
             <?php get_template_part('template-parts/dashboard/order','detail',$order_id) ?>
+        </section>
+    <?php endif;?>
+
+    <?php if( get_query_var('pagename') == 'setting' || isset($wp->query_vars['setting']) ) :
+        ?>
+        <section class="content">
+            <?php get_template_part('template-parts/dashboard/setting') ?>
         </section>
     <?php endif;?>
     <!-- ./main content -->
