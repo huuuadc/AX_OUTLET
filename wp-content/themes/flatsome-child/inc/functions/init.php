@@ -20,4 +20,6 @@ require (__DIR__.'/database/create_table.php');
 require (__DIR__.'/ajax/generate_database_address.php');
 require (__DIR__.'/ajax/get_address_shipping.php');
 require (__DIR__.'/size-chart/size-chart.php');
+require (__DIR__.'/checkout/save_field.php');
+require (__DIR__.'/order/class_ax_order.php');
 
