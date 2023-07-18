@@ -4,6 +4,7 @@ jQuery(function ($){
     $('#billing_city').change(function (){
         let billing_city_id = $('#billing_city').val()
         $('#billing_district').html('');
+        $('#billing_ward').html('');
 
         $.ajax({
             type: 'POST',
@@ -15,8 +16,11 @@ jQuery(function ($){
             },
             success: function (rep){
                 let data = JSON.parse(rep);
-                data.data.map((e)=>{
-                    $('#billing_district').append(`<option value="${e.tiki_code}" >${e.district_name}</option>`)
+                data.data.district.map((e)=>{
+                        $('#billing_district').append(`<option value="${e.tiki_code}" >${e.district_name}</option>`)
+                })
+                data.data.ward.map((e)=>{
+                    $('#billing_ward').append(`<option value="${e.tiki_code}" >${e.ward_name}</option>`)
                 })
 
             },
