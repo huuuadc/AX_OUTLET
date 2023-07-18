@@ -14,8 +14,8 @@ function add_size_chart(){
             $term_id = $term->term_id;
             $size_chart = get_term_meta( $term_id, 'wh_size_chart', true );
             echo do_shortcode('[button text="Hướng dẫn chọn kích thước" class="btn--size_chart" link="#size_chart"][lightbox id="size_chart" width="1440px" padding="20px"]<img src="'.$size_chart.'" width="100%" height="auto"/>[/lightbox]');
+            break;
         }
-        break;
     }
 }
 
