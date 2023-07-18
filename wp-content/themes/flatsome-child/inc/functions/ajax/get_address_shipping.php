@@ -23,7 +23,7 @@ function get_address_shipping()
         $data_district = $wpdb->get_results("Select tiki_code,district_name 
             from {$wpdb->prefix}woocommerce_district where left(tiki_code,5) = '{$id}' ");
 
-        $data_ward = $wpdb->get_results("Select ward_id,ward_name 
+        $data_ward = $wpdb->get_results("Select tiki_code,ward_name 
             from {$wpdb->prefix}woocommerce_ward where left(tiki_code,8) = '{$data_district['0']->tiki_code}'");
         echo json_encode(array(
             'status' => '200',

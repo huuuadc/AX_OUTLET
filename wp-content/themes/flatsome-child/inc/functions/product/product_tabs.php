@@ -16,8 +16,6 @@ function product_tab_public_info($tabs){
         'callback' => 'woocommerce_product_return_policy_tab'
     );
 
-    write_log($tabs);
-
     return $tabs;
 }
 
