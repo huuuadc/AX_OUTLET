@@ -1,6 +1,7 @@
 <?php
     $order_id =  $_GET['order_id'];
     $order = wc_get_order($order_id);
+    $order_new = new AX_ORDER($order_id);
 ?>
 
 <!-- Content Header (Page header) -->
@@ -55,9 +56,9 @@
                             <address>
                                 <strong><?php echo $order->get_billing_last_name() .' '. $order->get_billing_first_name() ?></strong><br>
                                 <?php echo $order->get_billing_address_1()?><br>
-                                <?php echo $order->get_billing_city().' ,'. $order->get_billing_country()?><br>
-                                Phone: <?php echo $order->get_billing_phone()?><br>
-                                Email: <?php echo $order->get_billing_email()?>
+                                <?php echo $order_new->get_ax_address()?><br>
+                                Phone: <?php echo $order_new->get_billing_phone()?><br>
+                                Email: <?php echo $order_new->get_billing_email()?>
                             </address>
                         </div>
                         <!-- /.col -->

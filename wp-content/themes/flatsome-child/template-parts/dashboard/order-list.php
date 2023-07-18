@@ -27,6 +27,8 @@
             'confirm-goods' => 'badge-primary',
     );
 
+    var_dump($_POST);
+
 ?>
 
 <!-- Content Header (Page header) -->
