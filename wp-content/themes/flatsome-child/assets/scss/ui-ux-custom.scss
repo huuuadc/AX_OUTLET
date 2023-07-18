@@ -1313,7 +1313,7 @@ html *::-webkit-scrollbar-thumb{
             width: auto;
             > li {
                 &:not(:first-child){
-                    margin-left: 15px;
+                    margin-left: 10px;
                 }
                 > a {
                     font-size: 14px;
@@ -1369,6 +1369,34 @@ html *::-webkit-scrollbar-thumb{
             box-shadow: none;
             background-position: right 0 top 50%;
             margin: 0;
+        }
+    }
+    .btn--size_chart {
+        background-color: transparent !important;
+        color: #111;
+        padding: 0;
+        border: none;
+        border-bottom: solid 1px #999;
+        font-weight: 500;
+        font-style: italic;
+        font-size: 14px;
+        &:hover {
+            box-shadow: none;
+            opacity: 0.5;
+        }
+        @media(max-width:1200px){
+            margin: 0;
+        }
+    }
+    .single_add_to_cart_button {
+        margin-right: 15px;
+    }
+    .sticky-add-to-cart--active {
+        .btn--size_chart {
+            display: none;
+        }
+        .single_add_to_cart_button {
+            margin-right: 0;
         }
     }
 }
