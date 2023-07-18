@@ -160,7 +160,7 @@ $brands = $wpdb->get_results($sql);
 
         <td>parent_cat_id</td>
 
-        <td>parent_cat_id</td>
+        <td>Slug</td>
 
         <td>parent_name</td>
 
@@ -187,7 +187,7 @@ $brands = $wpdb->get_results($sql);
 			<td>$brand->parent</td>
 		
 
-			<td>$parent_name->name</td>
+			<td>$brand->slug</td>
 
 			<td>$parent_name->name </td>
 

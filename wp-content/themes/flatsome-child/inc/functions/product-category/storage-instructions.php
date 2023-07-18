@@ -53,11 +53,11 @@ function wpm_product_cat_edit_storage_instructions_meta( $term ) {
     }
     $settings = array(
         'textarea_name' => 'wpm-product-cat-storage_instructions',
-        'media_buttons' => false,
+        'media_buttons' => true,
         'textarea_rows' => get_option('default_post_edit_rows', 10),
-        'quicktags'     => false,
+        'quicktags'     => true,
         'tinymce'       => array(
-            'toolbar1'      => 'bold,italic,underline,|,bullist,numlist,|,separator,alignleft,aligncenter,alignright,|,separator,link,unlink,undo,redo',
+            'toolbar1'      => 'bold,italic,underline,|,bullist,numlist,separator,alignleft,aligncenter,alignright,separator,link,unlink,undo,redo',
             'toolbar2'      => '',
             'toolbar3'      => '',
         ),

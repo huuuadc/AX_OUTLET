@@ -791,7 +791,7 @@ html *::-webkit-scrollbar-thumb{
             }
             .yith-wcan-active-filters {
                 order: 10;
-                margin: 20px 0;
+                margin: 20px 0 0 0 !important;
                 .filter-title-active {
                     font-size: 16px;
                     font-weight: 600;
@@ -977,6 +977,23 @@ html *::-webkit-scrollbar-thumb{
     .shop-page-title {
         .woocommerce-result-count, .woocommerce-ordering {
             display: none !important;
+        }
+    }
+    .btn.reset-filters {
+        display: block;
+        background-color: #f5f5f5;
+        color: #111;
+        font-weight: 500;
+        border: solid 1px #aaa;
+        border-radius: 3px;
+        width: 150px;
+        order: 11;
+        font-size: 15px;
+        margin-top: 25px;
+        &:hover {
+            background-color: #666;
+            color: #fff;
+            border-color: #666;
         }
     }
 }
@@ -1353,21 +1370,5 @@ html *::-webkit-scrollbar-thumb{
             background-position: right 0 top 50%;
             margin: 0;
         }
-    }
-}
-.btn.reset-filters {
-    display: block;
-    background-color: #f5f5f5;
-    color: #111;
-    font-weight: 500;
-    border: solid 1px #aaa;
-    border-radius: 3px;
-    width: 150px;
-    order: 11;
-    font-size: 15px;
-    &:hover {
-        background-color: #666;
-        color: #fff;
-        border-color: #666;
     }
 }

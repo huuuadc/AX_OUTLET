@@ -19,15 +19,19 @@ function get_address_shipping()
     $action_payload = $_POST['action_payload'];
     $id = $_POST['id'];
 
-    write_log($id);
-
     if ($action_payload == 'get_district'){
         $data_district = $wpdb->get_results("Select tiki_code,district_name 
             from {$wpdb->prefix}woocommerce_district where left(tiki_code,5) = '{$id}' ");
+
+        $data_ward = $wpdb->get_results("Select ward_id,ward_name 
+            from {$wpdb->prefix}woocommerce_ward where left(tiki_code,8) = '{$data_district['0']->tiki_code}'");
         echo json_encode(array(
             'status' => '200',
             'messenger' => 'Thành Công',
-            'data' => $data_district
+            'data' => array(
+                'district'=>$data_district,
+                'ward'=>$data_ward
+            )
         ));
         exit;
     }
