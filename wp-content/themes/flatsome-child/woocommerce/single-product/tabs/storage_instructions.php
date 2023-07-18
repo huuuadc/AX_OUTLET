@@ -21,14 +21,13 @@ global $post;
 
 $cate = get_queried_object();
 $terms = get_the_terms( $post->ID, 'product_cat' );
-
 foreach ( $terms as $term ) {
     $parent = $term->parent;
     if($parent==0) {
         $term_id = $term->term_id;
         $storage_instructions = get_term_meta( $term_id, 'storage_instructions', true );
         echo apply_filters( 'the_content', wp_kses_post( $storage_instructions ) );
+        break;
     }
-    break;
 }
 ?>
