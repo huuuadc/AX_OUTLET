@@ -23,7 +23,7 @@
             'shipping' => 'badge-info',
             'delivered' => 'badge-info',
             'delivered-failed' => 'badge-danger',
-            'canceled' => 'badge-danger',
+            'cancelled' => 'badge-danger',
             'confirm-goods' => 'badge-primary',
     );
 
