@@ -791,7 +791,7 @@ html *::-webkit-scrollbar-thumb{
             }
             .yith-wcan-active-filters {
                 order: 10;
-                margin: 20px 0;
+                margin: 20px 0 0 0 !important;
                 .filter-title-active {
                     font-size: 16px;
                     font-weight: 600;
@@ -977,6 +977,23 @@ html *::-webkit-scrollbar-thumb{
     .shop-page-title {
         .woocommerce-result-count, .woocommerce-ordering {
             display: none !important;
+        }
+    }
+    .btn.reset-filters {
+        display: block;
+        background-color: #f5f5f5;
+        color: #111;
+        font-weight: 500;
+        border: solid 1px #aaa;
+        border-radius: 3px;
+        width: 150px;
+        order: 11;
+        font-size: 15px;
+        margin-top: 25px;
+        &:hover {
+            background-color: #666;
+            color: #fff;
+            border-color: #666;
         }
     }
 }
@@ -1296,7 +1313,7 @@ html *::-webkit-scrollbar-thumb{
             width: auto;
             > li {
                 &:not(:first-child){
-                    margin-left: 15px;
+                    margin-left: 10px;
                 }
                 > a {
                     font-size: 14px;
@@ -1354,20 +1371,32 @@ html *::-webkit-scrollbar-thumb{
             margin: 0;
         }
     }
-}
-.btn.reset-filters {
-    display: block;
-    background-color: #f5f5f5;
-    color: #111;
-    font-weight: 500;
-    border: solid 1px #aaa;
-    border-radius: 3px;
-    width: 150px;
-    order: 11;
-    font-size: 15px;
-    &:hover {
-        background-color: #666;
-        color: #fff;
-        border-color: #666;
+    .btn--size_chart {
+        background-color: transparent !important;
+        color: #111;
+        padding: 0;
+        border: none;
+        border-bottom: solid 1px #999;
+        font-weight: 500;
+        font-style: italic;
+        font-size: 14px;
+        &:hover {
+            box-shadow: none;
+            opacity: 0.5;
+        }
+        @media(max-width:1200px){
+            margin: 0;
+        }
+    }
+    .single_add_to_cart_button {
+        margin-right: 15px;
+    }
+    .sticky-add-to-cart--active {
+        .btn--size_chart {
+            display: none;
+        }
+        .single_add_to_cart_button {
+            margin-right: 0;
+        }
     }
 }

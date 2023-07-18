@@ -66,7 +66,8 @@ function markAdded () {
   jQuery('.wishlist-icon').each(function () {
     var $this = jQuery(this)
     if ($this.find('.yith-wcwl-wishlistexistsbrowse, .yith-wcwl-wishlistaddedbrowse').length) {
-      $this.find('.wishlist-button').addClass('wishlist-added')
+      $this.find('.wishlist-button').addClass('wishlist-added');
+      $this.find('.wishlist-button > i').attr('class','icon-heart');
     }
   })
 }
