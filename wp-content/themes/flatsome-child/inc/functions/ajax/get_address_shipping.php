@@ -27,7 +27,7 @@ function get_address_shipping()
             from {$wpdb->prefix}woocommerce_ward where left(tiki_code,8) = '{$data_district['0']->tiki_code}'");
         echo json_encode(array(
             'status' => '200',
-            'messenger' => 'Thành Công',
+            'messenger' => 'Success',
             'data' => array(
                 'district'=>$data_district,
                 'ward'=>$data_ward
@@ -37,11 +37,11 @@ function get_address_shipping()
     }
 
     if ($action_payload == 'get_ward'){
-        $data_ward = $wpdb->get_results("Select ward_id,ward_name 
+        $data_ward = $wpdb->get_results("Select tiki_code,ward_name 
             from {$wpdb->prefix}woocommerce_ward where left(tiki_code,8) = '{$id}'");
         echo json_encode(array(
             'status' => '200',
-            'messenger' => 'Thành Công',
+            'messenger' => 'Success',
             'data' => $data_ward
         ));
         exit;
