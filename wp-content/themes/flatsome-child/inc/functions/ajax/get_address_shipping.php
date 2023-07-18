@@ -44,7 +44,45 @@ function get_address_shipping()
             'messenger' => 'Success',
             'data' => $data_ward
         ));
+
         exit;
+    }
+
+    if ($action_payload == 'get_est_shipment'){
+
+        $apiTiki = new \TIKI\TIKI_API();
+
+        $cart = WC()->cart->total;
+
+
+        $data =  array(
+            'package_info' => array(
+                'height'    =>  20,
+                'width'     =>  20,
+                'depth'     =>  20,
+                'weight'    =>  2000,
+                'total_amount'  => 1234567
+            ),
+            'destination'    => array(
+                'street'        => '182 Lê Đại Hành',
+                'ward_name'     => 'Phường 05',
+                'district_name' => 'Quận 3',
+                'province_name' => 'Hồ Chí Minh',
+                'ward_code'     => "$id"
+            )
+        );
+
+
+        $estS = $apiTiki->estimate_shipping($data);
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'Success',
+            'data' => $estS
+        ));
+
+        exit;
+
     }
 
     echo json_encode(array(

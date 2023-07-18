@@ -7,6 +7,8 @@ class TIKI_API
 
     private string $LS_TOKEN = 'ls_token';
 
+    private string $ACCESS_TOKEN = 'jTWWQUFqJ0PwNwlQQweD5L9aYlZ50Ip--FV85W_ehv0.Z0moZgJciRKwR72rir4E85XbKy_Gd_Y20CtWUeNy4Bo';
+
     private string $user_name = '';
     private string $user_pass = '';
     private string $api_token = '';
@@ -16,12 +18,18 @@ class TIKI_API
     public string $env = 'test';
 
     public string $baseURL = 'https://api.tala.xyz/directory';
+    public string $baseURLTNSL = 'https://tikinowapi.tiki.vn/orders/last-miles';
 
     public array $URI = array(
 
         'get_list_regions'          =>          '/v1/countries/VN/regions',
         'get_list_districts'        =>          '/districts',
-        'get_list_ward'             =>          '/wards'
+        'get_list_ward'             =>          '/wards',
+        'get_token'                 =>          '/v1/oauth2/token',
+        'get_quotes'                =>          '/v1/quotes',
+        'sync_order'                =>          '/v1/shipments',
+        'cancel_order'              =>          '/v1/shipments',
+
     );
 
 
@@ -43,20 +51,21 @@ class TIKI_API
 
         try {
 
-            $data_string = json_encode($data);
+            $data_request = json_encode($data);
+
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                     'Content-Type: application/json',
-                    'Content-Length: ' . strlen($data_string))
+                    'Content-Length: ' . strlen($data_request))
             );
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_request);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-            if (false) {
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer ' . $this->api_token));
+            if ($this->ACCESS_TOKEN) {
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer ' . $this->ACCESS_TOKEN));
             }
 
             $result = curl_exec($ch);
@@ -134,6 +143,49 @@ class TIKI_API
         $response = $this->sendRequestToTiki($url,'','GET');
 
         return $response->data;
+
+    }
+
+    public function get_token(){
+
+        $url = $this->baseURLTNSL . $this->URI['get_token'];
+
+        return '';
+
+    }
+
+    public function estimate_shipping($data){
+        $url = $this->baseURLTNSL . $this->URI['get_quotes'];
+
+        $data_default = array(
+            'package_info' => array(
+                'height'    =>  20,
+                'width'     =>  20,
+                'depth'     =>  20,
+                'weight'    =>  2000,
+                'total_amount'  => 1234567
+            ),
+            'origin'    => array(
+                'street'        => '528 Huỳnh Tấn Phát',
+                'ward_name'     => 'Phường Bình Thuận',
+                'district_name' => 'Quận 7',
+                'province_name' => 'Hồ Chí Minh',
+                'ward_code'     => 'VN039015001'
+            ),
+            'destination'    => array(
+            'street'        => '182 Lê Đại Hành',
+            'ward_name'     => 'Phường 05',
+            'district_name' => 'Quận 3',
+            'province_name' => 'Hồ Chí Minh',
+            'ward_code'     => 'VN039011005'
+            )
+        );
+
+        $data = array_merge($data_default,$data);
+
+        $rep = $this->sendRequestToTiki($url,$data,'POST');
+
+        return $rep;
 
     }
 
