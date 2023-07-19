@@ -333,6 +333,47 @@ html *::-webkit-scrollbar-thumb{
         }
     }
 }
+.related {
+    .slider {
+        .flickity-prev-next-button {
+            width: 45px !important;
+            height: 45px !important;
+            top: 35%;
+            margin: 0 !important;
+            box-shadow: none !important;
+            background-size: 55% !important;
+            opacity: 1 !important;
+            transform: none !important;
+            &:hover {
+                background-color: rgba(0,0,0,1) !important;
+            }
+            &.previous {
+                background: url('../img/arrow_left_light.svg') no-repeat center center rgba(0,0,0,.4);
+                left: 10px !important;
+            }
+            &.next {
+                background: url('../img/arrow_right_light.svg') no-repeat center center rgba(0,0,0,.4);
+                right: 10px !important;
+            }
+        }
+    }
+}
+.product-section {
+    border: none;
+    &-title {
+        display: table;
+        width: auto;
+        margin: 0 0 10px 0;
+        &:before {
+            content: "";
+            display: block;
+            width: 50%;
+            height: 2px;
+            background-color: #333;
+            margin-bottom: 20px;
+        }
+    }
+}
 .hero__slider {
     .flickity-viewport {
         .section {
@@ -1191,15 +1232,44 @@ html *::-webkit-scrollbar-thumb{
     *::-webkit-scrollbar-track, *::-webkit-scrollbar-thumb {
         border-radius: 5px !important;
     }
-    @media(min-width:850px){
-        .vertical-thumbnails .col {
-            padding-bottom: 9px !important;
-        }
-    }
     &.woocommerce-page.single-product #main {
         .product__page--header {
             .page-title-inner {
                 padding: 0 !important;
+            }
+        }
+    }
+    @media(min-width:850px){
+        .vertical-thumbnails .col {
+            padding-bottom: 9px !important;
+        }
+        .product__gallery {
+            .row-small {
+                > .large-10 {
+                    padding-bottom: 0 !important;
+                }
+            }
+        }
+        .single-product .vertical-thumbnails .col {
+            width: 90% !important;
+            &:last-child {
+                padding-bottom: 0 !important;
+            }
+            > a {
+                display: block;
+                padding-bottom: 100%;
+                position: relative;
+                img {
+                    display: block;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-position: center;
+                    object-fit: cover;
+                    transform: none !important;
+                }
             }
         }
     }
