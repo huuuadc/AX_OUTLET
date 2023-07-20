@@ -1568,6 +1568,12 @@ html *::-webkit-scrollbar-thumb {
 .page-checkout .checkout input:not([type="checkbox"]):focus, .page-checkout .checkout input:not([type="radio"]):focus, .page-checkout .checkout select:focus, .page-checkout .checkout textarea:focus {
   border-color: #333;
 }
+.page-checkout .page__title--cart {
+  margin: -20px 0 25px 0;
+}
+.page-checkout .woocommerce-remove-coupon {
+  display: none !important;
+}
 @media screen and (min-width: 1200px) {
   .page-checkout .checkout .col.large-7 {
     border-right: solid 1px #ececec;

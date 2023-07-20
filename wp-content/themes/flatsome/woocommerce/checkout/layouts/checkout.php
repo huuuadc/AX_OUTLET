@@ -6,7 +6,9 @@
  * @flatsome-version 3.16.0
  */
 
-get_header(); ?>
+get_header();
+global $post;
+?>
 
 <?php while ( have_posts() ) : the_post(); ?>
 
@@ -14,6 +16,7 @@ get_header(); ?>
 	wc_get_template( 'checkout/header.php' );
 
 	echo '<div class="cart-container container page-wrapper page-checkout">';
+	echo '<h1 class="page__title--cart">'.$post->post_title.'</h1>';
 	wc_print_notices();
 	the_content();
 	echo '</div>';
