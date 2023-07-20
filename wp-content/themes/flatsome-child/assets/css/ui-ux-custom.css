@@ -1009,6 +1009,9 @@ html *::-webkit-scrollbar-thumb {
 .woocommerce-page .cart-container .cart-sidebar .shipping-calculator-button:hover {
   border-color: #999;
 }
+.woocommerce-page .cart-container .cart-sidebar .checkout_coupon .input-text {
+  width: calc(100% - 100px);
+}
 .woocommerce-page .cart-container .woocommerce-cart-form__contents td {
   border-bottom: none;
   padding-top: 25px;
@@ -1080,7 +1083,7 @@ html *::-webkit-scrollbar-thumb {
   justify-content: space-between;
 }
 .woocommerce-page .checkout_coupon .input-text {
-  width: calc(100% - 100px);
+  width: 100%;
   border: solid 1px #ccc;
   box-shadow: none !important;
   font-size: 14px;
@@ -1526,4 +1529,80 @@ html *::-webkit-scrollbar-thumb {
 }
 #cart-popup .woocommerce-mini-cart__buttons .button.checkout {
   display: none !important;
+}
+.page-checkout .woocommerce-form-coupon-toggle, .page-checkout .woocommerce-shipping-fields {
+  display: none !important;
+}
+.page-checkout .shop_table .order-total td, .page-checkout .shop_table .order-total th, .page-checkout .shop_table thead th {
+  border-width: 1px;
+  border-color: #111;
+}
+.page-checkout .shipping__table {
+  margin-top: 10px;
+}
+.page-checkout .shipping__table th, .page-checkout .shipping__table td {
+  padding-bottom: 15px;
+}
+.page-checkout .woocommerce-shipping-totals, .page-checkout .order-total {
+  display: none !important;
+}
+.page-checkout .checkout .woocommerce-shipping-totals, .page-checkout .checkout .order-total {
+  display: table-row !important;
+}
+.page-checkout .checkout .woocommerce-billing-fields {
+  border-top: none;
+  padding-top: 0;
+}
+.page-checkout .checkout .woocommerce-billing-fields > h3, .page-checkout .checkout .checkout-sidebar > h3 {
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+.page-checkout .checkout input:not([type="checkbox"]), .page-checkout .checkout input:not([type="radio"]), .page-checkout .checkout select, .page-checkout .checkout textarea {
+  border: solid 1px #ccc;
+  box-shadow: none;
+  border-radius: 3px;
+}
+.page-checkout .checkout input:not([type="checkbox"]):focus, .page-checkout .checkout input:not([type="radio"]):focus, .page-checkout .checkout select:focus, .page-checkout .checkout textarea:focus {
+  border-color: #333;
+}
+@media screen and (min-width: 1200px) {
+  .page-checkout .checkout .col.large-7 {
+    border-right: solid 1px #333;
+    padding-right: 35px;
+    padding-bottom: 0;
+  }
+  .page-checkout .checkout .col-inner.has-border {
+    border: none;
+    padding: 0 0 0 20px;
+  }
+}
+@media screen and (min-width: 850px) {
+  .vertical-thumbnails .col {
+    padding-bottom: 9px !important;
+  }
+  .product__gallery .row-small > .large-10 {
+    padding-bottom: 0 !important;
+  }
+  .single-product .vertical-thumbnails .col {
+    width: 90% !important;
+  }
+  .single-product .vertical-thumbnails .col:last-child {
+    padding-bottom: 0 !important;
+  }
+  .single-product .vertical-thumbnails .col > a {
+    display: block;
+    padding-bottom: 100%;
+    position: relative;
+  }
+  .single-product .vertical-thumbnails .col > a img {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-position: center;
+    object-fit: cover;
+    transform: none !important;
+  }
 }
