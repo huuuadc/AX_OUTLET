@@ -1762,6 +1762,12 @@ html *::-webkit-scrollbar-thumb{
             }
         }
     }
+    .page__title--cart {
+        margin: -20px 0 25px 0;
+    }
+    .woocommerce-remove-coupon {
+        display: none !important;
+    }
 }
 @media screen and (min-width:1200px){
     .page-checkout {
