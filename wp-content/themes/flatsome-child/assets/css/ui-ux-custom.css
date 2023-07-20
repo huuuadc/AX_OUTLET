@@ -1570,7 +1570,7 @@ html *::-webkit-scrollbar-thumb {
 }
 @media screen and (min-width: 1200px) {
   .page-checkout .checkout .col.large-7 {
-    border-right: solid 1px #333;
+    border-right: solid 1px #ececec;
     padding-right: 35px;
     padding-bottom: 0;
   }
