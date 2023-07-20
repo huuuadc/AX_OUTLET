@@ -53,8 +53,8 @@ do_action( 'woocommerce_before_cart' ); ?>
 				<th class="product-name" width="35%" colspan="2"><?php esc_html_e( 'Product', 'woocommerce' ); ?></th>
 				<th class="product-price"><?php esc_html_e( 'Price', 'woocommerce' ); ?></th>
 				<th class="product-quantity" width="15%"><?php esc_html_e( 'Quantity', 'woocommerce' ); ?></th>
-				<th class="product-subtotal"><?php esc_html_e( 'Subtotal', 'woocommerce' ); ?></th>
-                <th></th>
+				<th class="product-subtotal" width="15%"><?php esc_html_e( 'Subtotal', 'woocommerce' ); ?></th>
+                <th width="6%"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -101,19 +101,29 @@ do_action( 'woocommerce_before_cart' ); ?>
 							echo wp_kses_post( apply_filters( 'woocommerce_cart_item_backorder_notification', '<p class="backorder_notification">' . esc_html__( 'Available on backorder', 'woocommerce' ) . '</p>', $product_id ) );
 						}
 
+                        $product_price = apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key ); // PHPCS: XSS ok.
+                        $discounted = apply_filters('advanced_woo_discount_rules_get_product_discount_price_from_custom_price', false, $_product, 1, 0, 'all', true);
+                        if ($discounted) {
+                            $initial_price = $discounted['initial_price'];
+                            $discounted_price = $discounted['discounted_price'];
+                            $price_discount = ceil(($initial_price-$discounted_price)*100/$initial_price);
+                            $percent_label = '<span class="percent__label">-'.$price_discount.'%</span>';
+                            $product_price = str_replace('</ins>','</ins>'.$percent_label,$product_price);
+                        }
 						// Mobile price.
 						?>
 							<div class="show-for-small mobile-product-price">
 								<span class="mobile-product-price__qty"><?php echo $cart_item['quantity']; ?> x </span>
 								<?php
-									echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key ); // PHPCS: XSS ok.
+									echo $product_price;
 								?>
 							</div>
 						</td>
 
 						<td class="product-price" data-title="<?php esc_attr_e( 'Price', 'woocommerce' ); ?>">
 							<?php
-								echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key ); // PHPCS: XSS ok.
+								echo $product_price;
+
 							?>
 						</td>
 
