@@ -6,7 +6,7 @@ Flatsome.behavior('wishlist', {
       jQuery(element).on('click', function (e) {
         var $this = jQuery(this)
         // Browse wishlist
-        if ($this.parent().find('.yith-wcwl-wishlistexistsbrowse, .yith-wcwl-wishlistaddedbrowse').length) {
+        if ($this.parent().find('.yith-wcwl-wishlistexistsbrowse, .yith-wcwl-wishlistaddedbrowse, .exists').length) {
           window.location.href = $this.parent().find('.yith-wcwl-wishlistexistsbrowse a, .yith-wcwl-wishlistaddedbrowse a').attr('href')
           return
         }
@@ -65,7 +65,7 @@ jQuery(document).ready(function () {
 function markAdded () {
   jQuery('.wishlist-icon').each(function () {
     var $this = jQuery(this)
-    if ($this.find('.yith-wcwl-wishlistexistsbrowse, .yith-wcwl-wishlistaddedbrowse').length) {
+    if ($this.find('.yith-wcwl-wishlistexistsbrowse, .yith-wcwl-wishlistaddedbrowse, .exists').length) {
       $this.find('.wishlist-button').addClass('wishlist-added');
       $this.find('.wishlist-button > i').attr('class','icon-heart');
     }
