@@ -528,6 +528,9 @@ html *::-webkit-scrollbar-thumb{
             color: #000;
             border-radius: 3px;
         }
+        .on-sale {
+            display: none;
+        }
     }
     .box-image {
         .quick-view {
@@ -1202,6 +1205,27 @@ html *::-webkit-scrollbar-thumb{
                         background-color: #111 !important;
                         color: #fff !important;
                     }
+                }
+            }
+            .product-price .awdr_cart_strikeout_line {
+                position: relative;
+                display: inline-block;
+                .percent__label {
+                    font-size: 14px;
+                    position: absolute;
+                    top: 0;
+                    left: calc(100%  + 5px);
+                    color: #f00;
+                    font-weight: 600;
+                }
+            }
+            .product-name .awdr_cart_strikeout_line {
+                .percent__label {
+                    font-size: 13px;
+                    display: block;
+                    color: #f00;
+                    font-weight: 600;
+                    margin-top: 3px;
                 }
             }
         }
