@@ -17,7 +17,13 @@ function generate_database_address(){
         },
         success: function (data){
             const rep = JSON.parse(data);
-            console.log(rep);
+            $(document).Toasts('create', {
+                title: 'Success',
+                body: `Complete generate database and send info`,
+                icon: 'fas fa-info-circle',
+                autohide: true,
+                delay: 5000
+            })
         },
         complete: function (){
             $('#card_create_table>.overlay').remove()
@@ -60,7 +66,13 @@ function save_setting_tiki_api(){
         },
         success: function (data){
             const rep = JSON.parse(data);
-            console.log(rep);
+            $(document).Toasts('create', {
+                title: 'Success',
+                body: `update setting tiki success`,
+                icon: 'fas fa-info-circle',
+                autohide: true,
+                delay: 5000
+            })
         },
         complete: function (){
             $('#card_setting_tiki_api>.overlay').remove()
@@ -78,6 +90,9 @@ function save_setting_tiki_api(){
  */
 
 function get_access_token_tiki(){
+
+    if (!confirm('Are you sure create new token?')) return;
+
     $.ajax({
         type    :   'POST',
         url     :   '/wp-admin/admin-ajax.php',
@@ -89,14 +104,62 @@ function get_access_token_tiki(){
         },
         success     :   function (data){
             const rep = JSON.parse(data);
-            console.log(rep);
             $("input[name='access_token']").val(rep.data);
+            $(document).Toasts('create', {
+                title: 'Success',
+                body: `get access token success`,
+                icon: 'fas fa-info-circle',
+                autohide: true,
+                delay: 5000
+            })
         },
         complete    :    function (){
             $('#card_setting_tiki_api>.overlay').remove()
         },
         error       :   function (e){
             console.log("ERROR",e)
+        }
+    })
+}
+
+/**
+ *
+ * @param id
+ * @param status
+ */
+function send_update_status(id = '', status = ''){
+
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        data:{
+            action: 'post_order_update_status',
+            payload_action: 'order_status_' + status,
+            order_id: id
+
+        },
+        beforeSend: function (){
+            $('#card_orders').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+
+        },
+        success: function (data){
+            const rep = JSON.parse(data);
+            $(`#order_status_${id}`).html(rep.data)
+            $(document).Toasts('create', {
+                title: 'Success',
+                body: `Update status: ${rep.data}`,
+                icon: 'fas fa-info-circle',
+                autohide: true,
+                delay: 5000
+            })
+        },
+        complete: function (){
+            $('#card_orders>.overlay').remove()
+        },
+        error: function(errorThrown){
+
+            console.log("ERROR",errorThrown)
+
         }
     })
 }

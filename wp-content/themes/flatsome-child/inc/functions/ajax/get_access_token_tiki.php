@@ -10,16 +10,22 @@ function get_access_token_tiki()
             'status' => '500',
             'messenger' => 'No action map',
             'data' => []
-        ));;
+        ));
         exit;
     }
 
-    $post = json_decode(json_encode($_POST));
+    $tiki_api = new \TIKI\TIKI_API();
+
+    $access_token = $tiki_api->get_token();
+
+    if(add_option('tiki_access_token',$access_token,'','no')){
+        update_option('tiki_access_token', $access_token,'','no');
+    }
 
     echo json_encode(array(
         'status' => '200',
         'messenger' => 'Save success',
-        'data' => 'access_token'
+        'data' => $access_token
     ));;
 
     exit;

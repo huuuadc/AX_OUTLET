@@ -4,7 +4,7 @@ namespace TIKI;
 
 class TIKI_API
 {
-    private string $ACCESS_TOKEN = 'jTWWQUFqJ0PwNwlQQweD5L9aYlZ50Ip--FV85W_ehv0.Z0moZgJciRKwR72rir4E85XbKy_Gd_Y20CtWUeNy4Bo';
+    private string $ACCESS_TOKEN;
 
     private string $CLIENT_ID;
 
@@ -45,7 +45,7 @@ class TIKI_API
         $this->CLIENT_ID        = get_option('tiki_client_id') ?? '';
         $this->SECRET_KEY       = get_option('tiki_secret_key') ?? '';
         $this->SECRET_CLIENT    = get_option('tiki_secret_client') ?? '';
-
+        $this->ACCESS_TOKEN     = get_option('tiki_access_token') ?? '';
     }
 
     /**
@@ -55,7 +55,7 @@ class TIKI_API
      * @return false|mixed|string[]
      */
 
-    public function sendRequestToTiki($url, $data = '', $method = 'GET')
+    public function sendRequestToTiki($url, $data = '', $method = 'GET'): mixed
     {
 
         try {
@@ -203,8 +203,7 @@ class TIKI_API
 
         $rep = $this->sendRequestToTiki($url,$data,'POST');
 
-        return '';
-
+        return $rep->data->access_token ?? '';
     }
 
     /**
