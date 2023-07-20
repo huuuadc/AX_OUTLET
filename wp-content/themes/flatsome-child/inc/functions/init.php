@@ -22,4 +22,6 @@ require (__DIR__.'/ajax/get_address_shipping.php');
 require (__DIR__.'/size-chart/size-chart.php');
 require (__DIR__.'/checkout/save_field.php');
 require (__DIR__.'/order/class_ax_order.php');
+require (__DIR__.'/ajax/save_setting_tiki_api.php');
+require (__DIR__.'/ajax/get_access_token_tiki.php');
 

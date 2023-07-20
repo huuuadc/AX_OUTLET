@@ -22,8 +22,7 @@ function create_address_shipment(): bool
             $collate = $wpdb->get_charset_collate();
         }
 
-        if (!get_option('create_address_shipment')){
-            add_option('create_address_shipment',$create_address_shipment);
+        if (add_option('create_address_shipment',$create_address_shipment)){
             $installed_version = '0.0.0';
         }else {
             $installed_version = get_option('create_address_shipment');
