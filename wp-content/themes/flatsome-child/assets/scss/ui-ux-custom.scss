@@ -1735,6 +1735,9 @@ html *::-webkit-scrollbar-thumb{
     }
     .woocommerce-shipping-totals, .order-total {
         display: none !important;
+        &.show {
+            display: table-row !important;
+        }
     }
     .checkout {
         .woocommerce-shipping-totals, .order-total {

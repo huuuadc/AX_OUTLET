@@ -1,6 +1,19 @@
 
 jQuery(function ($){
-
+    var checkDiscount = function() {
+        $('.shop_table').each(function () {
+            var hasDiscount = $(this).find('.cart-discount');
+            if (hasDiscount.length) {
+                $('.order-total').addClass('show');
+            }
+        });
+    }
+    checkDiscount();
+    $('body').on('click','.woocommerce-remove-coupon',function(){
+        $(document).on( "ajaxComplete", function( event, xhr, settings ) {
+            checkDiscount();
+        });
+    });
     $('#billing_city').change(function (){
         let billing_city_id = $('#billing_city').val()
         $('#billing_district').html('');
