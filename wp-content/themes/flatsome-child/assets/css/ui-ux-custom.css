@@ -1546,6 +1546,9 @@ html *::-webkit-scrollbar-thumb {
 .page-checkout .woocommerce-shipping-totals, .page-checkout .order-total {
   display: none !important;
 }
+.page-checkout .woocommerce-shipping-totals.show, .page-checkout .order-total.show {
+  display: table-row !important;
+}
 .page-checkout .checkout .woocommerce-shipping-totals, .page-checkout .checkout .order-total {
   display: table-row !important;
 }
