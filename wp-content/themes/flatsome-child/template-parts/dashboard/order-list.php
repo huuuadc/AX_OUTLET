@@ -99,14 +99,14 @@
                                     </button>
                                     <div class="dropdown-menu" role="menu">
                                         <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list?order_id='.get_the_ID()?>">View</a>
-                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
-                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
-                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Request</button>
-                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
-                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
-                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
-                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
-                                        <button class="dropdown-item" onclick="send(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Request</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
                                     </div>
                                 </div></td>
                         </tr>
@@ -139,41 +139,3 @@
         </div>
     </div>
 </div>
-<script>
-    function send(id = '', status = ''){
-
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo admin_url('admin-ajax.php');?>',
-            data:{
-                action: 'post_order_update_status',
-                payload_action: 'order_status_' + status,
-                order_id: id
-
-            },
-            beforeSend: function (){
-                $('#card_orders').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
-
-            },
-            success: function (data){
-                const rep = JSON.parse(data);
-                $(`#order_status_${id}`).html(rep.data)
-                $(document).Toasts('create', {
-                    title: 'Success',
-                    body: `Update status: ${rep.data}`,
-                    icon: 'fas fa-info-circle',
-                    autohide: true,
-                    delay: 5000
-                })
-            },
-            complete: function (){
-                $('#card_orders>.overlay').remove()
-            },
-            error: function(errorThrown){
-
-                console.log("ERROR",errorThrown)
-
-            }
-        })
-    }
-</script>

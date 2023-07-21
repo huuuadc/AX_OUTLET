@@ -52,7 +52,7 @@ function get_address_shipping()
 
         $apiTiki = new \TIKI\TIKI_API();
 
-        $cart = WC()->cart->total;
+        $total_amount = WC()->cart->total;
 
 
         $data =  array(
@@ -61,7 +61,7 @@ function get_address_shipping()
                 'width'     =>  20,
                 'depth'     =>  20,
                 'weight'    =>  2000,
-                'total_amount'  => 1234567
+                'total_amount'  => (int)$total_amount
             ),
             'destination'    => array(
                 'street'        => '182 Lê Đại Hành',

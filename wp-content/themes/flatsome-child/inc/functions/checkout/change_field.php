@@ -4,6 +4,8 @@ add_filter('woocommerce_checkout_fields', 'checkout_add_change_fields');
 
 function checkout_add_change_fields($fields){
 
+    write_log(WC()->session);
+
     foreach ($fields as $key => $value){
         if (isset($fields[$key][$key.'_postcode'])) {
             unset($fields[$key][$key.'_postcode']);
