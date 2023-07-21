@@ -1127,11 +1127,16 @@ html *::-webkit-scrollbar-thumb{
                     border-width: 0;
                 }
             }
+            .cart_totals {
+                position: relative;
+                min-height: 100px;
+            }
             .wc-proceed-to-checkout {
                 position: absolute;
-                top: 100%;
+                top: calc(100% + 120px);
                 left: 0;
                 right: 0;
+                margin: 0 !important;
             }
             .shipping-calculator-button {
                 border-bottom: solid 1px #333;
