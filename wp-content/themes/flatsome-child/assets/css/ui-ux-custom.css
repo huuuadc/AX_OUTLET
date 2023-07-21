@@ -698,6 +698,15 @@ html *::-webkit-scrollbar-thumb {
 .absolute-footer .copyright-footer {
   font-size: 15px;
 }
+.page_static .title h1, .page_static .title h2, .page_static .title h3, .page_static--sidebar .title h1, .page_static--sidebar .title h2, .page_static--sidebar .title h3 {
+  font-weight: 400;
+}
+.page_static .text-left p a, .page_static .text-left ul li a, .page_static .text p a, .page_static .text ul li a, .page_static--sidebar .text-left p a, .page_static--sidebar .text-left ul li a, .page_static--sidebar .text p a, .page_static--sidebar .text ul li a {
+  text-decoration: underline;
+}
+.page_static .text-left hr, .page_static .text hr, .page_static--sidebar .text-left hr, .page_static--sidebar .text hr {
+  opacity: 1;
+}
 .page_static--sidebar .widget_nav_menu .widget-title {
   font-size: 22px;
   letter-spacing: 0;
@@ -728,6 +737,29 @@ html *::-webkit-scrollbar-thumb {
 }
 .page_static--sidebar .widget_nav_menu .menu > li + li {
   border-top: solid 1px #eee;
+}
+.page_static--sidebar .widget-title, .page_static--sidebar .is-divider {
+  display: none;
+}
+.page_static--sidebar .is-divider {
+  height: 1px;
+  width: 100%;
+  max-width: unset;
+  background-color: #333;
+  margin: 15px 0 10px 0;
+}
+.page_static--sidebar .widget_nav_menu .menu {
+  align-items: start;
+}
+.page_static--sidebar .widget_nav_menu .menu > li {
+  border: none !important;
+}
+.page_static--sidebar .widget_nav_menu .menu > li > a {
+  padding: 10px 0;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  text-decoration: none !important;
 }
 .page__header--static .page-title-inner {
   padding-top: 5px;
