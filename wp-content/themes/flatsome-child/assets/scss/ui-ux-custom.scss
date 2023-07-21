@@ -789,6 +789,20 @@ html *::-webkit-scrollbar-thumb{
     }
 }
 .page_static {
+    .title, &--sidebar .title {
+        h1, h2, h3 {
+            font-weight: 400;
+        }
+    }
+    .text-left, .text, &--sidebar .text-left, &--sidebar .text {
+        font-size: 15px;
+        p a, ul li a {
+            text-decoration: underline;
+        }
+        hr {
+            opacity: 1;
+        }
+    }
     &--sidebar {
         .widget_nav_menu {
             .widget-title {
@@ -822,6 +836,31 @@ html *::-webkit-scrollbar-thumb{
                 }
                 > li + li {
                     border-top: solid 1px #eee;
+                }
+            }
+        }
+        .widget-title, .is-divider {
+            display: none;
+        }
+        .is-divider {
+            height: 1px;
+            width: 100%;
+            max-width: unset;
+            background-color: #333;
+            margin: 15px 0 10px 0;
+        }
+        .widget_nav_menu {
+            .menu {
+                align-items: start;
+                > li {
+                    border: none !important;
+                    > a {
+                        padding: 10px 0;
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 15px;
+                        text-decoration: none !important;
+                    }
                 }
             }
         }
