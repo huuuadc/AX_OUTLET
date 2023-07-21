@@ -462,6 +462,9 @@ html *::-webkit-scrollbar-thumb {
   color: #000;
   border-radius: 3px;
 }
+.product-small .badge-container .on-sale {
+  display: none;
+}
 .product-small .box-image .quick-view {
   background-color: rgba(0, 0, 0, 0.3);
   padding: 8px 15px;
@@ -1076,6 +1079,25 @@ html *::-webkit-scrollbar-thumb {
 .woocommerce-page .cart-container .woocommerce-cart-form__contents .form-flat .minus:hover, .woocommerce-page .cart-container .woocommerce-cart-form__contents .form-flat .plus:hover {
   background-color: #111 !important;
   color: #fff !important;
+}
+.woocommerce-page .cart-container .woocommerce-cart-form__contents .product-price .awdr_cart_strikeout_line {
+  position: relative;
+  display: inline-block;
+}
+.woocommerce-page .cart-container .woocommerce-cart-form__contents .product-price .awdr_cart_strikeout_line .percent__label {
+  font-size: 14px;
+  position: absolute;
+  top: 0;
+  left: calc(100%  + 5px);
+  color: #f00;
+  font-weight: 600;
+}
+.woocommerce-page .cart-container .woocommerce-cart-form__contents .product-name .awdr_cart_strikeout_line .percent__label {
+  font-size: 13px;
+  display: block;
+  color: #f00;
+  font-weight: 600;
+  margin-top: 3px;
 }
 .woocommerce-page .checkout_coupon .coupon {
   display: flex;

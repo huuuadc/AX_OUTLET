@@ -61,7 +61,9 @@ jQuery(function ($){
                 let data = JSON.parse(rep);
                 data.data.map((e)=>{
                     $('#billing_ward').append(`<option value="${e.tiki_code}" >${e.ward_name}</option>`)
-                })
+                });
+
+                $('body').trigger('update_checkout');
 
             },
             error: function (e){
