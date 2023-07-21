@@ -14,6 +14,11 @@ jQuery(function ($){
             checkDiscount();
         });
     });
+    $('body').on('change','.quantity .input-text.qty', function (){
+        $(document).on( "ajaxComplete", function( event, xhr, settings ) {
+            checkDiscount();
+        });
+    });
     $('#billing_city').change(function (){
         let billing_city_id = $('#billing_city').val()
         $('#billing_district').html('');

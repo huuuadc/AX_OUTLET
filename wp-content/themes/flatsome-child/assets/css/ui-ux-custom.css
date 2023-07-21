@@ -1008,11 +1008,16 @@ html *::-webkit-scrollbar-thumb {
 .woocommerce-page .cart-container .cart-sidebar .order-total th, .woocommerce-page .cart-container .cart-sidebar .order-total td {
   border-width: 0;
 }
+.woocommerce-page .cart-container .cart-sidebar .cart_totals {
+  position: relative;
+  min-height: 100px;
+}
 .woocommerce-page .cart-container .cart-sidebar .wc-proceed-to-checkout {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 120px);
   left: 0;
   right: 0;
+  margin: 0 !important;
 }
 .woocommerce-page .cart-container .cart-sidebar .shipping-calculator-button {
   border-bottom: solid 1px #333;
