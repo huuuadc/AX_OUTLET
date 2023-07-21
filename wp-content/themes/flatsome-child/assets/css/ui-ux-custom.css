@@ -701,6 +701,9 @@ html *::-webkit-scrollbar-thumb {
 .page_static .title h1, .page_static .title h2, .page_static .title h3, .page_static--sidebar .title h1, .page_static--sidebar .title h2, .page_static--sidebar .title h3 {
   font-weight: 400;
 }
+.page_static .text-left, .page_static .text, .page_static--sidebar .text-left, .page_static--sidebar .text {
+  font-size: 15px;
+}
 .page_static .text-left p a, .page_static .text-left ul li a, .page_static .text p a, .page_static .text ul li a, .page_static--sidebar .text-left p a, .page_static--sidebar .text-left ul li a, .page_static--sidebar .text p a, .page_static--sidebar .text ul li a {
   text-decoration: underline;
 }
@@ -1204,6 +1207,44 @@ html *::-webkit-scrollbar-thumb {
 }
 .woocommerce-page ul.product_list_widget li .awdr_cart_strikeout_line ins .amount bdi {
   color: #111;
+}
+.woocommerce-page .woocommerce-pagination ul.links {
+  margin: 15px 0 20px 0;
+  text-align: left;
+}
+.woocommerce-page .woocommerce-pagination ul.links li {
+  margin-right: 5px !important;
+}
+.woocommerce-page .woocommerce-pagination ul.links li .page-number {
+  border: none;
+  border-radius: 0;
+  line-height: 2.3em;
+  background-color: transparent !important;
+  color: #000 !important;
+  padding: 0;
+  min-width: 32px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.woocommerce-page .woocommerce-pagination ul.links li .page-number:hover {
+  background-color: #eee !important;
+}
+.woocommerce-page .woocommerce-pagination ul.links li .page-number:after {
+  content: "";
+  display: block;
+  margin: 0 auto;
+  height: 1px;
+  width: 25px;
+  background-color: transparent;
+}
+.woocommerce-page .woocommerce-pagination ul.links li .page-number.current:after {
+  background-color: #333;
+}
+.woocommerce-page .woocommerce-pagination ul.links li .page-number.current:hover, .woocommerce-page .woocommerce-pagination ul.links li .page-number.dots:hover {
+  background-color: transparent !important;
+}
+.woocommerce-page .woocommerce-pagination ul.links li:first-child .page-number:not(.prev), .woocommerce-page .woocommerce-pagination ul.links li:first-child .page-number:not(.prev):after {
+  min-width: 28px;
 }
 .category__page--title {
   display: flex;

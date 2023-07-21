@@ -32,8 +32,10 @@ function add_label_sale( $product ) {
     if ($discounted) {
         $initial_price = $discounted['initial_price'];
         $discounted_price = $discounted['discounted_price'];
-        $price_discount = ceil(($initial_price-$discounted_price)*100/$initial_price);
-        echo '<span class="percent__label">-'.$price_discount.'%</span>';
+        if($initial_price>0){
+            $price_discount = ceil(($initial_price-$discounted_price)*100/$initial_price);
+            echo '<span class="percent__label">-'.$price_discount.'%</span>';
+        }
     }
 }
 

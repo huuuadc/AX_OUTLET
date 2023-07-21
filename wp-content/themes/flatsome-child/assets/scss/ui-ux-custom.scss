@@ -1351,6 +1351,50 @@ html *::-webkit-scrollbar-thumb{
             }
         }
     }
+    .woocommerce-pagination {
+        ul.links {
+            margin: 15px 0 20px 0;
+            text-align: left;
+            li {
+                margin-right: 5px !important;
+                .page-number {
+                    border: none;
+                    border-radius: 0;
+                    line-height: 2.3em;
+                    background-color: transparent !important;
+                    color: #000 !important;
+                    padding: 0;
+                    min-width: 32px;
+                    font-size: 14px;
+                    font-weight: 500;
+                    &:hover {
+                        background-color: #eee !important;
+                    }
+                    &:after {
+                        content: "";
+                        display: block;
+                        margin: 0 auto;
+                        height: 1px;
+                        width: 25px;
+                        background-color: transparent;
+                    }
+                    &.current {
+                        &:after {
+                            background-color: #333;
+                        }
+                    }
+                    &.current:hover, &.dots:hover {
+                        background-color: transparent !important;
+                    }
+                }
+                &:first-child {
+                    .page-number:not(.prev), .page-number:not(.prev):after {
+                        min-width: 28px;
+                    }
+                }
+            }
+        }
+    }
 }
 .category__page {
     &--title {
