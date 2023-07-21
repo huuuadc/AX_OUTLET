@@ -16,15 +16,26 @@ function generate_database_address(){
 
         },
         success: function (data){
-            const rep = JSON.parse(data);
-            $(document).Toasts('create', {
-                class: 'bg-success',
-                title: 'Success',
-                body: `Complete generate database and send info`,
-                icon: 'fas fa-info-circle',
-                autohide: true,
-                delay: 5000
-            })
+            try {
+                const rep = JSON.parse(data);
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `Complete generate database and send info`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            } catch (e){
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Danger',
+                    body: e,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            }
         },
         complete: function (){
             $('#card_create_table>.overlay').remove()
@@ -167,3 +178,119 @@ function send_update_status(id = '', status = ''){
         }
     })
 }
+
+function save_company_info(){
+
+    let web_company_name        =       $('#company_name').val()
+    let web_company_email       =       $('#company_email').val()
+    let web_company_phone       =       $('#company_phone').val()
+    let web_company_country     =       $('#company_country').val()
+    let web_company_city        =       $('#company_city').val()
+    let web_company_district    =       $('#company_district').val()
+    let web_company_ward        =       $('#company_ward').val()
+    let web_company_address     =       $('#company_address').val()
+
+    $.ajax({
+        type    :   'POST',
+        url     :   '/wp-admin/admin-ajax.php',
+        data    :   {
+            action  :   'save_company_info',
+            web_company_name,
+            web_company_email,
+            web_company_phone,
+            web_company_country,
+            web_company_city,
+            web_company_district,
+            web_company_ward,
+            web_company_address,
+        },
+        beforeSend: function (){
+            $('#card_information_company').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+        },
+        success :   function (data){
+            const rep = JSON.parse(data);
+            if (rep.success = '200') {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `Update success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            } else {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Danger',
+                    body: data,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            }
+        },
+        complete :  function (){
+            $('#card_information_company>.overlay').remove()
+        },
+        error   :   function (e){
+            console.log("ERROR",e)
+        }
+    })
+}
+
+
+$('#company_city').change(function (){
+    let company_city_id = $('#company_city').val()
+    $('#company_district').html('');
+    $('#company_ward').html('');
+
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        data : {
+            action: 'get_address_shipping',
+            action_payload : 'get_district',
+            id: `${company_city_id}`
+        },
+        success: function (rep){
+            let data = JSON.parse(rep);
+            data.data.district.map((e)=>{
+                $('#company_district').append(`<option value="${e.tiki_code}" >${e.tiki_code} - ${e.district_name}</option>`)
+            })
+            data.data.ward.map((e)=>{
+                $('#company_ward').append(`<option value="${e.tiki_code}" >${e.tiki_code} - ${e.ward_name}</option>`)
+            })
+        },
+        error: function (e){
+            console.log(e)
+        }
+
+    })
+
+})
+
+$('#company_district').change(function (){
+    let company_district_id = $('#company_district').val()
+    $('#company_ward').html('');
+
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        data : {
+            action: 'get_address_shipping',
+            action_payload : 'get_ward',
+            id: `${company_district_id}`
+        },
+        success: function (rep){
+            let data = JSON.parse(rep);
+            data.data.map((e)=>{
+                $('#company_ward').append(`<option value="${e.tiki_code}" >${e.tiki_code} - ${e.ward_name}</option>`)
+            });
+        },
+        error: function (e){
+            console.log(e)
+        }
+
+    })
+
+})

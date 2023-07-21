@@ -1,12 +1,7 @@
-<style>
-    .layout-fixed .main-sidebar-custom .sidebar {
-        height: calc(100% - ((3.5rem + 0rem) + 1px));
-    }
-</style>
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar d-flex flex-column">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
@@ -21,21 +16,8 @@
                 </a>
             </div>
         </div>
-
-        <!-- SidebarSearch Form -->
-        <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-sidebar">
-                        <i class="fas fa-search fa-fw"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- Sidebar Menu -->
-        <nav class="mt-2">
+        <nav class="mt-2 flex-fill">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
@@ -80,6 +62,12 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
+                            <a href="/admin-dashboard/order-report" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
+                                <i class="fa fa-list-alt nav-icon"></i>
+                                <p>Add New Order</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="/admin-dashboard/order-list" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
                                 <i class="fas fa-clipboard-list nav-icon"></i>
                                 <p>List Orders</p>
@@ -93,12 +81,35 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item <?php echo  substr(get_query_var('pagename'),0,8) == 'customer' ? 'menu-open menu-is-opening' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo substr(get_query_var('pagename'),0,8) == 'customer' ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-address-book"></i>
+                        <p>
+                            Stock
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/customer-list" class="nav-link <?php echo get_query_var('pagename') == 'customer-list' ? 'active' : ''; ?>">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>TO</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin-dashboard/customer-witchlist" class="nav-link <?php echo get_query_var('pagename') == 'customer-witchlist' ? 'active' : ''; ?>">
+                                <i class="fa fa-heart nav-icon"></i>
+                                <p>SO</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
-    <div class="sidebar-custom">
+    <div class="sidebar-custom p-3">
         <a href="/admin-dashboard/setting" class="btn btn-link"><i class="fas fa-cogs"></i></a>
         <a href="#" class="btn btn-secondary hide-on-collapse pos-right">Cứu tôi!</a>
     </div>
