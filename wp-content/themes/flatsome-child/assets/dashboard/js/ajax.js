@@ -18,6 +18,7 @@ function generate_database_address(){
         success: function (data){
             const rep = JSON.parse(data);
             $(document).Toasts('create', {
+                class: 'bg-success',
                 title: 'Success',
                 body: `Complete generate database and send info`,
                 icon: 'fas fa-info-circle',
@@ -67,6 +68,7 @@ function save_setting_tiki_api(){
         success: function (data){
             const rep = JSON.parse(data);
             $(document).Toasts('create', {
+                class: 'bg-success',
                 title: 'Success',
                 body: `update setting tiki success`,
                 icon: 'fas fa-info-circle',
@@ -106,6 +108,7 @@ function get_access_token_tiki(){
             const rep = JSON.parse(data);
             $("input[name='access_token']").val(rep.data);
             $(document).Toasts('create', {
+                class: 'bg-success',
                 title: 'Success',
                 body: `get access token success`,
                 icon: 'fas fa-info-circle',
@@ -146,6 +149,7 @@ function send_update_status(id = '', status = ''){
             const rep = JSON.parse(data);
             $(`#order_status_${id}`).html(rep.data)
             $(document).Toasts('create', {
+                class: 'bg-success',
                 title: 'Success',
                 body: `Update status: ${rep.data}`,
                 icon: 'fas fa-info-circle',

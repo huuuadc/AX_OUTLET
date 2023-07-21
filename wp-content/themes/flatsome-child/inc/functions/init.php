@@ -4,9 +4,9 @@
  *
  */
 
-require (__DIR__.'/write_log.php');
+require (__DIR__.'/helps/write_log.php');
 require (__DIR__.'/ajax/post_check_connect_ls.php');
-require (__DIR__.'/register_scripts.php');
+require (__DIR__.'/helps/register_scripts.php');
 require (__DIR__.'/product/product-register-term-brand.php');
 require (__DIR__.'/product/product-register-term-gender.php');
 require (__DIR__.'/product/product-register-term-shop-by.php');
@@ -24,4 +24,5 @@ require (__DIR__.'/checkout/save_field.php');
 require (__DIR__.'/order/class_ax_order.php');
 require (__DIR__.'/ajax/save_setting_tiki_api.php');
 require (__DIR__.'/ajax/get_access_token_tiki.php');
+require (__DIR__.'/shipping/shipping_method.php');
 

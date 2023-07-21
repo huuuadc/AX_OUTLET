@@ -55,10 +55,12 @@ class TIKI_API
      * @return false|mixed|string[]
      */
 
-    public function sendRequestToTiki($url, $data = '', $method = 'GET'): mixed
+    public function sendRequestToTiki($url, $data = '', $method = 'GET')
     {
 
         try {
+
+            write_log($data);
 
             $data_request = json_encode($data);
 
@@ -82,6 +84,7 @@ class TIKI_API
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             if ($http_status != 200) {
+                write_log($result);
                 return array(
                     'messenger' => 'error http status code: ' . $http_status
                 );
