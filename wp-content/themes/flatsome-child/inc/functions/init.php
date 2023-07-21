@@ -25,4 +25,4 @@ require (__DIR__.'/order/class_ax_order.php');
 require (__DIR__.'/ajax/save_setting_tiki_api.php');
 require (__DIR__.'/ajax/get_access_token_tiki.php');
 require (__DIR__.'/shipping/shipping_method.php');
-
+require (__DIR__.'/ajax/save_company_info.php');
