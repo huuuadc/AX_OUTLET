@@ -1,0 +1,32 @@
+<?php
+
+
+add_action( 'wp_ajax_save_admin_dashboard_setting', 'save_admin_dashboard_setting' );
+add_action( 'wp_ajax_nopriv_save_admin_dashboard_setting', 'save_admin_dashboard_setting' );
+function save_admin_dashboard_setting()
+{
+
+    if(!isset($_POST['action']) && $_POST['action'] !== 'save_admin_dashboard_setting') {
+        echo json_encode(array(
+            'status' => '500',
+            'messenger' => 'No action map',
+            'data' => []
+        ));;
+        exit;
+    }
+
+    $post = json_decode(json_encode ($_POST));
+
+    if(!add_option('admin_dashboard_item_in_page',$post->item_in_page , '','no')){
+        update_option('admin_dashboard_item_in_page',$post->item_in_page , 'no');
+    }
+
+    echo json_encode(array(
+        'status' => '200',
+        'messenger' => 'Save success',
+        'data' => []
+    ));;
+
+    exit;
+
+}

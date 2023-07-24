@@ -15,8 +15,8 @@ function order_update_status(){
         'request' => 'badge-info',
         'shipping' => 'badge-info',
         'delivered' => 'badge-info',
-        'delivered-failed' => 'badge-danger',
-        'canceled' => 'badge-danger',
+        'delivery-failed' => 'badge-danger',
+        'cancelled' => 'badge-danger',
         'confirm-goods' => 'badge-primary',
     );
 
@@ -29,6 +29,7 @@ function order_update_status(){
         exit;
     }
 
+    // Action reject order
     if ($_POST['payload_action'] == 'order_status_reject'){
 
         $order_id = $_POST['order_id'];
@@ -46,6 +47,8 @@ function order_update_status(){
 
     }
 
+
+    // Action confirm order
     if ($_POST['payload_action'] == 'order_status_confirm'){
 
         $order_id = $_POST['order_id'];
@@ -62,6 +65,116 @@ function order_update_status(){
 
 
     }
+
+
+    // Action request shipping order
+    if ($_POST['payload_action'] == 'order_status_request'){
+
+        $order_id = $_POST['order_id'];
+
+        $order = wc_get_order($order_id);
+
+        $order->update_status('wc-request');
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'success',
+            'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+        ));
+
+
+    }
+
+    // Action vendor update shipping order
+    if ($_POST['payload_action'] == 'order_status_shipping'){
+
+        $order_id = $_POST['order_id'];
+
+        $order = wc_get_order($order_id);
+
+        $order->update_status('wc-shipping');
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'success',
+            'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+        ));
+
+
+    }
+
+    // Action vendor update delivered order
+    if ($_POST['payload_action'] == 'order_status_delivered'){
+
+        $order_id = $_POST['order_id'];
+
+        $order = wc_get_order($order_id);
+
+        $order->update_status('wc-delivered');
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'success',
+            'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+        ));
+
+
+    }
+
+    // Action vendor update delivered failed order
+    if ($_POST['payload_action'] == 'order_status_delivery-failed'){
+
+        $order_id = $_POST['order_id'];
+
+        $order = wc_get_order($order_id);
+
+        $order->update_status('wc-delivery-failed');
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'success',
+            'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+        ));
+
+
+    }
+
+    // Action store update confirm goods order
+    if ($_POST['payload_action'] == 'order_status_confirm-goods'){
+
+        $order_id = $_POST['order_id'];
+
+        $order = wc_get_order($order_id);
+
+        $order->update_status('wc-confirm-goods');
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'success',
+            'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+        ));
+
+
+    }
+
+    // Action admin update cancelled order
+    if ($_POST['payload_action'] == 'order_status_cancelled'){
+
+        $order_id = $_POST['order_id'];
+
+        $order = wc_get_order($order_id);
+
+        $order->update_status('wc-cancelled');
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'success',
+            'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+        ));
+
+
+    }
+
 
 
 
