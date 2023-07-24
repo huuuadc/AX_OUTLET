@@ -1,13 +1,3 @@
-<?php
-
-use AX\COMPANY;
-
-    $order_id =  $_GET['order_id'];
-    $order = wc_get_order($order_id);
-    $order_new = new AX_ORDER($order_id);
-    $company = new COMPANY();
-?>
-
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
@@ -24,7 +14,29 @@ use AX\COMPANY;
     </div><!-- /.container-fluid -->
 </div>
 <!-- /.content-header -->
+<?php
 
+use AX\COMPANY;
+
+    $order_id =  $_GET['order_id'];
+
+if (!isset($_GET['order_id']) || !get_post_type($order_id)):
+    ?>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">No order: <?php echo $order_id?></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<?php
+else:
+    $order_ax = new AX_ORDER($order_id);
+    $company = new COMPANY();
+    ?>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -37,7 +49,7 @@ use AX\COMPANY;
                         <div class="col-12">
                             <h4>
                                 <i class="fas fa-globe"></i> <?php echo $company->get_company_name()?>
-                                <small class="float-right">Date: <?php echo wp_date( get_date_format(), strtotime($order->get_date_created()))?></small>
+                                <small class="float-right">Date: <?php echo wp_date( get_date_format(), strtotime($order_ax->get_date_created()))?></small>
                             </h4>
                         </div>
                         <!-- /.col -->
@@ -60,13 +72,13 @@ use AX\COMPANY;
                         <div class="col-sm-4 invoice-col">
                             To
                             <address>
-                                <strong><?php echo $order->get_billing_last_name() .' '. $order->get_billing_first_name() ?></strong><br>
-                                Street: <?php echo $order->get_billing_address_1()?><br>
-                                Ward:   <?php echo $order_new->get_billing_ward_name()?>
-                                , <?php echo $order_new->get_billing_district_name()?><br>
-                                City <?php echo $order_new->get_billing_city_name()?><br>
-                                Phone: <?php echo $order_new->get_billing_phone()?><br>
-                                Email: <?php echo $order_new->get_billing_email()?>
+                                <strong><?php echo $order_ax->get_billing_last_name() .' '. $order_ax->get_billing_first_name() ?></strong><br>
+                                Street: <?php echo $order_ax->get_billing_address_1()?><br>
+                                Ward:   <?php echo $order_ax->get_billing_ward_name()?>
+                                , <?php echo $order_ax->get_billing_district_name()?><br>
+                                City: <?php echo $order_ax->get_billing_city_name()?><br>
+                                Phone: <?php echo $order_ax->get_billing_phone()?><br>
+                                Email: <?php echo $order_ax->get_billing_email()?>
                             </address>
                         </div>
                         <!-- /.col -->
@@ -91,9 +103,8 @@ use AX\COMPANY;
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php $count= 0; foreach ($order->get_items() as $item_key => $item ): $count++ ?>
-                                <tr>
-                                    <td><?php echo $count?></td>
+                                <?php $count= 0; foreach ($order_ax->get_items() as $item_key => $item ): $count++ ?>
+                                <tax<td><?php echo $count?></td>
                                     <td><?php echo get_post_meta( $item['variation_id'], '_sku', true ) ?></td>
                                     <td><?php echo $item->get_name() ?></td>
                                     <td><?php echo $item->get_quantity() ?></td>
@@ -110,7 +121,7 @@ use AX\COMPANY;
                     <div class="row">
                         <!-- accepted payments column -->
                         <div class="col-6">
-                            <p class="lead">Payment Methods:</p><span><?php echo $order->get_payment_method() . ' - ' . $order->get_payment_method_title()?></span>
+                            <p class="lead">Payment Methods:</p><span><?php echo $order_ax->get_payment_method() . ' - ' . $order_ax->get_payment_method_title()?></span>
                         </div>
                         <!-- /.col -->
                         <div class="col-6">
@@ -118,19 +129,19 @@ use AX\COMPANY;
                                 <table class="table">
                                     <tr>
                                         <th>Subtotal:</th>
-                                        <td class="text-right"><?php echo number_format($order->get_total() - $order->get_shipping_total(), '0', ',', '.'); ?> VNĐ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_total() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> VNĐ</td>
                                     </tr>
                                     <tr>
                                         <th>Discount</th>
-                                        <td class="text-right"><?php echo number_format($order->get_total_discount() , '0', ',', '.')?> VNĐ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_total_discount() , '0', ',', '.')?> VNĐ</td>
                                     </tr>
                                     <tr>
                                         <th>Shipping:</th>
-                                        <td class="text-right"><?php echo number_format($order->get_shipping_total(), '0', ',', '.')?> VNĐ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_shipping_total(), '0', ',', '.')?> VNĐ</td>
                                     </tr>
                                     <tr>
                                         <th>Total:</th>
-                                        <td class="text-right"><?php echo number_format($order->get_total() , '0', ',', '.')?> VNĐ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_total() , '0', ',', '.')?> VNĐ</td>
                                     </tr>
                                 </table>
                             </div>
@@ -159,3 +170,5 @@ use AX\COMPANY;
     </div><!-- /.container-fluid -->
 </section>
 <!-- /.content -->
+
+<?php endif;
