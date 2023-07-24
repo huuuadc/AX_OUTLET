@@ -1,7 +1,11 @@
 <?php
+
+use AX\COMPANY;
+
     $order_id =  $_GET['order_id'];
     $order = wc_get_order($order_id);
     $order_new = new AX_ORDER($order_id);
+    $company = new COMPANY();
 ?>
 
 <!-- Content Header (Page header) -->
@@ -32,8 +36,8 @@
                     <div class="row">
                         <div class="col-12">
                             <h4>
-                                <i class="fas fa-globe"></i> AX OUTLET
-                                <small class="float-right">Date: <?php echo $order->get_date_created()?></small>
+                                <i class="fas fa-globe"></i> <?php echo $company->get_company_name()?>
+                                <small class="float-right">Date: <?php echo wp_date( get_date_format(), strtotime($order->get_date_created()))?></small>
                             </h4>
                         </div>
                         <!-- /.col -->
@@ -43,11 +47,13 @@
                         <div class="col-sm-4 invoice-col">
                             From
                             <address>
-                                <strong>AX Outlet</strong><br>
-                                72-74 Nguyễn Thị Minh Khai<br>
-                                Quận 3, Tp Hồ Chí Minh<br>
-                                Phone: 0326 473 067<br>
-                                Email: huu.tran@dafc.com.vn
+                                <strong><?php echo $company->get_company_name()?></strong><br>
+                                Street: <?php echo $company->get_company_address()?><br>
+                                Ward:   <?php echo $company->get_company_ward_name()?>
+                                , <?php echo $company->get_company_district_name()?><br>
+                                City: <?php echo $company->get_company_city_name()?><br>
+                                Phone: <?php echo $company->get_company_phone()?><br>
+                                Email: <?php echo $company->get_company_email()?>
                             </address>
                         </div>
                         <!-- /.col -->
@@ -55,19 +61,17 @@
                             To
                             <address>
                                 <strong><?php echo $order->get_billing_last_name() .' '. $order->get_billing_first_name() ?></strong><br>
-                                <?php echo $order->get_billing_address_1()?><br>
-                                <?php echo $order_new->get_ax_address()?><br>
+                                Street: <?php echo $order->get_billing_address_1()?><br>
+                                Ward:   <?php echo $order_new->get_billing_ward_name()?>
+                                , <?php echo $order_new->get_billing_district_name()?><br>
+                                City <?php echo $order_new->get_billing_city_name()?><br>
                                 Phone: <?php echo $order_new->get_billing_phone()?><br>
                                 Email: <?php echo $order_new->get_billing_email()?>
                             </address>
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-4 invoice-col">
-                            <b>Invoice #<?php echo $order_id?></b><br>
-                            <br>
-                            <b>Order ID:</b> <?php echo $order_id?><br>
-                            <b>Payment Due:</b> <?php echo $order->get_date_paid()?><br>
-                            <b>Account:</b> <?php echo $order->get_customer_id()?>
+                            Invoice <br><b> #<?php echo $order_id?></b><br>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -79,23 +83,21 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Index</th>
-                                    <th>Qty</th>
+                                    <th>No.</th>
+                                    <th>Item no</th>
                                     <th>Product</th>
-                                    <th>Serial #</th>
-                                    <th>Description</th>
-                                    <th>Subtotal</th>
+                                    <th>Quantity</th>
+                                    <th class="text-right">Subtotal</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php $count= 0; foreach ($order->get_items() as $item_key => $item ): $count++ ?>
                                 <tr>
-                                    <td><?php echo $count  ?></td>
-                                    <td><?php echo $item->get_quantity() ?></td>
-                                    <td><?php echo $item->get_name() ?></td>
+                                    <td><?php echo $count?></td>
                                     <td><?php echo get_post_meta( $item['variation_id'], '_sku', true ) ?></td>
-                                    <td><?php echo $item->get_order_id() ?></td>
-                                    <td><?php echo number_format( $item->get_total(), '0',',','.') ?> VNĐ</td>
+                                    <td><?php echo $item->get_name() ?></td>
+                                    <td><?php echo $item->get_quantity() ?></td>
+                                    <td class="text-right"><?php echo number_format( $item->get_total(), '0',',','.') ?> VNĐ</td>
                                 </tr>
                                 <?php endforeach; ?>
                                 </tbody>
@@ -112,25 +114,23 @@
                         </div>
                         <!-- /.col -->
                         <div class="col-6">
-                            <p class="lead">Amount Due 2/22/2014</p>
-
                             <div class="table-responsive">
                                 <table class="table">
                                     <tr>
-                                        <th style="width:50%">Subtotal:</th>
-                                        <td style="text-align: right; padding-right: 30px "><?php echo number_format($order->get_total() - $order->get_shipping_total(), '0', ',', '.'); ?> VNĐ</td>
+                                        <th>Subtotal:</th>
+                                        <td class="text-right"><?php echo number_format($order->get_total() - $order->get_shipping_total(), '0', ',', '.'); ?> VNĐ</td>
                                     </tr>
-<!--                                    <tr>-->
-<!--                                        <th>Tax (8%)</th>-->
-<!--                                        <td style="text-align: right; padding-right: 30px">--><?php //echo number_format($order->get_total() * 0.08 / 1.08, '0', ',', '.')?><!-- VNĐ</td>-->
-<!--                                    </tr>-->
+                                    <tr>
+                                        <th>Discount</th>
+                                        <td class="text-right"><?php echo number_format($order->get_total_discount() , '0', ',', '.')?> VNĐ</td>
+                                    </tr>
                                     <tr>
                                         <th>Shipping:</th>
-                                        <td style="text-align: right; padding-right: 30px"><?php echo number_format($order->get_shipping_total(), '0', ',', '.')?> VNĐ</td>
+                                        <td class="text-right"><?php echo number_format($order->get_shipping_total(), '0', ',', '.')?> VNĐ</td>
                                     </tr>
                                     <tr>
                                         <th>Total:</th>
-                                        <td style="text-align: right; padding-right: 30px"><?php echo number_format($order->get_total() , '0', ',', '.')?> VNĐ</td>
+                                        <td class="text-right"><?php echo number_format($order->get_total() , '0', ',', '.')?> VNĐ</td>
                                     </tr>
                                 </table>
                             </div>
