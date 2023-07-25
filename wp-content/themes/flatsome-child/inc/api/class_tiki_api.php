@@ -1,22 +1,41 @@
 <?php
 
 namespace TIKI;
+use AX\COMPANY;
 
 class TIKI_API
 {
     private string $ACCESS_TOKEN;
-
     private string $CLIENT_ID;
-
     private string $SECRET_KEY;
-
     private string $SECRET_CLIENT;
-
-    public string $baseURL;
-
-    public string $baseURLTNSL;
-
-    public array $URI = array(
+    private string $baseURL;
+    private string $baseURLTNSL;
+    private object $company;
+    public array  $data_default = array(
+        'package_info' => array(
+            'height'    =>  0,
+            'width'     =>  0,
+            'depth'     =>  0,
+            'weight'    =>  0,
+            'total_amount'  => 0
+        ),
+        'origin'    => array(
+            'street'        => '',
+            'ward_name'     => '',
+            'district_name' => '',
+            'province_name' => '',
+            'ward_code'     => ''
+        ),
+        'destination'    => array(
+            'street'        => '',
+            'ward_name'     => '',
+            'district_name' => '',
+            'province_name' => '',
+            'ward_code'     => ''
+        )
+    );
+    private array $URI = array(
 
         'get_list_regions'          =>          '/v1/countries/VN/regions',
         'get_list_districts'        =>          '/districts',
@@ -46,6 +65,7 @@ class TIKI_API
         $this->SECRET_KEY       = get_option('tiki_secret_key') ?? '';
         $this->SECRET_CLIENT    = get_option('tiki_secret_client') ?? '';
         $this->ACCESS_TOKEN     = get_option('tiki_access_token') ?? '';
+        $this->company          = new COMPANY();
     }
 
     /**
@@ -84,10 +104,12 @@ class TIKI_API
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             if ($http_status != 200) {
+                write_log("===========================================");
+                write_log("===============request======================");
                 write_log($result);
-                return array(
-                    'messenger' => 'error http status code: ' . $http_status
-                );
+                write_log("===============request======================");
+                write_log("===========================================");
+                return  json_decode( $result);
             }
 
             return json_decode($result);
@@ -217,32 +239,13 @@ class TIKI_API
     public function estimate_shipping($data){
         $url = $this->baseURLTNSL . $this->URI['get_quotes'];
 
-        $data_default = array(
-            'package_info' => array(
-                'height'    =>  20,
-                'width'     =>  20,
-                'depth'     =>  20,
-                'weight'    =>  2000,
-                'total_amount'  => 1234567
-            ),
-            'origin'    => array(
-                'street'        => '528 Huỳnh Tấn Phát',
-                'ward_name'     => 'Phường Bình Thuận',
-                'district_name' => 'Quận 7',
-                'province_name' => 'Hồ Chí Minh',
-                'ward_code'     => 'VN039015001'
-            ),
-            'destination'    => array(
-            'street'        => '182 Lê Đại Hành',
-            'ward_name'     => 'Phường 05',
-            'district_name' => 'Quận 3',
-            'province_name' => 'Hồ Chí Minh',
-            'ward_code'     => 'VN039011005'
-            )
-        );
+        $this->data_default['origin']['street'] = $this->company->get_company_address();
+        $this->data_default['origin']['ward_name'] = $this->company->get_company_ward_name();
+        $this->data_default['origin']['district_name'] = $this->company->get_company_district_name();
+        $this->data_default['origin']['province_name'] = $this->company->get_company_city_name();
+        $this->data_default['origin']['ward_code'] = $this->company->get_company_ward_code();
 
-        $data = array_merge($data_default,$data);
-
+        $data = array_merge($this->data_default,$data);
         return $this->sendRequestToTiki($url,$data,'POST');;
 
     }

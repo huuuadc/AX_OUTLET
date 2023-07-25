@@ -1,16 +1,19 @@
 <?php
 
-//add_action('woocommerce_shipping_init', 'request_shipping_quote_method');
-function request_shipping_quote_method() {
+use AX\ADDRESS;
+use TIKI\TIKI_API;
 
-    if ( ! class_exists( 'WC_Request_Shipping_Quote_Method' ) ) {
-        class WC_Request_Shipping_Quote_Method extends WC_Shipping_Method {
+add_action('woocommerce_shipping_init', 'tiki_tnsl_method');
+function tiki_tnsl_method() {
+
+    if ( ! class_exists( 'WC_TIKI_TNSL_Method' ) ) {
+        class WC_TIKI_TNSL_Method extends WC_Shipping_Method {
 
             public function __construct( $instance_id = 0) {
-                $this->id = 'request_shipping_quote';
+                $this->id = 'tiki_tnsl';
                 $this->instance_id = absint( $instance_id );
-                $this->domain = 'rasq';
-                $this->method_title = __( 'Request a Shipping Quote', $this->domain );
+                $this->domain = 'ax_outlet';
+                $this->method_title = __( 'Tiki TNSL', $this->domain );
                 $this->method_description = __( 'Shipping method to be used where the exact shipping amount needs to be quoted', $this->domain );
                 $this->supports = array(
                     'shipping-zones',
@@ -36,13 +39,13 @@ function request_shipping_quote_method() {
                         'type'          => 'text',
                         'title'         => __('Title', $this->domain),
                         'description'   => __( 'Title to be displayed on site.', $this->domain ),
-                        'default'       => __( 'Request a Quote ', $this->domain ),
+                        'default'       => __( 'Tiki TNSL ', $this->domain ),
                     ),
                     'cost' => array(
                         'type'          => 'text',
                         'title'         => __('Coast', $this->domain),
                         'description'   => __( 'Enter a cost', $this->domain ),
-                        'default'       => '',
+                        'default'       => 0,
                     ),
                 );
             }
@@ -60,8 +63,61 @@ function request_shipping_quote_method() {
     }
 }
 
-//add_filter('woocommerce_shipping_methods', 'add_request_shipping_quote');
-function add_request_shipping_quote( $methods ) {
-    $methods['request_shipping_quote'] = 'WC_Request_Shipping_Quote_Method';
+add_filter('woocommerce_shipping_methods', 'add_tiki_tnsl');
+function add_tiki_tnsl( $methods ) {
+    $methods['tiki_tnsl'] = 'WC_TIKI_TNSL_Method';
     return $methods;
+}
+
+add_filter('woocommerce_shipping_packages','update_cost_shipping_tiki_tnsl',100,1);
+function update_cost_shipping_tiki_tnsl($arg){
+
+    global $tiki_ward;
+    global $shipping_cost;
+
+    if( isset($arg[0]['rates']['tiki_tnsl']) && $arg[0]['rates']['tiki_tnsl']->cost == 0)
+    $arg[0]['rates']['tiki_tnsl']->cost = $shipping_cost;
+
+    if (!isset($_POST['ward']) ){
+        return $arg;
+    }
+    if ($tiki_ward == $_POST['ward']){
+        return $arg;
+    }
+
+    $tiki_ward = $_POST['ward'];
+
+    if ($_POST['shipping_method'][0] == 'tiki_tnsl' ){
+
+        $location = new ADDRESS();
+
+        $apiTiki = new TIKI_API();
+
+        $total_amount = WC()->cart->total;
+
+        $data =  array(
+            'package_info' => array(
+                'height'    =>  20,
+                'width'     =>  20,
+                'depth'     =>  20,
+                'weight'    =>  2000,
+                'total_amount'  => (int)$total_amount
+            ),
+            'destination'    => array(
+                'street'        => $_POST['address'],
+                'ward_name'     => $location->get_ward_name_by_code($_POST['ward']) ?? '',
+                'district_name' => $location->get_district_name_by_code($_POST['district']) ?? '',
+                'province_name' => $location->get_city_name_by_code($_POST['city']) ?? '',
+                'ward_code'     => $_POST['ward']
+            )
+        );
+
+        $estimate = $apiTiki->estimate_shipping($data);
+
+        if ($estimate->success){
+            $shipping_cost = $estimate->data->quotes[0]->fee->amount;
+        }
+    }
+
+    return $arg;
 }
