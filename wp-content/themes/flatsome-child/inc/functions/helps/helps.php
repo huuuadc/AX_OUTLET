@@ -15,3 +15,7 @@ function exist_option( $arg ) {
         return true;
     }
 }
+
+function get_date_format(){
+    return get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+}

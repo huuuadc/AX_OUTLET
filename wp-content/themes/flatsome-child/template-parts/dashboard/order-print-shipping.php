@@ -104,7 +104,7 @@ else:
                                 </thead>
                                 <tbody>
                                 <?php $count= 0; foreach ($order_ax->get_items() as $item_key => $item ): $count++ ?>
-                                <tr><td><?php echo $count?></td>
+                                <tax<td><?php echo $count?></td>
                                     <td><?php echo get_post_meta( $item['variation_id'], '_sku', true ) ?></td>
                                     <td><?php echo $item->get_name() ?></td>
                                     <td><?php echo $item->get_quantity() ?></td>
