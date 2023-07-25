@@ -1,11 +1,10 @@
-<footer class="main-footer">
+<footer class="main-footer hidden-print">
     <strong>Copyright &copy; 2023 <a href="https://dafc.com.vn" target="_blank">IT Project DAFC</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
         <b>Version</b> 1.0.1
     </div>
 </footer>
-
 </div>
 <footer>
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/jquery/jquery.min.js' ?>"></script>

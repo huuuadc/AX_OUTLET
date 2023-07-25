@@ -4,8 +4,6 @@ add_filter('woocommerce_checkout_fields', 'checkout_add_change_fields');
 
 function checkout_add_change_fields($fields){
 
-    write_log(WC()->session);
-
     foreach ($fields as $key => $value){
         if (isset($fields[$key][$key.'_postcode'])) {
             unset($fields[$key][$key.'_postcode']);
@@ -31,21 +29,11 @@ function checkout_add_change_fields($fields){
         $arg_city[$value_city->tiki_code] = $value_city->province_name;
     }
 
-    $data_district = $wpdb->get_results("Select tiki_code,district_name 
-            from {$wpdb->prefix}woocommerce_district where left(tiki_code,5) = '{$data_city['0']->tiki_code}' ");
-    foreach ($data_district as $value_city){
-        $arg_districts[$value_city->tiki_code] = $value_city->district_name;
-    }
-
-    $data_ward = $wpdb->get_results("Select tiki_code,ward_name 
-            from {$wpdb->prefix}woocommerce_ward where left(tiki_code,8) = '{$data_district['0']->tiki_code}'");
-    foreach ($data_ward as $value_city){
-        $arg_wards[$value_city->tiki_code] = $value_city->ward_name;
-    }
-
     $city_args = wp_parse_args( array(
         'type' => 'select',
+        'label'         => __("Tỉnh/Thành Phố", "woocommerce") ,
         'options' => $arg_city,
+        'autocomplete'  =>  '',
         'input_class' => array(
             'country_select',
         ),
@@ -57,6 +45,7 @@ function checkout_add_change_fields($fields){
         'type'          => 'select',
         'label'         => __("Quận/Huyện", "woocommerce") ,
         'options'       => $arg_districts,
+        'autocomplete'  =>  'address-level3',
         'input_class'   => array(
             'district_select',
         ),
@@ -70,6 +59,7 @@ function checkout_add_change_fields($fields){
         'type' => 'select',
         'label'  => __("Phường/Xã", "woocommerce") ,
         'options' => $arg_wards,
+        'autocomplete'  =>  'address-level4',
         'input_class' => array(
             'ward_select',
         ),

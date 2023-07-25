@@ -294,3 +294,51 @@ $('#company_district').change(function (){
     })
 
 })
+
+
+function save_admin_dashboard_setting(){
+
+    let item_in_page = $('#item_in_page').val()
+
+    $.ajax({
+        type:   'POST',
+        url:    '/wp-admin/admin-ajax.php',
+        data:   {
+            action: 'save_admin_dashboard_setting',
+            item_in_page,
+        },
+        beforeSend: function (){
+            $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+        },
+        success :   function (data){
+            const rep = JSON.parse(data);
+            if (rep.success = '200') {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `Update success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            } else {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Danger',
+                    body: data,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            }
+        },
+        complete :  function (){
+            $('#card_admin_dashboard>.overlay').remove()
+        },
+        error   :   function (e){
+            console.log("ERROR",e)
+        }
+    })
+
+
+}

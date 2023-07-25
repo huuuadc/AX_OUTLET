@@ -1,0 +1,12 @@
+
+
+@media print {
+    .hidden-print {
+        display: none !important;
+    }
+
+    @page {
+        size: a5 landscape;
+        margin: 0;
+    }
+}

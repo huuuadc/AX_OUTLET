@@ -1,9 +1,11 @@
 <?php
 
+    $item_in_page = get_option('admin_dashboard_item_in_page') ?? 10;
+
     $filter_order = array(
         'post_status' => 'completed',
         'post_type' => 'shop_order',
-        'posts_per_page' => 5,
+        'posts_per_page' => $item_in_page,
         'paged' => $_GET['offset'] ?? 1,
         'order_by' => 'modified',
         'order' => 'DESC'
@@ -22,12 +24,10 @@
             'request' => 'badge-info',
             'shipping' => 'badge-info',
             'delivered' => 'badge-info',
-            'delivered-failed' => 'badge-danger',
+            'delivery-failed' => 'badge-danger',
             'cancelled' => 'badge-danger',
             'confirm-goods' => 'badge-primary',
     );
-
-    var_dump($_POST);
 
 ?>
 
@@ -40,7 +40,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/admin-dashboard">Dashboard</a></li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -78,13 +78,13 @@
                     while ( $order_query->have_posts() ) :
                         $count++;
                         $order_query->the_post();
-                        $order = new WC_Order(get_the_ID());
+                        $order = new AX_ORDER(get_the_ID());
                         ?>
                         <tr id="order_id_<?php echo get_the_ID()?>" >
                             <td><?php echo (($order_query->query_vars['paged'] -1)*$order_query->query_vars['posts_per_page']) + $count?></td>
-                            <td><?php the_ID();?></td>
+                            <td>#<?php the_ID();?></td>
                             <td><?php echo $order->get_order_key()?></td>
-                            <td><?php echo $order->get_date_created()?></td>
+                            <td><?php echo wp_date(get_date_format(),strtotime( $order->get_date_created()))?></td>
                             <td><?php echo $order->get_billing_last_name() . ' ' . $order->get_billing_first_name()?></td>
                             <td><?php echo $order->get_item_count()?></td>
                             <td class="text-right"><?php echo number_format( $order->get_total(),0,',','.')?> VNĐ</td>
@@ -98,15 +98,15 @@
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu" role="menu">
-                                        <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list?order_id='.get_the_ID()?>">View</a>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Request</button>
+                                        <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list?order_id='.get_the_ID()?>">View Order</a>
                                         <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
                                         <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'request')">Store Request</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'shipping')">Vendor shipping</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivered')">Vendor delivered</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivery-failed')">Vendor delivery failed</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm-goods')">Store confirm goods</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'cancelled')">Admin cancel</button>
                                     </div>
                                 </div></td>
                         </tr>

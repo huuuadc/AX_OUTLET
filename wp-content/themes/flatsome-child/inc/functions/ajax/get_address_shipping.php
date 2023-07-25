@@ -1,6 +1,5 @@
 <?php
 
-
 add_action('wp_ajax_get_address_shipping', 'get_address_shipping');
 add_action('wp_ajax_nopriv_get_address_shipping', 'get_address_shipping');
 function get_address_shipping()
@@ -20,6 +19,7 @@ function get_address_shipping()
     $id = $_POST['id'];
 
     if ($action_payload == 'get_district'){
+
         $data_district = $wpdb->get_results("Select tiki_code,district_name 
             from {$wpdb->prefix}woocommerce_district where left(tiki_code,5) = '{$id}' ");
 
@@ -46,43 +46,6 @@ function get_address_shipping()
         ));
 
         exit;
-    }
-
-    if ($action_payload == 'get_est_shipment'){
-
-        $apiTiki = new \TIKI\TIKI_API();
-
-        $total_amount = WC()->cart->total;
-
-
-        $data =  array(
-            'package_info' => array(
-                'height'    =>  20,
-                'width'     =>  20,
-                'depth'     =>  20,
-                'weight'    =>  2000,
-                'total_amount'  => (int)$total_amount
-            ),
-            'destination'    => array(
-                'street'        => '182 Lê Đại Hành',
-                'ward_name'     => 'Phường 05',
-                'district_name' => 'Quận 3',
-                'province_name' => 'Hồ Chí Minh',
-                'ward_code'     => "$id"
-            )
-        );
-
-
-        $estS = $apiTiki->estimate_shipping($data);
-
-        echo json_encode(array(
-            'status' => '200',
-            'messenger' => 'Success',
-            'data' => $estS
-        ));
-
-        exit;
-
     }
 
     echo json_encode(array(
