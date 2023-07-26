@@ -87,7 +87,7 @@ function update_cost_shipping_tiki_tnsl($arg){
 
     $tiki_ward = $_POST['ward'];
 
-    if ($_POST['shipping_method'][0] == 'tiki_tnsl' ){
+    if ($_POST['shipping_method'][0] == 'tiki_tnsl'  ){
 
         $location = new ADDRESS();
 
@@ -120,4 +120,50 @@ function update_cost_shipping_tiki_tnsl($arg){
     }
 
     return $arg;
+}
+
+
+add_action('woocommerce_checkout_create_order','woocommerce_checkout_process_shipping_tiki_tnsl',10.2);
+function woocommerce_checkout_process_shipping_tiki_tnsl(WC_Order $order)
+{
+    try {
+        if (isset($_POST['shipping_method']) && $_POST['shipping_method'][0] == 'tiki_tnsl') {
+
+            $location = new ADDRESS();
+
+            $apiTiki = new TIKI_API();
+
+            $shipping_cost = 0;
+
+            $total_amount = $order->get_total('value');
+
+            $data =  array(
+                'package_info' => array(
+                    'height'    =>  20,
+                    'width'     =>  20,
+                    'depth'     =>  20,
+                    'weight'    =>  2000,
+                    'total_amount'  => (int)$total_amount
+                ),
+                'destination'    => array(
+                    'street'        => $_POST['billing_address_1'],
+                    'ward_name'     => $location->get_ward_name_by_code($_POST['billing_ward']) ?? '',
+                    'district_name' => $location->get_district_name_by_code($_POST['billing_district']) ?? '',
+                    'province_name' => $location->get_city_name_by_code($_POST['billing_city']) ?? '',
+                    'ward_code'     => $_POST['billing_ward']
+                )
+            );
+
+            $estimate = $apiTiki->estimate_shipping($data);
+
+            if ($estimate->success){
+                $shipping_cost = $estimate->data->quotes[0]->fee->amount;
+            }
+
+            $order->set_shipping_total((int)$shipping_cost);
+            $order->set_total($order->get_shipping_total() + $order->get_total('value'));
+        }
+    } catch (Throwable $e){
+        write_log($e->getMessage());
+    }
 }

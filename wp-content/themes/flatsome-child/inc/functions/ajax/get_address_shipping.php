@@ -17,14 +17,17 @@ function get_address_shipping()
 
     $action_payload = $_POST['action_payload'];
     $id = $_POST['id'];
+    $data_district = '';
+    $data_ward = '';
 
     if ($action_payload == 'get_district'){
 
         $data_district = $wpdb->get_results("Select tiki_code,district_name 
             from {$wpdb->prefix}woocommerce_district where left(tiki_code,5) = '{$id}' ");
-
-        $data_ward = $wpdb->get_results("Select tiki_code,ward_name 
+        if($data_district) {
+            $data_ward = $wpdb->get_results("Select tiki_code,ward_name 
             from {$wpdb->prefix}woocommerce_ward where left(tiki_code,8) = '{$data_district['0']->tiki_code}'");
+        }
         echo json_encode(array(
             'status' => '200',
             'messenger' => 'Success',
