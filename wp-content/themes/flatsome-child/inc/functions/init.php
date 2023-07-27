@@ -26,6 +26,7 @@ require (__DIR__.'/ajax/save_setting_tiki_api.php');
 require (__DIR__.'/ajax/get_access_token_tiki.php');
 require (__DIR__.'/shipping/shipping_method.php');
 require (__DIR__.'/ajax/save_company_info.php');
+require (__DIR__.'/brand-search/brand-search.php');
 require (__DIR__.'/class-address.php');
 require (__DIR__.'/class-company.php');
 require (__DIR__.'/helps/helps.php');
