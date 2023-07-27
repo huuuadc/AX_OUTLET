@@ -143,13 +143,20 @@ function get_access_token_tiki(){
  */
 function send_update_status(id = '', status = ''){
 
+    let commit_note = prompt('Nhận ghi chú')
+
+    if(!commit_note){
+        alert("Bạn cần nhập ghi chú trước khi thực hiên thao tác")
+    }
+
     $.ajax({
         type: 'POST',
         url: '/wp-admin/admin-ajax.php',
         data:{
             action: 'post_order_update_status',
             payload_action: 'order_status_' + status,
-            order_id: id
+            order_id: id,
+            commit_note
 
         },
         beforeSend: function (){
@@ -157,16 +164,40 @@ function send_update_status(id = '', status = ''){
 
         },
         success: function (data){
-            const rep = JSON.parse(data);
-            $(`#order_status_${id}`).html(rep.data)
-            $(document).Toasts('create', {
-                class: 'bg-success',
-                title: 'Success',
-                body: `Update status: ${rep.data}`,
-                icon: 'fas fa-info-circle',
-                autohide: true,
-                delay: 5000
-            })
+            console.log(data)
+            if (isJsonString(data)){
+                const rep = JSON.parse(data);
+                if (rep.status){
+                    $(`#order_status_${id}`).html(rep.data)
+                    $(document).Toasts('create', {
+                        class: 'bg-success',
+                        title: 'Success',
+                        body: `Update status: ${rep.data}`,
+                        icon: 'fas fa-info-circle',
+                        autohide: true,
+                        delay: 5000
+                    })
+                }else {
+                    $(document).Toasts('create', {
+                        class: 'bg-danger',
+                        title: 'update false',
+                        body: `${rep.messenger}`,
+                        icon: 'fas fa-info-circle',
+                        autohide: true,
+                        delay: 5000
+                    })
+                }
+            }else {
+                console.log(data)
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Error',
+                    body: `${rep.data}`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            }
         },
         complete: function (){
             $('#card_orders>.overlay').remove()
@@ -306,6 +337,55 @@ function save_admin_dashboard_setting(){
         data:   {
             action: 'save_admin_dashboard_setting',
             item_in_page,
+        },
+        beforeSend: function (){
+            $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+        },
+        success :   function (data){
+            const rep = JSON.parse(data);
+            if (rep.success = '200') {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `Update success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            } else {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Danger',
+                    body: data,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            }
+        },
+        complete :  function (){
+            $('#card_admin_dashboard>.overlay').remove()
+        },
+        error   :   function (e){
+            console.log("ERROR",e)
+        }
+    })
+
+
+}
+
+
+function post_create_shipment(){
+
+    let order_id = $('#item_in_page').val()
+
+    $.ajax({
+        type:   'POST',
+        url:    '/wp-admin/admin-ajax.php',
+        data:   {
+            action: 'post_create_shipment',
+            action_payload: 'post_create_shipment_to_tiki',
+            order_id
         },
         beforeSend: function (){
             $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')

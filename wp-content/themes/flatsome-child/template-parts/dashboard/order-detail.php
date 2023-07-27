@@ -36,6 +36,7 @@ if (!isset($_GET['order_id']) || !get_post_type($order_id)):
 else:
     $order_ax = new AX_ORDER($order_id);
     $company = new COMPANY();
+    write_log($order_ax->get_shipping_total());
     ?>
 <section class="content">
     <div class="container-fluid">
