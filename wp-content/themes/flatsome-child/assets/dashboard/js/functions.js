@@ -15,6 +15,11 @@ if (currentTheme) {
     }
 }
 
+/**
+ *
+ * @param e
+ */
+
 function switchTheme(e) {
     if (e.target.checked) {
         if (!document.body.classList.contains('dark-mode')) {
@@ -38,3 +43,18 @@ function switchTheme(e) {
 }
 
 toggleSwitch.addEventListener('change', switchTheme, false);
+
+
+/**
+ * check isJson
+ * @param str
+ * @returns {boolean}
+ */
+const isJsonString = (str) => {
+    try {
+        JSON.stringify(str);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
