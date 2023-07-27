@@ -33,7 +33,7 @@
                     <a href="#" class="nav-link <?php echo substr(get_query_var('pagename'),0,8) == 'customer' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-address-book"></i>
                         <p>
-                            Customers
+                            Khách hàng
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -41,13 +41,13 @@
                         <li class="nav-item">
                             <a href="/admin-dashboard/customer-list" class="nav-link <?php echo get_query_var('pagename') == 'customer-list' ? 'active' : ''; ?>">
                                 <i class="fas fa-clipboard-list nav-icon"></i>
-                                <p>List</p>
+                                <p>Danh sách</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="/admin-dashboard/customer-witchlist" class="nav-link <?php echo get_query_var('pagename') == 'customer-witchlist' ? 'active' : ''; ?>">
                                 <i class="fa fa-heart nav-icon"></i>
-                                <p>Witchlist</p>
+                                <p>Yêu thích</p>
                             </a>
                         </li>
                     </ul>
@@ -56,7 +56,7 @@
                     <a href="#" class="nav-link <?php echo  substr(get_query_var('pagename'),0,5) == 'order' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-boxes "></i>
                         <p>
-                            Orders
+                            Đơn hàng
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -64,19 +64,19 @@
                         <li class="nav-item">
                             <a href="/admin-dashboard/order-report" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
                                 <i class="fa fa-list-alt nav-icon"></i>
-                                <p>Add New Order</p>
+                                <p>Thêm đơn hàng mới</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="/admin-dashboard/order-list" class="nav-link <?php echo get_query_var('pagename') == 'order-list' ? 'active' : ''; ?>">
                                 <i class="fas fa-clipboard-list nav-icon"></i>
-                                <p>List Orders</p>
+                                <p>Danh sách đơn hàng</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="/admin-dashboard/order-report" class="nav-link <?php echo get_query_var('pagename') == 'order-report' ? 'active' : ''; ?>">
                                 <i class="fa fa-list-alt nav-icon"></i>
-                                <p>Report Order</p>
+                                <p>Báo cáo</p>
                             </a>
                         </li>
                     </ul>
@@ -85,7 +85,7 @@
                     <a href="#" class="nav-link <?php echo substr(get_query_var('pagename'),0,8) == 'customer' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-address-book"></i>
                         <p>
-                            Stock
+                            Tồn kho
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -111,6 +111,6 @@
     <!-- /.sidebar -->
     <div class="sidebar-custom p-3">
         <a href="/admin-dashboard/setting" class="btn btn-link"><i class="fas fa-cogs"></i></a>
-        <a href="#" class="btn btn-secondary hide-on-collapse pos-right">Cứu tôi!</a>
+        <a href="#" class="btn btn-secondary hide-on-collapse pos-right">Cứu tôi với!</a>
     </div>
 </aside>

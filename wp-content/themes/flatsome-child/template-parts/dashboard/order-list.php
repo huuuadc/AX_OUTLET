@@ -36,7 +36,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Orders</h1>
+                <h1 class="m-0">Danh sách đơn hàng</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -48,9 +48,6 @@
 </div>
 <!-- /.content-header -->
 <div id="card_orders" class="card">
-    <div class="card-header">
-        <h3 class="card-title">Orders</h3>
-    </div>
     <!-- /.card-header -->
     <div class="card-body">
         <div class="row">
@@ -58,18 +55,18 @@
                 <table id="list_order" class="table table-bordered table-hover dataTable dtr-inline" style="display: block ;overflow-x: scroll; overflow-y: clip;">
                     <thead>
                         <tr style="white-space: nowrap">
-                            <th>Index</th>
-                            <th>Order id</th>
-                            <th>Order key</th>
-                            <th>Order date</th>
-                            <th>Customer name</th>
-                            <th>Qty item</th>
-                            <th>Total amount</th>
-                            <th>Transport code</th>
-                            <th>Payment method</th>
-                            <th>Shipment status</th>
-                            <th>Order status</th>
-                            <th>Action</th>
+                            <th>STT</th>
+                            <th>Mã đơn hàng</th>
+                            <th>Khóa đơn hàng</th>
+                            <th>Ngày đặt hàng</th>
+                            <th>Khách hàng</th>
+                            <th>Số lượng sản phẩm</th>
+                            <th>Tổng tiền</th>
+                            <th>Phương thức thanh toán</th>
+                            <th>Mã giao hàng</th>
+                            <th>Trạng thái giao hàng</th>
+                            <th>Trạng thái đơn hàng</th>
+                            <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,12 +85,11 @@
                             <td><?php echo $order->get_billing_last_name() . ' ' . $order->get_billing_first_name()?></td>
                             <td><?php echo $order->get_item_count()?></td>
                             <td class="text-right"><?php echo number_format( $order->get_total(),0,',','.')?> VNĐ</td>
-                            <td><a href="<?php echo $order->get_tracking_url()?>" ><?php echo $order->get_tracking_id()?></a></td>
                             <td><?php echo $order->get_payment_method_title()?></td>
-                            <td><?php echo $order->get_meta('shipment_status',true) ?? 'new'?></td>
+                            <td><a href="<?php echo $order->get_tracking_url()?>" ><?php echo $order->get_tracking_id()?></a></td>
+                            <td><?php echo $order->get_meta('shipment_status',true,'value') ?? 'new'?></td>
                             <td id="order_status_<?php echo get_the_ID()?>"><span class="badge <?php echo $status_badge[$order->get_status()] ?>"><?php echo $order->get_status()?></span></td>
                             <td><div class="btn-group">
-                                    <button type="button" class="btn btn-default">Action</button>
                                     <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown">
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
@@ -119,10 +115,10 @@
         <div class="row">
             <div class="col-sm-12 col-md-5">
                 <div class="dataTables_info" id="list_order_info" role="status" aria-live="polite">
-                    Showing <?php echo (($order_query->query_vars['paged'] -1)*$order_query->query_vars['posts_per_page'])+1?>
-                    to <?php echo $order_query->query_vars['paged']*$order_query->query_vars['posts_per_page']?>
-                    of <?php echo $order_query->found_posts?>
-                    entries
+                    Hiển thị <?php echo (($order_query->query_vars['paged'] -1)*$order_query->query_vars['posts_per_page'])+1?>
+                    từ <?php echo $order_query->query_vars['paged']*$order_query->query_vars['posts_per_page']?>
+                    của <?php echo $order_query->found_posts?>
+                    đơn hàng
                 </div>
             </div>
             <div class="col-sm-12 col-md-7">
