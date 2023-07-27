@@ -13,6 +13,11 @@ class TIKI_API
     private string $baseURLTNSL;
     private object $company;
     public array  $data_default = array(
+        'external_order_id' => '',
+        'service_code'  => 'hns_standard',
+        'partner_code'  => 'TNSL',
+        'cash_on_delivery_amount'   => 0,
+        'instruction'   => 'Được phép đồng kiểm khi nhận hàng.',
         'package_info' => array(
             'height'    =>  0,
             'width'     =>  0,
@@ -21,6 +26,10 @@ class TIKI_API
             'total_amount'  => 0
         ),
         'origin'    => array(
+            'first_name'    => '',
+            'last_name' => '',
+            'phone'     => '',
+            'email'     => '',
             'street'        => '',
             'ward_name'     => '',
             'district_name' => '',
@@ -28,13 +37,35 @@ class TIKI_API
             'ward_code'     => ''
         ),
         'destination'    => array(
+            'first_name'    => '',
+            'last_name' => '',
+            'phone'     => '',
+            'email'     => '',
             'street'        => '',
             'ward_name'     => '',
             'district_name' => '',
             'province_name' => '',
             'ward_code'     => ''
-        )
+        ),
+        'return_destination'    => array(
+            'first_name'    => '',
+            'last_name' => '',
+            'phone'     => '',
+            'email'     => '',
+            'street'        => '',
+            'ward_name'     => '',
+            'district_name' => '',
+            'province_name' => '',
+            'ward_code'     => ''
+        ),
+        'product_name'      => '',
+        'placed_on'         => ''
     );
+
+    public array $default_cancel = array (
+        'reason_code'  => 'OUT_OF_STOCK',
+        'comment'   => 'test api call create shipment'
+        );
     private array $URI = array(
 
         'get_list_regions'          =>          '/v1/countries/VN/regions',
@@ -111,6 +142,8 @@ class TIKI_API
                 write_log("===========================================");
                 return  json_decode( $result);
             }
+
+            write_log($result);
 
             return json_decode($result);
         } catch (\Throwable $th) {
@@ -247,6 +280,51 @@ class TIKI_API
 
         $data = array_merge($this->data_default,$data);
         return $this->sendRequestToTiki($url,$data,'POST');;
+
+    }
+
+    /**
+     * @param $data
+     * @return json
+     */
+
+    public function post_create_shipping_to_tiki($data){
+        $url = $this->baseURLTNSL.$this->URI['sync_order'];
+
+        $this->data_default['origin']['first_name'] = $this->company->get_company_name();
+        $this->data_default['origin']['last_name']  = $this->company->get_company_name();
+        $this->data_default['origin']['phone'] = $this->company->get_company_phone();
+        $this->data_default['origin']['email'] = $this->company->get_company_email();
+        $this->data_default['origin']['street'] = $this->company->get_company_address();
+        $this->data_default['origin']['ward_name'] = $this->company->get_company_ward_name();
+        $this->data_default['origin']['district_name'] = $this->company->get_company_district_name();
+        $this->data_default['origin']['province_name'] = $this->company->get_company_city_name();
+        $this->data_default['origin']['ward_code'] = $this->company->get_company_ward_code();
+        $this->data_default['return_destination']['first_name'] = $this->company->get_company_name();
+        $this->data_default['return_destination']['last_name']  = $this->company->get_company_name();
+        $this->data_default['return_destination']['phone'] = $this->company->get_company_phone();
+        $this->data_default['return_destination']['email'] = $this->company->get_company_email();
+        $this->data_default['return_destination']['street'] = $this->company->get_company_address();
+        $this->data_default['return_destination']['ward_name'] = $this->company->get_company_ward_name();
+        $this->data_default['return_destination']['district_name'] = $this->company->get_company_district_name();
+        $this->data_default['return_destination']['province_name'] = $this->company->get_company_city_name();
+        $this->data_default['return_destination']['ward_code'] = $this->company->get_company_ward_code();
+
+        $data = array_merge($this->data_default,$data);
+
+        return $this->sendRequestToTiki($url,$data,'POST');;
+
+    }
+
+    /**
+     * @param $tracking_id
+     * @return json
+     */
+    public function put_cancelled_shippment($tracking_id){
+
+        $url = $this->baseURLTNSL.$this->URI['sync_order'].'/'.$tracking_id;
+
+        return $this->sendRequestToTiki($url,$this->default_cancel,'PUT');
 
     }
 

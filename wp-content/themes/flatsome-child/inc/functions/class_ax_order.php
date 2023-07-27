@@ -76,4 +76,24 @@ class AX_ORDER extends WC_Order{
         return $this->ax_address->get_full_address_name_by_code($this->billing_ward_code,$this->billing_district_code,$this->billing_city_code) ;
     }
 
+    public function get_tracking_id(){
+        return $this->get_meta('tracking_id',true,'value');
+    }
+
+    public function get_tracking_url(){
+        return $this->get_meta('tracking_url',true,'value');
+    }
+
+    public function get_shipment_status(){
+        return $this->get_meta('shipment_status',true,'value');
+    }
+
+    public function set_shipment_status(){
+
+    }
+
+
+
+
+
 }
