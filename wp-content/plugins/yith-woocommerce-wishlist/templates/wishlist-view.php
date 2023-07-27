@@ -63,27 +63,6 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 			</th>
 		<?php endif; ?>
 
-		<?php if ( $show_remove_product ) : ?>
-			<?php $column_count ++; ?>
-			<th class="product-remove">
-				<span class="nobr">
-					<?php
-					/**
-					 * APPLY_FILTERS: yith_wcwl_wishlist_view_remove_heading
-					 *
-					 * Filter the heading of the column to remove the product from the wishlist in the wishlist table.
-					 *
-					 * @param string             $heading  Heading text
-					 * @param YITH_WCWL_Wishlist $wishlist Wishlist object
-					 *
-					 * @return string
-					 */
-					echo esc_html( apply_filters( 'yith_wcwl_wishlist_view_remove_heading', '', $wishlist ) );
-					?>
-				</span>
-			</th>
-		<?php endif; ?>
-
 		<th class="product-thumbnail"></th>
 
 		<th class="product-name">
@@ -106,7 +85,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 
 		<?php if ( $show_price || $show_price_variations ) : ?>
 			<?php $column_count ++; ?>
-			<th class="product-price">
+			<th class="product-price" width="200">
 				<span class="nobr">
 					<?php
 					/**
@@ -148,7 +127,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 
 		<?php if ( $show_stock_status ) : ?>
 			<?php $column_count ++; ?>
-			<th class="product-stock-status">
+			<th class="product-stock-status" width="150">
 				<span class="nobr">
 					<?php
 					/**
@@ -169,8 +148,8 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 
 		<?php if ( $show_last_column ) : ?>
 			<?php $column_count ++; ?>
-			<th class="product-add-to-cart">
-				<span class="nobr">
+			<!--<th class="product-add-to-cart">
+				<span class="nobr">-->
 					<?php
 					/**
 					 * APPLY_FILTERS: yith_wcwl_wishlist_view_cart_heading
@@ -182,11 +161,33 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 					 *
 					 * @return string
 					 */
-					echo esc_html( apply_filters( 'yith_wcwl_wishlist_view_cart_heading', '', $wishlist ) );
+					//echo esc_html( apply_filters( 'yith_wcwl_wishlist_view_cart_heading', '', $wishlist ) );
 					?>
-				</span>
-			</th>
+				<!--</span>
+			</th>-->
 		<?php endif; ?>
+
+        <?php if ( $show_remove_product ) : ?>
+            <?php $column_count ++; ?>
+            <th class="product-remove" width="200" style="text-align:center;">
+				<span class="nobr">
+                    Action
+					<?php
+                    /**
+                     * APPLY_FILTERS: yith_wcwl_wishlist_view_remove_heading
+                     *
+                     * Filter the heading of the column to remove the product from the wishlist in the wishlist table.
+                     *
+                     * @param string             $heading  Heading text
+                     * @param YITH_WCWL_Wishlist $wishlist Wishlist object
+                     *
+                     * @return string
+                     */
+                    echo esc_html( apply_filters( 'yith_wcwl_wishlist_view_remove_heading', '', $wishlist ) );
+                    ?>
+				</span>
+            </th>
+        <?php endif; ?>
 
 		<?php if ( $enable_drag_n_drop ) : ?>
 			<?php $column_count ++; ?>
@@ -233,25 +234,6 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 						</td>
 					<?php endif ?>
 
-					<?php if ( $show_remove_product ) : ?>
-						<td class="product-remove">
-							<div>
-								<?php
-								/**
-								 * APPLY_FILTERS: yith_wcwl_remove_product_wishlist_message_title
-								 *
-								 * Filter the title of the icon to remove the product from the wishlist.
-								 *
-								 * @param string $title Icon title
-								 *
-								 * @return string
-								 */
-								?>
-								<a href="<?php echo esc_url( $item->get_remove_url() ); ?>" class="remove remove_from_wishlist" title="<?php echo esc_html( apply_filters( 'yith_wcwl_remove_product_wishlist_message_title', __( 'Remove this product', 'yith-woocommerce-wishlist' ) ) ); ?>">&times;</a>
-							</div>
-						</td>
-					<?php endif; ?>
-
 					<td class="product-thumbnail">
 						<?php
 						/**
@@ -293,6 +275,13 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 						 * @param YITH_WCWL_Wishlist      $wishlist Wishlist object
 						 */
 						do_action( 'yith_wcwl_table_before_product_name', $item, $wishlist );
+
+                        $terms = wp_get_post_terms( $item->get_product_id(), 'brand' );
+                        if(count($terms)>0) {
+                            foreach($terms as $brand) {
+                                echo '<p class="product__brand" style="color:"><a href="' . get_term_link($brand) . '">' . $brand->name . '</a></p>';
+                            }
+                        }
 						?>
 
 						<a href="<?php echo esc_url( get_permalink( apply_filters( 'woocommerce_in_cart_product', $item->get_product_id() ) ) ); ?>">
@@ -324,7 +313,8 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 					</td>
 
 					<?php if ( $show_price || $show_price_variations ) : ?>
-						<td class="product-price">
+						<td class="product-price" width="150px">
+                            <div class="price-wrapper">
 							<?php
 							/**
 							 * DO_ACTION: yith_wcwl_table_before_product_price
@@ -358,11 +348,12 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 							 */
 							do_action( 'yith_wcwl_table_after_product_price', $item, $wishlist );
 							?>
+                            </div>
 						</td>
 					<?php endif ?>
 
 					<?php if ( $show_quantity ) : ?>
-						<td class="product-quantity">
+						<td class="product-quantity"  width="50px">
 							<?php
 							/**
 							 * DO_ACTION: yith_wcwl_table_before_product_quantity
@@ -396,7 +387,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 					<?php endif; ?>
 
 					<?php if ( $show_stock_status ) : ?>
-						<td class="product-stock-status">
+						<td class="product-stock-status" width="130px">
 							<?php
 							/**
 							 * DO_ACTION: yith_wcwl_table_before_product_stock
@@ -460,6 +451,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 
 					<?php if ( $show_last_column ) : ?>
 						<td class="product-add-to-cart">
+                            <div class="btn__group">
 							<?php
 							/**
 							 * DO_ACTION: yith_wcwl_table_before_product_cart
@@ -618,6 +610,23 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 							 */
 							do_action( 'yith_wcwl_table_after_product_cart', $item, $wishlist );
 							?>
+                            <?php if ( $show_remove_product ) : ?>
+                                <!--<td class="product-remove">-->
+                                    <?php
+                                    /**
+                                     * APPLY_FILTERS: yith_wcwl_remove_product_wishlist_message_title
+                                     *
+                                     * Filter the title of the icon to remove the product from the wishlist.
+                                     *
+                                     * @param string $title Icon title
+                                     *
+                                     * @return string
+                                     */
+                                    ?>
+                                    <a href="<?php echo esc_url( $item->get_remove_url() ); ?>" class="remove remove_from_wishlist" title="<?php echo esc_html( apply_filters( 'yith_wcwl_remove_product_wishlist_message_title', __( 'Remove this product', 'yith-woocommerce-wishlist' ) ) ); ?>">Xóa</a>
+                                <!--</td>-->
+                            <?php endif; ?>
+                            </div>
 						</td>
 					<?php endif; ?>
 

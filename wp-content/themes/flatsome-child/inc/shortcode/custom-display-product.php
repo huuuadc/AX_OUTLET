@@ -23,6 +23,32 @@ function et_print_brands(){
         <?php
     }
 }
+// Display product brand in Cart and checkout pages
+add_filter( 'woocommerce_cart_item_name', 'customizing_cart_item_name', 10, 3 );
+//add_action( 'yith_wcwl_table_before_product_name', 'customizing_cart_item_name', 10 );
+function customizing_cart_item_name( $product_name, $cart_item, $cart_item_key ) {
+    $terms = wp_get_post_terms( $cart_item['product_id'], 'brand' );
+    if(count($terms)>0) {
+        foreach($terms as $brand) {
+            return '<p class="product__brand" style="color:#999;"><a href="' . get_term_link($brand) . '" style="color:inherit;">' . $brand->name . '</a></p>'.$product_name;
+        }
+    }else{
+        return $product_name;
+    }
+}
+
+// Display product brand in order pages and email notification
+add_filter( 'woocommerce_order_item_name', 'customizing_order_item_name', 10, 2 );
+function customizing_order_item_name( $product_name, $item ) {
+    $terms = wp_get_post_terms( $item->get_product_id(), 'brand' );
+    if(count($terms)>0) {
+        foreach($terms as $brand) {
+            return '<p class="product__brand" style="color:"><a href="' . get_term_link($brand) . '">' . $brand->name . '</a></p>'.$product_name;
+        }
+    }else{
+        return $product_name;
+    }
+}
 
 /* add sale label product */
 add_filter( 'woocommerce_get_price_suffix', 'add_label_sale', 9999, 10 );
