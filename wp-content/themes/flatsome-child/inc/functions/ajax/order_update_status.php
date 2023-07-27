@@ -78,8 +78,6 @@ function order_update_status(){
     //get old status
     $old_status = $order->get_status('value');
 
-    write_log($order->get_meta('order_user_log'));
-
     //
     //
     // Action reject order
@@ -354,7 +352,6 @@ function order_update_status(){
         }
 
         if ($order->update_status('wc-cancelled')) {
-            update_post_meta($order_id,'shipment_status','cancelled');
             echo json_encode(array(
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang cancelled",

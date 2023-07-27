@@ -17,12 +17,26 @@ function shipment_order_update_status( WP_REST_Request $request ) {
 
     $order_id =  str_replace('#','', $req->client_order_id);
 
-    write_log($req);
 
     if (wc_get_order($order_id)){
 
         $order = new AX_ORDER($order_id);
+
         update_post_meta($order_id,'shipment_status', $req->status);
+
+        if($req->status == 'delivering'){
+            $order->update_status('wc-shipping');
+        }
+        if($req->status == 'successful_delivery'){
+            $order->update_status('wc-delivered');
+        }
+        if($req->status == 'failed_shipment'){
+            $order->update_status('wc-delivery-failed');
+        }
+
+        $shipment_log = explode('|', $order->get_meta('order_shipment_log',true,'value') ?? '');
+        $shipment_log[] =   $request->get_body() ;
+        update_post_meta($order_id,'order_shipment_log',implode('|',$shipment_log));
 
     }
 
