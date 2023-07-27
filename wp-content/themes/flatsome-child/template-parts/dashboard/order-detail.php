@@ -3,7 +3,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Order Detail</h1>
+                <h1 class="m-0">Chi tiết đơn hàng</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -19,6 +19,21 @@
 use AX\COMPANY;
 
     $order_id =  $_GET['order_id'];
+    $status_badge = array(
+        'reject' => 'bg-danger',
+        'trash' => 'bg-danger',
+        'on-hold' => 'bg-danger',
+        'pending' => 'bg-warning',
+        'processing' => 'bg-primary',
+        'confirm' => 'bg-primary',
+        'completed' => 'bg-success',
+        'request' => 'bg-info',
+        'shipping' => 'bg-info',
+        'delivered' => 'bg-info',
+        'delivery-failed' => 'bg-danger',
+        'cancelled' => 'bg-danger',
+        'confirm-goods' => 'bg-primary',
+    );
 
 if (!isset($_GET['order_id']) || !get_post_type($order_id)):
     ?>
@@ -26,7 +41,7 @@ if (!isset($_GET['order_id']) || !get_post_type($order_id)):
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="text-center">No order: <?php echo $order_id?></div>
+                    <div class="text-center">Không tìm thấy đơn hàng: <?php echo $order_id?></div>
                 </div>
             </div>
         </div>
@@ -36,7 +51,6 @@ if (!isset($_GET['order_id']) || !get_post_type($order_id)):
 else:
     $order_ax = new AX_ORDER($order_id);
     $company = new COMPANY();
-    write_log($order_ax->get_shipping_total());
     ?>
 <section class="content">
     <div class="container-fluid">
@@ -45,12 +59,13 @@ else:
 
                 <!-- Main content -->
                 <div class="invoice p-3 mb-3">
+
                     <!-- title row -->
                     <div class="row">
                         <div class="col-12">
                             <h4>
                                 <i class="fas fa-globe"></i> <?php echo $company->get_company_name()?>
-                                <small class="float-right">Date: <?php echo wp_date( get_date_format(), strtotime($order_ax->get_date_created()))?></small>
+                                <small class="float-right">Ngày đặt hàng: <?php echo wp_date( get_date_format(), strtotime($order_ax->get_date_created()))?></small>
                             </h4>
                         </div>
                         <!-- /.col -->
@@ -58,33 +73,33 @@ else:
                     <!-- info row -->
                     <div class="row invoice-info">
                         <div class="col-sm-4 invoice-col">
-                            From
+                            Từ
                             <address>
                                 <strong><?php echo $company->get_company_name()?></strong><br>
-                                Street: <?php echo $company->get_company_address()?><br>
-                                Ward:   <?php echo $company->get_company_ward_name()?>
+                                Địa chỉ: <?php echo $company->get_company_address()?><br>
+                                <?php echo $company->get_company_ward_name()?>
                                 , <?php echo $company->get_company_district_name()?><br>
-                                City: <?php echo $company->get_company_city_name()?><br>
-                                Phone: <?php echo $company->get_company_phone()?><br>
+                                Thành phố: <?php echo $company->get_company_city_name()?><br>
+                                Điện thoại: <?php echo $company->get_company_phone()?><br>
                                 Email: <?php echo $company->get_company_email()?>
                             </address>
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-4 invoice-col">
-                            To
+                            Đến
                             <address>
                                 <strong><?php echo $order_ax->get_billing_last_name() .' '. $order_ax->get_billing_first_name() ?></strong><br>
-                                Street: <?php echo $order_ax->get_billing_address_1()?><br>
-                                Ward:   <?php echo $order_ax->get_billing_ward_name()?>
+                                Địa chỉ: <?php echo $order_ax->get_billing_address_1()?><br>
+                                <?php echo $order_ax->get_billing_ward_name()?>
                                 , <?php echo $order_ax->get_billing_district_name()?><br>
-                                City: <?php echo $order_ax->get_billing_city_name()?><br>
-                                Phone: <?php echo $order_ax->get_billing_phone()?><br>
+                                Thành phố: <?php echo $order_ax->get_billing_city_name()?><br>
+                                Điện thoại: <?php echo $order_ax->get_billing_phone()?><br>
                                 Email: <?php echo $order_ax->get_billing_email()?>
                             </address>
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-4 invoice-col">
-                            Invoice <br><b> #<?php echo $order_id?></b><br>
+                            Hóa đơn <br><b> #<?php echo $order_id?></b><br>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -96,11 +111,11 @@ else:
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th>No.</th>
-                                    <th>Item no</th>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th class="text-right">Subtotal</th>
+                                    <th>STT</th>
+                                    <th>SKU</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Số lượng</th>
+                                    <th class="text-right">Tiền</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -109,7 +124,7 @@ else:
                                     <td><?php echo get_post_meta( $item['variation_id'], '_sku', true ) ?></td>
                                     <td><?php echo $item->get_name() ?></td>
                                     <td><?php echo $item->get_quantity() ?></td>
-                                    <td class="text-right"><?php echo number_format( $item->get_total(), '0',',','.') ?> VNĐ</td>
+                                    <td class="text-right"><?php echo number_format( $item->get_total(), '0',',','.') ?> đ</td>
                                 </tr>
                                 <?php endforeach; ?>
                                 </tbody>
@@ -122,15 +137,15 @@ else:
                     <div class="row">
                         <!-- accepted payments column -->
                         <div class="col-3">
-                            <p class="lead">Payment Methods:</p>
+                            <p class="lead">Phương thức thanh toán:</p>
                             <span><?php echo $order_ax->get_payment_method() . ' - ' . $order_ax->get_payment_method_title()?></span>
                         </div>
                         <!-- /.col -->
                         <!-- accepted payments column -->
                         <div class="col-3">
-                            <p class="lead">Shipment Detail:</p>
-                            Shipment methods: <span><?php echo $order_ax->get_shipping_method()?></span><br>
-                            Shipment methods: <span><?php echo $order_ax->get_meta('shipment_status',true)?></span><br>
+                            <p class="lead">Thông tin giao hàng:</p>
+                            Đơn vị giao hàng: <span><?php echo $order_ax->get_shipping_method()?></span><br>
+                            Trạng thái giao hang: <span><?php echo $order_ax->get_meta('shipment_status',true)?></span><br>
                             Ngày lấy hàng dự kiến: <span><?php echo wp_date( get_date_format(), strtotime( $order_ax->get_meta('shipment_estimated_timeline_pickup',true)))?></span><br>
                             Ngày giao hàng thành: <span><?php echo wp_date( get_date_format(), strtotime( $order_ax->get_meta('shipment_estimated_timeline_dropoff',true)))?></span><br>
                         </div>
@@ -139,19 +154,19 @@ else:
                             <div class="table-responsive">
                                 <table class="table">
                                     <tr>
-                                        <th>Subtotal:</th>
+                                        <th>Tiền:</th>
                                         <td class="text-right"><?php echo number_format($order_ax->get_total() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> VNĐ</td>
                                     </tr>
                                     <tr>
-                                        <th>Discount</th>
+                                        <th>Giảm giá</th>
                                         <td class="text-right"><?php echo number_format($order_ax->get_total_discount() , '0', ',', '.')?> VNĐ</td>
                                     </tr>
                                     <tr>
-                                        <th>Shipping:</th>
+                                        <th>Giao hàng:</th>
                                         <td class="text-right"><?php echo number_format($order_ax->get_shipping_total(), '0', ',', '.')?> VNĐ</td>
                                     </tr>
                                     <tr>
-                                        <th>Total:</th>
+                                        <th>Tổng tiền:</th>
                                         <td class="text-right"><?php echo number_format($order_ax->get_total() , '0', ',', '.')?> VNĐ</td>
                                     </tr>
                                 </table>
@@ -161,35 +176,63 @@ else:
                     </div>
                     <!-- /.row -->
 
-                    <div class="row">
-                        <div class="col-12">
-                            <p class="lead">Log order</p>
-                            <?php
-                                $order_log = $order_ax->get_meta('order_user_log',true,'value');
-                                $order_logs = explode('|' , $order_log);
-                                foreach ($order_logs as $value):
-                            ?>
-                                    <span><?php echo $value?></span><br>
-
-                                <?php endforeach; ?>
-                        </div>
-                    </div>
-
                     <!-- this row will not appear when printing -->
-                    <div class="row no-print">
+                    <div class="row no-print padding10">
                         <div class="col-12">
                             <button onclick="window.print()" rel="noopener" target="_blank" class="btn btn-default">
-                                <i class="fas fa-print"></i> Print</button>
+                                <i class="fas fa-print"></i> In</button>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
                                 <i class="fas fa-file-invoice-dollar"></i> Xác nhận đã nhận hàng</button>
                             <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-primary float-right"  style="margin-right: 5px;">
-                                <i class="fas fa-shipping-fast"> Gọi giao hàng</i></button>
+                                <i class="fas fa-shipping-fast"> </i> Gọi giao hàng</button>
                             <button onclick="send_update_status(<?php echo $order_id?>,'cancelled')" type="button" class="btn btn-danger float-right"  style="margin-right: 5px;">
-                                <i class="fas fa-shipping-fast"> Admin hủy đơn</i></button>
+                                <i class="fas fa-times"></i> Hủy đơn</button>
                         </div>
                     </div>
+
                 </div>
                 <!-- /.invoice -->
+
+                <div class="card no-print">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="timeline">
+                                    <!-- timeline time label -->
+                                    <div class="time-label">
+                                        <span class="bg-primary"><i class="fas fa-history"></i> <?php echo 'Lịch sử đơn hàng'?></span>
+                                    </div>
+                                    <!-- /.timeline-label -->
+
+                                <?php
+                                $order_log = $order_ax->get_meta('order_user_log',true,'value');
+                                $order_logs = explode('|' , $order_log);
+                                foreach (array_reverse($order_logs) as $value):
+                                    $value_log = explode(';', $value);
+                                    if (!$value_log[0]) continue;
+                                    $status_log = trim( str_replace('order_status_','',$value_log[2]));
+                                    ?>
+                                    <!-- timeline item -->
+                                    <div>
+                                        <i class="fas fa-comments <?php echo $status_badge[ $status_log] ?>"></i>
+                                        <div class="timeline-item">
+                                            <span class="time"><i class="fas fa-clock"></i><?php echo $value_log[1]?></span>
+                                            <h3 class="timeline-header"><?php echo  $value_log[0]  . ' - '. $status_log?></h3>
+
+                                            <div class="timeline-body">
+                                               <?php echo $value_log[3]?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                                    <!-- END timeline item -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div><!-- /.col -->
         </div><!-- /.row -->
     </div><!-- /.container-fluid -->
