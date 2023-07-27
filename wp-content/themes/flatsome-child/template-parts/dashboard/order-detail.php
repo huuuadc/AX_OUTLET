@@ -196,7 +196,7 @@ else:
                 <div class="card no-print">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="timeline">
                                     <!-- timeline time label -->
                                     <div class="time-label">
@@ -221,6 +221,42 @@ else:
 
                                             <div class="timeline-body">
                                                <?php echo $value_log[3]?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                                    <!-- END timeline item -->
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="timeline">
+                                    <!-- timeline time label -->
+                                    <div class="time-label">
+                                        <span class="bg-warning"><i class="fas fa-history"></i> <?php echo 'Lịch sử giao hàng'?></span>
+                                    </div>
+                                    <!-- /.timeline-label -->
+
+                                <?php
+                                $shipment_log = $order_ax->get_meta('order_shipment_log',true,'value');
+                                $shipment_logs = explode('|' , $shipment_log);
+                                foreach (array_reverse($shipment_logs) as $value):
+                                    $value_log = json_decode($value);
+                                    if (!$value_log) continue;
+                                    ?>
+                                    <!-- timeline item -->
+                                    <div>
+                                        <i class="fas fa-comments bg-blue"></i>
+                                        <div class="timeline-item">
+                                            <span class="time"><i class="fas fa-clock"></i><?php echo $value_log->timestamp?></span>
+                                            <h3 class="timeline-header">
+                                                <a href="<?php echo$value_log->tracking_url?>"><?php echo$value_log->tracking_id?>
+                                                </a>
+                                                <?php echo  $value_log->status  . ' - '. $value_log->reason_code?>
+                                            </h3>
+
+
+                                            <div class="timeline-body">
+                                                <p><?php echo json_encode( $value_log->driver)?></p>
                                             </div>
                                         </div>
                                     </div>
