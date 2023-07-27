@@ -121,8 +121,18 @@ else:
 
                     <div class="row">
                         <!-- accepted payments column -->
-                        <div class="col-6">
-                            <p class="lead">Payment Methods:</p><span><?php echo $order_ax->get_payment_method() . ' - ' . $order_ax->get_payment_method_title()?></span>
+                        <div class="col-3">
+                            <p class="lead">Payment Methods:</p>
+                            <span><?php echo $order_ax->get_payment_method() . ' - ' . $order_ax->get_payment_method_title()?></span>
+                        </div>
+                        <!-- /.col -->
+                        <!-- accepted payments column -->
+                        <div class="col-3">
+                            <p class="lead">Shipment Detail:</p>
+                            Shipment methods: <span><?php echo $order_ax->get_shipping_method()?></span><br>
+                            Shipment methods: <span><?php echo $order_ax->get_meta('shipment_status',true)?></span><br>
+                            Ngày lấy hàng dự kiến: <span><?php echo wp_date( get_date_format(), strtotime( $order_ax->get_meta('shipment_estimated_timeline_pickup',true)))?></span><br>
+                            Ngày giao hàng thành: <span><?php echo wp_date( get_date_format(), strtotime( $order_ax->get_meta('shipment_estimated_timeline_dropoff',true)))?></span><br>
                         </div>
                         <!-- /.col -->
                         <div class="col-6">
@@ -151,17 +161,31 @@ else:
                     </div>
                     <!-- /.row -->
 
+                    <div class="row">
+                        <div class="col-12">
+                            <p class="lead">Log order</p>
+                            <?php
+                                $order_log = $order_ax->get_meta('order_user_log',true,'value');
+                                $order_logs = explode('|' , $order_log);
+                                foreach ($order_logs as $value):
+                            ?>
+                                    <span><?php echo $value?></span><br>
+
+                                <?php endforeach; ?>
+                        </div>
+                    </div>
+
                     <!-- this row will not appear when printing -->
                     <div class="row no-print">
                         <div class="col-12">
                             <button onclick="window.print()" rel="noopener" target="_blank" class="btn btn-default">
                                 <i class="fas fa-print"></i> Print</button>
-                            <button type="button" class="btn btn-success float-right">
-                                <i class="fas fa-file-invoice-dollar"></i> Post E-Invoice</button>
-                            <button type="button" class="btn btn-primary float-right"  style="margin-right: 5px;">
-                                <i class="fas fa-shipping-fast"> Call Shipper</i></button>
-                            <button onclick="" type="button" class="btn btn-primary float-right"  style="margin-right: 5px;">
-                                <i class="fas fa-shipping-fast"> Call Shipper</i></button>
+                            <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
+                                <i class="fas fa-file-invoice-dollar"></i> Xác nhận đã nhận hàng</button>
+                            <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-primary float-right"  style="margin-right: 5px;">
+                                <i class="fas fa-shipping-fast"> Gọi giao hàng</i></button>
+                            <button onclick="send_update_status(<?php echo $order_id?>,'cancelled')" type="button" class="btn btn-danger float-right"  style="margin-right: 5px;">
+                                <i class="fas fa-shipping-fast"> Admin hủy đơn</i></button>
                         </div>
                     </div>
                 </div>

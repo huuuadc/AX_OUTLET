@@ -147,6 +147,7 @@ function send_update_status(id = '', status = ''){
 
     if(!commit_note){
         alert("Bạn cần nhập ghi chú trước khi thực hiên thao tác")
+        return
     }
 
     $.ajax({
