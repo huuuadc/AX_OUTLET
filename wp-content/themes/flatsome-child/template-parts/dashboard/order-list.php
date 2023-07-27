@@ -84,7 +84,7 @@
                             <td><?php echo wp_date(get_date_format(),strtotime( $order->get_date_created()))?></td>
                             <td><?php echo $order->get_billing_last_name() . ' ' . $order->get_billing_first_name()?></td>
                             <td><?php echo $order->get_item_count()?></td>
-                            <td class="text-right"><?php echo number_format( $order->get_total(),0,',','.')?> VNĐ</td>
+                            <td class="text-right"><?php echo number_format( $order->get_total(),0,',','.')?> đ</td>
                             <td><?php echo $order->get_payment_method_title()?></td>
                             <td><a href="<?php echo $order->get_tracking_url()?>" ><?php echo $order->get_tracking_id()?></a></td>
                             <td><?php echo $order->get_meta('shipment_status',true,'value') ?? 'new'?></td>
@@ -98,11 +98,11 @@
                                         <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Từ chối đơn hàng</button>
                                         <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Xác nhận đơn hàng</button>
                                         <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'request')">Gọi đơn vị vận chuyển</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'shipping')">Đang giao hàng</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivered')">Giao hàng thành công</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivery-failed')">Giao hàng thất bại</button>
+                                        <button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'shipping')">Đang giao hàng</button>
+                                        <button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivered')">Giao hàng thành công</button>
+                                        <button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivery-failed')">Giao hàng thất bại</button>
                                         <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm-goods')">Xác nhận còn hàng</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'cancelled')">Admin hủy đơn</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'cancelled')">Hủy đơn hàng</button>
                                     </div>
                                 </div></td>
                         </tr>

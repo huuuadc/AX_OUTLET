@@ -155,19 +155,19 @@ else:
                                 <table class="table">
                                     <tr>
                                         <th>Tiền:</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_total() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> VNĐ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_total() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> đ</td>
                                     </tr>
                                     <tr>
                                         <th>Giảm giá</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_total_discount() , '0', ',', '.')?> VNĐ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_total_discount() , '0', ',', '.')?> đ</td>
                                     </tr>
                                     <tr>
                                         <th>Giao hàng:</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_shipping_total(), '0', ',', '.')?> VNĐ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_shipping_total(), '0', ',', '.')?> đ</td>
                                     </tr>
                                     <tr>
                                         <th>Tổng tiền:</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_total() , '0', ',', '.')?> VNĐ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_total() , '0', ',', '.')?> đ</td>
                                     </tr>
                                 </table>
                             </div>
