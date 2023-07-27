@@ -59,7 +59,7 @@ class TIKI_API
             'ward_code'     => ''
         ),
         'product_name'      => '',
-        'placed_on'         => ''
+        'placed_on'         => 'tiki'
     );
 
     public array $default_cancel = array (

@@ -166,7 +166,7 @@ function order_update_status(){
                     'ward_code'     => $order->get_billing_ward_code()
                 ),
                 'product_name'      => implode(' \n ',$item_names),
-                'placed_on'         => 'ax_outlet'
+                'placed_on'         => 'tiki'
             );
 
             $rep = $tiki_connect->post_create_shipping_to_tiki($data);
