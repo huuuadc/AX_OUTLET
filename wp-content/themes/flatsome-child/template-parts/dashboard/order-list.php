@@ -90,7 +90,7 @@
                             <td class="text-right"><?php echo number_format( $order->get_total(),0,',','.')?> VNĐ</td>
                             <td><a href="<?php echo $order->get_tracking_url()?>" ><?php echo $order->get_tracking_id()?></a></td>
                             <td><?php echo $order->get_payment_method_title()?></td>
-                            <td><?php echo $order->get_customer_id()?></td>
+                            <td><?php echo $order->get_meta('shipment_status',true) ?? 'new'?></td>
                             <td id="order_status_<?php echo get_the_ID()?>"><span class="badge <?php echo $status_badge[$order->get_status()] ?>"><?php echo $order->get_status()?></span></td>
                             <td><div class="btn-group">
                                     <button type="button" class="btn btn-default">Action</button>
