@@ -66,31 +66,42 @@ function order_update_status(){
     //create tiki api
     $tiki_connect = new TIKI_API();
 
+
+    //set log order
+    $current_login = wp_get_current_user();
+    $user_name = $current_login->nickname;
+    $order_log = explode('|', $order->get_meta('order_user_log',true,'value') ?? '');
+
+    $order_log[] =  $user_name . '; ' . date('Y-m-d H:i:s') . '; ' . $_POST['payload_action'] . '; '. $commit_note ;
+    update_post_meta($order_id,'order_user_log',implode('|',$order_log));
+
+    //get old status
     $old_status = $order->get_status('value');
 
+    write_log($order->get_meta('order_user_log'));
 
     //
     //
     // Action reject order
     //
     //
-    if ($_POST['payload_action'] === 'order_status_reject' && 'order_status_reject' !== 'order_status_'.$old_status){
+    if ($_POST['payload_action'] === 'order_status_reject' && 'order_status_processing' == 'order_status_'.$old_status){
 
-        if ($order->update_status('wc-reject')){
-            echo json_encode(array(
-                'status' => true,
-                'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang reject",
-                'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
-            ));
-        }else{
-            echo json_encode(array(
-                'status' => false,
-                'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
-                'data' => []
-            ));
-        };
+            if ($order->update_status('wc-reject')){
+                echo json_encode(array(
+                    'status' => true,
+                    'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang reject",
+                    'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+                ));
+            }else{
+                echo json_encode(array(
+                    'status' => false,
+                    'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
+                    'data' => []
+                ));
+            }
+            exit;
 
-        exit;
     }
 
 
@@ -99,23 +110,23 @@ function order_update_status(){
     // Action confirm order
     //
     //
-    if ($_POST['payload_action'] == 'order_status_confirm' && 'order_status_confirm' !== 'order_status_'.$old_status){
+    if ($_POST['payload_action'] == 'order_status_confirm' && 'order_status_processing' == 'order_status_'.$old_status){
 
-        if ($order->update_status('wc-confirm')){
-            echo json_encode(array(
-                'status' => true,
-                'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang confirm",
-                'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
-            ));
-        }else{
-            echo json_encode(array(
-                'status' => false,
-                'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
-                'data' => []
-            ));
-        };
+            if ($order->update_status('wc-confirm')){
+                echo json_encode(array(
+                    'status' => true,
+                    'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang confirm",
+                    'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+                ));
+            }else{
+                echo json_encode(array(
+                    'status' => false,
+                    'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
+                    'data' => []
+                ));
+            }
 
-        exit;
+            exit;
 
     }
 
@@ -124,17 +135,20 @@ function order_update_status(){
     // Action request shipping order
     //
     //
-    if ($_POST['payload_action'] == 'order_status_request' && 'order_status_request' !== 'order_status_'.$old_status){
+    if ($_POST['payload_action'] == 'order_status_request' && 'order_status_confirm' == 'order_status_'.$old_status){
 
-        if('order_status_confirm' ===  'order_status_'.$old_status ){
             //Get total amount order
             $total_amount = $order->get_total('value');
+            $cash_on_delivery_amount = 0;
+
+            if ($order->get_payment_method() === 'cod') $cash_on_delivery_amount = $order->get_total('value');
+
 
             $item_names = [];
-            $total_height = 0;
-            $total_width = 0;
-            $total_depth = 0;
-            $total_weight = 0;
+            $total_height = 20;
+            $total_width = 20;
+            $total_depth = 20;
+            $total_weight = 2000;
 
             $items = $order->get_items();
             foreach ($items as $item){
@@ -145,20 +159,20 @@ function order_update_status(){
                 'external_order_id' => '#'.$order_id,
                 'service_code'  => 'hns_standard',
                 'partner_code'  => 'TNSL',
-                'cash_on_delivery_amount'   => 0,
-                'instruction'   => $commit_note,
+                'cash_on_delivery_amount'   => (int)$cash_on_delivery_amount,
+                'instruction'   => $order->get_customer_note('value') ?? '',
                 'package_info' => array(
-                    'height'    =>  20,
-                    'width'     =>  20,
-                    'depth'     =>  20,
-                    'weight'    =>  2000,
+                    'height'    =>  $total_height ,
+                    'width'     =>  $total_width ,
+                    'depth'     =>  $total_depth ,
+                    'weight'    =>  $total_weight ,
                     'total_amount'  => (int)$total_amount
                 ),
                 'destination'    => array(
-                    'first_name'    => $order->get_billing_first_name(),
-                    'last_name' => $order->get_billing_last_name(),
-                    'phone'     => $order->get_billing_phone(),
-                    'email'     => $order->get_billing_email(),
+                    'first_name'    => $order->get_billing_first_name() ?? '',
+                    'last_name' => $order->get_billing_last_name() ?? '',
+                    'phone'     => $order->get_billing_phone() ?? '',
+                    'email'     => $order->get_billing_email() ?? '',
                     'street'        => $order->get_billing_address_1(),
                     'ward_name'     => $order->get_billing_ward_name() ?? '',
                     'district_name' => $order->get_billing_district_name() ?? '',
@@ -184,6 +198,10 @@ function order_update_status(){
 
             add_post_meta($order_id, 'tracking_id', $rep->data->tracking_id, true);
             add_post_meta($order_id, 'tracking_url', $rep->data->tracking_url, true);
+            add_post_meta($order_id, 'response_shipment', $rep->data, true);
+            add_post_meta($order_id, 'shipment_status', $rep->data->status, true);
+            add_post_meta($order_id, 'shipment_estimated_timeline_pickup',$rep->data->quote->estimated_timeline->pickup, true);
+            add_post_meta($order_id, 'shipment_estimated_timeline_dropoff',$rep->data->quote->estimated_timeline->dropoff, true);
 
 
             if ($order->update_status('wc-request')){
@@ -201,16 +219,6 @@ function order_update_status(){
             };
 
             exit;
-        } else {
-            echo json_encode(array(
-                'status' => false,
-                'messenger' => "Trạng thái này không được gọi giao",
-                'data' => []
-            ));
-            exit;
-        }
-
-
 
 
     }
@@ -221,7 +229,7 @@ function order_update_status(){
     //
     //
 
-    if ($_POST['payload_action'] == 'order_status_shipping' && 'order_status_shipping' !== 'order_status_'.$old_status){
+    if ($_POST['payload_action'] == 'order_status_shipping' && 'order_status_request' == 'order_status_'.$old_status){
 
 
         if ($order->update_status('wc-shipping')){
@@ -249,7 +257,7 @@ function order_update_status(){
     //
     //
 
-    if ($_POST['payload_action'] == 'order_status_delivered' && 'order_status_delivered' !== 'order_status_'.$old_status){
+    if ($_POST['payload_action'] == 'order_status_delivered' && 'order_status_shipping' == 'order_status_'.$old_status){
 
         if ($order->update_status('wc-delivered')){
             echo json_encode(array(
@@ -275,7 +283,7 @@ function order_update_status(){
     // Action vendor update delivered failed order
     //
     //
-    if ($_POST['payload_action'] == 'order_status_delivery-failed' && 'order_status_delivery-failed' !== 'order_status_'.$old_status){
+    if ($_POST['payload_action'] == 'order_status_delivery-failed' && 'order_status_shipping' == 'order_status_'.$old_status){
 
 
         if ($order->update_status('wc-delivery-failed')){
@@ -303,7 +311,7 @@ function order_update_status(){
     //
     //
 
-    if ($_POST['payload_action'] == 'order_status_confirm-goods' && 'order_status_confirm-goods' !== 'order_status_'.$old_status){
+    if ($_POST['payload_action'] == 'order_status_confirm-goods' && 'order_status_delivery-failed' == 'order_status_'.$old_status){
 
         if ($order->update_status('wc-confirm-goods')){
             echo json_encode(array(
@@ -331,6 +339,9 @@ function order_update_status(){
     //
     if ($_POST['payload_action'] == 'order_status_cancelled' && 'order_status_cancelled' !== 'order_status_'.$old_status) {
 
+
+        $tiki_connect->default_cancel['comment'] = $commit_note;
+
         $rep = $tiki_connect->put_cancelled_shippment($order->get_tracking_id());
 
         if (!$rep->success){
@@ -343,6 +354,7 @@ function order_update_status(){
         }
 
         if ($order->update_status('wc-cancelled')) {
+            update_post_meta($order_id,'shipment_status','cancelled');
             echo json_encode(array(
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang cancelled",
@@ -358,5 +370,12 @@ function order_update_status(){
 
         exit;
     }
+
+    echo json_encode(array(
+        'status' => false,
+        'messenger' => "Trạng thái đơn hàng không cho phép thao tác này",
+        'data' => []
+    ));
+    exit;
 
 }

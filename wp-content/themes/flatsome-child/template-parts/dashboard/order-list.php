@@ -98,15 +98,15 @@
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu" role="menu">
-                                        <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list?order_id='.get_the_ID()?>">View Order</a>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Store reject</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Store confirm</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'request')">Store Request</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'shipping')">Vendor shipping</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivered')">Vendor delivered</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivery-failed')">Vendor delivery failed</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm-goods')">Store confirm goods</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'cancelled')">Admin cancel</button>
+                                        <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list?order_id='.get_the_ID()?>">Chi tiết đơn hàng</a>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Từ chối đơn hàng</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Xác nhận đơn hàng</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'request')">Gọi đơn vị vận chuyển</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'shipping')">Đang giao hàng</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivered')">Giao hàng thành công</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivery-failed')">Giao hàng thất bại</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm-goods')">Xác nhận còn hàng</button>
+                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'cancelled')">Admin hủy đơn</button>
                                     </div>
                                 </div></td>
                         </tr>
