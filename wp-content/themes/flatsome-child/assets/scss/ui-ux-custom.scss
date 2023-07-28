@@ -2217,3 +2217,15 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
         }
     }
 }
+.dgwt-wcas-suggestions-wrapp {
+    .search__result--brand {
+        display: block;
+        color: #999;
+        margin: 0 0 5px 0;
+        font-size: 13px;
+    }
+    .dgwt-wcas-st-title {
+        font-weight: 400;
+        font-size: 16px;
+    }
+}
