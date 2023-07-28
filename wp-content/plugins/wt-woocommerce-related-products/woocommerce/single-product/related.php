@@ -27,7 +27,7 @@ if ( ! function_exists( 'crp_get_all_product_ids_from_cat_ids' ) ) {
 	* @since 1.3.7
 	* @return array  
 	*/
-	function crp_get_all_product_ids_from_cat_ids( array $cat_ids ) {
+	function crp_get_all_product_ids_from_cat_ids( array $cat_ids, $gender ) {
             
             $all_ids = $total= array();
             
@@ -44,10 +44,11 @@ if ( ! function_exists( 'crp_get_all_product_ids_from_cat_ids' ) ) {
 					array(
 						'taxonomy'	 => 'product_cat',
 						'field'		 => 'term_id',
-                                                    'terms'		 => array($cat_value),
+                        'terms'		 => array($cat_value),
 						'operator'	 => 'IN',
 					)
 				),
+                'gender'    => $gender
 			)
 		);
                     $total = array_merge($total,$all_ids);
@@ -129,7 +130,7 @@ if ( ! function_exists( 'crp_get_all_product_ids_from_attr_ids' ) ) {
 				'posts_per_page'	 => -1,
 				'post_status'	 => 'publish',
 				'fields'		 => 'ids',
-				'tax_query' => $tax_query
+				'tax_query' => $tax_query,
 			)
 		);
 
@@ -153,10 +154,10 @@ if ( $related_products || !empty($global_related_by) ) :
 		global $post;
 
         $genders = get_the_terms( $post->ID, 'gender' );
-        $current_gendder = '';
+        $current_gender = '';
         if(count($genders)>0) {
             foreach ($genders as $gender) {
-                $current_gendder = $gender->slug;
+                $current_gender = $gender->slug;
             }
         }
 		// when rendering through shortcode
@@ -205,7 +206,7 @@ if ( $related_products || !empty($global_related_by) ) :
 			if(!empty($related) || !empty($related_categories_ids) || !empty($related_tags_ids) || !empty($related_attr_ids)) {
 
 				if (!empty($related_categories_ids)) {
-					$all_ids = crp_get_all_product_ids_from_cat_ids( $related_categories_ids );
+					$all_ids = crp_get_all_product_ids_from_cat_ids( $related_categories_ids, $current_gender );
 
 					if (!empty($related)) {
 						$related = array_merge($all_ids, $related);
@@ -265,7 +266,7 @@ if ( $related_products || !empty($global_related_by) ) :
 							}	
 						}
 						if(!empty($product_cat_ids)) {
-							$related = crp_get_all_product_ids_from_cat_ids( $product_cat_ids );
+							$related = crp_get_all_product_ids_from_cat_ids( $product_cat_ids, $current_gender );
 						}
 					}
 					
@@ -291,7 +292,7 @@ if ( $related_products || !empty($global_related_by) ) :
 			$excluded_categories_ids = apply_filters( 'wt_crp_excluded_category_ids',get_post_meta($post->ID, '_crp_excluded_cats', true) );
 
 			if (!empty($excluded_categories_ids) && !empty($related)) {
-				$all_ids = crp_get_all_product_ids_from_cat_ids( $excluded_categories_ids );
+				$all_ids = crp_get_all_product_ids_from_cat_ids( $excluded_categories_ids, $current_gender );
 
 				if (!empty($all_ids)) {
 					$related = array_diff($related, $all_ids);
@@ -366,7 +367,7 @@ if ( $related_products || !empty($global_related_by) ) :
 					'orderby' => $orderby, 
 					'order' => $order, 
 					'post__in' => $copy,
-                    'gender' => $current_gendder
+                    //'gender' => $current_gendder
 				);
 				$custom_orderby = class_exists('Custom_Related_Products') ? Custom_Related_Products::get_custom_order_by_values() : array();
 				if( array_key_exists( $orderby, $custom_orderby ) ) {
