@@ -153,8 +153,11 @@ if ( $related_products || !empty($global_related_by) ) :
 		global $post;
 
         $genders = get_the_terms( $post->ID, 'gender' );
-        foreach ($genders as $gender){
-            $current_gendder = $gender->slug;
+        $current_gendder = '';
+        if(count($genders)>0) {
+            foreach ($genders as $gender) {
+                $current_gendder = $gender->slug;
+            }
         }
 		// when rendering through shortcode
 		if (isset($shortcode_post)) {
