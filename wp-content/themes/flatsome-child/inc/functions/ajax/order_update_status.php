@@ -7,22 +7,6 @@ add_action( 'wp_ajax_post_order_update_status', 'order_update_status' );
 add_action( 'wp_ajax_nopriv_post_order_update_status', 'order_update_status' );
 function order_update_status(){
 
-    $status_badge = array(
-        'reject' => 'badge-danger',
-        'trash' => 'badge-danger',
-        'on-hold' => 'badge-danger',
-        'pending' => 'badge-warning',
-        'processing' => 'badge-primary',
-        'confirm' => 'badge-primary',
-        'completed' => 'badge-success',
-        'request' => 'badge-info',
-        'shipping' => 'badge-info',
-        'delivered' => 'badge-info',
-        'delivery-failed' => 'badge-danger',
-        'cancelled' => 'badge-danger',
-        'confirm-goods' => 'badge-primary',
-    );
-
     //Check have action and payload_action
     //payload action variant status ajax post
     if(!isset($_POST['action']) || !isset($_POST['payload_action'])) {
@@ -33,6 +17,8 @@ function order_update_status(){
         ));
         exit;
     }
+
+    $payload_action = $_POST['payload_action'];
 
     //Check have post order_id
     if (!isset($_POST['order_id'])){
@@ -66,15 +52,6 @@ function order_update_status(){
     //create tiki api
     $tiki_connect = new TIKI_API();
 
-
-    //set log order
-    $current_login = wp_get_current_user();
-    $user_name = $current_login->nickname;
-    $order_log = explode('|', $order->get_meta('order_user_log',true,'value') ?? '');
-
-    $order_log[] =  $user_name . '; ' . date('Y-m-d H:i:s') . '; ' . $_POST['payload_action'] . '; '. $commit_note ;
-    update_post_meta($order_id,'order_user_log',implode('|',$order_log));
-
     //get old status
     $old_status = $order->get_status('value');
 
@@ -86,18 +63,24 @@ function order_update_status(){
     if ($_POST['payload_action'] === 'order_status_reject' && 'order_status_processing' == 'order_status_'.$old_status){
 
             if ($order->update_status('wc-reject')){
+                $order->set_log('success',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => true,
                     'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang reject",
-                    'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+                    'data' => array(
+                        'order_status' => $order->get_status(),
+                        'class' => 'secondary'
+                    )
                 ));
             }else{
+                $order->set_log('danger',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => false,
                     'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
                     'data' => []
                 ));
             }
+
             exit;
 
     }
@@ -111,12 +94,17 @@ function order_update_status(){
     if ($_POST['payload_action'] == 'order_status_confirm' && 'order_status_processing' == 'order_status_'.$old_status){
 
             if ($order->update_status('wc-confirm')){
+                $order->set_log('success',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => true,
                     'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang confirm",
-                    'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+                    'data' => array(
+                        'order_status' => $order->get_status(),
+                        'class' => 'primary'
+                    )
                 ));
             }else{
+                $order->set_log('danger',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => false,
                     'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
@@ -186,6 +174,7 @@ function order_update_status(){
             write_log($rep);
 
             if (!$rep->success){
+                $order->set_log('danger',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => false,
                     'messenger' => "Gọi giao hàng không thành công!",
@@ -194,25 +183,33 @@ function order_update_status(){
                 exit;
             }
 
-            add_post_meta($order_id, 'tracking_id', $rep->data->tracking_id, true);
-            add_post_meta($order_id, 'tracking_url', $rep->data->tracking_url, true);
-            add_post_meta($order_id, 'response_shipment', $rep->data, true);
-            add_post_meta($order_id, 'shipment_status', $rep->data->status, true);
+            $order->set_tracking_id($rep->data->tracking_id);
+            $order->set_tracking_url($rep->data->tracking_url);
+            $order->set_shipment_status($rep->data->status);
+
             add_post_meta($order_id, 'shipment_estimated_timeline_pickup',$rep->data->quote->estimated_timeline->pickup, true);
             add_post_meta($order_id, 'shipment_estimated_timeline_dropoff',$rep->data->quote->estimated_timeline->dropoff, true);
 
 
             if ($order->update_status('wc-request')){
+                $order->set_log('success',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => true,
                     'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang request",
-                    'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+                    'data' => array(
+                        'order_status' => $order->get_status(),
+                        'class' => 'info',
+                        'tracking_id' =>$rep->data->tracking_id,
+                        'tracking_url' =>$rep->data->tracking_url,
+                        'shipment_status' => $rep->data->status
+                    )
                 ));
             }else{
+                $order->set_log('danger',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => false,
                     'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
-                    'data' => []
+                    'data' => json_encode($rep->data)
                 ));
             };
 
@@ -231,12 +228,17 @@ function order_update_status(){
 
 
         if ($order->update_status('wc-shipping')){
+            $order->set_log('success',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang shipping",
-                'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+                'data' => array(
+                    'order_status' => $order->get_status(),
+                    'class' => 'info'
+                )
             ));
         }else{
+            $order->set_log('danger',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => false,
                 'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
@@ -258,12 +260,17 @@ function order_update_status(){
     if ($_POST['payload_action'] == 'order_status_delivered' && 'order_status_shipping' == 'order_status_'.$old_status){
 
         if ($order->update_status('wc-delivered')){
+            $order->set_log('success',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang delivered",
-                'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+                'data' => array(
+                    'order_status' => $order->get_status(),
+                    'class' => 'info'
+                )
             ));
         }else{
+            $order->set_log('danger',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => false,
                 'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
@@ -288,7 +295,10 @@ function order_update_status(){
             echo json_encode(array(
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang delivery failed",
-                'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+                'data' => array(
+                    'order_status' => $order->get_status(),
+                    'class' => 'secondary'
+                )
             ));
         }else{
             echo json_encode(array(
@@ -312,12 +322,17 @@ function order_update_status(){
     if ($_POST['payload_action'] == 'order_status_confirm-goods' && 'order_status_delivery-failed' == 'order_status_'.$old_status){
 
         if ($order->update_status('wc-confirm-goods')){
+            $order->set_log('success',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang confirm goods",
-                'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+                'data' => array(
+                    'order_status' => $order->get_status(),
+                    'class' => 'warning'
+                )
             ));
         }else{
+            $order->set_log('danger',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => false,
                 'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
@@ -343,6 +358,7 @@ function order_update_status(){
         $rep = $tiki_connect->put_cancelled_shippment($order->get_tracking_id());
 
         if (!$rep->success){
+            $order->set_log('danger',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => false,
                 'messenger' => "Request failed",
@@ -352,12 +368,17 @@ function order_update_status(){
         }
 
         if ($order->update_status('wc-cancelled')) {
+            $order->set_log('success',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang cancelled",
-                'data' => ['<span class="badge ' . $status_badge[$order->get_status()] . '">' . $order->get_status() . '</span>']
+                'data' => array(
+                    'order_status' => $order->get_status(),
+                    'class' => 'danger'
+                )
             ));
         } else {
+            $order->set_log('danger',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => false,
                 'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
@@ -368,6 +389,7 @@ function order_update_status(){
         exit;
     }
 
+    $order->set_log('info',$payload_action,$commit_note);
     echo json_encode(array(
         'status' => false,
         'messenger' => "Trạng thái đơn hàng không cho phép thao tác này",
