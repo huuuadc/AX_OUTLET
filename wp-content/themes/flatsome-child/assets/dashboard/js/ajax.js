@@ -172,7 +172,9 @@ function send_update_status(id = '', status = ''){
 
                     let class_status = rep.data.class ?? 'muted';
 
-                    $(`#order_status_${id}`).html(`<span class="badge badge-${class_status}">${rep.data.order_status}</span> `)
+                    if (rep.data.order_status)  $(`#order_status_${id}`).context(`<span class="badge badge-${class_status}">${rep.data.order_status}</span> `);
+                    if (rep.data.tracking_id)   $(`#order_tracking_id_${id}`).context(`<a href="${rep.data.tracking_url}" >${rep.data.tracking_id}</a>`)
+                    if (rep.data.shipment_status)   $(`#order_shipment_status_${id}`).context(`<span class="badge">${rep.data.shipment_status}</span>`)
                     $(document).Toasts('create', {
                         class: 'bg-success',
                         title: 'Success',
