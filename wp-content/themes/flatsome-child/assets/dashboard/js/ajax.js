@@ -169,20 +169,25 @@ function send_update_status(id = '', status = ''){
             if (isJsonString(data)){
                 const rep = JSON.parse(data);
                 if (rep.status){
-                    $(`#order_status_${id}`).html(rep.data)
+
+                    let class_status = rep.data.class ?? 'muted';
+
+                    if (rep.data.order_status)  $(`#order_status_${id}`).context(`<span class="badge badge-${class_status}">${rep.data.order_status}</span> `);
+                    if (rep.data.tracking_id)   $(`#order_tracking_id_${id}`).context(`<a href="${rep.data.tracking_url}" >${rep.data.tracking_id}</a>`)
+                    if (rep.data.shipment_status)   $(`#order_shipment_status_${id}`).context(`<span class="badge">${rep.data.shipment_status}</span>`)
                     $(document).Toasts('create', {
                         class: 'bg-success',
                         title: 'Success',
-                        body: `Update status: ${rep.data}`,
+                        body: `Update status: <span class="badge badge-${class_status}">${rep.data.order_status}</span>`,
                         icon: 'fas fa-info-circle',
                         autohide: true,
                         delay: 5000
                     })
                 }else {
                     $(document).Toasts('create', {
-                        class: 'bg-danger',
+                        class: 'bg-info',
                         title: 'update false',
-                        body: `${rep.messenger}`,
+                        body: `${rep.messenger} <br>${rep.body}`,
                         icon: 'fas fa-info-circle',
                         autohide: true,
                         delay: 5000

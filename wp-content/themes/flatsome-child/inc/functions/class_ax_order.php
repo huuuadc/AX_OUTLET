@@ -52,43 +52,126 @@ class AX_ORDER extends WC_Order{
 
     }
 
+    /**
+     * @return string
+     */
     public function get_billing_city_code(){
-        return $this->get_billing_city();
+        return $this->get_billing_city() ?? '';
     }
+
+    /**
+     * @return string
+     */
     public function get_billing_city_name(){
         return $this->ax_address->get_city_name_by_code($this->billing_city_code);
     }
+
+    /**
+     * @return string
+     */
     public function get_billing_district_code(){
-        return $this->get_billing_city();
+        return $this->get_billing_city() ?? '';
     }
+
+    /**
+     * @return string
+     */
     public function get_billing_district_name(){
         return $this->ax_address->get_district_name_by_code($this->billing_district_code);
     }
+
+    /**
+     * @return string
+     */
     public function get_billing_ward_code(){
         return $this->billing_ward_code;
     }
 
+    /**
+     * @return string
+     */
     public function get_billing_ward_name(){
         return $this->ax_address->get_ward_name_by_code($this->billing_ward_code);
     }
 
+    /**
+     * @return string
+     */
     public function get_billing_address_full(){
         return $this->ax_address->get_full_address_name_by_code($this->billing_ward_code,$this->billing_district_code,$this->billing_city_code) ;
     }
 
+    /**
+     * @return string
+     */
     public function get_tracking_id(){
-        return $this->get_meta('tracking_id',true,'value');
+        return $this->get_meta('tracking_id',true,'value') ?? '';
     }
 
+    /**
+     * @return bool
+     */
+    public function set_tracking_id($tracking_id){
+        if ('' != $tracking_id ) {
+            update_post_meta($this->get_id(),'tracking_id', $tracking_id);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return string
+     */
     public function get_tracking_url(){
-        return $this->get_meta('tracking_url',true,'value');
+        return $this->get_meta('tracking_url',true,'value') ?? '';
     }
 
+    /**
+     * @return bool
+     */
+    public function set_tracking_url($url = ''){
+        if ('' != $url ) {
+            update_post_meta($this->get_id(),'tracking_url', $url);
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * @return string
+     */
     public function get_shipment_status(){
-        return $this->get_meta('shipment_status',true,'value');
+        return $this->get_meta('shipment_status',true,'value') ?? '';
     }
 
-    public function set_shipment_status(){
+    /**
+     * @return bool
+     */
+    public function set_shipment_status($shipment_status = ''){
+        if ('' != $shipment_status ) {
+            update_post_meta($this->get_id(),'shipment_status', $shipment_status);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function get_log()
+    {
+        return explode('|', $this->get_meta('order_user_log',true,'value') ?? []);
+    }
+
+
+    public function set_log($type = 'info' , $payload = '', $note ){
+        //get current user
+        $current_login = wp_get_current_user();
+        $user_name = $current_login->nickname;
+        $order_log = $this->get_log();
+        $order_log[] =  $user_name . '; ' . date('Y-m-d H:i:s') . '; ' . $_POST['payload_action'] . '; '. $type .'; '. $note ;
+        update_post_meta($this->get_id(),'order_user_log',implode('|',$order_log));
 
     }
 

@@ -14,11 +14,11 @@
     $order_query = new WP_Query($filter_order);
 
     $status_badge = array(
-            'reject' => 'badge-danger',
+            'reject' => 'badge-secondary',
             'trash' => 'badge-danger',
             'on-hold' => 'badge-danger',
-            'pending' => 'badge-warning',
-            'processing' => 'badge-primary',
+            'pending' => 'badge-danger',
+            'processing' => 'badge-warning',
             'confirm' => 'badge-primary',
             'completed' => 'badge-success',
             'request' => 'badge-info',
@@ -26,7 +26,7 @@
             'delivered' => 'badge-info',
             'delivery-failed' => 'badge-danger',
             'cancelled' => 'badge-danger',
-            'confirm-goods' => 'badge-primary',
+            'confirm-goods' => 'badge-warning',
     );
 
 ?>
@@ -86,8 +86,8 @@
                             <td><?php echo $order->get_item_count()?></td>
                             <td class="text-right"><?php echo number_format( $order->get_total(),0,',','.')?> đ</td>
                             <td><?php echo $order->get_payment_method_title()?></td>
-                            <td><a href="<?php echo $order->get_tracking_url()?>" ><?php echo $order->get_tracking_id()?></a></td>
-                            <td><?php echo $order->get_meta('shipment_status',true,'value') ?? 'new'?></td>
+                            <td id="order_tracking_id_<?php echo get_the_ID()?>" ><a href="<?php echo $order->get_tracking_url()?>" ><?php echo $order->get_tracking_id()?></a></td>
+                            <td id="order_shipment_status_<?php echo get_the_ID()?>"><span class="badge"><?php echo $order->get_meta('shipment_status',true,'value') ?? 'new'?></span></td>
                             <td id="order_status_<?php echo get_the_ID()?>"><span class="badge <?php echo $status_badge[$order->get_status()] ?>"><?php echo $order->get_status()?></span></td>
                             <td><div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown">

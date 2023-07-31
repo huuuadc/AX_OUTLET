@@ -5,6 +5,7 @@ add_action('rest_api_init', function () {
     register_rest_route('shipment/v1', '/update_status', array(
         'methods' => 'POST',
         'callback' => 'shipment_order_update_status',
+        'permission_callback' => '__return_true'
     ));
 });
 
@@ -40,5 +41,6 @@ function shipment_order_update_status( WP_REST_Request $request ) {
 
     }
 
+    return true;
 
 }
