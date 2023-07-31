@@ -1973,7 +1973,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 .wishlist-items-wrapper .price-wrapper del {
   margin-bottom: 3px;
 }
-.wishlist-items-wrapper .price-wrapper del, .wishlist-items-wrapper .price-wrapper ins {
+.wishlist-items-wrapper .price-wrapper del, .wishlist-items-wrapper .price-wrapper ins, .wishlist-items-wrapper .price-wrapper .amount {
   font-size: 15px;
 }
 .wishlist-items-wrapper .price-wrapper .percent__label {
