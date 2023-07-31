@@ -1297,6 +1297,7 @@ html *::-webkit-scrollbar-thumb {
   padding-right: 0;
 }
 .woocommerce-page .products.wt-related-products .owl-nav .owl-prev, .woocommerce-page .products.wt-related-products .owl-nav .owl-next {
+  top: 33% !important;
   width: 40px;
   height: 40px;
   border-radius: 0 !important;
