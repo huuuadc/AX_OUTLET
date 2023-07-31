@@ -19,21 +19,6 @@
 use AX\COMPANY;
 
     $order_id =  $_GET['order_id'];
-    $status_badge = array(
-        'reject' => 'bg-danger',
-        'trash' => 'bg-danger',
-        'on-hold' => 'bg-danger',
-        'pending' => 'bg-warning',
-        'processing' => 'bg-primary',
-        'confirm' => 'bg-primary',
-        'completed' => 'bg-success',
-        'request' => 'bg-info',
-        'shipping' => 'bg-info',
-        'delivered' => 'bg-info',
-        'delivery-failed' => 'bg-danger',
-        'cancelled' => 'bg-danger',
-        'confirm-goods' => 'bg-primary',
-    );
 
 if (!isset($_GET['order_id']) || !get_post_type($order_id)):
     ?>
@@ -214,13 +199,13 @@ else:
                                     ?>
                                     <!-- timeline item -->
                                     <div>
-                                        <i class="fas fa-comments <?php echo $status_badge[ $status_log] ?>"></i>
+                                        <i class="fas fa-comments bg-<?php echo trim($value_log[3])?>"></i>
                                         <div class="timeline-item">
                                             <span class="time"><i class="fas fa-clock"></i><?php echo $value_log[1]?></span>
-                                            <h3 class="timeline-header"><?php echo  $value_log[0]  . ' - '. $status_log?></h3>
+                                            <h3 class="timeline-header"><?php echo  $value_log[0]  . ' - '. $status_log . ' - ' .trim($value_log[3])?></h3>
 
                                             <div class="timeline-body">
-                                               <?php echo $value_log[3]?>
+                                               <?php echo $value_log[4]?? '' ?>
                                             </div>
                                         </div>
                                     </div>
@@ -249,14 +234,19 @@ else:
                                         <div class="timeline-item">
                                             <span class="time"><i class="fas fa-clock"></i><?php echo $value_log->timestamp?></span>
                                             <h3 class="timeline-header">
-                                                <a href="<?php echo$value_log->tracking_url?>"><?php echo$value_log->tracking_id?>
-                                                </a>
-                                                <?php echo  $value_log->status  . ' - '. $value_log->reason_code?>
+                                                <a href="<?php echo$value_log->tracking_url?>"><?php echo$value_log->tracking_id?></a>
                                             </h3>
-
-
                                             <div class="timeline-body">
-                                                <p><?php echo json_encode( $value_log->driver)?></p>
+                                                <span>Shipment status: </span><strong><?php echo $value_log->status; ?></strong><br>
+                                                 <?php if($value_log->reason_code) : ?> <span>Cancel note: </span><strong><?php echo $value_log->reason_code ; ?></strong><br>
+                                                <?php endif;?>
+                                                <span>Name: </span><strong><?php echo $value_log->driver->name ?></strong><br>
+                                                <span>Phone: </span><strong><?php echo $value_log->driver->phone ?></strong><br>
+                                                <span>License plate: </span><strong><?php echo $value_log->driver->license_plate ?></strong><br>
+                                                <span>Photo Url: </span><strong><?php echo $value_log->driver->photo_url ?></strong><br>
+                                                <span>Location: </span>
+                                                    <strong><?php echo $value_log->driver->current_coordinates->latitude ?></strong>
+                                                    <strong><?php echo $value_log->driver->current_coordinates->longitude ?></strong><br>
                                             </div>
                                         </div>
                                     </div>

@@ -187,7 +187,7 @@ function send_update_status(id = '', status = ''){
                     $(document).Toasts('create', {
                         class: 'bg-info',
                         title: 'update false',
-                        body: `${rep.messenger} <br>${rep.body}`,
+                        body: `${rep.messenger} <br>${rep.data ?? ''}`,
                         icon: 'fas fa-info-circle',
                         autohide: true,
                         delay: 5000
@@ -198,7 +198,7 @@ function send_update_status(id = '', status = ''){
                 $(document).Toasts('create', {
                     class: 'bg-danger',
                     title: 'Error',
-                    body: `${rep.data}`,
+                    body: `${rep.data ?? ''}`,
                     icon: 'fas fa-info-circle',
                     autohide: true,
                     delay: 5000
