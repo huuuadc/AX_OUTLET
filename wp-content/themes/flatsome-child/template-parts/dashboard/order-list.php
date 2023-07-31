@@ -14,11 +14,11 @@
     $order_query = new WP_Query($filter_order);
 
     $status_badge = array(
-            'reject' => 'badge-danger',
+            'reject' => 'badge-secondary',
             'trash' => 'badge-danger',
             'on-hold' => 'badge-danger',
-            'pending' => 'badge-warning',
-            'processing' => 'badge-primary',
+            'pending' => 'badge-danger',
+            'processing' => 'badge-warning',
             'confirm' => 'badge-primary',
             'completed' => 'badge-success',
             'request' => 'badge-info',
@@ -26,7 +26,7 @@
             'delivered' => 'badge-info',
             'delivery-failed' => 'badge-danger',
             'cancelled' => 'badge-danger',
-            'confirm-goods' => 'badge-primary',
+            'confirm-goods' => 'badge-warning',
     );
 
 ?>
