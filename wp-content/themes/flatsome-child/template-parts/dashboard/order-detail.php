@@ -130,7 +130,7 @@ else:
                         <div class="col-3">
                             <p class="lead">Thông tin giao hàng:</p>
                             Đơn vị giao hàng: <span><?php echo $order_ax->get_shipping_method()?></span><br>
-                            Trạng thái giao hang: <span><?php echo $order_ax->get_meta('shipment_status',true)?></span><br>
+                            Trạng thái giao hàng: <span><?php echo $order_ax->get_meta('shipment_status',true)?></span><br>
                             Ngày lấy hàng dự kiến: <span><?php echo wp_date( get_date_format(), strtotime( $order_ax->get_meta('shipment_estimated_timeline_pickup',true)))?></span><br>
                             Ngày giao hàng thành: <span><?php echo wp_date( get_date_format(), strtotime( $order_ax->get_meta('shipment_estimated_timeline_dropoff',true)))?></span><br>
                         </div>
@@ -140,7 +140,7 @@ else:
                                 <table class="table">
                                     <tr>
                                         <th>Tiền:</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_total() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> đ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_total_discount() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> đ</td>
                                     </tr>
                                     <tr>
                                         <th>Giảm giá</th>
@@ -232,19 +232,19 @@ else:
                                     <div>
                                         <i class="fas fa-comments bg-blue"></i>
                                         <div class="timeline-item">
-                                            <span class="time"><i class="fas fa-clock"></i><?php echo $value_log->timestamp?></span>
+                                            <span class="time"><i class="fas fa-clock"></i><?php echo wp_date( get_date_format(),strtotime($value_log->timestamp))?></span>
                                             <h3 class="timeline-header">
                                                 <a href="<?php echo$value_log->tracking_url?>"><?php echo$value_log->tracking_id?></a>
                                             </h3>
                                             <div class="timeline-body">
-                                                <span>Shipment status: </span><strong><?php echo $value_log->status; ?></strong><br>
+                                                <span>Trạng thái giao hàng: </span><strong><?php echo $value_log->status; ?></strong><br>
                                                  <?php if($value_log->reason_code) : ?> <span>Cancel note: </span><strong><?php echo $value_log->reason_code ; ?></strong><br>
                                                 <?php endif;?>
-                                                <span>Name: </span><strong><?php echo $value_log->driver->name ?></strong><br>
-                                                <span>Phone: </span><strong><?php echo $value_log->driver->phone ?></strong><br>
+                                                <span>Họ tên shipper: </span><strong><?php echo $value_log->driver->name ?></strong><br>
+                                                <span>Số điện thoại: </span><strong><?php echo $value_log->driver->phone ?></strong><br>
                                                 <span>License plate: </span><strong><?php echo $value_log->driver->license_plate ?></strong><br>
-                                                <span>Photo Url: </span><strong><?php echo $value_log->driver->photo_url ?></strong><br>
-                                                <span>Location: </span>
+                                                <span>Linh hình: </span><strong><?php echo $value_log->driver->photo_url ?></strong><br>
+                                                <span>Vị trí: </span>
                                                     <strong><?php echo $value_log->driver->current_coordinates->latitude ?></strong>
                                                     <strong><?php echo $value_log->driver->current_coordinates->longitude ?></strong><br>
                                             </div>
