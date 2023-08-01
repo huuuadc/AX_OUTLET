@@ -140,7 +140,7 @@ else:
                                 <table class="table">
                                     <tr>
                                         <th>Tiền:</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_total_discount() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> đ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_total() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> đ</td>
                                     </tr>
                                     <tr>
                                         <th>Giảm giá</th>
@@ -165,7 +165,9 @@ else:
                     <div class="row no-print padding10">
                         <div class="col-12">
                             <button onclick="window.print()" rel="noopener" target="_blank" class="btn btn-default">
-                                <i class="fas fa-print"></i> In</button>
+                                <i class="fas fa-print"></i> In hóa đơn</button>
+                            <a href="/orders/" ><button rel="noopener" target="_blank" class="btn btn-default">
+                                    <i class="fas fa-print"></i> In phiếu giao hàng</button></a>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
                                 <i class="fas fa-file-invoice-dollar"></i> Xác nhận đã nhận hàng</button>
                             <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-primary float-right"  style="margin-right: 5px;">
