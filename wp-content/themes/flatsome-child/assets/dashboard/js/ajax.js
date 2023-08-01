@@ -187,7 +187,7 @@ function send_update_status(id = '', status = ''){
                     $(document).Toasts('create', {
                         class: 'bg-info',
                         title: 'update false',
-                        body: `${rep.messenger} <br>${rep.data ?? ''}`,
+                        body: `${rep.messenger} <br>${JSON.stringify(rep.data) ?? ''}`,
                         icon: 'fas fa-info-circle',
                         autohide: true,
                         delay: 5000
