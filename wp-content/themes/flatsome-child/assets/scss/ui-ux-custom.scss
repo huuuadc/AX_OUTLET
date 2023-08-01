@@ -2293,3 +2293,33 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
         font-size: 16px;
     }
 }
+.faq__accordion {
+    margin-bottom: 20px;
+    > div {
+        padding: 15px 0;
+        border-bottom: solid 1px #111;
+        &:first-child {
+            padding-top: 0;
+        }
+    }
+    .accordion-title {
+        border-top: none;
+        padding: 10px 30px 10px 0;
+        background-color: transparent !important;
+        .toggle {
+            left: auto;
+            right: 0;
+            font-size: 11px;
+            color: #111;
+            opacity: 1;
+            top: auto;
+        }
+    }
+    .accordion-inner {
+        padding-left: 0;
+        padding-right: 0;
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
