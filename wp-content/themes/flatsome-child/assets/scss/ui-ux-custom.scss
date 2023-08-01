@@ -1450,9 +1450,12 @@ html *::-webkit-scrollbar-thumb{
         .carousel-wrap {
             padding: 0 !important;
         }
-        .col, .columns, .gallery-item {
-            padding-left: 0;
-            padding-right: 0;
+        .owl-item {
+            
+            .col, .columns, .gallery-item {
+                padding-left: 0;
+                padding-right: 0;
+            }
         }
         .owl-nav {
             .owl-prev, .owl-next {

@@ -1292,7 +1292,7 @@ html *::-webkit-scrollbar-thumb {
 .woocommerce-page .products.wt-related-products .carousel-wrap {
   padding: 0 !important;
 }
-.woocommerce-page .products.wt-related-products .col, .woocommerce-page .products.wt-related-products .columns, .woocommerce-page .products.wt-related-products .gallery-item {
+.woocommerce-page .products.wt-related-products .owl-item .col, .woocommerce-page .products.wt-related-products .owl-item .columns, .woocommerce-page .products.wt-related-products .owl-item .gallery-item {
   padding-left: 0;
   padding-right: 0;
 }
@@ -2033,4 +2033,34 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 .dgwt-wcas-suggestions-wrapp .dgwt-wcas-st-title {
   font-weight: 400;
   font-size: 16px;
+}
+.faq__accordion {
+  margin-bottom: 20px;
+}
+.faq__accordion > div {
+  padding: 15px 0;
+  border-bottom: solid 1px #111;
+}
+.faq__accordion > div:first-child {
+  padding-top: 0;
+}
+.faq__accordion .accordion-title {
+  border-top: none;
+  padding: 10px 30px 10px 0;
+  background-color: transparent !important;
+}
+.faq__accordion .accordion-title .toggle {
+  left: auto;
+  right: 0;
+  font-size: 11px;
+  color: #111;
+  opacity: 1;
+  top: auto;
+}
+.faq__accordion .accordion-inner {
+  padding-left: 0;
+  padding-right: 0;
+}
+.faq__accordion .accordion-inner p:last-child {
+  margin-bottom: 0;
 }
