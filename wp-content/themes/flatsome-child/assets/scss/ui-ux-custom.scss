@@ -2439,5 +2439,29 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
         input[name=rememberme]#rememberme {
             margin: -3px 5px 0 0;
         }
+        .ur-message {
+            display: flex;
+        }
+        #ur-submit-message-node {
+            border: none;
+            margin: 10px;
+            border-radius: 3px;
+            ul {
+                li {
+                    margin: 0;
+                    padding-top: 1px;
+                }
+            }
+        }
+        .ur-form-row .ur-form-grid label.user-registration-error {
+            font-size: 12px !important;
+            border: none;
+            padding: 0;
+            background-color: transparent;
+            font-weight: 500;
+            &:before {
+                display: none;
+            }
+        }
     }
 }
