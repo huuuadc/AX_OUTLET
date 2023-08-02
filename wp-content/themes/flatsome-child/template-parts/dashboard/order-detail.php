@@ -190,8 +190,9 @@ else:
                     <!-- this row will not appear when printing -->
                     <div class="row no-print padding10">
                         <div class="col-12">
-                            <button onclick="window.print()" rel="noopener" target="_blank" class="btn btn-default">
-                                <i class="fas fa-print"></i> In hóa đơn</button>
+                            <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=invoice'?>" target="_blank"  rel="noopener noreferrer">
+                                <button rel="noopener" target="_blank" class="btn btn-default">
+                                    <i class="fas fa-print"></i> In hóa đơn</button></a>
                             <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=shipment'?>" target="_blank"  rel="noopener noreferrer">
                                 <button rel="noopener" target="_blank" class="btn btn-default">
                                     <i class="fas fa-print"></i> In phiếu giao hàng</button></a>
