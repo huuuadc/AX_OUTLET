@@ -2170,3 +2170,25 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 .login__register .ur-frontend-form input[name=rememberme]#rememberme {
   margin: -3px 5px 0 0;
 }
+.login__register .ur-frontend-form .ur-message {
+  display: flex;
+}
+.login__register .ur-frontend-form #ur-submit-message-node {
+  border: none;
+  margin: 10px;
+  border-radius: 3px;
+}
+.login__register .ur-frontend-form #ur-submit-message-node ul li {
+  margin: 0;
+  padding-top: 1px;
+}
+.login__register .ur-frontend-form .ur-form-row .ur-form-grid label.user-registration-error {
+  font-size: 12px !important;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  font-weight: 500;
+}
+.login__register .ur-frontend-form .ur-form-row .ur-form-grid label.user-registration-error:before {
+  display: none;
+}

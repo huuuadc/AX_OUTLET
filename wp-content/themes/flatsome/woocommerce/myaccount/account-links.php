@@ -36,6 +36,14 @@
   <?php endforeach; ?>
   <?php do_action('flatsome_account_links'); ?>
   <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--customer-logout">
-    <a href="<?php echo esc_url( wc_get_endpoint_url( 'customer-logout', '', wc_get_page_permalink( 'myaccount' )) ); ?>"><?php _e('Logout','woocommerce'); ?></a>
+      <a href="javascript:;" onclick="logOutConfirm()">Đăng xuất</a>
+    <!--<a href="<?php /*echo esc_url( wc_get_endpoint_url( 'customer-logout', '', wc_get_page_permalink( 'myaccount' )) ); */?>"><?php /*_e('Logout','woocommerce'); */?></a>-->
   </li>
+<script>
+    function logOutConfirm() {
+        if (confirm("Bạn muốn đăng xuất?")) {
+            window.location.href = '<?php echo wp_logout_url(wc_get_page_permalink( 'myaccount' )) ?>';
+        }
+    }
+</script>
 <?php } ?>
