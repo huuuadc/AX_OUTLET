@@ -166,7 +166,8 @@ else:
                         <div class="col-12">
                             <button onclick="window.print()" rel="noopener" target="_blank" class="btn btn-default">
                                 <i class="fas fa-print"></i> In hóa đơn</button>
-                            <a href="/orders/" ><button rel="noopener" target="_blank" class="btn btn-default">
+                            <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=shipment'?>" >
+                                <button rel="noopener" target="_blank" class="btn btn-default">
                                     <i class="fas fa-print"></i> In phiếu giao hàng</button></a>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
                                 <i class="fas fa-file-invoice-dollar"></i> Xác nhận đã nhận hàng</button>
