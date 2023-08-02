@@ -64,7 +64,6 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-
                 <!-- Main content -->
                 <div class="invoice p-3 mb-3 ">
                         <div class="w-100 border border-dark">
@@ -139,6 +138,7 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
                                 <span>(thời gian làm việc từ 9h-18h từ thứ 2-thứ 6)</span>
                     </div>
                 </div>
+                <!-- Main content -->
             </div>
         </div>
     </div>

@@ -33,6 +33,12 @@
         </section>
     <?php endif;?>
 
+        <?php if ($print && $_GET['print'] == 'invoice' ):?>
+        <section class="content">
+            <?php get_template_part('template-parts/dashboard/order-print','invoice',$order_id) ?>
+        </section>
+    <?php endif;?>
+
 
     <?php endif;?>
 

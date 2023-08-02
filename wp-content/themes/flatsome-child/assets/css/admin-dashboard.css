@@ -14,6 +14,10 @@
         position: absolute !important;
     }
 
+    .invoice {
+        page-break-before: always;
+    }
+
     @page {
         size: a5 landscape;
         margin: 0;
