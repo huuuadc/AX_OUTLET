@@ -1752,6 +1752,9 @@ html *::-webkit-scrollbar-thumb {
   color: #000;
   background-color: transparent !important;
 }
+.product .accordion-title {
+  font-weight: 600;
+}
 #cart-popup .woocommerce-mini-cart__buttons .button.checkout {
   display: none !important;
 }
@@ -2063,4 +2066,107 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 }
 .faq__accordion .accordion-inner p:last-child {
   margin-bottom: 0;
+}
+.login__register {
+  width: 600px;
+  max-width: 100%;
+  margin: 30px auto 10px auto;
+}
+.login__register .tabbed-content .nav {
+  position: relative;
+  z-index: 2;
+}
+.login__register .tabbed-content .nav li {
+  margin: 0;
+  width: 50%;
+}
+.login__register .tabbed-content .nav li a {
+  display: block;
+  font-size: 18px;
+  letter-spacing: 0;
+  padding: 10px 25px;
+  background-color: #e9ecf5;
+  text-align: center;
+  font-weight: 500;
+  color: #000;
+  border-bottom: none;
+}
+.login__register .tabbed-content .nav li a:before {
+  display: none;
+}
+.login__register .tabbed-content .nav li.active a {
+  background-color: #111;
+  color: #fff;
+}
+.login__register .tab-panels {
+  padding: 0;
+}
+.login__register #user-registration, .login__register #user-registration.horizontal {
+  box-shadow: none;
+}
+.login__register .ur-frontend-form {
+  padding: 20px !important;
+  border-color: #111;
+}
+.login__register .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item {
+  margin-bottom: 10px;
+}
+.login__register .ur-frontend-form .ur-form-row .ur-form-grid input {
+  margin-bottom: 0;
+}
+.login__register .ur-frontend-form p.user-registration-form-row.user-registration-form-row--wide.form-row.form-row-wide {
+  margin-bottom: 20px;
+}
+.login__register .ur-frontend-form p.form-row:not(.form-row-wide) {
+  margin-bottom: 25px;
+}
+.login__register .ur-frontend-form input[type="text"], .login__register .ur-frontend-form input[type="number"], .login__register .ur-frontend-form input[type="password"], .login__register .ur-frontend-form input[type="email"], .login__register .ur-frontend-form textarea, .login__register .ur-frontend-form select {
+  border: solid 1px #aaa;
+  box-shadow: none;
+  padding: 6px 15px;
+  min-height: 40px;
+  font-size: 14px;
+}
+.login__register .ur-frontend-form input[type="text"]:focus, .login__register .ur-frontend-form input[type="number"]:focus, .login__register .ur-frontend-form input[type="password"]:focus, .login__register .ur-frontend-form input[type="email"]:focus, .login__register .ur-frontend-form textarea:focus, .login__register .ur-frontend-form select:focus {
+  border-color: #000;
+}
+.login__register .ur-frontend-form .ur-field-item.form-gender {
+  width: calc(30% - 10px);
+  float: left;
+}
+.login__register .ur-frontend-form .ur-field-item.form-firstname {
+  width: calc(35% - 5px);
+  float: left;
+  margin-left: 10px;
+}
+.login__register .ur-frontend-form .ur-field-item.form-lastname {
+  width: calc(35% - 5px);
+  float: right;
+}
+.login__register .ur-frontend-form .ur-field-item.form-birthday {
+  width: calc(50% - 5px);
+  float: right;
+}
+.login__register .ur-frontend-form .ur-field-item.form-phone {
+  width: calc(50% - 5px);
+  float: left;
+}
+.login__register .ur-frontend-form .ur-field-item.form-email {
+  display: block;
+  clear: both;
+  margin-top: 15px;
+}
+.login__register .ur-frontend-form .button {
+  margin: 0;
+  font-weight: 500;
+  font-size: 15px;
+  text-transform: none;
+  border-radius: 3px;
+  background-color: #000;
+}
+.login__register .ur-frontend-form .button:hover {
+  background-color: #666;
+}
+.login__register .ur-frontend-form input[name=rememberme]#rememberme {
+  margin: -3px 5px 0 0;
 }

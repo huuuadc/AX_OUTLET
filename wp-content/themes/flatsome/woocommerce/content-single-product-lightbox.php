@@ -12,6 +12,18 @@ global $post, $product;
 
 do_action( 'wc_quick_view_before_single_product' );
 ?>
+<style>
+    .product .product-lightbox-inner .btn--size_chart.before_add_to_cart_form {
+        position: relative;
+        right: auto;
+        float: none !important;
+        margin: 0 0 25px 0 !important;
+        clear: both;
+        display: table;
+        min-height: unset;
+        line-height: 1 !important;
+    }
+</style>
 <div class="product-quick-view-container">
 	<div class="row row-collapse mb-0 product" id="product-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<div class="product-gallery large-6 col">
