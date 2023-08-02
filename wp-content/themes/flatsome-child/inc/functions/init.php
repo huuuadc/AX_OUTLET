@@ -32,3 +32,4 @@ require (__DIR__.'/class-company.php');
 require (__DIR__.'/helps/helps.php');
 require (__DIR__.'/order/change_on_hold_to_processing.php');
 require (__DIR__.'/ajax/save_setting_admin_dashboard.php');
+require (__DIR__.'/barcode/init.php');

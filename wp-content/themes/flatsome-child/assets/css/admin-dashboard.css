@@ -5,6 +5,15 @@
         display: none !important;
     }
 
+    .table-bordered td, .table-bordered th {
+        border: 1px solid black !important;
+    }
+
+    #barcode_shipment div {
+        right: 10px !important;
+        position: absolute !important;
+    }
+
     @page {
         size: a5 landscape;
         margin: 0;
