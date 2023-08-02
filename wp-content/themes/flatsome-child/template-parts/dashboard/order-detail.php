@@ -125,16 +125,21 @@ else:
                                     <th>Sản phẩm</th>
                                     <th>Mã sản phẩm</th>
                                     <th>Số lượng</th>
-                                    <th class="text-right">Thành tiền</th>
+                                    <th>Đơn giá</th>
+                                    <th>% Giảm giá</th>
+                                    <th class="text-right">Tạm tính</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php $count= 0; foreach ($order_ax->get_items() as $item_key => $item ): $count++ ?>
-                                <?php $product = new WC_Product($item['product_id']);?>
+                                <?php $product = $item->get_product() ?>
+                                <?php write_log($product); ?>
                                 <tr><td><?php echo $count?></td>
                                     <td><?php echo $item->get_name() ?></td>
                                     <td><?php echo $product->get_sku()  ?></td>
                                     <td><?php echo $item->get_quantity() ?></td>
+                                    <td class="text-right"><?php echo number_format( $product->get_regular_price(), '0',',','.') ?> đ</td>
+                                    <td class="text-right"><?php echo number_format( 100 * (1 - $item->get_total()/$product->get_regular_price()), '0',',','.') ?> %</td>
                                     <td class="text-right"><?php echo number_format( $item->get_total(), '0',',','.') ?> đ</td>
                                 </tr>
                                 <?php endforeach; ?>
