@@ -33,6 +33,31 @@ $company = new COMPANY();
 $order = new AX_ORDER($order_id);
 $barcode = new BarcodeGeneratorHTML();
 
+$site_logo_id        = flatsome_option( 'site_logo' );
+$site_logo           = wp_get_attachment_image_src( $site_logo_id, 'large' );
+
+write_log($site_logo_id);
+
+if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
+    $site_logo = array( $site_logo_id, 400, 300 );
+}
+
+    if ($order->get_tracking_id() == ''):
+        ?>
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">Đơn hàng: <?php echo $order_id?></div>
+                        <div class="text-center">Không tìm thấy mã vận đơn</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <?php
+        else:
+
 ?>
 
 <div class="content-header">
@@ -46,7 +71,7 @@ $barcode = new BarcodeGeneratorHTML();
                 <div class="invoice p-3 mb-3 ">
                         <div class="w-100 border border-dark">
                                 <div class="d-flex flex-col p-3">
-                                    <div class="pt-3 w-100"><img src="https://www.dafc.com.vn/wp-content/uploads/2023/04/Property-1gold.png" /></div>
+                                    <div class="pt-3 w-100"><img src="<?php echo $site_logo[0]?>" /></div>
                                     <div class="w-100 text-center"><h1><strong>Phiếu Giao Hàng</strong></h1></div>
                                     <div id="barcode_shipment" class="barcode_shipment w-100 flex justify-content-end"><?php echo $barcode->getBarcode($order->get_tracking_id(),'C128',1, 50) ?></div>
                                 </div>
@@ -80,14 +105,15 @@ $barcode = new BarcodeGeneratorHTML();
                         <tr class="font-italic border-dark">
                             <td class="pl-3  border-dark"><strong>STT</strong></td>
                             <td class="border-dark"><strong>Tên sản phẩm</strong></td>
-                            <td class="border-dark"><strong>SKU</strong></td>
+                            <td class="border-dark"><strong>Mã sản phẩm</strong></td>
                             <td class="border-dark"><strong>Số lượng</strong></td>
                         </tr>
                         <?php $count= 0; foreach ($order->get_items() as $item_key => $item ): $count++ ?>
+                            <?php $product = new WC_Product($item['product_id']);?>
                             <tr>
                                 <td class="pl-3 border-dark"><?php echo $count?></td>
                                 <td class="border-dark"><?php echo $item->get_name() ?></td>
-                                <td class="border-dark"><?php echo get_post_meta( $item['variation_id'], '_sku', true ) ?></td>
+                                <td class="border-dark"><?php echo $product->get_sku() ?></td>
                                 <td class="border-dark"><?php echo $item->get_quantity() ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -119,10 +145,10 @@ $barcode = new BarcodeGeneratorHTML();
         </div>
     </div>
 </section>
+            <script>
+                window.print()
+            </script>
 <?php
-
+    endif;
 endif;
 ?>
-<script>
-    window.print()
-</script>

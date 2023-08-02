@@ -20,6 +20,22 @@ use AX\COMPANY;
 
     $order_id =  $_GET['order_id'];
 
+    $status_badge = array(
+        'reject' => 'badge-secondary',
+        'trash' => 'badge-danger',
+        'on-hold' => 'badge-danger',
+        'pending' => 'badge-danger',
+        'processing' => 'badge-warning',
+        'confirm' => 'badge-primary',
+        'completed' => 'badge-success',
+        'request' => 'badge-info',
+        'shipping' => 'badge-info',
+        'delivered' => 'badge-info',
+        'delivery-failed' => 'badge-danger',
+        'cancelled' => 'badge-danger',
+        'confirm-goods' => 'badge-warning',
+    );
+
 if (!isset($_GET['order_id']) || !get_post_type($order_id)):
     ?>
     <section class="content">
@@ -83,8 +99,17 @@ else:
                             </address>
                         </div>
                         <!-- /.col -->
-                        <div class="col-sm-4 invoice-col">
+                        <div class="col-sm-2 invoice-col">
                             Hóa đơn <br><b> #<?php echo $order_id?></b><br>
+                        </div>
+                        <!-- /.col -->
+                        <!-- /.col -->
+                        <div id="card_orders" class="col-sm-2 invoice-col no-print">
+                            Trạng thái <br>
+                            <b id="order_status_<?php echo get_the_ID()?>">
+                                <span class="badge <?php echo $status_badge[$order_ax->get_status()] ?>"><?php echo $order_ax->get_status()?>
+                                </span>
+                            </b><br>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -97,17 +122,18 @@ else:
                                 <thead>
                                 <tr>
                                     <th>STT</th>
-                                    <th>SKU</th>
                                     <th>Sản phẩm</th>
+                                    <th>Mã sản phẩm</th>
                                     <th>Số lượng</th>
-                                    <th class="text-right">Tiền</th>
+                                    <th class="text-right">Thành tiền</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php $count= 0; foreach ($order_ax->get_items() as $item_key => $item ): $count++ ?>
+                                <?php $product = new WC_Product($item['product_id']);?>
                                 <tr><td><?php echo $count?></td>
-                                    <td><?php echo get_post_meta( $item['variation_id'], '_sku', true ) ?></td>
                                     <td><?php echo $item->get_name() ?></td>
+                                    <td><?php echo $product->get_sku()  ?></td>
                                     <td><?php echo $item->get_quantity() ?></td>
                                     <td class="text-right"><?php echo number_format( $item->get_total(), '0',',','.') ?> đ</td>
                                 </tr>
@@ -139,7 +165,7 @@ else:
                             <div class="table-responsive">
                                 <table class="table">
                                     <tr>
-                                        <th>Tiền:</th>
+                                        <th>Thành tiền:</th>
                                         <td class="text-right"><?php echo number_format($order_ax->get_total() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> đ</td>
                                     </tr>
                                     <tr>
@@ -166,13 +192,17 @@ else:
                         <div class="col-12">
                             <button onclick="window.print()" rel="noopener" target="_blank" class="btn btn-default">
                                 <i class="fas fa-print"></i> In hóa đơn</button>
-                            <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=shipment'?>" >
+                            <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=shipment'?>" target="_blank"  rel="noopener noreferrer">
                                 <button rel="noopener" target="_blank" class="btn btn-default">
                                     <i class="fas fa-print"></i> In phiếu giao hàng</button></a>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
-                                <i class="fas fa-file-invoice-dollar"></i> Xác nhận đã nhận hàng</button>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-primary float-right"  style="margin-right: 5px;">
+                                <i class="fas fa-file-invoice-dollar"></i> Xác nhận hoàn hàng</button>
+                            <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-info float-right"  style="margin-right: 5px;">
                                 <i class="fas fa-shipping-fast"> </i> Gọi giao hàng</button>
+                            <button onclick="send_update_status(<?php echo $order_id?>,'confirm')" type="button" class="btn btn-primary float-right"  style="margin-right: 5px;">
+                                <i class="fas fa-times"></i> Xác nhận</button>
+                            <button onclick="send_update_status(<?php echo $order_id?>,'reject')" type="button" class="btn btn-secondary float-right"  style="margin-right: 5px;">
+                                <i class="fas fa-times"></i> Từ chối</button>
                             <button onclick="send_update_status(<?php echo $order_id?>,'cancelled')" type="button" class="btn btn-danger float-right"  style="margin-right: 5px;">
                                 <i class="fas fa-times"></i> Hủy đơn</button>
                         </div>
