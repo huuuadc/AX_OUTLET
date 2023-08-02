@@ -311,5 +311,8 @@ else:
         </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
+    <script>
+        window.print()
+    </script>
 
 <?php endif;
