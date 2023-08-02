@@ -69,7 +69,7 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
                 <div class="invoice p-3 mb-3 ">
                         <div class="w-100 border border-dark">
                                 <div class="d-flex flex-col p-3">
-                                    <div class="pt-2 w-100"><img width="<?php echo esc_attr( $site_logo[1] )?>" height="<?php echo esc_attr( $site_logo[2] )?>"  src="<?php echo $site_logo[0]?>" /></div>
+                                    <div class="pt-2 w-100"><img width="200" height="70"  src="<?php echo $site_logo[0]?>" /></div>
                                     <div class="w-100 text-center"><h1><strong>Phiếu Giao Hàng</strong></h1></div>
                                     <div id="barcode_shipment" class="barcode_shipment w-100 flex justify-content-end"><?php echo $barcode->getBarcode($order->get_tracking_id(),'C128',1, 50) ?></div>
                                 </div>
