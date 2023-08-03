@@ -313,6 +313,7 @@ else:
     <!-- /.content -->
     <script>
         window.print()
+        window.onafterprint = () => window.close();
     </script>
 
 <?php endif;
