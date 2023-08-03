@@ -2192,3 +2192,102 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 .login__register .ur-frontend-form .ur-form-row .ur-form-grid label.user-registration-error:before {
   display: none;
 }
+#yith-wcmap-avatar .avatar-modal-overlay {
+  z-index: 1100;
+}
+#yith-wcmap-avatar .avatar-modal-wrapper {
+  z-index: 1111;
+}
+@media screen and (min-width: 481px) {
+  .woocommerce-account #main {
+    background-color: #f4f4f4;
+    position: relative;
+  }
+  .woocommerce-account #main:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 50%;
+    bottom: 0;
+    background-color: #fff;
+  }
+  .woocommerce-account #main > .content-area {
+    position: relative;
+    z-index: 2;
+  }
+  .myaccount__container #my-account-menu {
+    width: 25% !important;
+  }
+  .myaccount__container #my-account-menu ~ .woocommerce-MyAccount-content {
+    width: 75% !important;
+  }
+  .myaccount__container > .woocommerce {
+    display: flex;
+  }
+  .myaccount__container > .woocommerce .woocommerce-MyAccount-content {
+    background-color: #fff;
+    padding: 50px 0 30px 50px;
+  }
+  .myaccount__container > .woocommerce .position-vertical-left {
+    padding: 60px 0 30px 0;
+  }
+}
+.myaccount__container .woocommerce-MyAccount-content .message-container.container.medium-text-center {
+  padding-left: 0;
+}
+.myaccount__container .woocommerce-MyAccount-content .message-container.container.medium-text-center .woocommerce-Button {
+  font-weight: 500;
+  display: table;
+  margin: 15px 0 0 0;
+  border-radius: 3px;
+}
+.myaccount__container .woocommerce-MyAccount-content form input[type=email], .myaccount__container .woocommerce-MyAccount-content form input[type=number], .myaccount__container .woocommerce-MyAccount-content form input[type=search], .myaccount__container .woocommerce-MyAccount-content form input[type=tel], .myaccount__container .woocommerce-MyAccount-content form input[type=text], .myaccount__container .woocommerce-MyAccount-content form input[type=url], .myaccount__container .woocommerce-MyAccount-content form textarea {
+  box-shadow: none;
+  padding: 8px 15px;
+  height: auto;
+  border-radius: 3px;
+}
+.myaccount__container .woocommerce-MyAccount-content form input[type=email]:focus, .myaccount__container .woocommerce-MyAccount-content form input[type=number]:focus, .myaccount__container .woocommerce-MyAccount-content form input[type=search]:focus, .myaccount__container .woocommerce-MyAccount-content form input[type=tel]:focus, .myaccount__container .woocommerce-MyAccount-content form input[type=text]:focus, .myaccount__container .woocommerce-MyAccount-content form input[type=url]:focus, .myaccount__container .woocommerce-MyAccount-content form textarea:focus {
+  border-color: #000;
+}
+.myaccount__container .woocommerce-MyAccount-content form button[type="submit"] {
+  padding: 10px 25px;
+  height: auto;
+  line-height: 1.4;
+  font-weight: 500;
+  border-radius: 3px;
+}
+.myaccount__container #my-account-menu.layout-simple .user-info .logout a {
+  text-transform: none;
+  background-color: #000;
+}
+.myaccount__container #my-account-menu.layout-simple .user-info .logout a:hover {
+  background-color: #666;
+}
+.myaccount__container #my-account-menu.layout-simple .myaccount-menu:before {
+  border: none;
+  padding: 0;
+}
+.myaccount__container #my-account-menu.layout-simple .myaccount-menu:after {
+  padding: 0;
+}
+.myaccount__container #my-account-menu.layout-simple .myaccount-menu > li {
+  background-color: transparent !important;
+  border: none !important;
+}
+.myaccount__container #my-account-menu.layout-simple .myaccount-menu > li > a {
+  border: none !important;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 15px;
+}
+.myaccount__container #my-account-menu.layout-simple .myaccount-menu > li.active {
+  border-right: solid 1px #333 !important;
+}
+.myaccount__container #my-account-menu.layout-simple .myaccount-menu > li:hover > a {
+  color: #000 !important;
+}
+.myaccount__container #my-account-menu.layout-simple .myaccount-menu > li:not(.active) > a {
+  color: #555;
+}

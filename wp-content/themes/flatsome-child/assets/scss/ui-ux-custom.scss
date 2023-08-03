@@ -2465,3 +2465,125 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
         }
     }
 }
+#yith-wcmap-avatar .avatar-modal-overlay {
+    z-index: 1100;
+}
+#yith-wcmap-avatar .avatar-modal-wrapper {
+    z-index: 1111;
+}
+@media screen and (min-width: 481px){
+    .woocommerce-account {
+        #main {
+            background-color: #f4f4f4;
+            position: relative;
+            &:after {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 50%;
+                bottom: 0;
+                background-color: #fff;
+            }
+            > .content-area {
+                position: relative;
+                z-index: 2;
+            }
+        }
+    }
+    .myaccount__container {
+        #my-account-menu {
+            width: 25% !important;
+        }
+        #my-account-menu ~ .woocommerce-MyAccount-content {
+            width: 75% !important;
+        }
+        > .woocommerce {
+            display: flex;
+            .woocommerce-MyAccount-content {
+                background-color: #fff;
+                padding: 50px 0 30px 50px;
+            }
+            .position-vertical-left {
+                padding: 60px 0 30px 0;
+            }
+        }
+    }
+}
+
+.myaccount__container {
+    .woocommerce-MyAccount-content {
+        .message-container.container.medium-text-center {
+            padding-left: 0;
+            .woocommerce-Button {
+                font-weight: 500;
+                display: table;
+                margin: 15px 0 0 0;
+                border-radius: 3px;
+            }
+        }
+        form {
+            input[type=email], input[type=number], input[type=search], input[type=tel], input[type=text], input[type=url], textarea {
+                box-shadow: none;
+                padding: 8px 15px;
+                height: auto;
+                border-radius: 3px;
+                &:focus {
+                    border-color: #000;
+                }
+            }
+            button[type="submit"] {
+                padding: 10px 25px;
+                height: auto;
+                line-height: 1.4;
+                font-weight: 500;
+                border-radius: 3px;
+            }
+        }
+    }
+    #my-account-menu.layout-simple {
+        .user-info {
+            .logout {
+                a {
+                    text-transform: none;
+                    background-color: #000;
+                    &:hover {
+                        background-color: #666;
+                    }
+                }
+            }
+        }
+        .myaccount-menu {
+            &:before {
+                border: none;
+                padding: 0;
+            }
+            &:after {
+                padding: 0;
+            }
+            > li {
+                background-color: transparent !important;
+                border: none !important;
+                > a {
+                    border: none !important;
+                    padding-top: 5px;
+                    padding-bottom: 5px;
+                    font-size: 15px;
+                }
+                &.active {
+                    border-right: solid 1px #333 !important;
+                }
+                &:hover {
+                    > a {
+                        color: #000 !important;
+                    }
+                }
+                &:not(.active) {
+                    > a {
+                        color: #555;
+                    }
+                }
+            }
+        }
+    }
+}
