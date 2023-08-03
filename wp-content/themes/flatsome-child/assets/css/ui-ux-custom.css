@@ -2107,6 +2107,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 .login__register .ur-frontend-form {
   padding: 20px !important;
   border-color: #111;
+  background-color: #fff;
 }
 .login__register .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item {
   margin-bottom: 10px;
@@ -2202,11 +2203,11 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
   background-color: #666 !important;
 }
 @media screen and (min-width: 481px) {
-  .woocommerce-account #main {
+  .woocommerce-account.logged-in #main {
     background-color: #f4f4f4;
     position: relative;
   }
-  .woocommerce-account #main:after {
+  .woocommerce-account.logged-in #main:after {
     content: "";
     position: absolute;
     top: 0;
@@ -2215,7 +2216,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     bottom: 0;
     background-color: #fff;
   }
-  .woocommerce-account #main > .content-area {
+  .woocommerce-account.logged-in #main > .content-area {
     position: relative;
     z-index: 2;
   }
@@ -2236,61 +2237,61 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     padding: 60px 0 30px 0;
   }
 }
-.myaccount__container .woocommerce-MyAccount-content .message-container.container.medium-text-center {
+.logged-in .myaccount__container .woocommerce-MyAccount-content .message-container.container.medium-text-center {
   padding-left: 0;
 }
-.myaccount__container .woocommerce-MyAccount-content .message-container.container.medium-text-center .woocommerce-Button {
+.logged-in .myaccount__container .woocommerce-MyAccount-content .message-container.container.medium-text-center .woocommerce-Button {
   font-weight: 500;
   display: table;
   margin: 15px 0 0 0;
   border-radius: 3px;
 }
-.myaccount__container .woocommerce-MyAccount-content form input[type=email], .myaccount__container .woocommerce-MyAccount-content form input[type=number], .myaccount__container .woocommerce-MyAccount-content form input[type=search], .myaccount__container .woocommerce-MyAccount-content form input[type=tel], .myaccount__container .woocommerce-MyAccount-content form input[type=text], .myaccount__container .woocommerce-MyAccount-content form input[type=url], .myaccount__container .woocommerce-MyAccount-content form textarea {
+.logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=email], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=number], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=search], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=tel], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=text], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=url], .logged-in .myaccount__container .woocommerce-MyAccount-content form textarea {
   box-shadow: none;
   padding: 8px 15px;
   height: auto;
   border-radius: 3px;
 }
-.myaccount__container .woocommerce-MyAccount-content form input[type=email]:focus, .myaccount__container .woocommerce-MyAccount-content form input[type=number]:focus, .myaccount__container .woocommerce-MyAccount-content form input[type=search]:focus, .myaccount__container .woocommerce-MyAccount-content form input[type=tel]:focus, .myaccount__container .woocommerce-MyAccount-content form input[type=text]:focus, .myaccount__container .woocommerce-MyAccount-content form input[type=url]:focus, .myaccount__container .woocommerce-MyAccount-content form textarea:focus {
+.logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=email]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=number]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=search]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=tel]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=text]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=url]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form textarea:focus {
   border-color: #000;
 }
-.myaccount__container .woocommerce-MyAccount-content form button[type="submit"] {
+.logged-in .myaccount__container .woocommerce-MyAccount-content form button[type="submit"] {
   padding: 10px 25px;
   height: auto;
   line-height: 1.4;
   font-weight: 500;
   border-radius: 3px;
 }
-.myaccount__container #my-account-menu.layout-simple .user-info .logout a {
+.logged-in .myaccount__container #my-account-menu.layout-simple .user-info .logout a {
   text-transform: none;
   background-color: #000;
 }
-.myaccount__container #my-account-menu.layout-simple .user-info .logout a:hover {
+.logged-in .myaccount__container #my-account-menu.layout-simple .user-info .logout a:hover {
   background-color: #666;
 }
-.myaccount__container #my-account-menu.layout-simple .myaccount-menu:before {
+.logged-in .myaccount__container #my-account-menu.layout-simple .myaccount-menu:before {
   border: none;
   padding: 0;
 }
-.myaccount__container #my-account-menu.layout-simple .myaccount-menu:after {
+.logged-in .myaccount__container #my-account-menu.layout-simple .myaccount-menu:after {
   padding: 0;
 }
-.myaccount__container #my-account-menu.layout-simple .myaccount-menu > li {
+.logged-in .myaccount__container #my-account-menu.layout-simple .myaccount-menu > li {
   background-color: transparent !important;
   border: none !important;
 }
-.myaccount__container #my-account-menu.layout-simple .myaccount-menu > li > a {
+.logged-in .myaccount__container #my-account-menu.layout-simple .myaccount-menu > li > a {
   border: none !important;
   padding-top: 5px;
   padding-bottom: 5px;
   font-size: 15px;
 }
-.myaccount__container #my-account-menu.layout-simple .myaccount-menu > li.active {
+.logged-in .myaccount__container #my-account-menu.layout-simple .myaccount-menu > li.active {
   border-right: solid 1px #333 !important;
 }
-.myaccount__container #my-account-menu.layout-simple .myaccount-menu > li:hover > a {
+.logged-in .myaccount__container #my-account-menu.layout-simple .myaccount-menu > li:hover > a {
   color: #000 !important;
 }
-.myaccount__container #my-account-menu.layout-simple .myaccount-menu > li:not(.active) > a {
+.logged-in .myaccount__container #my-account-menu.layout-simple .myaccount-menu > li:not(.active) > a {
   color: #555;
 }

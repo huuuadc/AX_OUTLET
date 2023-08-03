@@ -145,6 +145,7 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
 </section>
             <script>
                 window.print()
+                window.onafterprint = () => window.close();
             </script>
 <?php
     endif;
