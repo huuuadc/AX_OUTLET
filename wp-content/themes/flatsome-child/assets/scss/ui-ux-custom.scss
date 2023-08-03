@@ -2372,6 +2372,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     .ur-frontend-form {
         padding: 20px !important;
         border-color: #111;
+        background-color: #fff;
         .ur-form-row .ur-form-grid .ur-field-item {
             margin-bottom: 10px;
         }
@@ -2475,7 +2476,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     background-color: #666 !important;
 }
 @media screen and (min-width: 481px){
-    .woocommerce-account {
+    .woocommerce-account.logged-in {
         #main {
             background-color: #f4f4f4;
             position: relative;
@@ -2513,77 +2514,78 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
         }
     }
 }
-
-.myaccount__container {
-    .woocommerce-MyAccount-content {
-        .message-container.container.medium-text-center {
-            padding-left: 0;
-            .woocommerce-Button {
-                font-weight: 500;
-                display: table;
-                margin: 15px 0 0 0;
-                border-radius: 3px;
-            }
-        }
-        form {
-            input[type=email], input[type=number], input[type=search], input[type=tel], input[type=text], input[type=url], textarea {
-                box-shadow: none;
-                padding: 8px 15px;
-                height: auto;
-                border-radius: 3px;
-                &:focus {
-                    border-color: #000;
+.logged-in {
+    .myaccount__container {
+        .woocommerce-MyAccount-content {
+            .message-container.container.medium-text-center {
+                padding-left: 0;
+                .woocommerce-Button {
+                    font-weight: 500;
+                    display: table;
+                    margin: 15px 0 0 0;
+                    border-radius: 3px;
                 }
             }
-            button[type="submit"] {
-                padding: 10px 25px;
-                height: auto;
-                line-height: 1.4;
-                font-weight: 500;
-                border-radius: 3px;
+            form {
+                input[type=email], input[type=number], input[type=search], input[type=tel], input[type=text], input[type=url], textarea {
+                    box-shadow: none;
+                    padding: 8px 15px;
+                    height: auto;
+                    border-radius: 3px;
+                    &:focus {
+                        border-color: #000;
+                    }
+                }
+                button[type="submit"] {
+                    padding: 10px 25px;
+                    height: auto;
+                    line-height: 1.4;
+                    font-weight: 500;
+                    border-radius: 3px;
+                }
             }
         }
-    }
-    #my-account-menu.layout-simple {
-        .user-info {
-            .logout {
-                a {
-                    text-transform: none;
-                    background-color: #000;
-                    &:hover {
-                        background-color: #666;
+        #my-account-menu.layout-simple {
+            .user-info {
+                .logout {
+                    a {
+                        text-transform: none;
+                        background-color: #000;
+                        &:hover {
+                            background-color: #666;
+                        }
                     }
                 }
             }
-        }
-        .myaccount-menu {
-            &:before {
-                border: none;
-                padding: 0;
-            }
-            &:after {
-                padding: 0;
-            }
-            > li {
-                background-color: transparent !important;
-                border: none !important;
-                > a {
+            .myaccount-menu {
+                &:before {
+                    border: none;
+                    padding: 0;
+                }
+                &:after {
+                    padding: 0;
+                }
+                > li {
+                    background-color: transparent !important;
                     border: none !important;
-                    padding-top: 5px;
-                    padding-bottom: 5px;
-                    font-size: 15px;
-                }
-                &.active {
-                    border-right: solid 1px #333 !important;
-                }
-                &:hover {
                     > a {
-                        color: #000 !important;
+                        border: none !important;
+                        padding-top: 5px;
+                        padding-bottom: 5px;
+                        font-size: 15px;
                     }
-                }
-                &:not(.active) {
-                    > a {
-                        color: #555;
+                    &.active {
+                        border-right: solid 1px #333 !important;
+                    }
+                    &:hover {
+                        > a {
+                            color: #000 !important;
+                        }
+                    }
+                    &:not(.active) {
+                        > a {
+                            color: #555;
+                        }
                     }
                 }
             }
