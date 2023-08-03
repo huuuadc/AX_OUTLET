@@ -30,9 +30,10 @@ use AX\COMPANY;
         'completed' => 'badge-success',
         'request' => 'badge-info',
         'shipping' => 'badge-info',
-        'delivered' => 'badge-info',
+        'delivered' => 'badge-success',
         'delivery-failed' => 'badge-danger',
         'cancelled' => 'badge-danger',
+        'auto-draft' => 'badge-secondary',
         'confirm-goods' => 'badge-warning',
     );
 
@@ -99,17 +100,31 @@ else:
                             </address>
                         </div>
                         <!-- /.col -->
-                        <div class="col-sm-2 invoice-col">
-                            Hóa đơn <br><b> #<?php echo $order_id?></b><br>
-                        </div>
-                        <!-- /.col -->
-                        <!-- /.col -->
-                        <div id="card_orders" class="col-sm-2 invoice-col no-print">
-                            Trạng thái <br>
-                            <b id="order_status_<?php echo get_the_ID()?>">
-                                <span class="badge <?php echo $status_badge[$order_ax->get_status()] ?>"><?php echo $order_ax->get_status()?>
-                                </span>
-                            </b><br>
+                        <div class="col-sm-4 invoice-col">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    Hóa đơn <br><b> #<?php echo $order_id?></b><br>
+                                </div>
+                                <!-- /.col -->
+                                <div id="card_orders" class="col-sm-4 invoice-col no-print">
+                                    Trạng thái <br>
+                                    <b id="order_status_<?php echo get_the_ID()?>">
+                                    <span class="badge <?php echo $status_badge[$order_ax->get_status()] ?>"><?php echo $order_ax->get_status()?>
+                                    </span></b><br>
+                                </div>
+                                <div id="card_orders" class="col-sm-4 invoice-col no-print">
+                                    Loại đơn hàng <br>
+                                    <span class="badge badge-info">
+                                        <?php echo $order_ax->get_type()?><br>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 pt-3">
+                                    Khách hàng ghi chú:<br>
+                                    <b><?php echo $order_ax->get_customer_note()?> </b>
+                                </div>
+                            </div>
+                            <!-- /.col -->
                         </div>
                         <!-- /.col -->
                     </div>
@@ -125,22 +140,21 @@ else:
                                     <th>Sản phẩm</th>
                                     <th>Mã sản phẩm</th>
                                     <th>Số lượng</th>
-                                    <th>Đơn giá</th>
-                                    <th>% Giảm giá</th>
+                                    <th class="text-right">Đơn giá</th>
+                                    <th class="text-right">% Giảm giá</th>
                                     <th class="text-right">Tạm tính</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php $count= 0; foreach ($order_ax->get_items() as $item_key => $item ): $count++ ?>
-                                <?php $product = $item->get_product() ?>
-                                <?php write_log($product); ?>
+                                <?php $product = wc_get_product($item['variation_id']) ?>
                                 <tr><td><?php echo $count?></td>
                                     <td><?php echo $item->get_name() ?></td>
                                     <td><?php echo $product->get_sku()  ?></td>
                                     <td><?php echo $item->get_quantity() ?></td>
                                     <td class="text-right"><?php echo number_format( $product->get_regular_price(), '0',',','.') ?> đ</td>
-                                    <td class="text-right"><?php echo number_format( 100 * (1 - $item->get_total()/$product->get_regular_price()), '0',',','.') ?> %</td>
-                                    <td class="text-right"><?php echo number_format( $item->get_total(), '0',',','.') ?> đ</td>
+                                    <td class="text-right"><?php echo number_format( 100 * (1 - $order_ax->get_line_subtotal($item,true)/(int)($product->get_regular_price('value')*$item->get_quantity())), '0',',','.') ?> %</td>
+                                    <td class="text-right"><?php echo number_format($order_ax->get_line_subtotal($item,true), '0',',','.') ?> đ</td>
                                 </tr>
                                 <?php endforeach; ?>
                                 </tbody>
@@ -171,11 +185,11 @@ else:
                                 <table class="table">
                                     <tr>
                                         <th>Thành tiền:</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_total() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> đ</td>
+                                        <td class="text-right"><?php echo number_format($order_ax->get_subtotal(), '0', ',', '.'); ?> đ</td>
                                     </tr>
                                     <tr>
-                                        <th>Giảm giá</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_total_discount() , '0', ',', '.')?> đ</td>
+                                        <th>Giảm giá chiết khấu</th>
+                                        <td class="text-right"> - <?php echo  number_format($order_ax->get_total_discount() , '0', ',', '.')?> đ</td>
                                     </tr>
                                     <tr>
                                         <th>Giao hàng:</th>
@@ -202,13 +216,13 @@ else:
                                 <button rel="noopener" target="_blank" class="btn btn-default">
                                     <i class="fas fa-print"></i> In phiếu giao hàng</button></a>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
-                                <i class="fas fa-file-invoice-dollar"></i> Xác nhận hoàn hàng</button>
+                                <i class="far fa-calendar-check"></i> Xác nhận hoàn hàng</button>
                             <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-info float-right"  style="margin-right: 5px;">
-                                <i class="fas fa-shipping-fast"> </i> Gọi giao hàng</button>
+                                <i class="fas fa-people-carry"> </i> Gọi giao hàng</button>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm')" type="button" class="btn btn-primary float-right"  style="margin-right: 5px;">
-                                <i class="fas fa-times"></i> Xác nhận</button>
+                                <i class="fa fa-check"></i> Xác nhận</button>
                             <button onclick="send_update_status(<?php echo $order_id?>,'reject')" type="button" class="btn btn-secondary float-right"  style="margin-right: 5px;">
-                                <i class="fas fa-times"></i> Từ chối</button>
+                                <i class="fas fa-ban"></i> Từ chối</button>
                             <button onclick="send_update_status(<?php echo $order_id?>,'cancelled')" type="button" class="btn btn-danger float-right"  style="margin-right: 5px;">
                                 <i class="fas fa-times"></i> Hủy đơn</button>
                         </div>

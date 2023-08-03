@@ -350,21 +350,25 @@ function order_update_status(){
     // Action admin update cancelled order
     //
     //
-    if ($_POST['payload_action'] == 'order_status_cancelled' && 'order_status_cancelled' !== 'order_status_'.$old_status) {
+    if ($_POST['payload_action'] == 'order_status_cancelled'
+        && 'order_status_cancelled' !== 'order_status_'.$old_status
+    ) {
 
 
         $tiki_connect->default_cancel['comment'] = $commit_note;
 
-        $rep = $tiki_connect->put_cancelled_shippment($order->get_tracking_id());
+        if ($order->get_tracking_id() !== '') {
+            $rep = $tiki_connect->put_cancelled_shippment($order->get_tracking_id());
 
-        if (!$rep->success){
-            $order->set_log('danger',$payload_action,$commit_note);
-            echo json_encode(array(
-                'status' => false,
-                'messenger' => "Request failed",
-                'data' => json_encode($rep)
-            ));
-            exit;
+            if (!$rep->success) {
+                $order->set_log('danger', $payload_action, $commit_note);
+                echo json_encode(array(
+                    'status' => false,
+                    'messenger' => "Request failed",
+                    'data' => json_encode($rep)
+                ));
+                exit;
+            }
         }
 
         if ($order->update_status('wc-cancelled')) {

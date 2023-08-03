@@ -3,8 +3,8 @@
     $item_in_page = get_option('admin_dashboard_item_in_page') ?? 10;
 
     $filter_order = array(
-        'post_status' => 'completed',
-        'post_type' => 'shop_order',
+        'post_status' => 'any',
+        'post_type' => array('shop_shopee','shop_order'),
         'posts_per_page' => $item_in_page,
         'paged' => $_GET['offset'] ?? 1,
         'order_by' => 'modified',
@@ -23,9 +23,10 @@
             'completed' => 'badge-success',
             'request' => 'badge-info',
             'shipping' => 'badge-info',
-            'delivered' => 'badge-info',
+            'delivered' => 'badge-success',
             'delivery-failed' => 'badge-danger',
             'cancelled' => 'badge-danger',
+            'auto-draft' => 'badge-secondary',
             'confirm-goods' => 'badge-warning',
     );
 
@@ -56,13 +57,14 @@
                     <thead>
                         <tr style="white-space: nowrap">
                             <th>STT</th>
+                            <th>Loại Đơn Hàng</th>
                             <th>Mã đơn hàng</th>
                             <th>Khóa đơn hàng</th>
                             <th>Ngày đặt hàng</th>
                             <th>Khách hàng</th>
-                            <th>Số lượng sản phẩm</th>
+                            <th>SL SP</th>
                             <th>Tổng tiền</th>
-                            <th>Phương thức thanh toán</th>
+                            <th>HTTT</th>
                             <th>Mã giao hàng</th>
                             <th>Trạng thái giao hàng</th>
                             <th>Trạng thái đơn hàng</th>
@@ -79,7 +81,8 @@
                         ?>
                         <tr id="order_id_<?php echo get_the_ID()?> " value="<?php echo get_the_ID()?>" >
                             <td><?php echo (($order_query->query_vars['paged'] -1)*$order_query->query_vars['posts_per_page']) + $count?></td>
-                            <td>#<?php the_ID();?></td>
+                            <td><span><?php echo $order->get_type()?></span></td>
+                            <td><a href="<?php echo '/admin-dashboard/order-list/?order_id='.get_the_ID()?>">#<?php the_ID();?></a></td>
                             <td><?php echo $order->get_order_key()?></td>
                             <td><?php echo wp_date(get_date_format(),strtotime( $order->get_date_created()))?></td>
                             <td><?php echo $order->get_billing_last_name() . ' ' . $order->get_billing_first_name()?></td>
