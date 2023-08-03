@@ -2471,6 +2471,9 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 #yith-wcmap-avatar .avatar-modal-wrapper {
     z-index: 1111;
 }
+.yith-wcmap .user-profile .user-avatar.avatar-upload:after {
+    background-color: #666 !important;
+}
 @media screen and (min-width: 481px){
     .woocommerce-account {
         #main {
