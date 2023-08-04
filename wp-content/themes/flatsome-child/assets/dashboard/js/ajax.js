@@ -430,3 +430,50 @@ function post_create_shipment(){
 
 
 }
+
+
+
+function run_product_shop_by(action){
+    let action_payload = 'action_' + action;
+
+    $.ajax({
+        type: 'POST',
+        url:  '/wp-admin/admin-ajax.php',
+        data:   {
+            action: 'run_product_shop_by',
+            action_payload,
+        },
+        beforeSend: function (){
+            $('#card_task_scheduler').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+        },
+        success :   function (data){
+            const rep = JSON.parse(data);
+            if (rep.success = '200') {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `Update success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            } else {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Danger',
+                    body: data,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            }
+        },
+        complete :  function (){
+            $('#card_task_scheduler>.overlay').remove()
+        },
+        error   :   function (e){
+            console.log("ERROR",e)
+        }
+
+    })
+}

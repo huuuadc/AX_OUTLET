@@ -2,9 +2,11 @@
 
     $item_in_page = get_option('admin_dashboard_item_in_page') ?? 10;
 
+    $order_status = $_GET['filter_status'] ?? 'any';
+
     $filter_order = array(
-        'post_status' => 'any',
-        'post_type' => array('shop_shopee','shop_order'),
+        'post_status' => explode(',',$order_status),
+        'post_type' => array('shop_order'),
         'posts_per_page' => $item_in_page,
         'paged' => $_GET['offset'] ?? 1,
         'order_by' => 'modified',
@@ -52,6 +54,38 @@
     <!-- /.card-header -->
     <div class="card-body">
         <div class="row">
+            <div class="container-fluid">
+                <div class="card card-default">
+                    <div class="card-header">
+                        <h3 class="card-title">Lọc đơn hàng</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <label>Trạng thái đơn hàng</label>
+                        <select
+                                id="filter_order_status"
+                                class="select2 select2-primary"
+                                multiple="multiple"
+                                data-placeholder="Chọn trạng thái"
+                                style="width: 100%;"
+                                data-dropdown-css-class="select2-primary"
+                        >
+                            <?php foreach ($status_badge as $item_key => $item_value) :?>
+                            <option <?php echo str_contains($order_status,$item_key) ? 'selected' :'' ?> value="wc-<?php echo $item_key?>" ><?php echo $item_key?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="col-sm-12">
                 <table id="list_order" class="table table-bordered table-hover dataTable dtr-inline" style="display: block ;overflow-x: scroll; overflow-y: clip;">
                     <thead>

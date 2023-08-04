@@ -176,6 +176,17 @@ html *::-webkit-scrollbar-thumb {
   margin: 0 15px 0 0 !important;
   color: #000;
 }
+.header-nav .account-item .nav-dropdown li {
+  position: relative;
+  z-index: 2;
+}
+.header-nav .account-item .nav-dropdown li a {
+  text-transform: none !important;
+  font-size: 14px;
+}
+.header-nav .account-item .nav-dropdown li.woocommerce-MyAccount-navigation-link--downloads {
+  display: none;
+}
 .header-top .nav-dropdown {
   border: solid 1px #000;
   border-top: none;
@@ -2290,13 +2301,13 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
   margin: 15px 0 0 0;
   border-radius: 3px;
 }
-.logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=email], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=number], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=search], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=tel], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=text], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=url], .logged-in .myaccount__container .woocommerce-MyAccount-content form textarea {
+.logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=password], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=email], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=number], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=search], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=tel], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=text], .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=url], .logged-in .myaccount__container .woocommerce-MyAccount-content form textarea {
   box-shadow: none;
   padding: 8px 15px;
   height: auto;
   border-radius: 3px;
 }
-.logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=email]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=number]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=search]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=tel]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=text]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=url]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form textarea:focus {
+.logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=password]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=email]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=number]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=search]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=tel]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=text]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form input[type=url]:focus, .logged-in .myaccount__container .woocommerce-MyAccount-content form textarea:focus {
   border-color: #000;
 }
 .logged-in .myaccount__container .woocommerce-MyAccount-content form button[type="submit"] {
@@ -2338,4 +2349,85 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 }
 .logged-in .myaccount__container #my-account-menu.layout-simple .myaccount-menu > li:not(.active) > a {
   color: #555;
+}
+.logged-in .myaccount__container input[disabled] {
+  cursor: not-allowed;
+  background-color: #eee;
+}
+.woocommerce-order-details__title {
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 20px;
+}
+.woocommerce-order-details .wc-item-meta {
+  display: none;
+}
+.woocommerce-order-details tfoot tr:first-child th, .woocommerce-order-details tfoot tr:first-child td {
+  padding-top: 20px;
+}
+.woocommerce-order-details .woocommerce-table__line-item td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.woocommerce-order-details .woocommerce-table__line-item .woocommerce-table__product-name .product__brand {
+  margin-top: 0;
+}
+.woocommerce-order-details .woocommerce-table__line-item .woocommerce-table__product-name > a {
+  color: #000;
+  font-weight: 600;
+}
+.woocommerce-order-received .is-well {
+  box-shadow: none;
+  border: solid 1px #333;
+}
+.woocommerce-order-received .is-well .woocommerce-notice {
+  color: #111;
+}
+@media (min-width: 1200px) {
+  .woocommerce-order-received .is-well {
+    margin-left: 15px !important;
+    margin-top: 76px;
+  }
+}
+.woocommerce-message.message-wrapper {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 20;
+  background-color: #111;
+  margin: 0 !important;
+  border-radius: 3px;
+  padding: 10px 0 !important;
+  opacity: 0;
+  pointer-events: none;
+}
+.woocommerce-message.message-wrapper .message-container {
+  color: #fff;
+  font-size: 14px;
+}
+.woocommerce-message.message-wrapper .message-container i {
+  font-size: 12px;
+  margin-right: 5px;
+}
+.animateOpen, .woocommerce-message.message-wrapper {
+  -webkit-animation: moveOpen 5s;
+  -webkit-animation-fill-mode: forwards;
+}
+/* Safari and Chrome */
+@-webkit-keyframes moveOpen {
+  from {
+    -webkit-transform: translate(200px, 0);
+    transform: translate(200px, 0);
+    opacity: 0;
+  }
+  25%, 80% {
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  to {
+    -webkit-transform: translate(200px, 0);
+    transform: translate(200px, 0);
+    opacity: 0;
+  }
 }

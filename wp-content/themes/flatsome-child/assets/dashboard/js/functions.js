@@ -66,4 +66,25 @@ $(function () {
     // Summernote
     $('#footer_print_shipment').summernote()
 
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    $('#filter_order_status').change(
+        function (){
+            let filter_order_status = $('#filter_order_status').val()
+            let param = ''
+            console.log(filter_order_status)
+            if (filter_order_status.length > 0){
+                param = 'filter_status='+ filter_order_status.toString()
+                window.location.href = '/admin-dashboard/order-list/?'+param;
+            }else {
+                window.location.href = '/admin-dashboard/order-list';
+            }
+        }
+    )
+
 })
+
+function send_filter(){
+
+}

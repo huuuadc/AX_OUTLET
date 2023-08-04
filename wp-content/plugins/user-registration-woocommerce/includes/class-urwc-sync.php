@@ -75,7 +75,7 @@ class URWC_Sync {
 				wp_enqueue_script( 'flatpickr' );
 			}
 
-			echo '<div class="user-registration" data-form-id="' . esc_attr( $edit_account_form_id ) . '"><h1>Extra Information</h1>';
+			echo '<div class="user-registration" data-form-id="' . esc_attr( $edit_account_form_id ) . '"><h3 style="display:none;">Extra Information</h3>';
 
 			$profile   = user_registration_form_data( $user_id, $edit_account_form_id );
 			$user_data = get_userdata( $user_id );
