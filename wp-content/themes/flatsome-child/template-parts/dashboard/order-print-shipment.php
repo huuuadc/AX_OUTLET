@@ -129,13 +129,7 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
                         <div class="p-3 w-75 border-left border-dark"><?php echo $order->get_customer_note('value') ?? 'Không có note' ?></div>
                     </div>
                     <div class="p-2 w-100 text-center border-right border-left border-bottom border-dark">
-                                <span>Khách hàng vui lòng kiểm tra kiện hàng kĩ trước khi nhận.</span><br>
-                                <strong class="font-italic text-decoration-underline">Lưu ý:</strong><span> Chúng tôi khuyến khích Quý khách quay lại video khi mở kiện hàng để được chúng tôi hỗ trợ tốt nhất khi gặp sự cố.</span><br>
-                                <span>Để đảm bảo quyền lợi Quý khách khi có vấn đề xảy ra, việc xử lý đổi trả, bảo hành chỉ được giải quyết khi có video quay lại quá trình mở kiện hàng.</span>
-                                <br><br>
-                                <span>Các vấn đề liên quan đến giao hàng, chất lượng sản phẩm</span><br>
-                                <span>Vui lòng liên hệ bộ phận CSKH của DAFC: <strong>Hotline:</strong> 19002688 hoặc <strong>Email:</strong> dafcelite@dafc.com.vn.</span><br>
-                                <span>(thời gian làm việc từ 9h-18h từ thứ 2-thứ 6)</span>
+                        <?php echo get_option('admin_dashboard_footer_print_shipment')?>
                     </div>
                 </div>
                 <!-- Main content -->
