@@ -23,9 +23,9 @@ function update_lastpiece_task($product_id) {
     }
     //echo $stock_qty;
     if($stock_qty == 1) {
-        wp_set_object_terms($product_id, 'last-piece', 'product_shop',true);
+        wp_set_object_terms($product_id, 'co-hoi-cuoi', 'product_shop',true);
     }
     else {
-        wp_remove_object_terms($product_id, 'last-piece', 'product_shop',true);
+        wp_remove_object_terms($product_id, 'co-hoi-cuoi', 'product_shop',true);
     }
 }
