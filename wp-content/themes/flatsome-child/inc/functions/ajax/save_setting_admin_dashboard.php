@@ -21,6 +21,10 @@ function save_admin_dashboard_setting()
         update_option('admin_dashboard_item_in_page',$post->item_in_page , 'no');
     }
 
+    if(!add_option('admin_dashboard_footer_print_shipment',$post->footer_print_shipment , '','no')){
+        update_option('admin_dashboard_footer_print_shipment',$post->footer_print_shipment , 'no');
+    }
+
     echo json_encode(array(
         'status' => '200',
         'messenger' => 'Save success',

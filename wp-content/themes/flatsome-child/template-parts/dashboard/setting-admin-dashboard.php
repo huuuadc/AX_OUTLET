@@ -29,6 +29,12 @@ $item_in_page_arg = [
                 <?php endforeach; ?>
             </select>
         </div>
+        <div class="form-group">
+            <label for="item_in_page">Footer print shipment</label>
+            <textarea id="footer_print_shipment">
+                <?php echo get_option('admin_dashboard_footer_print_shipment')?>
+            </textarea>
+        </div>
     </div>
     <!-- /.card-body -->
 
