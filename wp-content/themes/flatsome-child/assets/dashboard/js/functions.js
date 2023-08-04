@@ -58,3 +58,12 @@ const isJsonString = (str) => {
         return false;
     }
 }
+
+/**
+ *
+ */
+$(function () {
+    // Summernote
+    $('#footer_print_shipment').summernote()
+
+})
