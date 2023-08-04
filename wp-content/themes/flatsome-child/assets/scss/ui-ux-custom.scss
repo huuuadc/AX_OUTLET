@@ -2573,7 +2573,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
                 }
             }
             form {
-                input[type=email], input[type=number], input[type=search], input[type=tel], input[type=text], input[type=url], textarea {
+                input[type=password], input[type=email], input[type=number], input[type=search], input[type=tel], input[type=text], input[type=url], textarea {
                     box-shadow: none;
                     padding: 8px 15px;
                     height: auto;
@@ -2636,6 +2636,10 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
                 }
             }
         }
+        input[disabled] {
+            cursor: not-allowed;
+            background-color: #eee;
+        }
     }
 }
 .woocommerce-order-details {
@@ -2681,5 +2685,47 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
             margin-left: 15px !important;
             margin-top: 76px;
         }
+    }
+}
+.woocommerce-message.message-wrapper {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 20;
+    background-color: #111;
+    margin: 0 !important;
+    border-radius: 3px;
+    padding: 10px 0 !important;
+    opacity: 0;
+    pointer-events: none;
+    .message-container {
+        color: #fff;
+        font-size: 14px;
+        i {
+            font-size: 12px;
+            margin-right: 5px;
+        }
+    }
+}
+.animateOpen, .woocommerce-message.message-wrapper {
+    -webkit-animation: moveOpen 5s;
+    -webkit-animation-fill-mode: forwards;
+}
+/* Safari and Chrome */
+@-webkit-keyframes moveOpen {
+    from {
+        -webkit-transform: translate(200px,0);
+        transform: translate(200px,0);
+        opacity: 0;
+    }
+    25%, 80% {
+        -webkit-transform: translate(0,0);
+        transform: translate(0,0);
+        opacity: 1;
+    }
+    to {
+        -webkit-transform: translate(200px,0);
+        transform: translate(200px,0);
+        opacity: 0;
     }
 }
