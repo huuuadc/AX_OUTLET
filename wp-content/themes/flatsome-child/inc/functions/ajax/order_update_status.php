@@ -91,7 +91,7 @@ function order_update_status(){
     // Action confirm order
     //
     //
-    if ($_POST['payload_action'] == 'order_status_confirm' && 'order_status_processing' == 'order_status_'.$old_status){
+    if ($_POST['payload_action'] == 'order_status_confirm' && ('processing' == $old_status || 'reject' == $old_status)){
 
             if ($order->update_status('wc-confirm')){
                 $order->set_log('success',$payload_action,$commit_note);

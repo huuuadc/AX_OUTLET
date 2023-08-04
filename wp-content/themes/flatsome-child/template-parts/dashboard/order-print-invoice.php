@@ -46,9 +46,12 @@ else:
 
                     <!-- Main content -->
                     <div class="invoice p-3 mb-3">
-                        <span>Liên 1(Giao cho khách)</span>
+                        <span>Liên 1(Giao cho khách)</span><span> giờ in: <?php echo date('H:m:s d-m-Y')  ?></span>
                         <!-- title row -->
                         <div class="row">
+                            <div class="col-12 text-center">
+                                <h1>Chi Tiết Đơn Hàng Bán Lẻ</h1>
+                            </div>
                             <div class="col-12 pt-3">
                                 <h4>
                                     <i class="fas fa-globe"></i> <?php echo $company->get_company_name()?>
@@ -104,28 +107,14 @@ else:
                         <!-- Table row -->
                         <div class="row">
                             <div class="col-12 table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Sản phẩm</th>
-                                        <th>Mã sản phẩm</th>
-                                        <th>Số lượng</th>
-                                        <th class="text-right">Thành tiền</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php $count= 0; foreach ($order_ax->get_items() as $item_key => $item ): $count++ ?>
-                                        <?php $product = new WC_Product($item['product_id']);?>
-                                        <tr><td><?php echo $count?></td>
-                                            <td><?php echo $item->get_name() ?></td>
-                                            <td><?php echo $product->get_sku()  ?></td>
-                                            <td><?php echo $item->get_quantity() ?></td>
-                                            <td class="text-right"><?php echo number_format( $item->get_total(), '0',',','.') ?> đ</td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                <?php
+                                wc_get_template(
+                                    'template-parts/dashboard/order-items.php',
+                                    array(
+                                        'order' => $order_ax,
+                                    )
+                                );
+                                ?>
                             </div>
                             <!-- /.col -->
                         </div>
@@ -148,26 +137,14 @@ else:
                             </div>
                             <!-- /.col -->
                             <div class="col-6">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <tr>
-                                            <th>Thành tiền:</th>
-                                            <td class="text-right"><?php echo number_format($order_ax->get_total() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> đ</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Giảm giá</th>
-                                            <td class="text-right"><?php echo number_format($order_ax->get_total_discount() , '0', ',', '.')?> đ</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Giao hàng:</th>
-                                            <td class="text-right"><?php echo number_format($order_ax->get_shipping_total(), '0', ',', '.')?> đ</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Tổng tiền:</th>
-                                            <td class="text-right"><?php echo number_format($order_ax->get_total() , '0', ',', '.')?> đ</td>
-                                        </tr>
-                                    </table>
-                                </div>
+                                <?php
+                                wc_get_template(
+                                    'template-parts/dashboard/order-summary-total.php',
+                                    array(
+                                        'order' => $order_ax,
+                                    )
+                                );
+                                ?>
                             </div>
                             <!-- /.col -->
                         </div>
@@ -178,9 +155,12 @@ else:
 
                     <!-- Main content -->
                     <div class="invoice p-3 mb-3">
-                        <span>Liên 2(Lưu tại cửa hàng)</span>
+                        <span>Liên 2(Lưu tại cửa hàng)</span><span> giờ in: <?php echo date('H:m:s d-m-Y') ?></span>
                         <!-- title row -->
                         <div class="row">
+                            <div class="col-12 text-center">
+                                <h1>Chi Tiết Đơn Hàng Bán Lẻ</h1>
+                            </div>
                             <div class="col-12 pt-3">
                                 <h4>
                                     <i class="fas fa-globe"></i> <?php echo $company->get_company_name()?>
@@ -236,28 +216,14 @@ else:
                         <!-- Table row -->
                         <div class="row">
                             <div class="col-12 table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Sản phẩm</th>
-                                        <th>Mã sản phẩm</th>
-                                        <th>Số lượng</th>
-                                        <th class="text-right">Thành tiền</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php $count= 0; foreach ($order_ax->get_items() as $item_key => $item ): $count++ ?>
-                                        <?php $product = new WC_Product($item['product_id']);?>
-                                        <tr><td><?php echo $count?></td>
-                                            <td><?php echo $item->get_name() ?></td>
-                                            <td><?php echo $product->get_sku()  ?></td>
-                                            <td><?php echo $item->get_quantity() ?></td>
-                                            <td class="text-right"><?php echo number_format( $item->get_total(), '0',',','.') ?> đ</td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                <?php
+                                wc_get_template(
+                                    'template-parts/dashboard/order-items.php',
+                                    array(
+                                        'order' => $order_ax,
+                                    )
+                                );
+                                ?>
                             </div>
                             <!-- /.col -->
                         </div>
@@ -280,26 +246,14 @@ else:
                             </div>
                             <!-- /.col -->
                             <div class="col-6">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <tr>
-                                            <th>Thành tiền:</th>
-                                            <td class="text-right"><?php echo number_format($order_ax->get_total() - $order_ax->get_shipping_total(), '0', ',', '.'); ?> đ</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Giảm giá</th>
-                                            <td class="text-right"><?php echo number_format($order_ax->get_total_discount() , '0', ',', '.')?> đ</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Giao hàng:</th>
-                                            <td class="text-right"><?php echo number_format($order_ax->get_shipping_total(), '0', ',', '.')?> đ</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Tổng tiền:</th>
-                                            <td class="text-right"><?php echo number_format($order_ax->get_total() , '0', ',', '.')?> đ</td>
-                                        </tr>
-                                    </table>
-                                </div>
+                                <?php
+                                wc_get_template(
+                                    'template-parts/dashboard/order-summary-total.php',
+                                    array(
+                                        'order' => $order_ax,
+                                    )
+                                );
+                                ?>
                             </div>
                             <!-- /.col -->
                         </div>
