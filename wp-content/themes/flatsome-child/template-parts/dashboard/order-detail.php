@@ -103,16 +103,17 @@ else:
                         <div class="col-sm-4 invoice-col">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    Hóa đơn <br><b> #<?php echo $order_id?></b><br>
+                                    Số đơn hàng <br><b> #<?php echo $order_id?></b><br>
                                 </div>
                                 <!-- /.col -->
                                 <div id="card_orders" class="col-sm-4 invoice-col no-print">
                                     Trạng thái <br>
-                                    <b id="order_status_<?php echo get_the_ID()?>">
+                                    <b id="order_status_<?php echo $order_id?>">
                                     <span class="badge <?php echo $status_badge[$order_ax->get_status()] ?>"><?php echo $order_ax->get_status()?>
-                                    </span></b><br>
+                                    </span>
+                                    </b><br>
                                 </div>
-                                <div id="card_orders" class="col-sm-4 invoice-col no-print">
+                                <div id="card_order_type" class="col-sm-4 invoice-col no-print">
                                     Loại đơn hàng <br>
                                     <span class="badge badge-info">
                                         <?php echo $order_ax->get_type()?><br>
@@ -120,7 +121,7 @@ else:
                             </div>
                             <div class="row">
                                 <div class="col-sm-12 pt-3">
-                                    Khách hàng ghi chú:<br>
+                                    Ghi chú của khách hàng:<br>
                                     <b><?php echo $order_ax->get_customer_note()?> </b>
                                 </div>
                             </div>
@@ -133,32 +134,14 @@ else:
                     <!-- Table row -->
                     <div class="row">
                         <div class="col-12 table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Sản phẩm</th>
-                                    <th>Mã sản phẩm</th>
-                                    <th>Số lượng</th>
-                                    <th class="text-right">Đơn giá</th>
-                                    <th class="text-right">% Giảm giá</th>
-                                    <th class="text-right">Tạm tính</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php $count= 0; foreach ($order_ax->get_items() as $item_key => $item ): $count++ ?>
-                                <?php $product = wc_get_product($item['variation_id']) ?>
-                                <tr><td><?php echo $count?></td>
-                                    <td><?php echo $item->get_name() ?></td>
-                                    <td><?php echo $product->get_sku()  ?></td>
-                                    <td><?php echo $item->get_quantity() ?></td>
-                                    <td class="text-right"><?php echo number_format( $product->get_regular_price(), '0',',','.') ?> đ</td>
-                                    <td class="text-right"><?php echo number_format( 100 * (1 - $order_ax->get_line_subtotal($item,true)/(int)($product->get_regular_price('value')*$item->get_quantity())), '0',',','.') ?> %</td>
-                                    <td class="text-right"><?php echo number_format($order_ax->get_line_subtotal($item,true), '0',',','.') ?> đ</td>
-                                </tr>
-                                <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                            <?php
+                            wc_get_template(
+                                'template-parts/dashboard/order-items.php',
+                                array(
+                                    'order' => $order_ax,
+                                )
+                            );
+                            ?>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -173,34 +156,24 @@ else:
                         <!-- /.col -->
                         <!-- accepted payments column -->
                         <div class="col-3">
+                            <div class="no-print">
                             <p class="lead">Thông tin giao hàng:</p>
                             Đơn vị giao hàng: <span><?php echo $order_ax->get_shipping_method()?></span><br>
                             Trạng thái giao hàng: <span><?php echo $order_ax->get_meta('shipment_status',true)?></span><br>
                             Ngày lấy hàng dự kiến: <span><?php echo wp_date( get_date_format(), strtotime( $order_ax->get_meta('shipment_estimated_timeline_pickup',true)))?></span><br>
                             Ngày giao hàng thành: <span><?php echo wp_date( get_date_format(), strtotime( $order_ax->get_meta('shipment_estimated_timeline_dropoff',true)))?></span><br>
+                            </div>
                         </div>
                         <!-- /.col -->
                         <div class="col-6">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tr>
-                                        <th>Thành tiền:</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_subtotal(), '0', ',', '.'); ?> đ</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Giảm giá chiết khấu</th>
-                                        <td class="text-right"> - <?php echo  number_format($order_ax->get_total_discount() , '0', ',', '.')?> đ</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Giao hàng:</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_shipping_total(), '0', ',', '.')?> đ</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Tổng tiền:</th>
-                                        <td class="text-right"><?php echo number_format($order_ax->get_total() , '0', ',', '.')?> đ</td>
-                                    </tr>
-                                </table>
-                            </div>
+                            <?php
+                                wc_get_template(
+                                    'template-parts/dashboard/order-summary-total.php',
+                                    array(
+                                        'order' => $order_ax,
+                                    )
+                                );
+                            ?>
                         </div>
                         <!-- /.col -->
                     </div>
