@@ -100,10 +100,10 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
                         </div>
                     <table class="table table-bordered mb-0">
                         <tr class="font-italic border-dark">
-                            <td class="pl-3  border-dark"><strong>STT</strong></td>
-                            <td class="border-dark"><strong>Tên sản phẩm</strong></td>
-                            <td class="border-dark"><strong>Mã sản phẩm</strong></td>
-                            <td class="border-dark"><strong>Số lượng</strong></td>
+                            <td class="pl-3  border-dark w-5"><strong>STT</strong></td>
+                            <td class="border-dark w-35"><strong>Tên sản phẩm</strong></td>
+                            <td class="border-dark w-25"><strong>Mã sản phẩm</strong></td>
+                            <td class="border-dark w-25"><strong>Số lượng</strong></td>
                         </tr>
                         <?php $count= 0; foreach ($order->get_items() as $item_key => $item ): $count++ ?>
                             <?php $product = new WC_Product($item['product_id']);?>
@@ -145,7 +145,7 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
 </section>
             <script>
                 window.print()
-                window.onafterprint = () => window.close();
+                // window.onafterprint = () => window.close();
             </script>
 <?php
     endif;

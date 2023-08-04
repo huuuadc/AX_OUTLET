@@ -1,4 +1,5 @@
 <?php
+
 add_action('check_admin_referer', 'logout_without_confirm', 10, 2);
 function logout_without_confirm($action, $result)
 {
@@ -12,3 +13,4 @@ function logout_without_confirm($action, $result)
         die();
     }
 }
+

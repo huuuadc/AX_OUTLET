@@ -1153,6 +1153,25 @@ html *::-webkit-scrollbar-thumb {
   font-weight: 600;
   margin-top: 3px;
 }
+.woocommerce-page .cart-container .user-registration {
+  box-shadow: none !important;
+}
+@media (min-width: 1200px) {
+  .woocommerce-page .cart-container .user-registration {
+    width: 58.3333333333%;
+    padding-right: 35px;
+  }
+}
+.woocommerce-page .cart-container .user-registration .ur-frontend-form.login {
+  padding: 0;
+  border: none;
+}
+.woocommerce-page .cart-container .user-registration .ur-frontend-form.login .ur-form-row .ur-form-grid {
+  padding: 0;
+}
+.woocommerce-page .cart-container .user-registration .ur-frontend-form.login .ur-form-row .ur-form-grid .ur-submit-button {
+  margin: 15px 0 0 0;
+}
 .woocommerce-page .checkout_coupon .coupon {
   display: flex;
   flex-wrap: wrap;
@@ -1766,7 +1785,19 @@ html *::-webkit-scrollbar-thumb {
   border-color: #111;
 }
 .page-checkout .shop_table .cart-discount {
-  background-color: #eee;
+  background-color: transparent;
+}
+.page-checkout .shop_table .cart-discount th, .page-checkout .shop_table .cart-discount td {
+  padding-left: 0;
+  padding-right: 2px;
+}
+.page-checkout .shop_table .cart-discount th {
+  color: #e00;
+  font-weight: bold;
+}
+.page-checkout .shop_table .woocommerce-shipping-methods .shipping__list_label {
+  display: flex;
+  justify-content: space-between;
 }
 .page-checkout .shipping__table {
   margin-top: 10px;
@@ -2192,6 +2223,19 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 }
 .login__register .ur-frontend-form .ur-form-row .ur-form-grid label.user-registration-error:before {
   display: none;
+}
+.login__register .ur-frontend-form #user_policy_field {
+  margin-top: 5px;
+}
+.login__register .ur-frontend-form #user_policy_field .ur-label {
+  display: none !important;
+}
+.login__register .ur-frontend-form #user_policy_field .ur-checkbox-list input[type=checkbox] {
+  margin-top: -2px !important;
+}
+.login__register .ur-frontend-form #user_policy_field .ur-checkbox-list .ur-checkbox-label {
+  font-weight: 500;
+  font-style: italic;
 }
 #yith-wcmap-avatar .avatar-modal-overlay {
   z-index: 1100;

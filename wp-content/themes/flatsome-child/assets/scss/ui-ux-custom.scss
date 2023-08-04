@@ -1291,6 +1291,23 @@ html *::-webkit-scrollbar-thumb{
                 }
             }
         }
+        .user-registration {
+            box-shadow: none !important;
+            @media(min-width:1200px){
+                width: 58.3333333333%;
+                padding-right: 35px;
+            }
+            .ur-frontend-form.login {
+                padding: 0;
+                border: none;
+                .ur-form-row .ur-form-grid {
+                    padding: 0;
+                    .ur-submit-button {
+                        margin: 15px 0 0 0;
+                    }
+                }
+            }
+        }
     }
     .checkout_coupon {
         .coupon {
@@ -1992,7 +2009,21 @@ html *::-webkit-scrollbar-thumb{
             }
         }
         .cart-discount {
-            background-color: #eee;
+            background-color: transparent;
+            th, td {
+                padding-left: 0;
+                padding-right: 2px;
+            }
+            th {
+                color: #e00;
+                font-weight: bold;
+            }
+        }
+        .woocommerce-shipping-methods {
+            .shipping__list_label {
+                display: flex;
+                justify-content: space-between;
+            }
         }
     }
     .shipping__table {
@@ -2464,6 +2495,21 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
                 display: none;
             }
         }
+        #user_policy_field {
+            margin-top: 5px;
+            .ur-label {
+                display: none !important;
+            }
+            .ur-checkbox-list {
+                input[type=checkbox] {
+                    margin-top: -2px !important;
+                }
+                .ur-checkbox-label {
+                    font-weight: 500;
+                    font-style: italic;
+                }
+            }
+        }
     }
 }
 #yith-wcmap-avatar .avatar-modal-overlay {
@@ -2589,6 +2635,51 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
                     }
                 }
             }
+        }
+    }
+}
+.woocommerce-order-details {
+    &__title {
+        margin-bottom: 20px;
+        font-weight: 600;
+        font-size: 20px;
+    }
+    .wc-item-meta {
+        display: none;
+    }
+    tfoot {
+        tr:first-child {
+            th, td {
+                padding-top: 20px;
+            }
+        }
+    }
+    .woocommerce-table__line-item {
+        td {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .woocommerce-table__product-name {
+            .product__brand {
+                margin-top: 0;
+            }
+            > a {
+                color: #000;
+                font-weight: 600;
+            }
+        }
+    }
+}
+.woocommerce-order-received {
+    .is-well {
+        box-shadow: none;
+        border: solid 1px #333;
+        .woocommerce-notice {
+            color: #111;
+        }
+        @media(min-width: 1200px){
+            margin-left: 15px !important;
+            margin-top: 76px;
         }
     }
 }
