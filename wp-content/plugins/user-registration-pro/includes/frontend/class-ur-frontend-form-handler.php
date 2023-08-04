@@ -101,6 +101,13 @@ class UR_Frontend_Form_Handler {
 
 			if ( $user_id > 0 ) {
 				do_action( 'user_registration_after_user_meta_update', self::$valid_form_data, $form_id, $user_id );
+
+                $user = get_user_by('id',$user_id);
+                $full_name = trim(get_user_meta($user_id, 'first_name', true) . " " . get_user_meta($user_id, 'last_name', true));
+                if (!empty($full_name) && ($user->data->display_name!=$full_name)) {
+                    wp_update_user( array ('ID' => $user->ID, 'display_name' => $full_name));
+                }
+
 				$login_option   = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 				$success_params = array(
 					'username' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',

@@ -14,17 +14,3 @@ function logout_without_confirm($action, $result)
     }
 }
 
-add_action( 'wp_login', 'format_user_display_name_on_login' );
-function format_user_display_name_on_login( $username ) {
-    $user = get_user_by( 'login', $username );
-    $first_name = get_user_meta( $user->ID, 'first_name', true );
-    $last_name = get_user_meta( $user->ID, 'last_name', true );
-    $full_name = trim( $first_name . ' ' . $last_name );
-    if ( ! empty( $full_name ) && ( $user->data->display_name != $full_name ) ) {
-        $userdata = array(
-            'ID' => $user->ID,
-            'display_name' => $full_name,
-        );
-        wp_update_user( $userdata );
-    }
-}
