@@ -2464,6 +2464,21 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
                 display: none;
             }
         }
+        #user_policy_field {
+            margin-top: 5px;
+            .ur-label {
+                display: none !important;
+            }
+            .ur-checkbox-list {
+                input[type=checkbox] {
+                    margin-top: -2px !important;
+                }
+                .ur-checkbox-label {
+                    font-weight: 500;
+                    font-style: italic;
+                }
+            }
+        }
     }
 }
 #yith-wcmap-avatar .avatar-modal-overlay {
