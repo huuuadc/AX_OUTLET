@@ -202,6 +202,23 @@ html *::-webkit-scrollbar-thumb{
     margin: 0 15px 0 0 !important;
     color: #000;
 }
+.header-nav {
+    .account-item {
+        .nav-dropdown {
+            li {
+                position: relative;
+                z-index: 2;
+                a {
+                    text-transform: none !important;
+                    font-size: 14px;
+                }
+                &.woocommerce-MyAccount-navigation-link--downloads {
+                    display: none;
+                }
+            }
+        }
+    }
+}
 .header-top {
     .nav-dropdown {
         border: solid 1px #000;
