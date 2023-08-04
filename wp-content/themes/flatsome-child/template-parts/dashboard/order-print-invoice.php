@@ -2,6 +2,8 @@
 </div>
 <?php
 
+date_default_timezone_set('Asia/Ho_Chi_Minh');
+
 use AX\COMPANY;
 
 $order_id =  $_GET['order_id'];
@@ -50,7 +52,7 @@ else:
                         <!-- title row -->
                         <div class="row">
                             <div class="col-12 text-center">
-                                <h1>Chi Tiết Đơn Hàng Bán Lẻ</h1>
+                                <h1>Hóa Đơn Bán Lẻ</h1>
                             </div>
                             <div class="col-12 pt-3">
                                 <h4>
@@ -89,7 +91,7 @@ else:
                             </div>
                             <!-- /.col -->
                             <div class="col-sm-2 invoice-col">
-                                Hóa đơn <br><b> #<?php echo $order_id?></b><br>
+                                Mã đơn hàng <br><b> #<?php echo $order_id?></b><br>
                             </div>
                             <!-- /.col -->
                             <!-- /.col -->
@@ -156,12 +158,12 @@ else:
                     <!-- /.invoice -->
 
                     <!-- Main content -->
-                    <div class="invoice p-3 mb-3">
+                    <div class="invoice p-2 mb-3">
                         <span>Liên 2(Lưu tại cửa hàng)</span><span> giờ in: <?php echo date('H:m:s d-m-Y') ?></span>
                         <!-- title row -->
                         <div class="row">
                             <div class="col-12 text-center">
-                                <h1>Chi Tiết Đơn Hàng Bán Lẻ</h1>
+                                <h1>Hóa Đơn Bán Lẻ</h1>
                             </div>
                             <div class="col-12 pt-3">
                                 <h4>
@@ -200,7 +202,7 @@ else:
                             </div>
                             <!-- /.col -->
                             <div class="col-sm-2 invoice-col">
-                                Hóa đơn <br><b> #<?php echo $order_id?></b><br>
+                                Mã đơn hàng <br><b> #<?php echo $order_id?></b><br>
                             </div>
                             <!-- /.col -->
                             <!-- /.col -->
