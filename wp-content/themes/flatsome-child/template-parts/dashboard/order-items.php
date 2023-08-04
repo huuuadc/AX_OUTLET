@@ -22,8 +22,9 @@ if ( ! $order ) {
     </thead>
     <tbody>
     <?php $count= 0; foreach ($order->get_items() as $item_key => $item ): $count++ ?>
-        <?php $product = wc_get_product($item['variation_id']) ?>
-        <tr><td><?php echo $count?></td>
+        <?php $product =  $item['variation_id'] != 0 ? wc_get_product($item['variation_id']) : wc_get_product($item->get_product_id()) ?>
+        <tr>
+            <td><?php echo $count?></td>
             <td><?php echo $item->get_name() ?></td>
             <td><?php echo $product->get_sku()  ?></td>
             <td><?php echo $item->get_quantity() ?></td>
