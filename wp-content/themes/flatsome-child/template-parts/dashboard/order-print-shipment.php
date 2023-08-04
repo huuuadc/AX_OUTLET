@@ -106,7 +106,7 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
                             <td class="border-dark w-25"><strong>Số lượng</strong></td>
                         </tr>
                         <?php $count= 0; foreach ($order->get_items() as $item_key => $item ): $count++ ?>
-                            <?php $product = new WC_Product($item['product_id']);?>
+                            <?php $product =  $item['variation_id'] != 0 ? wc_get_product($item['variation_id']) : wc_get_product($item->get_product_id()) ?>
                             <tr>
                                 <td class="pl-3 border-dark"><?php echo $count?></td>
                                 <td class="border-dark"><?php echo $item->get_name() ?></td>
@@ -145,7 +145,7 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
 </section>
             <script>
                 window.print()
-                // window.onafterprint = () => window.close();
+                window.onafterprint = () => window.close();
             </script>
 <?php
     endif;
