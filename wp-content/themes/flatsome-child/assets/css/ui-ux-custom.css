@@ -176,6 +176,17 @@ html *::-webkit-scrollbar-thumb {
   margin: 0 15px 0 0 !important;
   color: #000;
 }
+.header-nav .account-item .nav-dropdown li {
+  position: relative;
+  z-index: 2;
+}
+.header-nav .account-item .nav-dropdown li a {
+  text-transform: none !important;
+  font-size: 14px;
+}
+.header-nav .account-item .nav-dropdown li.woocommerce-MyAccount-navigation-link--downloads {
+  display: none;
+}
 .header-top .nav-dropdown {
   border: solid 1px #000;
   border-top: none;
