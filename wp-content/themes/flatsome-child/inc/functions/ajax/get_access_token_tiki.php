@@ -18,15 +18,24 @@ function get_access_token_tiki()
 
     $access_token = $tiki_api->get_token();
 
-    if(!add_option('tiki_access_token',$access_token,'','no')){
-        update_option('tiki_access_token', $access_token,'','no');
+    if ($access_token !== ''){
+        if(!add_option('tiki_access_token',$access_token,'','no')){
+            update_option('tiki_access_token', $access_token,'','no');
+        }
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'Save success',
+            'data' => $access_token
+        ));
     }
 
     echo json_encode(array(
-        'status' => '200',
-        'messenger' => 'Save success',
+        'status' => '500',
+        'messenger' => 'Failed get token',
         'data' => $access_token
-    ));;
+    ));
+
 
     exit;
 
