@@ -1526,6 +1526,7 @@ html *::-webkit-scrollbar-thumb{
         display: flex;
         justify-content: space-between;
         margin-bottom: 15px;
+        padding-top: 10px;
         .title {
             margin: 0 0 2px 0;
             font-size: 30px;
@@ -1942,6 +1943,7 @@ html *::-webkit-scrollbar-thumb{
             }
             &:not(.disabled):hover {
                 border-bottom-color: #ccc;
+                font-weight: bold;
             }
         }
         .ux-swatch--label.disabled {
@@ -2737,7 +2739,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     background-color: #111;
     margin: 0 !important;
     border-radius: 3px;
-    padding: 10px 0 !important;
+    padding: 10px 0 10px 10px !important;
     opacity: 0;
     pointer-events: none;
     .message-container {

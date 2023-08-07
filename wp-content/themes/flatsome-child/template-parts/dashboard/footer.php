@@ -25,6 +25,7 @@
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/js/ajax.js'?>"></script>
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/js/functions.js'?>"></script>
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/select2/js/select2.full.min.js'?>"></script>
+    <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/moment/moment.min.js'?>"></script>
 <!--    <script type="text/javascript" src="--><?php //echo get_stylesheet_directory_uri().'/assets/js/toast.js' ?><!--"/>-->
 </footer>
 </body>

@@ -21,7 +21,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
 
     if (wc_get_order($order_id)){
 
-        $order = new AX_ORDER($order_id);
+        $order = new OMS_ORDER($order_id);
 
         update_post_meta($order_id,'shipment_status', $req->status);
 

@@ -19,15 +19,6 @@ defined( 'ABSPATH' ) || exit;
 
 global $post;
 ?>
-
    <p>
-        <strong>Sản phẩm áp dụng:</strong> Tất cả sản phẩm nguyên giá & giảm giá không quá 50%</br>
-        <strong>Sản phẩm không áp dụng:</strong></br>
-        &ensp;•	Đồ lót, đồ tắm</br>
-        &ensp;•	Nước hoa</br>
-        &ensp;•	Phụ kiện: Đồng hồ, mắt kính, trang sức</br>
-        <strong>Thời gian đổi trả:</strong></br>
-        &ensp;•	Sản phẩm bị lỗi do nhà sản xuất: 14 ngày kể từ ngày nhận được sản phẩm</br>
-        &ensp;•	Thay đổi nhu cầu: 07 ngày kể từ ngày nhận được sản phẩm</br>
-        &ensp;Tham khảo chi tiết chính sách đổi trả hàng tại: <a href="/chinh-sach-doi-tra/"><strong>Chính sách đổi trả</strong></a></br>
-    </p>
+        <?php echo get_option('admin_dashboard_product_return_policy')?>
+   </p>

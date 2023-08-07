@@ -51,7 +51,7 @@ if (!isset($_GET['order_id']) || !get_post_type($order_id)):
 
 <?php
 else:
-    $order_ax = new AX_ORDER($order_id);
+    $order_ax = new OMS_ORDER($order_id);
     $company = new COMPANY();
     ?>
 <section class="content">

@@ -66,6 +66,8 @@ $(function () {
     // Summernote
     $('#footer_print_shipment').summernote()
 
+    $('#product_return_policy').summernote()
+
     //Initialize Select2 Elements
     $('.select2').select2()
 
@@ -83,8 +85,29 @@ $(function () {
         }
     )
 
+    $('#reservation').daterangepicker()
+
+    let defaultMoment = parseInt($('#daterange-btn').attr('default-moment'))
+
+    $('#daterange-btn').daterangepicker(
+        {
+            ranges   : {
+                'Hôm nay'       : [moment(), moment()],
+                'Hôm qua'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '7 ngày trước' : [moment().subtract(6, 'days'), moment()],
+                '30 ngày trước': [moment().subtract(29, 'days'), moment()],
+                'Tháng này'  : [moment().startOf('month'), moment().endOf('month')],
+                'Tháng trước'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            startDate: moment().subtract(defaultMoment, 'days'),
+            endDate  : moment()
+        },
+        function (start, end) {
+            $('#reportrange span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'))
+            window.location.href = '/admin-dashboard/order-list/?filter_range_date='+start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY');
+        }
+    )
+
+
 })
 
-function send_filter(){
-
-}

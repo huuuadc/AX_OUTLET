@@ -5,7 +5,7 @@ use AX\ADDRESS;
 /**
  *
  */
-class AX_ORDER extends WC_Order{
+class OMS_ORDER extends WC_Order{
 
     private string $billing_city_code;
     private string $billing_district_code;

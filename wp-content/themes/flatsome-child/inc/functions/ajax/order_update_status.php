@@ -48,7 +48,7 @@ function order_update_status(){
     //create order from order id
     //
     //
-    $order = new AX_ORDER($order_id);
+    $order = new OMS_ORDER($order_id);
     //create tiki api
     $tiki_connect = new TIKI_API();
 

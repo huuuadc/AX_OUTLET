@@ -337,6 +337,7 @@ function save_admin_dashboard_setting(){
 
     let item_in_page = $('#item_in_page').val()
     let footer_print_shipment = $('#footer_print_shipment').val()
+    let product_return_policy = $('#product_return_policy').val()
 
     $.ajax({
         type:   'POST',
@@ -344,7 +345,8 @@ function save_admin_dashboard_setting(){
         data:   {
             action: 'save_admin_dashboard_setting',
             item_in_page,
-            footer_print_shipment
+            footer_print_shipment,
+            product_return_policy
         },
         beforeSend: function (){
             $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')

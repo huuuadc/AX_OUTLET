@@ -1,7 +1,6 @@
 <?php
     global $wp;
-//    var_dump(get_query_var('pagename') );
-//    var_dump($wp->query_vars);
+    date_default_timezone_set('Asia/Ho_Chi_Minh');
 ?>
 <div class="content-wrapper">
     <?php if (get_query_var('pagename') == 'admin-dashboard' && isset($wp->query_vars['page'])) :?>

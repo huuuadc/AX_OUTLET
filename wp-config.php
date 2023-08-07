@@ -81,6 +81,12 @@ $table_prefix = 'ecom_';
  */
 define( 'WP_DEBUG', false );
 
+/**
+* Disable edit function and add plugin in admin page
+*/
+define( 'DISALLOW_FILE_EDIT',true);
+define( 'DISALLOW_FILE_MODS', true);
+
 /* Add any custom values between this line and the "stop editing" line. */
 
 
