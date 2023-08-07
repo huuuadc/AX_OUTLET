@@ -18,7 +18,7 @@ function get_access_token_tiki()
 
     $access_token = $tiki_api->get_token();
 
-    if(add_option('tiki_access_token',$access_token,'','no')){
+    if(!add_option('tiki_access_token',$access_token,'','no')){
         update_option('tiki_access_token', $access_token,'','no');
     }
 
