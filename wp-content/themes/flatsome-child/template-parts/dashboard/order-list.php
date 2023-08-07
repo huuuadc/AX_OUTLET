@@ -15,11 +15,15 @@
         $filter_end_date = str_replace('/', '-', $order_range_date_arg['1']);
         $filter_end_date = date('Y-m-d', strtotime($filter_end_date.' + 1 days'));
     } else {
-        $filter_start_date = date('Y-m-d',( strtotime( date('Y-m-d').'- 7 days')));
+        $filter_start_date = date('Y-m-d',( strtotime( date('Y-m-d').'- 6 days')));
         $filter_end_date = date('Y-m-d');
         $order_range_date = $filter_start_date . ' - ' . $filter_end_date;
+        $filter_start_date = date('Y-m-d',( strtotime( date('Y-m-d').'- 7 days')));
+        $filter_end_date = date('Y-m-d',(strtotime($filter_end_date.'+ 1 days')));
     }
 
+    $moment = (strtotime($filter_end_date) - strtotime($filter_start_date))/(86400);
+    $default_moment = $moment < 3 ? $moment : $moment -2;
     $filter_order = array(
         'post_status' => explode(',', $order_status),
         'post_type' => array('shop_order'),
@@ -114,7 +118,7 @@
                             <div class="col-4">
                                 <label>Theo ngày</label>
                                 <div class="input-group">
-                                    <button type="button" class="btn btn-default float-right" id="daterange-btn">
+                                    <button type="button" class="btn btn-default float-right" id="daterange-btn" default-moment="<?php echo $default_moment?>">
                                         <i class="far fa-calendar-alt"></i> Phạm vi
                                         <i class="fas fa-caret-down"></i>
                                     </button>

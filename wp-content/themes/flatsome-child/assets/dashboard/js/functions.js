@@ -87,6 +87,8 @@ $(function () {
 
     $('#reservation').daterangepicker()
 
+    let defaultMoment = parseInt($('#daterange-btn').attr('default-moment'))
+
     $('#daterange-btn').daterangepicker(
         {
             ranges   : {
@@ -97,7 +99,7 @@ $(function () {
                 'Tháng này'  : [moment().startOf('month'), moment().endOf('month')],
                 'Tháng trước'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             },
-            startDate: moment().subtract(29, 'days'),
+            startDate: moment().subtract(defaultMoment, 'days'),
             endDate  : moment()
         },
         function (start, end) {
