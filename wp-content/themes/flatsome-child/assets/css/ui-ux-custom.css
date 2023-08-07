@@ -1356,6 +1356,7 @@ html *::-webkit-scrollbar-thumb {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
+  padding-top: 10px;
 }
 .category__page--title .title {
   margin: 0 0 2px 0;
@@ -1728,6 +1729,7 @@ html *::-webkit-scrollbar-thumb {
 }
 .product .variations .ux-swatch:not(.disabled):hover {
   border-bottom-color: #ccc;
+  font-weight: bold;
 }
 .product .variations .ux-swatch--label.disabled {
   background: none;
@@ -2422,7 +2424,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
   background-color: #111;
   margin: 0 !important;
   border-radius: 3px;
-  padding: 10px 0 !important;
+  padding: 10px 0 10px 10px !important;
   opacity: 0;
   pointer-events: none;
 }
