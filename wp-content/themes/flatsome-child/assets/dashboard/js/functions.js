@@ -66,6 +66,8 @@ $(function () {
     // Summernote
     $('#footer_print_shipment').summernote()
 
+    $('#product_return_policy').summernote()
+
     //Initialize Select2 Elements
     $('.select2').select2()
 
