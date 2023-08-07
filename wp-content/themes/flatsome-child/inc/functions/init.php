@@ -21,7 +21,7 @@ require (__DIR__.'/ajax/generate_database_address.php');
 require (__DIR__.'/ajax/get_address_shipping.php');
 require (__DIR__.'/size-chart/size-chart.php');
 require (__DIR__.'/checkout/save_field.php');
-require (__DIR__ .'/class_ax_order.php');
+require (__DIR__ . '/class-oms-order.php');
 require (__DIR__.'/ajax/save_setting_tiki_api.php');
 require (__DIR__.'/ajax/get_access_token_tiki.php');
 require (__DIR__.'/shipping/shipping_method.php');

@@ -12,6 +12,7 @@ class TIKI_API
     private string $baseURL;
     private string $baseURLTNSL;
     private object $company;
+    private string $INVALID_TOKEN = 'INVALID_TOKEN';
     public array  $data_default = array(
         'external_order_id' => '',
         'service_code'  => 'hns_standard',
@@ -97,6 +98,9 @@ class TIKI_API
         $this->SECRET_CLIENT    = get_option('tiki_secret_client') ?? '';
         $this->ACCESS_TOKEN     = get_option('tiki_access_token') ?? '';
         $this->company          = new COMPANY();
+
+        //{"success":false,"errors":[{"message":"Forbidden","code":"INVALID_TOKEN"}],"metadata":{"request_id":"c2e612e212e1a70fdc33dca2a7bada81"}}
+
     }
 
     /**
@@ -279,7 +283,20 @@ class TIKI_API
         $this->data_default['origin']['ward_code'] = $this->company->get_company_ward_code();
 
         $data = array_merge($this->data_default,$data);
-        return $this->sendRequestToTiki($url,$data,'POST');;
+
+        $rep = $this->sendRequestToTiki($url,$data,'POST');
+
+        //Refresh token when invalid token
+        if (!$rep->success && $rep->errors[0]->code == $this->INVALID_TOKEN){
+            $token = $this->get_token();
+            $this->ACCESS_TOKEN = $token;
+            if(!add_option('tiki_access_token',$token,'','no')){
+                update_option('tiki_access_token', $token,'no');
+            }
+            $rep = $this->sendRequestToTiki($url,$data,'POST');
+        }
+
+        return $rep;
 
     }
 

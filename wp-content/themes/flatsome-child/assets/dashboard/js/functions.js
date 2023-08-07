@@ -83,8 +83,27 @@ $(function () {
         }
     )
 
+    $('#reservation').daterangepicker()
+
+    $('#daterange-btn').daterangepicker(
+        {
+            ranges   : {
+                'Hôm nay'       : [moment(), moment()],
+                'Hôm qua'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '7 ngày trước' : [moment().subtract(6, 'days'), moment()],
+                '30 ngày trước': [moment().subtract(29, 'days'), moment()],
+                'Tháng này'  : [moment().startOf('month'), moment().endOf('month')],
+                'Tháng trước'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate  : moment()
+        },
+        function (start, end) {
+            $('#reportrange span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'))
+            window.location.href = '/admin-dashboard/order-list/?filter_range_date='+start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY');
+        }
+    )
+
+
 })
 
-function send_filter(){
-
-}
