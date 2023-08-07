@@ -27,7 +27,7 @@ if ( !empty($breadcrumb) ) {
 		if ( ! empty( $crumb[1] ) && sizeof( $breadcrumb ) !== $key + 1 ) {
 			echo '<a href="' . esc_url( $crumb[1] ) . '">' . esc_html( $crumb[0] ) . '</a>';
 		} else if(!is_product() && !flatsome_option('wc_category_page_title')) {
-			echo esc_html( $crumb[0] );
+			echo '<span class="breadcrumb__name key_'.$key.'">'.esc_html( $crumb[0] ).'</span>';
 		}
 
 		echo $after;
@@ -36,13 +36,13 @@ if ( !empty($breadcrumb) ) {
 		if(is_product() || flatsome_option('wc_category_page_title')){
 				$key = $key+1;
 				if ( sizeof( $breadcrumb ) > $key+1) {
-					echo ' <span class="divider">'.$delimiter.'</span> ';
+					echo ' <span class="divider key_'.$key.'">'.$delimiter.'</span> ';
 				}
 		} else{
 
 		// Category pages
 		if ( sizeof( $breadcrumb ) !== $key + 1 ) {
-				echo ' <span class="divider">'.$delimiter.'</span> ';
+				echo ' <span class="divider key_'.$key.'">'.$delimiter.'</span> ';
 			}
 		}
 
