@@ -1,0 +1,891 @@
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/MaterialIcons-Regular.eot'); /* For IE6-8 */
+    src: url('fonts/MaterialIcons-Regular.woff2') format('woff2'),
+    url('fonts/MaterialIcons-Regular.woff') format('woff'),
+    url('fonts/MaterialIcons-Regular.ttf') format('truetype');
+}
+
+.material-icons{
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+/*tooltip*/
+
+.material-tooltip {
+    padding: 18px 20px;
+    z-index: 10000;
+    background-color: transparent;
+    border-radius: 2px;
+    color: #fff;
+    min-height: 0;
+    line-height: 100%;
+    opacity: 0;
+    display: none;
+    position: absolute;
+    text-align: center;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+    will-change: top, left;
+    max-width: 400px;
+}
+
+.backdrop {
+    position: absolute;
+    opacity: 0;
+    display: none;
+    height: 7px;
+    width: 14px;
+    border-radius: 0 0 14px 14px;
+    background-color: #FC9C4D;
+    z-index: -1;
+    -webkit-transform-origin: 50% 10%;
+    -moz-transform-origin: 50% 10%;
+    -ms-transform-origin: 50% 10%;
+    -o-transform-origin: 50% 10%;
+    transform-origin: 50% 10%;
+    will-change: transform, opacity;
+}
+#wpcontent {
+    padding-left: 0;
+}
+
+a, div {
+    outline : none;
+}
+
+.wpsol-width-100 {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.padding-top-bottom-20 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.margin-top-bottom-20 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.wpsol-left {
+    float : left;
+    max-height: 250px;
+    overflow: hidden;
+}
+
+.wpsol-right {
+    float: right;
+}
+
+.wpsol-row-full {
+    width: 100%;
+    float: left;
+    margin: 10px 0 10px 0;
+}
+
+.size-24 {
+    width: 24px;
+    height: 24px;
+}
+
+.material-icons.success {
+    color: #49bf88;
+}
+
+.material-icons.info {
+    color: #ffb25d;
+}
+
+.custom-material-icon {
+    color: #58a9ff;
+}
+
+.grey {
+    color: #96A2BB;
+}
+
+.icon-vertical-mid {
+    vertical-align: middle;
+}
+
+.panel-1 .icon {
+    background-image: linear-gradient(155deg, #a9dcff, #149aff);
+}
+
+.panel-2 .icon {
+    background-image: linear-gradient(154deg, #ffb47f, #ff923e);
+}
+.panel-3 .icon {
+    background-image: linear-gradient(150deg, #a7d878, #43c695);
+}
+.panel-4 .icon {
+    background-image: linear-gradient(159deg, #f39696, #f37382);
+}
+
+.white {
+    background: #ffffff;
+}
+
+.lightness {
+    background-color: #f7fafc;
+}
+
+.margin-right-none {
+    margin-right: 0 !important;
+}
+
+.none-margin {
+    margin : 0 !important;
+}
+
+.ju-setting-label.link-info {
+    padding-left: 10px;
+    min-width: 0 !important;
+    visibility: hidden;
+}
+
+.ju-setting-label.link-info.show-link {
+    visibility: initial;
+}
+
+/*-------------------------------------------------------
+    CSS FOR DASHBOARD
+*/
+.wpsol-dashboard {
+    font-family: Roboto, sans-serif;
+    padding: 0 4%;
+}
+.wpsol-dashboard .title {
+    margin-top: 30px;
+}
+.wpsol-dashboard .title span {
+    font-weight: 600;
+    font-size: 40px;
+    color: #404852;
+    padding: 0;
+    line-height: normal;
+    margin: 50px 0 10px 0;
+    letter-spacing: 1.5px;
+    font-stretch: normal;
+    font-style: normal;
+    box-sizing: border-box;
+    text-transform: uppercase;
+}
+.wpsol-dashboard .sub-title {
+    margin-top: 10px;
+}
+.wpsol-dashboard .sub-title a {
+    font-size: 22px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: 0.8px;
+    color: #ff8726;
+    margin: 0;
+    float: left;
+    text-decoration: none;
+}
+
+.wpsol-dashboard .image-dashboard {
+    box-shadow: 0 20px 40px 0 rgba(160, 166, 190, 0.1);
+    width: 550px;
+    /*max-height: 315px;*/
+    overflow: hidden;
+}
+
+.wpsol-dashboard .right-checkbox {
+    float: right;
+    line-height: 50px;
+    padding-right: 30px;
+}
+
+/*TOP CONTENT*/
+.dashboard-info .dashboard-info-right{
+    width: calc(100% - 550px - 3%);
+}
+
+.dashboard-info-right .ju-setting-label {
+    min-width: 0 !important;
+    padding-left: 20px;
+}
+
+.dashboard-info-right .label-dash-widgets {
+    font-weight: bolder;
+    text-transform: initial;
+    color : #404852;
+}
+
+/*// MID CONTENT*/
+.dashboard-title {
+    color: #4c6482;
+    text-transform: capitalize;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+}
+.dashboard-title label {
+    margin-bottom: 30px;
+
+}
+.dashboard-title-link a{
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    color: #4c6482;
+    text-transform: capitalize;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+}
+
+.dashboard-analysis .ju-settings-option{
+    width: 23.5%;
+    margin: 10px 2% 10px 0;
+}
+
+.dashboard-analysis .icon {
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    margin-left: 3%;
+    border-radius: 4px;
+}
+
+.dashboard-analysis .icon i{
+    color : #ffffff;
+}
+
+.dashboard-analysis .analysis {
+    float: right;
+    width: calc(100% - 80px - 6%);
+    height: 80px;
+    font-weight: bold;
+}
+
+.dashboard-analysis .analysis label{
+    height: 50%;
+    display: flex;
+    align-items: center;
+    color: #404852;
+    letter-spacing: 0.9px;
+}
+.dashboard-analysis .analysis span{
+    height: 50%;
+    display: flex;
+    align-items: center;
+    color: #4c6482;
+    letter-spacing: 0.5px;
+}
+
+/*FEATURES DASH*/
+
+.dashboard-features .ju-settings-option {
+    width: 32%;
+    margin : 30px 2% 30px 0;
+    background: none;
+}
+
+.dashboard-features .dashboard-features-panel {
+    margin-top: 10px;
+}
+
+.dashboard-features .dashboard-features-panel .text-title {
+    text-transform: capitalize;
+    font-weight: bold;
+    padding-left: 15px;
+    color: #404852;
+    letter-spacing: 0.9px;
+}
+
+.dashboard-features .dashboard-features-panel .panel {
+    padding: 0 20px 20px;
+    color: #4c6482;
+    line-height: 2.14;
+    font-size: 14px;
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: 0.5px;
+}
+
+.panel-addon {
+width: 170px;
+height: 32px;
+line-height: 32px;
+text-align: center;
+text-transform: uppercase;
+border: 1px solid #F7F0EB;
+border-radius: 5px;
+color: #ffa45a;
+background-color: #F7F0EB;
+font-weight: 500;
+margin: 9px 0;
+    overflow: hidden;
+}
+
+/*RESPONSIVE CASE*/
+/*********/
+/*********/
+/*********/
+/*/ * For phones * /*/
+@media all and (max-width: 600px){
+    .wpsol-dashboard .title span {
+        font-size: 26px;
+    }
+
+    .dashboard-info .ju-settings-option,
+    .dashboard-analysis .ju-settings-option{
+        width: 100%;
+    }
+
+    .dashboard-info .ju-setting-label {
+        padding-left: 10px;
+    }
+}
+
+@media all and (min-width: 600px) and (max-width: 900px){
+    .wpsol-dashboard .title span {
+        font-size: 30px;
+    }
+    .dashboard-info .ju-settings-option,
+    .dashboard-analysis .ju-settings-option{
+        width: 48%;
+    }
+}
+
+@media all and (max-width: 900px) {
+    .wpsol-dashboard .sub-title {
+        font-size: 14px;
+    }
+    .wpsol-dashboard .image-dashboard {
+        max-width: 430px;
+    }
+    .dashboard-info-left {
+        margin-bottom: 20px;
+    }
+
+    .dashboard-info .dashboard-info-right,
+    .dashboard-features .ju-settings-option{
+        width: 100%;
+    }
+
+    .dashboard-analysis .dashboard-title,
+    .dashboard-features .dashboard-title{
+        padding-top: 0;
+        padding-bottom: 10px;
+        font-size: 18px;
+    }
+
+    .dashboard-features .ju-settings-option {
+        margin: 20px 2% 20px 0;
+    }
+
+    .wpsol-row-full {
+        margin: 10px 0;
+    }
+
+    .wpsol-dashboard .right-checkbox {
+        padding-right: 15px;
+    }
+
+    .dashboard-info .material-icons,
+    .dashboard-info .custom-material-icon,
+    .dashboard-analysis .icon i,
+    .dashboard-features .material-icons{
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .dashboard-info-right .label-dash-widgets,
+    .dashboard-analysis .analysis label,
+    .dashboard-analysis .analysis span {
+        font-size: 14px;
+    }
+
+    .dashboard-analysis .icon {
+        height: 40px;
+        width: 40px;
+        margin-top: 5px;
+    }
+    .dashboard-analysis .analysis {
+        height: 50px;
+        width : calc(100% - 40px - 6%);
+    }
+
+    .dashboard-analysis {
+        padding: 0;
+    }
+
+    .dashboard-features .dashboard-features-panel .text-title {
+        font-size: 16px;
+        min-width: 0;
+    }
+    .dashboard-features .dashboard-features-panel .panel{
+        font-size: 14px;
+        min-width: 0;
+    }
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1170px) {
+    .dashboard-info .ju-settings-option {
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 1170px) and (max-width: 1300px) {
+    .dashboard-info-right .ju-setting-label{
+        padding-left: 15px;
+    }
+    .wpsol-left{
+        max-height: 250px !important;
+        overflow: hidden;
+    }
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1300px) {
+    .wpsol-dashboard .image-dashboard {
+        max-width: 350px;
+    }
+    .wpsol-left{
+        max-height: 520px;
+        overflow: hidden;
+    }
+
+    .dashboard-info .dashboard-info-right {
+        width: calc(100% - 350px - 3%);
+    }
+
+    .dashboard-analysis .icon i {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .dashboard-analysis .analysis label,
+    .dashboard-analysis .analysis span {
+        font-size: 13px;
+    }
+    .dashboard-info-right .label-dash-widgets{
+        font-size: 14px;
+    }
+
+    .panel-addon {
+        font-size: 12px;
+    }
+
+    .dashboard-analysis .icon {
+        height: 50px;
+        width: 50px;
+        margin-top: 5px;
+    }
+
+    .dashboard-analysis .analysis {
+        height: 60px;
+        width : calc(100% - 50px - 6%);
+    }
+
+    .dashboard-features .ju-settings-option {
+        width: 48%;
+    }
+}
+
+@media only screen and (min-width: 1300px) and (max-width: 1600px) {
+    .wpsol-dashboard .image-dashboard {
+        max-width: 400px;
+    }
+
+    .dashboard-info .dashboard-info-right {
+        width: calc(100% - 400px - 3%);
+    }
+
+    .dashboard-analysis .icon i {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+    }
+
+    .dashboard-analysis .analysis label {
+        font-size: 15px;
+    }
+    .dashboard-analysis .analysis span {
+        font-size: 16px;
+    }
+    .dashboard-info-right .label-dash-widgets {
+        font-size: 14px;
+        min-width: 0 !important;
+    }
+
+    /*.panel-addon {
+        font-size: 12px;
+    }*/
+
+    .dashboard-analysis .icon {
+        height: 60px;
+        width: 60px;
+        margin-top: 10px;
+    }
+
+    .dashboard-analysis .analysis {
+        height: 80px;
+        width : calc(100% - 60px - 6%);
+    }
+
+    .dashboard-features .ju-settings-option {
+        width: 32%;
+    }
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1600px) {
+    .wpsol-dashboard .title span {
+        font-size: 36px;
+    }
+
+    .wpsol-dashboard .sub-title {
+        font-size: 18px;
+    }
+
+   /* .dashboard-info .ju-settings-option {
+        height: 60px;
+    }*/
+
+    .dashboard-info .material-icons,
+    .dashboard-info .custom-material-icon,
+    .dashboard-features .material-icons{
+        font-size: 26px;
+        width: 26px;
+        height: 26px;
+    }
+
+    .dashboard-info .ju-setting-label,
+    .dashboard-info .material-icons,
+    .dashboard-info .right-checkbox{
+        /*line-height: 60px;*/
+    }
+
+    .dashboard-info .wpsol-row-full,
+    .dashboard-analysis .wpsol-row-full {
+        margin: 10px 0;
+    }
+
+    .dashboard-features .dashboard-features-panel .panel {
+        font-size: 14px;
+        min-width: 0;
+    }
+    .dashboard-features .dashboard-features-panel .text-title {
+        font-size: 16px;
+        min-width: 0;
+    }
+
+    .wpsol-dashboard .right-checkbox {
+        padding-right: 15px;
+    }
+
+    .dashboard-analysis .dashboard-title,
+    .dashboard-features .dashboard-title{
+        padding-top: 10px;
+        padding-bottom: 20px;
+        font-size: 18px;
+    }
+
+    /*.panel-addon {
+        width: 140px;
+        height: 28px;
+        line-height: 28px;
+    }*/
+}
+
+@media only screen and (min-width: 1600px) and (max-width: 1900px) {
+    .wpsol-dashboard .title span {
+        font-size: 40px;
+    }
+
+    .wpsol-dashboard .sub-title {
+        font-size: 20px;
+    }
+
+    /*.dashboard-info .ju-settings-option {
+        height: 60px;
+    }*/
+
+    .dashboard-info .material-icons,
+    .dashboard-info .custom-material-icon,
+    .dashboard-features .material-icons{
+        font-size: 26px;
+        width: 26px;
+        height: 26px;
+    }
+
+    .dashboard-info .ju-setting-label,
+    .dashboard-info .material-icons,
+    .dashboard-info .right-checkbox{
+        /*line-height: 60px;*/
+    }
+
+    .dashboard-info .wpsol-row-full,
+    .dashboard-analysis .wpsol-row-full {
+        margin: 10px 0;
+    }
+
+    .wpsol-dashboard .image-dashboard {
+        max-width: 450px;
+    }
+
+    .dashboard-info .dashboard-info-right {
+        width: calc(100% - 450px - 3%);
+    }
+
+    .dashboard-analysis .icon i {
+        font-size: 30px;
+        width: 30px;
+        height: 30px;
+    }
+
+    .dashboard-analysis .analysis label {
+        font-size: 15px;
+    }
+    .dashboard-analysis .analysis span {
+        font-size: 16px;
+    }
+    .dashboard-info-right .label-dash-widgets {
+        font-size: 14px;
+        min-width: 0 !important;
+    }
+
+    .dashboard-analysis .icon {
+        height: 70px;
+        width: 70px;
+        margin-top: 10px;
+    }
+
+    .dashboard-analysis .analysis {
+        height: 90px;
+        width : calc(100% - 70px - 6%);
+    }
+
+    .dashboard-features .ju-settings-option {
+        width: 32%;
+    }
+
+    .dashboard-analysis .dashboard-title,
+    .dashboard-features .dashboard-title{
+        font-size: 18px;
+    }
+
+    .dashboard-features .dashboard-features-panel .text-title {
+        font-size: 16px;
+        min-width: 0;
+    }
+
+
+    .dashboard-features .dashboard-features-panel .panel {
+        font-size: 14px;
+        min-width: 0;
+    }
+
+    .wpsol-dashboard .right-checkbox {
+        padding-right: 15px;
+    }
+
+    /*.panel-addon {
+        font-size: 16px;
+        width: 170px;
+        height: 28px;
+        line-height: 28px;
+    }*/
+}
+
+
+/* For large desktop */
+@media only screen and (min-width: 1900px) and (max-width: 2560px){
+    .dashboard-info .ju-settings-option {
+        height: 80px;
+    }
+    .wpsol-left {
+        max-height: 280px;
+    }
+
+    .dashboard-info .material-icons,
+    .dashboard-info .custom-material-icon,
+    .dashboard-features .material-icons{
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .dashboard-info .icon-vertical-mid {
+        vertical-align: sub;
+    }
+
+    .dashboard-info .ju-setting-label,
+    .dashboard-info .material-icons,
+    .dashboard-info .right-checkbox{
+        line-height: 80px;
+    }
+
+    .dashboard-info .wpsol-row-full,
+    .dashboard-analysis .wpsol-row-full {
+        margin: 0;
+    }
+
+    .wpsol-dashboard .image-dashboard {
+        max-width: 550px;
+    }
+
+    .dashboard-info .dashboard-info-right {
+        width: calc(100% - 550px - 3%);
+    }
+
+    .dashboard-analysis .icon i {
+        font-size: 34px;
+        width: 34px;
+        height: 34px;
+    }
+
+    .dashboard-info-right .label-dash-widgets {
+        font-size: 14px;
+    }
+    .dashboard-analysis .analysis label {
+        font-size: 15px;
+    }
+    .dashboard-analysis .analysis span {
+        font-size: 16px;
+    }
+
+    .dashboard-analysis .icon {
+        height: 80px;
+        width: 80px;
+        margin-top: 15px;
+    }
+
+    .dashboard-analysis .analysis {
+        height: 110px;
+        width : calc(100% - 80px - 6%);
+    }
+
+    .dashboard-features .ju-settings-option {
+        width: 32%;
+    }
+
+    .dashboard-analysis .dashboard-title,
+    .dashboard-features .dashboard-title{
+        font-size: 18px;
+    }
+
+    .dashboard-features .dashboard-features-panel .text-title {
+        font-size: 16px;
+        min-width: 0;
+    }
+
+    .dashboard-features .dashboard-features-panel .panel {
+        font-size: 14px;
+        min-width: 0;
+    }
+}
+
+@media only screen and (min-width: 2560px) {
+    .dashboard-info .ju-settings-option {
+        height: 80px;
+    }
+    .wpsol-left {
+        max-height: 280px;
+    }
+
+    .dashboard-info .material-icons,
+    .dashboard-info .custom-material-icon,
+    .dashboard-features .material-icons{
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+    }
+
+    .dashboard-info .icon-vertical-mid {
+        vertical-align: sub;
+    }
+
+    .dashboard-info .ju-setting-label,
+    .dashboard-info .material-icons,
+    .dashboard-info .right-checkbox{
+        line-height: 80px;
+    }
+
+    .dashboard-info .wpsol-row-full,
+    .dashboard-analysis .wpsol-row-full {
+        margin: 0;
+    }
+
+    .dashboard-info .dashboard-info-right {
+        width: calc(100% - 700px - 2%);
+    }
+
+    .dashboard-analysis .icon i {
+        font-size: 38px;
+        width: 38px;
+        height: 38px;
+    }
+
+    .dashboard-info-right .label-dash-widgets {
+        font-size: 14px;
+    }
+    .dashboard-analysis .analysis label {
+        font-size: 15px;
+    }
+    .dashboard-analysis .analysis span {
+        font-size: 16px;
+    }
+
+    .dashboard-analysis .icon {
+        height: 100px;
+        width: 100px;
+        margin-top: 20px;
+    }
+
+    .dashboard-analysis .analysis {
+        height: 140px;
+        width : calc(100% - 100px - 6%);
+    }
+
+    .dashboard-features .ju-settings-option {
+        width: 32%;
+    }
+
+    .dashboard-analysis .dashboard-title,
+    .dashboard-features .dashboard-title{
+        font-size: 18px;
+    }
+
+    .dashboard-features .dashboard-features-panel .text-title {
+        font-size: 16px;
+        min-width: 0;
+    }
+
+    .dashboard-features .dashboard-features-panel .panel {
+        font-size: 14px;
+        min-width: 0;
+    }
+}
