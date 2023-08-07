@@ -31,7 +31,7 @@ if (!isset($_GET['order_id']) || !get_post_type($order_id)):
 else:
 
 $company = new COMPANY();
-$order = new AX_ORDER($order_id);
+$order = new OMS_ORDER($order_id);
 $barcode = new BarcodeGeneratorHTML();
 
 $site_logo_id        = flatsome_option( 'site_logo' );

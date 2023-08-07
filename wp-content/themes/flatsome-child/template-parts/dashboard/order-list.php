@@ -3,15 +3,31 @@
     $item_in_page = get_option('admin_dashboard_item_in_page') ?? 10;
 
     $order_status = $_GET['filter_status'] ?? 'any';
+    $order_range_date = $_GET['filter_range_date'] ?? '01-08-2023 - 04-08-2023';
+    $order_range_date_arg = explode(' - ',$order_range_date);
 
-    $filter_order = array(
-        'post_status' => explode(',',$order_status),
-        'post_type' => array('shop_order'),
-        'posts_per_page' => $item_in_page,
-        'paged' => $_GET['offset'] ?? 1,
-        'order_by' => 'modified',
-        'order' => 'DESC'
-    );
+
+        $filter_start_date = DateTime::createFromFormat('d-m-Y', $order_range_date_arg[0]);
+        $filter_end_date = DateTime::createFromFormat('d-m-Y', $order_range_date_arg[1]);
+
+        write_log($filter_start_date->getTimestamp());
+
+        $filter_order = array(
+            'post_status' => explode(',', $order_status),
+            'post_type' => array('shop_order'),
+            'posts_per_page' => $item_in_page,
+            'paged' => $_GET['offset'] ?? 1,
+            'order_by' => 'modified',
+            'order' => 'DESC',
+            'date_query' => array(
+                array(
+                    'after' => strtotime($filter_start_date->getTimestamp()),
+                    'before' => strtotime($filter_end_date->getTimestamp()),
+                    'inclusive' => true,
+                    'relation' => 'AND'
+                ),
+            )
+        );
 
     $order_query = new WP_Query($filter_order);
 
@@ -55,34 +71,51 @@
     <div class="card-body">
         <div class="row">
             <div class="container-fluid">
-                <div class="card card-default">
+                <div class="card collapsed-card">
                     <div class="card-header">
                         <h3 class="card-title">Lọc đơn hàng</h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                <i class="fas fa-times"></i>
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <label>Trạng thái đơn hàng</label>
-                        <select
-                                id="filter_order_status"
-                                class="select2 select2-primary"
-                                multiple="multiple"
-                                data-placeholder="Chọn trạng thái"
-                                style="width: 100%;"
-                                data-dropdown-css-class="select2-primary"
-                        >
-                            <?php foreach ($status_badge as $item_key => $item_value) :?>
-                            <option <?php echo str_contains($order_status,$item_key) ? 'selected' :'' ?> value="wc-<?php echo $item_key?>" ><?php echo $item_key?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <div class="row">
+                            <div class="col-4">
+                                <label>Trạng thái đơn hàng</label>
+                                <select
+                                        id="filter_order_status"
+                                        class="select2 select2-primary"
+                                        multiple="multiple"
+                                        data-placeholder="Chọn trạng thái"
+                                        style="width: 100%;"
+                                        data-dropdown-css-class="select2-primary"
+                                >
+                                    <?php foreach ($status_badge as $item_key => $item_value) :
+                                        if (str_contains('trash,on-hold,pending,auto-draft',$item_key)) continue;
+                                        ?>
+                                        <option <?php echo str_contains($order_status,$item_key) ? 'selected' :'' ?> value="wc-<?php echo $item_key?>" ><?php echo $item_key?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label>Theo ngày</label>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-default float-right" id="daterange-btn">
+                                        <i class="far fa-calendar-alt"></i> Phạm vi
+                                        <i class="fas fa-caret-down"></i>
+                                    </button>
+                                </div>
+                                <div id="reportrange"><span></span></div>
+                            </div>
+                            <div class="col-4">
+                                <label></label>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,7 +144,7 @@
                     while ( $order_query->have_posts() ) :
                         $count++;
                         $order_query->the_post();
-                        $order = new AX_ORDER(get_the_ID());
+                        $order = new OMS_ORDER(get_the_ID());
                         ?>
                         <tr id="order_id_<?php echo get_the_ID()?> " value="<?php echo get_the_ID()?>" >
                             <td><?php echo (($order_query->query_vars['paged'] -1)*$order_query->query_vars['posts_per_page']) + $count?></td>
