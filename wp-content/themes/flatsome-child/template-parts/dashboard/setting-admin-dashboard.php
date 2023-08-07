@@ -23,16 +23,22 @@ $item_in_page_arg = [
     <div class="card-body">
         <div class="form-group">
             <label for="item_in_page">Item in page</label>
-            <select id="item_in_page" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="2" tabindex="-1" aria-hidden="true">
+            <select id="item_in_page" class="form-control" style="width: 100%;" >
                 <?php foreach ($item_in_page_arg as $value): ?>
                     <option <?php echo $item_in_page == $value ? 'selected': '' ?> value="<?php echo $value?>"><?php echo $value?></option>
                 <?php endforeach; ?>
             </select>
         </div>
         <div class="form-group">
-            <label for="item_in_page">Footer print shipment</label>
+            <label for="footer_print_shipment">Footer print shipment</label>
             <textarea id="footer_print_shipment">
                 <?php echo get_option('admin_dashboard_footer_print_shipment')?>
+            </textarea>
+        </div>
+        <div class="form-group">
+            <label for="product_return_policy">Product return policy</label>
+            <textarea id="product_return_policy">
+                <?php echo get_option('admin_dashboard_product_return_policy')?>
             </textarea>
         </div>
     </div>

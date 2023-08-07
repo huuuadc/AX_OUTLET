@@ -64,25 +64,25 @@ foreach ($data_wards as $value){
         </div>
         <div class="form-group">
             <label>Company country</label>
-            <select id="company_country" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="1" tabindex="-1" aria-hidden="true">
+            <select id="company_country" class="form-control " style="width: 100%;">
                 <option selected value="VN">VN - Việt Nam</option>
             </select>
         </div>
         <div class="form-group">
             <label for="company_city">company city</label>
-            <select id="company_city" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="2" tabindex="-1" aria-hidden="true">
+            <select id="company_city" class="form-control " style="width: 100%;">
                 <?php echo $arg_city?>
             </select>
         </div>
         <div class="form-group">
             <label for="company_district">company district</label>
-            <select id="company_district" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="2" tabindex="-1" aria-hidden="true">
+            <select id="company_district" class="form-control " style="width: 100%;">
                 <?php echo $arg_districts?>
             </select>
         </div>
         <div class="form-group">
             <label for="company_ward">company ward</label>
-            <select id="company_ward" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="2" tabindex="-1" aria-hidden="true">
+            <select id="company_ward" class="form-control " style="width: 100%;">
                 <?php echo $arg_wards?>
             </select>
         </div>

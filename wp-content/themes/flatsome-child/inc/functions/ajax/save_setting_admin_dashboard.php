@@ -25,6 +25,10 @@ function save_admin_dashboard_setting()
         update_option('admin_dashboard_footer_print_shipment',$post->footer_print_shipment , 'no');
     }
 
+    if(!add_option('admin_dashboard_product_return_policy',$post->product_return_policy , '','no')){
+        update_option('admin_dashboard_product_return_policy',$post->product_return_policy , 'no');
+    }
+
     echo json_encode(array(
         'status' => '200',
         'messenger' => 'Save success',
