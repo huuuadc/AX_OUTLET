@@ -1688,7 +1688,8 @@ html *::-webkit-scrollbar-thumb {
   display: none;
 }
 .product .variations {
-  margin-bottom: 25px;
+  margin-top: 5px;
+  margin-bottom: 20px;
 }
 .product .variations th, .product .variations td {
   display: inline-block;
@@ -1707,6 +1708,29 @@ html *::-webkit-scrollbar-thumb {
   box-shadow: none;
   background-position: right 0 top 50%;
   margin: 0;
+}
+.product .variations .ux-swatches {
+  margin-top: 0;
+  margin-left: 10px;
+}
+.product .variations .ux-swatch {
+  box-shadow: none !important;
+  min-width: 20px;
+  min-height: 20px;
+  background-color: transparent;
+  color: #000;
+  border-bottom: solid 1px transparent;
+  padding: 3px;
+  margin-right: 10px;
+}
+.product .variations .ux-swatch.selected {
+  border-bottom-color: #000;
+}
+.product .variations .ux-swatch:not(.disabled):hover {
+  border-bottom-color: #ccc;
+}
+.product .variations .ux-swatch--label.disabled {
+  background: none;
 }
 .product .btn--size_chart {
   background-color: transparent !important;
@@ -2093,6 +2117,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
   border-top: none;
   padding: 10px 30px 10px 0;
   background-color: transparent !important;
+  font-size: 100%;
 }
 .faq__accordion .accordion-title .toggle {
   left: auto;

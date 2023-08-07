@@ -1,0 +1,43 @@
+#Add expiress for single file by wpsol
+<IfModule mod_expires.c>
+   ExpiresActive On
+   ExpiresByType image/jpg "access plus 6 hour"
+   ExpiresByType image/jpeg "access plus 5 hour"
+   ExpiresByType image/gif "access plus 5 hour"
+   ExpiresByType image/png "access plus 6 hour"
+   ExpiresByType text/css "access plus 5 hour"
+   ExpiresByType application/pdf "access plus 5 hour"
+   ExpiresByType text/x-javascript "access plus 5 hour"
+   ExpiresByType application/x-shockwave-flash "access plus 5 hour"
+   ExpiresByType text/html "access plus 5 hour"
+   ExpiresByType image/x-icon "access plus 5 hour"
+   ExpiresDefault "access plus 2 hour"
+</IfModule>
+#wpsol
+
+# Set up header check module headers
+<IfModule mod_headers.c>
+  <filesMatch "\\.(html|htm|php)$">
+    Header add Wpsol-Header-Module "enabled"
+  </filesMatch>
+</IfModule>
+#wpsol
+
+#
+<IfModule mod_deflate.c>
+    <IfModule mod_filter.c>
+          # Using headers module to detect deflate and filter
+         <IfModule mod_headers.c>
+           <filesMatch "\\.(html|htm|php)$">
+             Header add Wpsol-Deflate-Module "enabled"
+           </filesMatch>
+         </IfModule>
+         #Another way
+         FilterDeclare   COMPRESS
+         FilterProvider  COMPRESS  DEFLATE "%{CONTENT_TYPE} = '$text/html'"
+         FilterChain     COMPRESS
+         FilterProtocol  COMPRESS  DEFLATE change=yes;byteranges=no
+    </IfModule>
+</IfModule>
+
+
