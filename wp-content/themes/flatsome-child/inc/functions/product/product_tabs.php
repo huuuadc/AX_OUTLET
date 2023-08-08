@@ -5,13 +5,13 @@ add_filter('woocommerce_product_tabs','product_tab_public_info');
 function product_tab_public_info($tabs){
 
     $tabs['storage_instructions'] = array(
-        'title' => 'Hướng dẫn bảo quản',
+        'title' => __('Hướng dẫn bảo quản','oms'),
         'priority' => 11,
         'callback' => 'woocommerce_product_storage_instructions_tab'
       );
 
     $tabs['return_policy'] = array(
-        'title' => 'Chính sách đổi trả',
+        'title' => __('Chính sách đổi sản phẩm','oms'),
         'priority' => 12,
         'callback' => 'woocommerce_product_return_policy_tab'
     );
