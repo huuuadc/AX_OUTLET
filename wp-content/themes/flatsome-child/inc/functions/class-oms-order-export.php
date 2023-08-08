@@ -184,7 +184,16 @@ class OMS_EXPORT {
     function export_show(){
 
         $exports = @scandir($this->BASEDIR,0);
+        $files= array();
+        foreach ($exports as $file){
+            $files[$file] = filemtime($this->BASEDIR.$file);
+        }
+
+        arsort($files);
+        $files = array_keys($files);
+
         $count = 0;
+
 
         echo '<table class="table table-bordered table-hover dataTable dtr-inline">';
         echo '<tr>
@@ -193,22 +202,22 @@ class OMS_EXPORT {
                 <th>Thời gian tạo</th>
                 <th></th>
               </tr>';
-        foreach ($exports as $key => $value){
+        foreach ($files as $key => $value){
             if ($value =='.' || $value == '..') continue;
-            $time_create = date ("d-m-Y H-i-s", filemtime($this->BASEDIR.$value))  ;
+            $time_create = date ("d-m-Y H:i:s", filemtime($this->BASEDIR.$value))  ;
             $user = fileowner($this->BASEDIR.$value);
             $stat = stat($this->BASEDIR.$value);
             $count ++;
             echo "<tr>
                     <td>{$count}</td>
                     <td>
-                        {$value}
+                        <a href='{$this->BASEURL}{$value}'>{$value}</a>
                     </td>
                     <td>
                         {$time_create}
                     </td>
                     <td>
-                        <a href='{$this->BASEURL}{$value}'>Tải xuống</a>  
+                        <a class='btn btn-danger' href='./?delete={$value}'>Xóa</a>  
                     </td>  
                 </tr>";
         }

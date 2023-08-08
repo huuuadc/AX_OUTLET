@@ -39,6 +39,10 @@ if (isset($_GET['export'])) {
 
 }
 
+if (isset($_GET['delete']) && file_exists($export->BASEDIR.$_GET['delete'])){
+    unlink($export->BASEDIR.$_GET['delete']);
+}
+
 ?>
 
 
