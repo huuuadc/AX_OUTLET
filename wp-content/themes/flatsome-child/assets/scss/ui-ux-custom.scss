@@ -2873,6 +2873,14 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     .home__cate {
         margin-bottom: 30px;
     }
+    .home__cate .mb-row > .col-inner {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .home__cate .mb-row > .col-inner > .row {
+        width: calc(50% - 7px);
+    }
     .home__cate .image__box--large .box-text {
         left: 0;
         bottom: 0;
@@ -2897,7 +2905,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
         z-index: 2;
         transform: none;
         text-align: left;
-        padding: 20px 15px 10px 20px;
+        padding: 20px 15px 10px 15px;
         background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.5) 100%);
     }
     .home__cate--textbox * {
@@ -2907,7 +2915,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     .home__cate .img .img-inner {
         overflow: hidden;
         position: relative;
-        padding-bottom: calc(780/1100 * 100%);
+        padding-bottom: 100%;
     }
     .home__cate .img .img-inner img {
         position: absolute;
@@ -2923,11 +2931,12 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     }
     .home__cate--textbox h4 {
         font-size: 16px;
-        margin-bottom: 0;
+        margin-bottom: 5px;
+        font-weight: 500;
     }
     .home__cate--textbox h2 {
-        font-size: 22px;
-        margin: 5px 0 10px 0;
+        font-size: 18px;
+        margin: 5px 0;
     }
     .product__slider {
         margin-left: -8px !important;
@@ -2943,6 +2952,12 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     .home__product .text p {
         font-size: 14px;
         line-height: 1.35;
+    }
+    .footer__info p,
+    .footer__group .ux-menu-link a,
+    .footer-wrapper .footer__title,
+    .policy__icon--box p {
+        font-size: 14px;
     }
     /* sidebar menu */
     .sidebar-menu .sidebar-menu-tabs {
