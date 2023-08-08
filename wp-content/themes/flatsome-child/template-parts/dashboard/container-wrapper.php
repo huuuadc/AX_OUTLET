@@ -47,6 +47,13 @@
             <?php get_template_part('template-parts/dashboard/setting') ?>
         </section>
     <?php endif;?>
+
+    <?php write_log(get_query_var('pagename'));?>
+    <?php if (get_query_var('pagename') == 'admin-dashboard' && isset($wp->query_vars['order-report'])) :?>
+        <section class="content">
+            <?php get_template_part('template-parts/dashboard/order','report') ?>
+        </section>
+    <?php endif; ?>
     <!-- ./main content -->
 
 
