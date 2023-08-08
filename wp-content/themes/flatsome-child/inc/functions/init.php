@@ -37,3 +37,5 @@ require (__DIR__.'/my-account/custom-user.php');
 require (__DIR__.'/ajax/run_product_shop_by.php');
 require (__DIR__.'/product/product_shop_by.php');
 require (__DIR__.'/helps/remove_comment.php');
+require (__DIR__.'/class-writer-xlsx.php');
+require (__DIR__.'/class-oms-order-export.php');
