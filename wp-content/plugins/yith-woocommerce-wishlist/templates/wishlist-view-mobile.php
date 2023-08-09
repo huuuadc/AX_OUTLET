@@ -193,23 +193,38 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 								<?php if ( $show_stock_status ) : ?>
 									<tr>
 										<td class="label">
-											<?php esc_html_e( 'Stock:', 'yith-woocommerce-wishlist' ); ?>
+											<strong><?php esc_html_e( 'Stock:', 'yith-woocommerce-wishlist' ); ?></strong>
+                                            <span>
+                                                <?php echo 'out-of-stock' === $item->get_stock_status() ? '<span class="wishlist-out-of-stock">' . esc_html__( 'Out of stock', 'yith-woocommerce-wishlist' ) . '</span>' : '<span class="wishlist-in-stock">' . esc_html__( 'In Stock', 'yith-woocommerce-wishlist' ) . '</span>'; ?>
+                                            </span>
 										</td>
 										<td class="value">
-											<?php echo 'out-of-stock' === $item->get_stock_status() ? '<span class="wishlist-out-of-stock">' . esc_html__( 'Out of stock', 'yith-woocommerce-wishlist' ) . '</span>' : '<span class="wishlist-in-stock">' . esc_html__( 'In Stock', 'yith-woocommerce-wishlist' ) . '</span>'; ?>
+                                            <?php $show_add_to_cart = apply_filters( 'yith_wcwl_table_product_show_add_to_cart', $show_add_to_cart, $item, $wishlist ); ?>
+                                            <?php if ( $show_add_to_cart && $item->is_purchasable() && 'out-of-stock' !== $item->get_stock_status() ) : ?>
+                                                <div class="product-add-to-cart">
+                                                    <?php woocommerce_template_loop_add_to_cart( array( 'quantity' => $show_quantity ? $item->get_quantity() : 1 ) ); ?>
+                                                </div>
+                                            <?php endif ?>
 										</td>
 									</tr>
+								<?php else: ?>
+                                    <tr>
+                                        <td class="label">
+
+                                        </td>
+                                        <td class="value">
+                                            <!-- Add to cart button -->
+                                            <?php $show_add_to_cart = apply_filters( 'yith_wcwl_table_product_show_add_to_cart', $show_add_to_cart, $item, $wishlist ); ?>
+                                            <?php if ( $show_add_to_cart && $item->is_purchasable() && 'out-of-stock' !== $item->get_stock_status() ) : ?>
+                                                <div class="product-add-to-cart">
+                                                    <?php woocommerce_template_loop_add_to_cart( array( 'quantity' => $show_quantity ? $item->get_quantity() : 1 ) ); ?>
+                                                </div>
+                                            <?php endif ?>
+                                        </td>
+                                    </tr>
 								<?php endif ?>
 							</table>
 						<?php endif; ?>
-
-						<!-- Add to cart button -->
-						<?php $show_add_to_cart = apply_filters( 'yith_wcwl_table_product_show_add_to_cart', $show_add_to_cart, $item, $wishlist ); ?>
-						<?php if ( $show_add_to_cart && $item->is_purchasable() && 'out-of-stock' !== $item->get_stock_status() ) : ?>
-							<div class="product-add-to-cart">
-								<?php woocommerce_template_loop_add_to_cart( array( 'quantity' => $show_quantity ? $item->get_quantity() : 1 ) ); ?>
-							</div>
-						<?php endif ?>
 
 						<!-- Change wishlist -->
 						<?php if ( $move_to_another_wishlist && $available_multi_wishlist && count( $users_wishlists ) > 1 ) : ?>
