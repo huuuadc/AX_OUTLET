@@ -8,11 +8,9 @@ function checkout_add_change_fields($fields){
         if (isset($fields[$key][$key.'_postcode'])) {
             unset($fields[$key][$key.'_postcode']);
         }
-        if (isset($fields[$key][$key.'_country'])) {
-            unset($fields[$key][$key.'_country']);
-        }
-
     }
+
+    $fields['billing']['billing_country']['class'][] =  'hidden';
 
     $fields['billing']['billing_phone']['priority'] = 30;
     $fields['billing']['billing_email']['priority'] = 35;
