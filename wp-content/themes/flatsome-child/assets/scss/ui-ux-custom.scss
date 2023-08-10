@@ -2619,6 +2619,15 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
         }
         #my-account-menu ~ .woocommerce-MyAccount-content {
             width: 75% !important;
+            mark {
+                background-color: transparent;
+                font-weight: bold;
+            }
+            .woocommerce-orders-table {
+                .button.view {
+                    margin: 0;
+                }
+            }
         }
         > .woocommerce {
             display: flex;
@@ -2784,6 +2793,9 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
             display: none;
         }
     }
+}
+.woocommerce-error.message-wrapper {
+    background-color: #e00;
 }
 .animateOpen, .woocommerce-message.message-wrapper, .woocommerce-error.message-wrapper {
     -webkit-animation: moveOpen 8s;
