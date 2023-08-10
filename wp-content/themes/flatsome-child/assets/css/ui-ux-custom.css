@@ -2328,6 +2328,13 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
   .myaccount__container #my-account-menu ~ .woocommerce-MyAccount-content {
     width: 75% !important;
   }
+  .myaccount__container #my-account-menu ~ .woocommerce-MyAccount-content mark {
+    background-color: transparent;
+    font-weight: bold;
+  }
+  .myaccount__container #my-account-menu ~ .woocommerce-MyAccount-content .woocommerce-orders-table .button.view {
+    margin: 0;
+  }
   .myaccount__container > .woocommerce {
     display: flex;
   }
@@ -2461,6 +2468,9 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 }
 .woocommerce-message.message-wrapper .message-container i, .woocommerce-error.message-wrapper .message-container i {
   display: none;
+}
+.woocommerce-error.message-wrapper {
+  background-color: #e00;
 }
 .animateOpen, .woocommerce-message.message-wrapper, .woocommerce-error.message-wrapper {
   -webkit-animation: moveOpen 8s;
