@@ -41,7 +41,71 @@ if ( $show_downloads ) {
 ?>
 <section class="woocommerce-order-details">
 	<?php do_action( 'woocommerce_order_details_before_order_table', $order ); ?>
-
+    <style>
+        .cart-container .page__title--cart {
+            display: none;
+        }
+        .cart-container .woocommerce {
+            width: 850px;
+            max-width: 100%;
+            margin: 0 auto;
+            border: solid 1px #666;
+            padding: 25px 30px 0 30px;
+            border-radius: 4px;
+            position: relative;
+            background-color: #f8f8f8;
+        }
+        .cart-container .woocommerce:after {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            bottom: 20px;
+            border-left: solid 1px #ddd;
+        }
+        .cart-container .woocommerce > .row .large-5 {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cart-container .woocommerce .is-well {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            margin-top: 0;
+            border: none;
+            background-color: transparent;
+            padding: 0 0 0 15px;
+        }
+        @media screen and (min-width: 850px){
+            .cart-container .woocommerce > .row .large-7,
+            .cart-container .woocommerce > .row .large-5 {
+                width: 50%;
+                max-width: 50%;
+                flex-basis: 50%;
+            }
+        }
+        @media screen and (max-width: 849px) {
+            .cart-container .woocommerce {
+                padding: 20px 25px 0 25px;
+            }
+            .cart-container .woocommerce > .row .large-7,
+            .cart-container .woocommerce > .row .large-5 {
+                padding: 0;
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+            .cart-container .woocommerce > .row .large-7 {
+                margin-bottom: 20px;
+                border-bottom: solid 1px #ddd;
+            }
+            .cart-container .woocommerce:after {
+                display: none;
+            }
+            .cart-container .woocommerce .is-well {
+                padding: 0 0 20px 0 !important;
+            }
+        }
+    </style>
+<!--
 	<h2 class="woocommerce-order-details__title"><?php esc_html_e( 'Order details', 'woocommerce' ); ?></h2>
 
 	<table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
@@ -95,7 +159,7 @@ if ( $show_downloads ) {
 				</tr>
 			<?php endif; ?>
 		</tfoot>
-	</table>
+	</table>-->
 
 	<?php do_action( 'woocommerce_order_details_after_order_table', $order ); ?>
 </section>
