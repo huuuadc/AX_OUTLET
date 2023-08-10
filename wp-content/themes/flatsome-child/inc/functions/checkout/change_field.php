@@ -14,7 +14,8 @@ function checkout_add_change_fields($fields){
 
     $fields['billing']['billing_phone']['priority'] = 30;
     $fields['billing']['billing_email']['priority'] = 35;
-    $fields['billing']['billing_address_1']['priority'] = 90;
+    $fields['billing']['billing_country']['priority'] = 100;
+    $fields['billing']['billing_address_1']['priority'] = 110;
 
     global $wpdb;
 

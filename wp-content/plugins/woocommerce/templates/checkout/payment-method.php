@@ -28,9 +28,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php if ( $gateway->has_fields() || $gateway->get_description() ) : ?>
 		<div class="payment_box payment_method_<?php echo esc_attr( $gateway->id ); ?>" <?php if ( ! $gateway->chosen ) : /* phpcs:ignore Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace */ ?>style="display:none;"<?php endif; /* phpcs:ignore Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace */ ?>>
 			<?php $gateway->payment_fields(); ?>
-            <?php if( $gateway->id =='bacs'):?>
-                <img src="https://img.vietqr.io/image/VCB-TCHUU-compact1.jpg?<?php echo 'amount='.WC()->cart->get_total('value') . '&addInfo=Tran Chi Huu 223344' ?>" alt="image-qr-code" width="300" height="300"/>
-            <?php endif;?>
 		</div>
 	<?php endif; ?>
 </li>

@@ -39,3 +39,4 @@ require (__DIR__.'/product/product_shop_by.php');
 require (__DIR__.'/helps/remove_comment.php');
 require (__DIR__.'/class-writer-xlsx.php');
 require (__DIR__.'/class-oms-order-export.php');
+require (__DIR__.'/checkout/qr_code_payment.php');
