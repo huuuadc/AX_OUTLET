@@ -9,7 +9,7 @@ function render_qr_code_payment($arrg){
     $printTypes = array('compact','compact2','qr_only','print');
 
     $printType          = !(isset($arrg['printType']) && isset($printTypes[$arrg['printType']] )) ? 'compact' : $arrg['printType'] ;
-    $bankName        = !isset($arrg['bankName']) ? 'VCB' : $arrg['bankName'] ;
+    $bankName           = !isset($arrg['bankName']) ? 'VCB' : $arrg['bankName'] ;
     $accountNo          = !isset($arrg['accountNo']) ? 'NoAccountNo' : $arrg['accountNo'] ;
     $description        = !isset($arrg['description']) ? '' : $arrg['description'] ;
     $amount             = !(isset($arrg['amount']) && (int)$arrg['amount'] > 0)  ? 0 : $arrg['amount'] ;
@@ -46,13 +46,9 @@ function get_viet_qr_code($amount,$description){
         ?>
         <script type="text/javascript">
             jQuery( function($){
-                $('form.checkout').on('change', 'input[name="payment_method"]', function(){
+                $('form.checkout').on('change', 'input[name="payment_method"],input[id="billing_first_name"],input[id="billing_last_name"]', function(){
                     $(document.body).trigger('update_checkout');
                 });
-
-                $('input[id="billing_first_name"],input[id="billing_last_name"]').on('change',function (){
-                    $( document.body ).trigger( 'update_checkout' );
-                })
             });
         </script>
     <?php
