@@ -3211,61 +3211,62 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
                 }
             }
         }
-    }
-    .related {
-        .wt-crp-heading {
-            margin-bottom: 15px;
-        }
-        .price-wrapper .percent__label {
-            top: -4px !important;
-        }
-    }
-    .off-canvas-right .mfp-content {
-        width: 300px;
-    }
-    .woocommerce-cart-form__cart-item {
-        .awdr_cart_strikeout_line {
-            margin-top: 5px;
-        }
-        td.product-thumbnail {
-            vertical-align: top;
-        }
-    }
-    .cart-container .woocommerce-cart-form__contents thead {
-        th.product-quantity {
-            width: 5%;
-        }
-        .product-subtotal + th {
-            width: 5%;
-        }
-    }
-    .page-checkout .checkout .woocommerce-billing-fields > h3, .page-checkout .checkout .checkout-sidebar > h3, form.checkout h3 {
-        text-transform: none;
-    }
-    .checkout {
-        .has-border {
-            padding: 15px;
-            border-width: 1px;
-        }
-    }
-    .cart-container {
-        padding-bottom: 0;
-    }
-    .page-checkout {
-        .shipping__table {
-            font-size: 15px;
-            th {
-                width: auto;
+        .related {
+            .wt-crp-heading {
+                margin-bottom: 15px;
             }
-            td {
-                width: 95%;
+            .price-wrapper .percent__label {
+                top: -4px !important;
             }
         }
-        .payment_methods p, .woocommerce-privacy-policy-text p {
-            font-size: 14px;
-            line-height: 1.45;
+        .off-canvas-right .mfp-content {
+            width: 300px;
+        }
+        .woocommerce-cart-form__cart-item {
+            .awdr_cart_strikeout_line {
+                margin-top: 5px;
+            }
+            td.product-thumbnail {
+                vertical-align: top;
+            }
+        }
+        .cart-container .woocommerce-cart-form__contents thead {
+            th.product-quantity {
+                width: 5%;
+            }
+            .product-subtotal + th {
+                width: 5%;
+            }
+        }
+        .page-checkout .checkout .woocommerce-billing-fields > h3, .page-checkout .checkout .checkout-sidebar > h3, form.checkout h3 {
+            text-transform: none;
+        }
+        .checkout {
+            .has-border {
+                padding: 15px;
+                border-width: 1px;
+            }
+        }
+        .cart-container {
+            padding-bottom: 0;
+        }
+        .page-checkout {
+            .shipping__table {
+                font-size: 15px;
+                th {
+                    width: auto;
+                }
+                td {
+                    width: 95%;
+                }
+            }
+            .payment_methods p, .woocommerce-privacy-policy-text p {
+                font-size: 14px;
+                line-height: 1.45;
+            }
         }
     }
+    
     .woocommerce-order-received {
         .is-well {
             padding: 15px !important;

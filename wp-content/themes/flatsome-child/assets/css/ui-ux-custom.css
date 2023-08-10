@@ -2847,47 +2847,47 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
   .product .accordion .accordion-inner p {
     font-size: 15px;
   }
-  .related .wt-crp-heading {
+  .product .related .wt-crp-heading {
     margin-bottom: 15px;
   }
-  .related .price-wrapper .percent__label {
+  .product .related .price-wrapper .percent__label {
     top: -4px !important;
   }
-  .off-canvas-right .mfp-content {
+  .product .off-canvas-right .mfp-content {
     width: 300px;
   }
-  .woocommerce-cart-form__cart-item .awdr_cart_strikeout_line {
+  .product .woocommerce-cart-form__cart-item .awdr_cart_strikeout_line {
     margin-top: 5px;
   }
-  .woocommerce-cart-form__cart-item td.product-thumbnail {
+  .product .woocommerce-cart-form__cart-item td.product-thumbnail {
     vertical-align: top;
   }
-  .cart-container .woocommerce-cart-form__contents thead th.product-quantity {
+  .product .cart-container .woocommerce-cart-form__contents thead th.product-quantity {
     width: 5%;
   }
-  .cart-container .woocommerce-cart-form__contents thead .product-subtotal + th {
+  .product .cart-container .woocommerce-cart-form__contents thead .product-subtotal + th {
     width: 5%;
   }
-  .page-checkout .checkout .woocommerce-billing-fields > h3, .page-checkout .checkout .checkout-sidebar > h3, form.checkout h3 {
+  .product .page-checkout .checkout .woocommerce-billing-fields > h3, .product .page-checkout .checkout .checkout-sidebar > h3, .product form.checkout h3 {
     text-transform: none;
   }
-  .checkout .has-border {
+  .product .checkout .has-border {
     padding: 15px;
     border-width: 1px;
   }
-  .cart-container {
+  .product .cart-container {
     padding-bottom: 0;
   }
-  .page-checkout .shipping__table {
+  .product .page-checkout .shipping__table {
     font-size: 15px;
   }
-  .page-checkout .shipping__table th {
+  .product .page-checkout .shipping__table th {
     width: auto;
   }
-  .page-checkout .shipping__table td {
+  .product .page-checkout .shipping__table td {
     width: 95%;
   }
-  .page-checkout .payment_methods p, .page-checkout .woocommerce-privacy-policy-text p {
+  .product .page-checkout .payment_methods p, .product .page-checkout .woocommerce-privacy-policy-text p {
     font-size: 14px;
     line-height: 1.45;
   }
