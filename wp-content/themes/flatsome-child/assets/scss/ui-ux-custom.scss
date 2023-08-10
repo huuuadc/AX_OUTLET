@@ -3591,4 +3591,30 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     .product-small .box-text .price .amount {
         font-size: 14px !important;
     }
+    .woocommerce-page {
+        .wt-related-products {
+            .owl-item {
+                .col {
+                    padding-bottom: 0;
+                }
+            }
+            .owl-dots {
+                display: block !important;
+                margin-top: -5px !important;
+                .owl-dot {
+                    span {
+                        border-radius: 0;
+                        width: 15px;
+                        height: 2px;
+                        margin: 3px;
+                    }
+                    &.active {
+                        span {
+                            background-color: #000;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
