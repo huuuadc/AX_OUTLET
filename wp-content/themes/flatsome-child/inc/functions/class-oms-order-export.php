@@ -218,8 +218,6 @@ class OMS_EXPORT {
             'Tồn kho',
             'item no',
             'variant code',
-            'color',
-            'size',
             'brand'
         );
 
@@ -230,6 +228,7 @@ class OMS_EXPORT {
         while ( $query->have_posts() ) :
             $query->the_post();
             $product = wc_get_product();
+            $brand = get_product_brand_name($product->get_id());
 
             if ($product->get_type() == 'variable'){
                 $variations = $product->get_available_variations();
@@ -246,10 +245,9 @@ class OMS_EXPORT {
                     $item_variant->get_id(),
                     $item_variant->get_name(),
                     $item_variant->get_stock_quantity(),
-                    $product->get_id(),
-                    '',
-                    $variant_att['color'] ?? '',
-                    $variant_att['size'] ?? ''
+                    get_post_meta($product->get_id(),'offline_id',true),
+                    (string)substr($item_variant->get_sku(),-3),
+                    $brand
                 );
 
                 endforeach;
@@ -259,14 +257,12 @@ class OMS_EXPORT {
                     $count,
                     $product->get_type(),
                     $product->get_sku(),
-                    $product->get_id(),
+                    get_post_meta($product->get_id(),'offline_id',true),
                     $product->get_name(),
                     $product->get_stock_quantity(),
+                    get_post_meta($product->get_id(),'offline_id',true),
                     '',
-                    '',
-                    '',
-                    '',
-                    ''
+                    $brand
                 );
             }
 

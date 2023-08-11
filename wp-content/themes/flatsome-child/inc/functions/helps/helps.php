@@ -62,3 +62,33 @@ function convert_string_to_range_date_default(int $number = 0){
                 'end_date'=>$end_date,
                 'text_date' => $text_date);
 }
+
+function get_product_brand_list( $product_id, $sep = ', ', $before = '', $after = '' ) {
+    return get_the_term_list( $product_id, 'brand', $before, $sep, $after );
+}
+function get_product_brand_name( $product_id, $sep = ', ', $before = '', $after = '' ) {
+
+    $taxonomy = 'brand';
+
+    $terms = get_the_terms( $product_id, $taxonomy );
+
+    if ( is_wp_error( $terms ) ) {
+        return $terms;
+    }
+
+    if ( empty( $terms ) ) {
+        return false;
+    }
+
+    $links = array();
+
+    foreach ( $terms as $term ) {
+        $link = get_term_link( $term, $taxonomy );
+        if ( is_wp_error( $link ) ) {
+            return $link;
+        }
+        $links[] = $term->name ;
+    }
+
+    return $before . implode( $sep, $links ) . $after;
+}
