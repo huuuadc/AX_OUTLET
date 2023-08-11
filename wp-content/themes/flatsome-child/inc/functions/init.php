@@ -40,3 +40,4 @@ require (__DIR__.'/helps/remove_comment.php');
 require (__DIR__.'/class-writer-xlsx.php');
 require (__DIR__.'/class-oms-order-export.php');
 require (__DIR__.'/checkout/qr_code_payment.php');
+require (__DIR__.'/wp-rocket/wp-rocket-compat-wc-cart-framents.php');
