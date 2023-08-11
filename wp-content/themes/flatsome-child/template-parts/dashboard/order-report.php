@@ -41,10 +41,10 @@ if (isset($_GET['export'])) {
 
 if (isset($_GET['delete']) && file_exists($export->BASEDIR.$_GET['delete'])){
     unlink($export->BASEDIR.$_GET['delete']);
+    echo "";
 }
 
 ?>
-
 
 <!-- Content Header (Page header) -->
 <div class="content-header">
@@ -62,6 +62,35 @@ if (isset($_GET['delete']) && file_exists($export->BASEDIR.$_GET['delete'])){
     </div><!-- /.container-fluid -->
 </div>
 <!-- /.content-header -->
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Lọc đơn hàng</h3>
+
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <label>Theo ngày</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                          </span>
+                        </div>
+                        <input type="text" class="form-control float-right" id="reservation">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="card_report" class="card">
     <div class="card-header">Báo cáo tồn kho</div>
     <div class="card-footer">

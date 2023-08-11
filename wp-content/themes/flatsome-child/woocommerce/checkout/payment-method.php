@@ -28,7 +28,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     <?php if ( $gateway->has_fields() || $gateway->get_description() ) : ?>
         <div class="payment_box payment_method_<?php echo esc_attr( $gateway->id ); ?>" <?php if ( ! $gateway->chosen ) : /* phpcs:ignore Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace */ ?>style="display:none;"<?php endif; /* phpcs:ignore Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace */ ?>>
             <?php $gateway->payment_fields();?>
-            <?php if( $gateway->id =='bacs') get_viet_qr_code(WC()->cart->get_total('value'),WC()->customer->get_billing_first_name() . ' ' . WC()->customer->get_billing_last_name()) ?>
+            <?php
+                $description = '';
+                if(isset($_POST['post_data'])){
+                    $post_data = decode_post_data_in_post( $_POST['post_data']);
+                    $description = $post_data['billing_first_name'] . ' ' . $post_data['billing_last_name'];
+                }
+
+            ?>
+            <?php if( $gateway->id =='bacs') get_viet_qr_code(WC()->cart->get_total('value'), $description); ?>
         </div>
     <?php endif; ?>
 </li>
