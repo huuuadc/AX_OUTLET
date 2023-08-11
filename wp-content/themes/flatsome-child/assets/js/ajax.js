@@ -1,5 +1,20 @@
 
 jQuery(function ($){
+    $('body').on('click','.header-search > a',function(){
+        if($('.header-search').is('.current-dropdown')){
+            $('.header-search').removeClass('current-dropdown');
+        }else{
+            $('.header-search').addClass('current-dropdown');
+        }
+    });
+    $(document).on('click', function (e) {
+        var container = $('.header-search,.dgwt-wcas-suggestions-wrapp');
+        if (!container.is(e.target) && container.has(e.target).length === 0)
+        {
+            $('.header-search').removeClass('current-dropdown');
+        }
+    });
+
     var checkDiscount = function() {
         $('.shop_table').each(function () {
             var hasDiscount = $(this).find('.cart-discount');

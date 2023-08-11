@@ -108,6 +108,13 @@ $(function () {
         }
     )
 
+    $('#reservation_inventory').daterangepicker()
+
+    $('#reservation_inventory').on('change',function (){
+        let range_date = $('#reservation_inventory').val();
+        $('#post_inventory').attr('href',`./?range_date=${range_date}`)
+    })
+
 
 })
 
