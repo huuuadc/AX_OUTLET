@@ -23,14 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <form class="woocommerce-ordering" method="get">
 	<select name="orderby" class="orderby" aria-label="<?php esc_attr_e( 'Shop order', 'woocommerce' ); ?>">
 		<?php foreach ( $catalog_orderby_options as $id => $name ) : ?>
-            <?php
-                $option_name = esc_html( $name );
-                $option_name = str_replace('Thứ tự theo giá','Giá',$option_name);
-                $option_name = str_replace('Thứ tự theo mức độ phổ biến','Phổ biến nhất',$option_name);
-                $option_name = str_replace('cao xuống thấp','Cao xuống thấp',$option_name);
-                $option_name = str_replace('thấp đến cao','Thấp đến cao',$option_name);
-            ?>
-			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $orderby, $id ); ?>><?php echo $option_name; ?></option>
+			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $orderby, $id ); ?>><?php echo esc_html( $name ); ?></option>
 		<?php endforeach; ?>
 	</select>
 	<input type="hidden" name="paged" value="1" />
