@@ -41,7 +41,7 @@ if (isset($_GET['delete']) && file_exists($export->BASEDIR.$export->INVENTORY_DI
 <div id="card_report" class="card">
     <div class="card-header">Báo cáo tồn kho</div>
     <div class="card-footer">
-        <a id="post_inventory" href="./?export=inventory"><button class="btn btn-primary">Xuất tồn kho hiện tại</button></a>
+        <a id="post_inventory" href="/admin-dashboard/inventory-report/?export=inventory"><button class="btn btn-primary">Xuất tồn kho hiện tại</button></a>
     </div>
     <div class="card-body">
         <?php $export->export_show($export->INVENTORY_DIR);?>
