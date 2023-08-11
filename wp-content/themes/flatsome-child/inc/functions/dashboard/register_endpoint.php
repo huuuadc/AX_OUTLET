@@ -10,6 +10,7 @@ function dashboard_register_query_vars( $vars ) {
     $vars[] = 'customer-report';
     $vars[] = 'customer-list';
     $vars[] = 'setting';
+    $vars[] = 'inventory-report';
 
     return $vars;
 }
