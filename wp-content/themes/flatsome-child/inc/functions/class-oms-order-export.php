@@ -213,12 +213,11 @@ class OMS_EXPORT {
             'STT',
             'Loại sản phẩm' ,
             'SKU',
-            'Mã sản phẩm',
             'Tên sản phẩm',
-            'Tồn kho',
             'item no',
             'variant code',
-            'brand'
+            'brand',
+            'Tồn kho',
         );
 
         $this->xlsxwriter->writeSheetRow($this->SHEET_NAME, $sheet_header);
@@ -242,13 +241,14 @@ class OMS_EXPORT {
                     $count,
                     $item_variant->get_type(),
                     $item_variant->get_sku(),
-                    $item_variant->get_id(),
                     $item_variant->get_name(),
-                    $item_variant->get_stock_quantity(),
                     get_post_meta($product->get_id(),'offline_id',true),
-                    (string)substr($item_variant->get_sku(),-3),
-                    $brand
+                    strlen($item_variant->get_sku()) > 7 ? (string)substr($item_variant->get_sku(),-3): '',
+                    $brand,
+                    $item_variant->get_stock_quantity()
                 );
+
+                $this->xlsxwriter->writeSheetRow($this->SHEET_NAME,$row);
 
                 endforeach;
             }else{
@@ -257,18 +257,15 @@ class OMS_EXPORT {
                     $count,
                     $product->get_type(),
                     $product->get_sku(),
-                    get_post_meta($product->get_id(),'offline_id',true),
                     $product->get_name(),
-                    $product->get_stock_quantity(),
                     get_post_meta($product->get_id(),'offline_id',true),
                     '',
-                    $brand
+                    $brand,
+                    $product->get_stock_quantity()
                 );
+
+                $this->xlsxwriter->writeSheetRow($this->SHEET_NAME,$row);
             }
-
-
-
-            $this->xlsxwriter->writeSheetRow($this->SHEET_NAME,$row);
 
         endwhile;
 
