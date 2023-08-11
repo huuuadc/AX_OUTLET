@@ -36,3 +36,29 @@ function decode_post_data_in_post($post_data){
     return $post;
 
 }
+
+function convert_string_to_range_date(string $date){
+
+    $dates = explode(' - ',$date);
+
+    $start_date = str_replace('/', '-', $dates['0']);
+    $start_date = date('Y-m-d', strtotime($start_date.' - 1 days'));
+    $end_date = str_replace('/', '-', $dates['1']);
+    $end_date = date('Y-m-d', strtotime($end_date.' + 1 days'));
+
+    return array(
+                'start_date' => $start_date,
+                'end_date' =>$end_date);
+}
+
+function convert_string_to_range_date_default(int $number = 0){
+    $start_date = date('Y-m-d',( strtotime( date('Y-m-d').'- '. $number.' days')));
+    $end_date = date('Y-m-d');
+    $text_date = $start_date . ' - ' . $end_date;
+    $start_date = date('Y-m-d',( strtotime( date('Y-m-d').'- '. ($number-1).' days')));
+    $end_date = date('Y-m-d',(strtotime($end_date.'+ 1 days')));
+    return array(
+                'start_date'=>$start_date,
+                'end_date'=>$end_date,
+                'text_date' => $text_date);
+}

@@ -99,6 +99,6 @@ if (isset($_GET['delete']) && file_exists($export->BASEDIR.$_GET['delete'])){
         <button class="btn btn-primary">Xuất tồn kho hiện tại</button>
     </div>
     <div class="card-body">
-        <?php $export->export_show();?>
+        <?php $export->export_show($export->ORDER_DIR);?>
     </div>
 </div>

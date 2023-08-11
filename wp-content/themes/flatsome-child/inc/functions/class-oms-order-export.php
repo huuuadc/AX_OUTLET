@@ -12,6 +12,8 @@ class OMS_EXPORT {
     private \XLSXWriter $xlsxwriter ;
     private string $extend = '.xlsx';
     private string $SHEET_NAME = 'sheet1';
+    public string $ORDER_DIR = 'order/';
+    public string $INVENTORY_DIR = 'inventory/';
     public function __construct()
     {
         $this->define_constants();
@@ -29,9 +31,17 @@ class OMS_EXPORT {
     function create_dir_export(){
         if ( ! is_dir( $this->BASEDIR ) ) {
             wp_mkdir_p( $this->BASEDIR );
-            return true;
+            wp_mkdir_p( $this->BASEDIR . $this->ORDER_DIR );
+            wp_mkdir_p( $this->BASEDIR . $this->INVENTORY_DIR );
         }
-        return false;
+
+        if ( ! is_dir( $this->BASEDIR . $this->ORDER_DIR  ) ) {
+            wp_mkdir_p( $this->BASEDIR . $this->ORDER_DIR );
+        }
+
+        if ( ! is_dir(  $this->BASEDIR . $this->INVENTORY_DIR) ) {
+            wp_mkdir_p(  $this->BASEDIR . $this->INVENTORY_DIR);
+        }
     }
 
     function order_export($order_status,$filter_start_date,$filter_end_date){
@@ -101,7 +111,7 @@ class OMS_EXPORT {
             $this->xlsxwriter->writeSheetRow($this->SHEET_NAME,$row);
         }
 
-        $this->xlsxwriter->writeToFile($this->BASEDIR. $file_name);
+        $this->xlsxwriter->writeToFile($this->BASEDIR . $this->ORDER_DIR . $file_name);
 
 
         return true;
@@ -175,18 +185,112 @@ class OMS_EXPORT {
             }
         }
 
-        $this->xlsxwriter->writeToFile($this->BASEDIR. $file_name);
+        $this->xlsxwriter->writeToFile($this->BASEDIR. $this->ORDER_DIR. $file_name);
 
         return true;
 
     }
 
-    function export_show(){
+    function inventory_export($start_date,$end_date)
+    {
+        $args = array(
+            'posts_per_page' => -1,
+            'post_type'      => 'product',
+            'hide_empty'     => 1,
+            'meta_query' => array(
+                array(
+                    'key' => '_stock_status',
+                    'value' => 'instock',
+                    'compare' => '=',
+                ))
+        );
 
-        $exports = @scandir($this->BASEDIR,0);
+        $query = new \WP_Query( $args );
+
+        $file_name = 'export_inventory_'.$this->APPEND_FILE;
+
+        $sheet_header = array(
+            'STT',
+            'Loại sản phẩm' ,
+            'SKU',
+            'Mã sản phẩm',
+            'Tên sản phẩm',
+            'Tồn kho',
+            'item no',
+            'variant code',
+            'color',
+            'size',
+            'brand'
+        );
+
+        $this->xlsxwriter->writeSheetRow($this->SHEET_NAME, $sheet_header);
+
+        $count = 0;
+
+        while ( $query->have_posts() ) :
+            $query->the_post();
+            $product = wc_get_product();
+
+            if ($product->get_type() == 'variable'){
+                $variations = $product->get_available_variations();
+
+                foreach ($variations as $item):
+                $item_variant = wc_get_product($item['variation_id']);
+                $variant_att = $item_variant->get_attributes('value');
+                write_log($variant_att);
+                $count++;
+                $row = array(
+                    $count,
+                    $item_variant->get_type(),
+                    $item_variant->get_sku(),
+                    $item_variant->get_id(),
+                    $item_variant->get_name(),
+                    $item_variant->get_stock_quantity(),
+                    $product->get_id(),
+                    '',
+                    $variant_att['color'] ?? '',
+                    $variant_att['size'] ?? ''
+                );
+
+                endforeach;
+            }else{
+                $count++;
+                $row = array(
+                    $count,
+                    $product->get_type(),
+                    $product->get_sku(),
+                    $product->get_id(),
+                    $product->get_name(),
+                    $product->get_stock_quantity(),
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                );
+            }
+
+
+
+            $this->xlsxwriter->writeSheetRow($this->SHEET_NAME,$row);
+
+        endwhile;
+
+        $this->xlsxwriter->writeToFile($this->BASEDIR. $this->INVENTORY_DIR. $file_name);
+
+        return true;
+
+    }
+
+    function export_show(string $sub_dir = ''){
+
+        $file_dir = !$sub_dir ? $this->BASEDIR : $this->BASEDIR .  $sub_dir;
+        $url_dir = !$sub_dir ? $this->BASEURL : $this->BASEURL .  $sub_dir;
+
+        $exports =  @scandir($file_dir ,0);
         $files= array();
         foreach ($exports as $file){
-            $files[$file] = filemtime($this->BASEDIR.$file);
+            $files[$file] = filemtime($file_dir.$file);
         }
 
         arsort($files);
@@ -204,14 +308,14 @@ class OMS_EXPORT {
               </tr>';
         foreach ($files as $key => $value){
             if ($value =='.' || $value == '..') continue;
-            $time_create = date ("d-m-Y H:i:s", filemtime($this->BASEDIR.$value))  ;
-            $user = fileowner($this->BASEDIR.$value);
-            $stat = stat($this->BASEDIR.$value);
+            $time_create = date ("d-m-Y H:i:s", filemtime($file_dir.$value))  ;
+            $user = fileowner($file_dir.$value);
+            $stat = stat($file_dir.$value);
             $count ++;
             echo "<tr>
                     <td>{$count}</td>
                     <td>
-                        <a href='{$this->BASEURL}{$value}'>{$value}</a>
+                        <a href='{$url_dir}{$value}'>{$value}</a>
                     </td>
                     <td>
                         {$time_create}
