@@ -2,38 +2,24 @@
 
     $item_in_page = get_option('admin_dashboard_item_in_page') ?? 10;
 
-    $order_status = $_GET['filter_status'] ?? 'any';
+    $order_status = $_GET['status'] ?? 'any';
 
-    $order_range_date = '';
+    $range_date = isset($_GET['range_date']) ?  convert_string_to_range_date($_GET['range_date']) : convert_string_to_range_date_default(6);
+    $start_date = $range_date['start_date'];
+    $end_date = $range_date['end_date'];
 
-    if (isset($_GET['filter_range_date'])){
-        $order_range_date = $_GET['filter_range_date'];
-        $order_range_date_arg = explode(' - ',$order_range_date);
-
-        $filter_start_date = str_replace('/', '-', $order_range_date_arg['0']);
-        $filter_start_date = date('Y-m-d', strtotime($filter_start_date.' - 1 days'));
-        $filter_end_date = str_replace('/', '-', $order_range_date_arg['1']);
-        $filter_end_date = date('Y-m-d', strtotime($filter_end_date.' + 1 days'));
-    } else {
-        $filter_start_date = date('Y-m-d',( strtotime( date('Y-m-d').'- 6 days')));
-        $filter_end_date = date('Y-m-d');
-        $order_range_date = $filter_start_date . ' - ' . $filter_end_date;
-        $filter_start_date = date('Y-m-d',( strtotime( date('Y-m-d').'- 7 days')));
-        $filter_end_date = date('Y-m-d',(strtotime($filter_end_date.'+ 1 days')));
-    }
-
-    $moment = (strtotime($filter_end_date) - strtotime($filter_start_date))/(86400);
-    $default_moment = $moment < 3 ? $moment : $moment -2;
+    $moment = (strtotime($end_date) - strtotime($start_date))/(86400);
+    $default_moment = $moment;
     $filter_order = array(
         'post_status' => explode(',', $order_status),
         'post_type' => array('shop_order'),
         'posts_per_page' => $item_in_page,
-        'paged' => $_GET['offset'] ?? 1,
+        'paged' => $_GET['offset'] ?? 1 ,
         'order_by' => 'modified',
         'date_query' => array(
             array(
-                'after' => $filter_start_date,
-                'before'=> $filter_end_date
+                'after' => $start_date,
+                'before'=> $end_date
             ),
             'inclusive' => true,
             'relation' => 'AND',
@@ -118,7 +104,7 @@
                             <div class="col-4">
                                 <label>Theo ngày</label>
                                 <div class="input-group">
-                                    <button type="button" class="btn btn-default float-right" id="daterange-btn" default-moment="<?php echo $default_moment?>">
+                                    <button type="button" class="btn btn-default float-right" id="reservation_order" default-moment="<?php echo $default_moment?>">
                                         <i class="far fa-calendar-alt"></i> Phạm vi
                                         <i class="fas fa-caret-down"></i>
                                     </button>
@@ -126,7 +112,7 @@
                             </div>
                             <div class="col-4">
                                 <label>Hiển thị từ</label>
-                                <div id="reportrange"><span><?php echo $order_range_date??'' ?></span></div>
+                                <div id="reservation_title"><span><?php echo $range_date['text_date'] ?></span></div>
                             </div>
                         </div>
                     </div>
@@ -208,8 +194,14 @@
                 <div class="dataTables_paginate paging_simple_numbers" id="list_order_paginate">
                     <ul class="pagination" style="justify-content: flex-end;">
                         <?php for($page=0; $page < $order_query->max_num_pages; $page++):?>
+                        <?php $_GET['offset'] = $page+1 ;
+                            $param=[];
+                            foreach($_GET as $key=>$value ){
+                                $param[] = $key.'='.$value;
+                            }
+                            ?>
                         <li class="paginate_button page-item <?php echo ($page+1) == $order_query->query_vars['paged']? 'active': ''?>">
-                            <a href="./?offset=<?php echo $page+1 ?><?php echo $order_range_date ? '&filter_range_date='.$order_range_date : ''?>" aria-controls="list_order" data-dt-idx="<?php echo $page+1 ?>" tabindex="<?php echo $page ?>" class="page-link"><?php echo $page+1 ?></a>
+                            <a href="./?<?php echo implode('&',$param)?>" aria-controls="list_order" data-dt-idx="<?php echo $page+1 ?>" tabindex="<?php echo $page ?>" class="page-link"><?php echo $page+1 ?></a>
                         </li>
                         <?php endfor;?>
                    </ul>
