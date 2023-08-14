@@ -48,7 +48,7 @@ class OMS_EXPORT {
 
         global $wpdb;
 
-        $order_query = $wpdb->get_results("select * from ecom_posts where post_type = 'shop_order' ");
+        $order_query = $wpdb->get_results("select * from ecom_posts where post_type = 'shop_order' order by post_date asc ");
 
         $file_name = 'export_order_'.$this->APPEND_FILE;
 
@@ -79,10 +79,13 @@ class OMS_EXPORT {
         $this->xlsxwriter->writeSheetRow($this->SHEET_NAME, $sheet_header);
         $count = 0;
         foreach ($order_query as $key => $item){
-            $count++;
 
             if (!wc_get_order($item->ID)) continue;
             $order = new \OMS_ORDER($item->ID);
+
+            if ($order->get_status() == 'on-hold' || $order->get_status() == 'trash' || $order->get_status() == 'auto-draft'  ) continue;
+
+            $count++;
 
             $row = array(
                 $count,
@@ -92,12 +95,12 @@ class OMS_EXPORT {
                 $order->get_order_key(),
                 $order->get_billing_last_name() . ' ' . $order->get_billing_first_name(),
                 $order->get_item_count(),
-                number_format( $order->get_full_price_all_item(),0,'.',','),
+                 $order->get_full_price_all_item(),
                 $order->get_full_price_all_item() - $order->get_after_sell_all_item(),
                 $order->get_after_sell_all_item(),
                 (int)$order->get_total_discount(),
                 $order->get_shipping_total('value'),
-                number_format( $order->get_total(),0,'.',','),
+                $order->get_total(),
                 $order->get_status(),
                 $order->get_payment_method_title(),
                 $order->get_payment_method(),
@@ -121,7 +124,7 @@ class OMS_EXPORT {
 
         global $wpdb;
 
-        $order_query = $wpdb->get_results("select * from ecom_posts where post_type = 'shop_order' ");
+        $order_query = $wpdb->get_results("select * from ecom_posts where post_type = 'shop_order' order by post_date asc ");
 
         $file_name = 'export_order_detail_'.$this->APPEND_FILE;
 
@@ -154,38 +157,42 @@ class OMS_EXPORT {
 
             if (!wc_get_order($item->ID)) continue;
             $order = new \OMS_ORDER($item->ID);
+            write_log($order->get_status());
+            if ($order->get_status() == 'on-hold' || $order->get_status() == 'trash' || $order->get_status() == 'auto-draft'  ) continue;
 
             foreach ($order->get_items() as $value){
-
-                $count++;
 
                 if ($value['variation_id'] == 0 && $value->get_product_id() == 0) continue;
 
                 $product =  $value['variation_id'] != 0 ? wc_get_product($value['variation_id']) : wc_get_product($value->get_product_id());
 
+                $count++;
+
+                $brand = get_product_brand_name($product->get_id());
+
                 $full_price = (int)($product->get_regular_price());
 
                 $total_price = (int)($full_price * $value->get_quantity());
                 if ($total_price == 0) $total_price = 1;
-                $persen_down = 100 * (1 - $order->get_line_subtotal($value,true) / $total_price );
+                $present_down = 100 * (1 - $order->get_line_subtotal($value,true) / $total_price );
 
                 $row = array(
                     $count,
                     wp_date(get_date_format(),strtotime( $order->get_date_created())),
                     '#'.$order->get_id(),
                     $order->get_billing_last_name() . ' ' . $order->get_billing_first_name(),
-                    $product->get_sku() ,
                     $product->get_sku(),
+                    get_post_meta($product->get_id(),'offline_id',true),
                     substr( $product->get_sku(), -3),
                     $value->get_name(),
-                    '',
+                    $brand,
                     'CAI',
                     $value->get_quantity(),
                     (int)$product->get_regular_price(),
                     $total_price,
-                    number_format($persen_down , '0',',','.'),
-                    $total_price - $order->get_line_subtotal($value,true),
-                    number_format($order->get_line_subtotal($value,true) , '0',',','.'),
+                    number_format($present_down , '0',',','.'),
+                    $total_price - $order->get_line_subtotal($value,true) < 0 ? 0 : $total_price - $order->get_line_subtotal($value,true),
+                    $order->get_line_subtotal($value,true),
                     $order->get_status(),
                     '',
                     ''
