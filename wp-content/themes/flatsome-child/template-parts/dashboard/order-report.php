@@ -84,7 +84,6 @@ if (isset($_GET['delete']) && file_exists($export->BASEDIR.$_GET['delete'])){
     <div class="card-footer">
         <a href="./?export=orders"><button class="btn btn-primary">Xuất đơn hàng tổng</button></a>
         <a href="./?export=order-detail"><button class="btn btn-primary">Xuất đơn hàng chi tiết</button></a>
-        <button class="btn btn-primary">Xuất tồn kho hiện tại</button>
     </div>
     <div class="card-body">
         <?php $export->export_show($export->ORDER_DIR);?>
