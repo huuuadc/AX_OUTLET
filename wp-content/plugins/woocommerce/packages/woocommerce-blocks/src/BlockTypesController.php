@@ -190,6 +190,7 @@ final class BlockTypesController {
 			'ProductButton',
 			'ProductCategories',
 			'ProductCategory',
+			'ProductGallery',
 			'ProductImage',
 			'ProductImageGallery',
 			'ProductNew',
@@ -213,6 +214,7 @@ final class BlockTypesController {
 			'ReviewsByProduct',
 			'RelatedProducts',
 			'ProductDetails',
+			'SingleProduct',
 			'StockFilter',
 		];
 
@@ -224,7 +226,9 @@ final class BlockTypesController {
 		);
 
 		if ( Package::feature()->is_experimental_build() ) {
-			$block_types[] = 'SingleProduct';
+			$block_types[] = 'ProductCollection';
+			$block_types[] = 'ProductRatingStars';
+			$block_types[] = 'ProductTemplate';
 		}
 
 		/**

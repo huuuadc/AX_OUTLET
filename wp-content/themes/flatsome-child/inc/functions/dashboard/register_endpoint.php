@@ -25,6 +25,7 @@ function dashboard_register_page_endpoint(): void
     add_rewrite_endpoint('customer-report', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('customer-list', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('setting', EP_ROOT | EP_PAGES );
+    add_rewrite_endpoint('inventory-report', EP_ROOT | EP_PAGES );
 
 }
 
@@ -48,6 +49,9 @@ function dashboard_register_template($template){
         return get_template_part('page','dashboard') ;
     }
     if(get_query_var('pagename') == 'setting' || isset($wp->query_vars['setting'])) {
+        return get_template_part('page','dashboard') ;
+    }
+    if(get_query_var('pagename') == 'inventory-report' || isset($wp->query_vars['inventory-report'])) {
         return get_template_part('page','dashboard') ;
     }
     return $template;
