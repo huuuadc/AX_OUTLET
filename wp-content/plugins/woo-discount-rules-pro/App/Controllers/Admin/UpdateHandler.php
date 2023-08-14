@@ -222,7 +222,7 @@ class UpdateHandler
         $message['message'] = '';
         $enter_valid_anchor_tag = '<a href="admin.php?page=woo_discount_rules&tab=settings">'.__('Please enter a valid license key').'</a>';
         $flycart_anchor_tag = '<a href="'.self::$flycart_url.'" target="_blank">'.__('our website').'</a>';
-        if ( !empty($licence_key) ) {
+        /*if ( !empty($licence_key) ) {
             $verifiedLicense = self::getLicenceKeyVerifiedStatus();
             if(!$verifiedLicense){
                 $message['message'] = sprintf(__('License key for the %s seems invalid. %s, you can get it from %s', 'woo-discount-rules-pro'), self::$plugin_name, $enter_valid_anchor_tag, $flycart_anchor_tag);
@@ -231,7 +231,7 @@ class UpdateHandler
         } else {
             $message['message'] = sprintf(__('License key for the %s is not entered. %s, you can get it from %s', 'woo-discount-rules-pro'), self::$plugin_name, $enter_valid_anchor_tag, $flycart_anchor_tag);
             $message['has_message'] = true;
-        }
+        }*/
 
         return $message;
     }
