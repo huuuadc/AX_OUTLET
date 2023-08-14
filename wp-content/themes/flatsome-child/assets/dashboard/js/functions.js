@@ -59,10 +59,45 @@ const isJsonString = (str) => {
     }
 }
 
+function QueryParamsToJSON() {
+    var list = location.search.slice(1).split('&'),
+        result = {};
+
+    list.forEach(function(keyval) {
+        keyval = keyval.split('=');
+        var key = keyval[0];
+        if (/\[[0-9]*\]/.test(key) === true) {
+            var pkey = key.split(/\[[0-9]*\]/)[0];
+            if (typeof result[pkey] === 'undefined') {
+                result[pkey] = [];
+            }
+            result[pkey].push(decodeURIComponent(keyval[1] || ''));
+        } else {
+            result[key] = decodeURIComponent(keyval[1] || '');
+        }
+    });
+
+    return JSON.parse(JSON.stringify(result));
+}
+
+function changeValueUrlParam(uri, param, value){
+    let paramObj = {}
+    if(window.location.search){
+        paramObj = QueryParamsToJSON(window.location.search)
+    }
+
+    paramObj['offset'] = 1;
+
+    paramObj[param] = value
+    console.log(paramObj)
+    return uri+'/?'+$.param(paramObj);
+}
+
 /**
  *
  */
 $(function () {
+
     // Summernote
     $('#footer_print_shipment').summernote()
 
@@ -71,44 +106,36 @@ $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()
 
+    $('#reservation_order,#reservation_inventory').daterangepicker()
+
     $('#filter_order_status').change(
         function (){
             let filter_order_status = $('#filter_order_status').val()
-            let param = ''
-            console.log(filter_order_status)
-            if (filter_order_status.length > 0){
-                param = 'filter_status='+ filter_order_status.toString()
-                window.location.href = '/admin-dashboard/order-list/?'+param;
-            }else {
-                window.location.href = '/admin-dashboard/order-list';
-            }
+            console.log(changeValueUrlParam('.','status',filter_order_status.toString()));
+            window.location.href = changeValueUrlParam('.','status',filter_order_status.toString())
         }
     )
 
     $('#reservation').daterangepicker()
 
-    let defaultMoment = parseInt($('#daterange-btn').attr('default-moment'))
+    let defaultMoment = parseInt($('#reservation_order').attr('default-moment'))
 
-    $('#daterange-btn').daterangepicker(
+    $('#reservation_order').daterangepicker(
         {
             ranges   : {
                 'Hôm nay'       : [moment(), moment()],
-                'Hôm qua'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                '7 ngày trước' : [moment().subtract(6, 'days'), moment()],
-                '30 ngày trước': [moment().subtract(29, 'days'), moment()],
-                'Tháng này'  : [moment().startOf('month'), moment().endOf('month')],
-                'Tháng trước'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                '30 ngày trước': [moment().subtract(29, 'days'), moment()]
             },
             startDate: moment().subtract(defaultMoment, 'days'),
             endDate  : moment()
         },
         function (start, end) {
-            $('#reportrange span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'))
-            window.location.href = '/admin-dashboard/order-list/?filter_range_date='+start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY');
+            let range_date = start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY')
+            $('#reservation_title span').html(range_date)
+            window.location.href = changeValueUrlParam('/admin-dashboard/order-list','range_date',range_date);
         }
     )
 
-    $('#reservation_inventory').daterangepicker()
 
     $('#reservation_inventory').on('change',function (){
         let range_date = $('#reservation_inventory').val();

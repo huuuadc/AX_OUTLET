@@ -175,6 +175,31 @@ class OMS_ORDER extends WC_Order{
 
     }
 
+    public function get_full_price_all_item(){
+        $total_price = 0;
+
+        if ($this->get_item_count() <= 0) return $total_price;
+
+        foreach($this->get_items() as $item ){
+            if ($item['variation_id'] == 0 && $item->get_product_id() == 0) continue;
+            $product =  $item['variation_id'] != 0 ? wc_get_product($item['variation_id']) : wc_get_product($item->get_product_id());
+            $total_price += (int)$product->get_regular_price() * $item->get_quantity() ?? 0;
+        }
+        return $total_price;
+    }
+
+    public function get_after_sell_all_item(){
+        $total_price = 0;
+
+        if ($this->get_item_count() <= 0) return $total_price;
+
+        foreach($this->get_items() as $item ){
+            if ($item['variation_id'] == 0 && $item->get_product_id() == 0) continue;
+            $total_price += (int) $this->get_line_subtotal($item,true);
+        }
+        return $total_price;
+    }
+
 
 
 
