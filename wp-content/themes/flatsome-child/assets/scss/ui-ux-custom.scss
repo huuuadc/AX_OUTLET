@@ -1655,9 +1655,12 @@ html *::-webkit-scrollbar-thumb{
             .price {
                 display: flex;
                 flex-direction: column;
-                font-size: 18px;
+                font-size: 0;
                 margin: 0 0 15px 0;
                 position: relative;
+                del, ins {
+                    font-size: 18px;
+                }
                 del {
                     margin-bottom: 5px;
                 }
@@ -1725,6 +1728,17 @@ html *::-webkit-scrollbar-thumb{
                 flex-direction: row-reverse;
             }
         }
+        .wishlist-button {
+            &:hover {
+                background-color: #333;
+                i {
+                    color: #fff;
+                }
+            }
+            .icon-heart-o, &.wishlist-added i {
+                color: #000;
+            }
+        }
     }
     *::-webkit-scrollbar{
         width: 4px !important;
@@ -1738,6 +1752,9 @@ html *::-webkit-scrollbar-thumb{
                 padding: 0 !important;
             }
         }
+    }
+    .owl-carousel .product .price-wrapper .percent__label {
+        top: -5px;
     }
     @media(min-width:850px){
         .vertical-thumbnails .col {
@@ -1925,6 +1942,19 @@ html *::-webkit-scrollbar-thumb{
         margin-bottom: 20px;
         th, td {
             display: inline-block;
+        }
+        tr {
+            padding: 0;
+            line-height: 0.5;
+            th, td {
+                padding: 0;
+            }
+        }
+        tr.Color, tr.color {
+            display: none !important;
+        }
+        label[for="pa_color"], select#pa_color {
+            display: none !important;
         }
         .label {
             padding-right: 10px;
