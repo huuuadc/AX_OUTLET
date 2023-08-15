@@ -159,9 +159,7 @@ else:
                             <div class="no-print">
                             <p class="lead">Thông tin giao hàng:</p>
                             Đơn vị giao hàng: <span><?php echo $order_ax->get_shipping_method()?></span><br>
-                            Trạng thái giao hàng: <span><?php echo $order_ax->get_meta('shipment_status',true)?></span><br>
-                            Ngày lấy hàng dự kiến: <span><?php echo wp_date( get_date_format(), strtotime( $order_ax->get_meta('shipment_estimated_timeline_pickup',true)))?></span><br>
-                            Ngày giao hàng thành: <span><?php echo wp_date( get_date_format(), strtotime( $order_ax->get_meta('shipment_estimated_timeline_dropoff',true)))?></span><br>
+                            Trạng thái giao hàng: <span class="badge badge-info"><?php echo $order_ax->get_meta('shipment_status',true)?></span><br>
                             </div>
                         </div>
                         <!-- /.col -->

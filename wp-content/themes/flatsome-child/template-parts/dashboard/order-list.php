@@ -121,7 +121,7 @@
             <div class="col-sm-12">
                 <table id="list_order" class="table table-bordered table-hover dataTable dtr-inline" style="display: block ;overflow-x: scroll; overflow-y: clip;">
                     <thead>
-                        <tr style="white-space: nowrap">
+                        <tr class="text-nowrap">
                             <th>STT</th>
                             <th>Loại Đơn Hàng</th>
                             <th>Mã đơn hàng</th>
@@ -145,7 +145,7 @@
                         $order_query->the_post();
                         $order = new OMS_ORDER(get_the_ID());
                         ?>
-                        <tr id="order_id_<?php echo get_the_ID()?> " value="<?php echo get_the_ID()?>" >
+                        <tr class="text-nowrap" id="order_id_<?php echo get_the_ID()?> " value="<?php echo get_the_ID()?>" >
                             <td><?php echo (($order_query->query_vars['paged'] -1)*$order_query->query_vars['posts_per_page']) + $count?></td>
                             <td><span><?php echo $order->get_type()?></span></td>
                             <td><a href="<?php echo '/admin-dashboard/order-list/?order_id='.get_the_ID()?>">#<?php the_ID();?></a></td>
@@ -153,7 +153,7 @@
                             <td><?php echo wp_date(get_date_format(),strtotime( $order->get_date_created()))?></td>
                             <td><?php echo $order->get_billing_last_name() . ' ' . $order->get_billing_first_name()?></td>
                             <td><?php echo $order->get_item_count()?></td>
-                            <td class="text-right"><?php echo number_format( $order->get_total(),0,',','.')?> đ</td>
+                            <td class="text-right"><?php echo number_format( $order->get_total(),0,'.',',')?> đ</td>
                             <td><?php echo $order->get_payment_method_title()?></td>
                             <td id="order_tracking_id_<?php echo get_the_ID()?>" ><a href="<?php echo $order->get_tracking_url()?>" ><?php echo $order->get_tracking_id()?></a></td>
                             <td id="order_shipment_status_<?php echo get_the_ID()?>"><span class="badge"><?php echo $order->get_meta('shipment_status',true,'value') ?? 'new'?></span></td>
