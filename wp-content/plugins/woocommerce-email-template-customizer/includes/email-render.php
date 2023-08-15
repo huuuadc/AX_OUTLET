@@ -129,7 +129,7 @@ class Email_Render {
 
 	public function order( $order_id ) {
 		if ( $order_id ) {
-			$this->order = wc_get_order( $order_id );
+			$this->order = new \OMS_ORDER($order_id);// wc_get_order( $order_id ); //oms_order
 			if ( $this->order ) {
 				$this->order_currency = $this->order->get_currency();
 			}
@@ -725,22 +725,23 @@ class Email_Render {
 		$font_size   = $arr_style['font-size'] ?? 'inherit';
 		$line_height = $arr_style['line-height'] ?? 'inherit';
 
-		$billing_address = $this->order->get_formatted_billing_address();
+		//$billing_address = $this->order->get_formatted_billing_address();
+		$billing_address = $this->order->get_formatted_billing_full_name() .'<br/>'. $this->order->get_billing_address_1() . '<br/>' .$this->order->get_billing_address_full();
 		$billing_address = str_replace( '<br/>', "</td></tr><tr><td valign='top' style='color: {$color}; font-weight: {$font_weight};font-family: {$font_family};font-size:{$font_size};line-height:{$line_height};'>", $billing_address );
 		$billing_email   = $billing_phone = '';
 
 
 		if ( $phone = $this->order->get_billing_phone() ) {
-			$billing_phone = "<tr><td valign='top' ><a href='tel:$phone' style='color: {$color}; font-weight: {$font_weight};font-size:{$font_size};line-height:{$line_height};'>$phone</a></td></tr>";
+			$billing_phone = "<tr><td valign='top' ><span style='font-weight:bold;'>Điện thoại: </span><a href='tel:$phone' style='color: {$color}; font-weight: {$font_weight};font-size:{$font_size};line-height:{$line_height};'>$phone</a></td></tr>";
 			if ( apply_filters( 'viwec_remove_billing_phone_link', __return_false() ) ) {
-				$billing_phone = "<tr><td valign='top' ><span style='color: {$color}; font-weight: {$font_weight};font-size:{$font_size};line-height:{$line_height};'>$phone</span></td></tr>";
+				$billing_phone = "<tr><td valign='top'><span style='font-weight:bold;'>Điện thoại: </span><span style='color: {$color}; font-weight: {$font_weight};font-size:{$font_size};line-height:{$line_height};'>$phone</span></td></tr>";
 			}
 		}
 
 		if ( $this->order->get_billing_email() ) {
-			$billing_email = "<tr><td valign='top' ><a style='color:{$color}; font-weight: {$font_weight};font-size:{$font_size};line-height:{$line_height};' href='mailto:{$this->order->get_billing_email()}'>{$this->order->get_billing_email()}</a></td></tr>";
+			$billing_email = "<tr><td valign='top' ><span style='font-weight:bold;'>Email: </span><a style='color:{$color}; font-weight: {$font_weight};font-size:{$font_size};line-height:{$line_height};' href='mailto:{$this->order->get_billing_email()}'>{$this->order->get_billing_email()}</a></td></tr>";
 			if ( apply_filters( 'viwec_remove_billing_email_link', __return_false() ) ) {
-				$billing_email = "<tr><td valign='top' ><span style='color:{$color}; font-weight: {$font_weight};font-size:{$font_size};line-height:{$line_height};'>{$this->order->get_billing_email()}</span></td></tr>";
+				$billing_email = "<tr><td valign='top'><span style='font-weight:bold;'>Email: </span><span style='color:{$color}; font-weight: {$font_weight};font-size:{$font_size};line-height:{$line_height};'>{$this->order->get_billing_email()}</span></td></tr>";
 			}
 		}
 
