@@ -726,7 +726,7 @@ class Email_Render {
 		$line_height = $arr_style['line-height'] ?? 'inherit';
 
 		//$billing_address = $this->order->get_formatted_billing_address();
-		$billing_address = $this->order->get_formatted_billing_full_name() .'<br/>'. $this->order->get_billing_address_1() . '<br/>' .$this->order->get_billing_address_full();
+		$billing_address = "<span style='font-weight:bold;'>Người nhận: </span>".$this->order->get_formatted_billing_full_name() ."<br/><span style='font-weight:bold;'>Địa chỉ: </span>". $this->order->get_billing_address_1() . ',<br/>' .$this->order->get_billing_address_full();
 		$billing_address = str_replace( '<br/>', "</td></tr><tr><td valign='top' style='color: {$color}; font-weight: {$font_weight};font-family: {$font_family};font-size:{$font_size};line-height:{$line_height};'>", $billing_address );
 		$billing_email   = $billing_phone = '';
 
