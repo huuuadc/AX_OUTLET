@@ -95,3 +95,7 @@ function get_product_brand_name( $product_id, $sep = ', ', $before = '', $after 
 
     return $before . implode( $sep, $links ) . $after;
 }
+
+function format_number_default(float $number){
+    return number_format($number,'0','.',',');
+};
