@@ -4,6 +4,8 @@ use OMS\EXPORT\OMS_EXPORT;
 
 $export = new OMS_EXPORT();
 
+$file_name = '';
+
 if (isset($_GET['export'])) {
 
     $order_status = $_GET['filter_status'] ?? 'any';
@@ -16,12 +18,12 @@ if (isset($_GET['export'])) {
 
     if ($_GET['export'] == 'orders'){
 
-        $export->order_export($order_status,$start_date,$end_date);
+        $file_name = $export->order_export($order_status,$start_date,$end_date);
 
     }
     if ($_GET['export'] == 'order-detail'){
 
-        $export->order_detail_export($order_status,$start_date,$end_date);
+        $file_name = $export->order_detail_export($order_status,$start_date,$end_date);
 
     }
 
@@ -52,15 +54,6 @@ if (isset($_GET['delete']) && file_exists($export->BASEDIR.$_GET['delete'])){
 <!-- /.content-header -->
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Lọc đơn hàng</h3>
-
-            <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                </button>
-            </div>
-        </div>
         <!-- /.card-header -->
         <div class="card-body">
             <div class="row">
@@ -86,6 +79,6 @@ if (isset($_GET['delete']) && file_exists($export->BASEDIR.$_GET['delete'])){
         <a href="./?export=order-detail"><button class="btn btn-primary">Xuất đơn hàng chi tiết</button></a>
     </div>
     <div class="card-body">
-        <?php $export->export_show($export->ORDER_DIR);?>
+        <?php $export->export_show($export->ORDER_DIR,$file_name);?>
     </div>
 </div>

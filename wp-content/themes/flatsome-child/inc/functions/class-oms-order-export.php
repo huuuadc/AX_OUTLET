@@ -116,7 +116,7 @@ class OMS_EXPORT {
         $this->xlsxwriter->writeToFile($this->BASEDIR . $this->ORDER_DIR . $file_name);
 
 
-        return true;
+        return $file_name;
 
     }
 
@@ -203,7 +203,7 @@ class OMS_EXPORT {
 
         $this->xlsxwriter->writeToFile($this->BASEDIR. $this->ORDER_DIR. $file_name);
 
-        return true;
+        return $file_name;
 
     }
 
@@ -287,11 +287,11 @@ class OMS_EXPORT {
 
         $this->xlsxwriter->writeToFile($this->BASEDIR. $this->INVENTORY_DIR. $file_name);
 
-        return true;
+        return $file_name;
 
     }
 
-    function export_show(string $sub_dir = ''){
+    function export_show(string $sub_dir = '', string $file_name = ''){
 
         $file_dir = !$sub_dir ? $this->BASEDIR : $this->BASEDIR .  $sub_dir;
         $url_dir = !$sub_dir ? $this->BASEURL : $this->BASEURL .  $sub_dir;
@@ -317,11 +317,12 @@ class OMS_EXPORT {
               </tr>';
         foreach ($files as $key => $value){
             if ($value =='.' || $value == '..') continue;
+            $class_check = $value == $file_name ? 'bg-warning' : '';
             $time_create = date ("d-m-Y H:i:s", filemtime($file_dir.$value))  ;
             $user = fileowner($file_dir.$value);
             $stat = stat($file_dir.$value);
             $count ++;
-            echo "<tr>
+            echo "<tr class='{$class_check}'>
                     <td>{$count}</td>
                     <td>
                         <a href='{$url_dir}{$value}'>{$value}</a>

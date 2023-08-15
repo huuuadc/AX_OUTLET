@@ -4,6 +4,9 @@ if ( ! $args ) {
     return;
 }
 
+global $current_user;
+wp_get_current_user();
+
 ?>
 
 <!-- Main Sidebar Container -->
@@ -13,14 +16,11 @@ if ( ! $args ) {
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="https://png.pngtree.com/png-clipart/20210311/original/pngtree-cute-ninja-mascot-logo-png-image_6051280.png" class="img-circle elevation-2" alt="User Image">
+                <img src="<?php echo get_avatar_url($current_user->ID)?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="#" class="d-block">
-                    <?php global $current_user;
-                    wp_get_current_user();
-                    echo 'Xin chào ' . $current_user->display_name . "\n";
-                    ?>
+                    <?php echo 'Xin chào ' . $current_user->display_name . "\n"; ?>
                 </a>
             </div>
         </div>
