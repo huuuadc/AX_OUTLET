@@ -4,6 +4,8 @@ use OMS\EXPORT\OMS_EXPORT;
 
 $export = new OMS_EXPORT();
 
+$file_name = '';
+
 if (isset($_GET['export']) && $_GET['export'] = 'inventory') {
 
     $range_date = isset($_GET['range_date']) ?  convert_string_to_range_date($_GET['range_date']) : convert_string_to_range_date_default(6);
@@ -11,7 +13,7 @@ if (isset($_GET['export']) && $_GET['export'] = 'inventory') {
     $start_date = $range_date['start_date'];
     $end_date = $range_date['end_date'];
 
-    $export->inventory_export($start_date,$end_date);
+    $file_name = $export->inventory_export($start_date,$end_date);
 
 }
 
@@ -44,6 +46,6 @@ if (isset($_GET['delete']) && file_exists($export->BASEDIR.$export->INVENTORY_DI
         <a id="post_inventory" href="/admin-dashboard/inventory-report/?export=inventory"><button class="btn btn-primary">Xuất tồn kho hiện tại</button></a>
     </div>
     <div class="card-body">
-        <?php $export->export_show($export->INVENTORY_DIR);?>
+        <?php $export->export_show($export->INVENTORY_DIR,$file_name);?>
     </div>
 </div>
