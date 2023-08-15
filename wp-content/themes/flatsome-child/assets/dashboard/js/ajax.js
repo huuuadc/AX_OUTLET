@@ -216,6 +216,7 @@ function send_update_status(id = '', status = ''){
     })
 }
 
+
 function save_company_info(){
 
     let web_company_name        =       $('#company_name').val()
@@ -291,6 +292,10 @@ $('#company_city').change(function (){
         },
         success: function (rep){
             let data = JSON.parse(rep);
+
+            $('#company_district').append(`<option value="" >Quận/Huyện</option>`)
+            $('#company_ward').append(`<option value="" >Phường/Xã</option>`)
+
             data.data.district.map((e)=>{
                 $('#company_district').append(`<option value="${e.tiki_code}" >${e.tiki_code} - ${e.district_name}</option>`)
             })
@@ -305,6 +310,7 @@ $('#company_city').change(function (){
     })
 
 })
+
 
 $('#company_district').change(function (){
     let company_district_id = $('#company_district').val()
@@ -432,7 +438,6 @@ function post_create_shipment(){
 
 
 }
-
 
 
 function run_product_shop_by(action){
