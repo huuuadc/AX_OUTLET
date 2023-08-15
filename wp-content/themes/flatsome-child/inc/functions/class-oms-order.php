@@ -12,6 +12,7 @@ class OMS_ORDER extends WC_Order{
     private string $billing_ward_code;
     private $ax_address ;
 
+
     function __construct($order = 0)
     {
         parent::__construct($order);
@@ -200,8 +201,10 @@ class OMS_ORDER extends WC_Order{
         return $total_price;
     }
 
-
-
+    public function get_type()
+    {
+        return 'Website';
+    }
 
 
 }
