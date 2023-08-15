@@ -4,22 +4,24 @@
  *
  * @return void
  */
-function render_qr_code_payment($arrg){
+function render_qr_code_payment($arg){
 
-    $printTypes = array('compact','compact2','qr_only','print');
+    $printTypes = ['compact'=>'compact','compact2'=>'compact2','qr_only'=>'qr_only','print'=>'print'];
 
-    $printType          = !(isset($arrg['printType']) && isset($printTypes[$arrg['printType']] )) ? 'compact' : $arrg['printType'] ;
-    $bankName           = !isset($arrg['bankName']) ? 'VCB' : $arrg['bankName'] ;
-    $accountNo          = !isset($arrg['accountNo']) ? 'NoAccountNo' : $arrg['accountNo'] ;
-    $description        = !isset($arrg['description']) ? '' : $arrg['description'] ;
-    $amount             = !(isset($arrg['amount']) && (int)$arrg['amount'] > 0)  ? 0 : $arrg['amount'] ;
-    $width              = !isset($arrg['width']) ? 300 : $arrg['width'] ;
-    $height             = !isset($arrg['height']) ? 300 : $arrg['height'] ;
+    $printType          = !(isset($arg['printType']) && isset($printTypes[$arg['printType']] )) ? 'compact' : $arg['printType'] ;
+    $bankName           = !isset($arg['bankName']) ? 'VCB' : $arg['bankName'] ;
+    $accountNo          = !isset($arg['accountNo']) ? 'NoAccountNo' : $arg['accountNo'] ;
+    $description        = !isset($arg['description']) ? '' : $arg['description'] ;
+    $amount             = !(isset($arg['amount']) && (int)$arg['amount'] > 0)  ? 0 : $arg['amount'] ;
+    $width              = !isset($arg['width']) ? 300 : $arg['width'] ;
+    $height             = !isset($arg['height']) ? 300 : $arg['height'] ;
 
-    if (isset($arrg['description']) && $arrg['description'] != '') {
-        echo "<img src='https://img.vietqr.io/image/{$bankName}-{$accountNo}-{$printType}.jpg?amount={$amount}&addInfo={$description}' alt='account-no-{$accountNo}' width='{$width}' height='{$height}'/>";
+    if (isset($arg['description']) && $arg['description'] != '') {
+        echo '<div class="text-center">';
+        echo "<img src='https://img.vietqr.io/image/{$bankName}-{$accountNo}-{$printType}.jpg?amount={$amount}&addInfo={$description}' alt='account-no-{$accountNo}' width='{$width}' height='{$height}'/></div>";
     }else{
-        echo "<img src='https://img.vietqr.io/image/{$bankName}-{$accountNo}-{$printType}.jpg' alt='account-no-{$accountNo}' width='{$width}' height='{$height}'/>";
+        echo '<div class="text-center">';
+        echo "<img src='https://img.vietqr.io/image/{$bankName}-{$accountNo}-{$printType}.jpg' alt='account-no-{$accountNo}' width='{$width}' height='{$height}'/></div>";
     }
 
 }
@@ -40,7 +42,9 @@ function get_viet_qr_code($amount,$description){
         'bankName'      =>  $bankName,
         'accountNo'     =>  $accountNo,
         'amount'        =>  $amount,
-        'description'   =>  $description));
+        'description'   =>  $description,
+        'width'         =>  200,
+        'height'        =>  200));
 
     if ( is_checkout()) :
         ?>

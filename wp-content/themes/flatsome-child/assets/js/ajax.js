@@ -23,20 +23,25 @@ jQuery(function ($){
             }
         });
     }
+
     checkDiscount();
+
     $('body').on('click','.woocommerce-remove-coupon',function(){
         $(document).on( "ajaxComplete", function( event, xhr, settings ) {
             checkDiscount();
         });
     });
+
     $('body').on('change','.quantity .input-text.qty', function (){
         $(document).on( "ajaxComplete", function( event, xhr, settings ) {
             checkDiscount();
         });
     });
+
     $('#billing_city').change(function (){
         let billing_city_id = $('#billing_city').val()
-        $('#billing_district').html('');
+
+        $('#billing_district').html('<option value="" >Quận/Huyện</option>');
         $('#billing_ward').html('<option value="" >Phường/Xã</option>');
 
         $.ajax({
@@ -49,6 +54,7 @@ jQuery(function ($){
             },
             success: function (rep){
                 let data = JSON.parse(rep);
+
                 data.data.district.map((e)=>{
                         $('#billing_district').append(`<option value="${e.tiki_code}" >${e.district_name}</option>`)
                 })
@@ -75,6 +81,7 @@ jQuery(function ($){
             },
             success: function (rep){
                 let data = JSON.parse(rep);
+
                 data.data.map((e)=>{
                     $('#billing_ward').append(`<option value="${e.tiki_code}" >${e.ward_name}</option>`)
                 });
@@ -89,11 +96,6 @@ jQuery(function ($){
         })
 
     })
-
-
-    /**
-     *
-     */
 
     $('#billing_ward').change(function (){
 
