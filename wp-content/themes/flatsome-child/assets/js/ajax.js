@@ -1,5 +1,6 @@
 
 jQuery(function ($){
+    $(".category-page-row .is-sticky-column").sticky({topSpacing: 70});
     $('body').on('click','.header-search > a',function(){
         if($('.header-search').is('.current-dropdown')){
             $('.header-search').removeClass('current-dropdown');

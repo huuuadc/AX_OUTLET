@@ -4,6 +4,7 @@ function custom_js():void {
     wp_enqueue_script( 'toast-js', get_stylesheet_directory_uri() . '/assets/js/toast.js', array( 'jquery' ),'',true );
     wp_enqueue_script( 'validation-js', get_stylesheet_directory_uri() . '/assets/js/validations.js', array( 'jquery' ),'',true );
     wp_enqueue_script( 'help-js', get_stylesheet_directory_uri() . '/assets/js/helps.js', array( 'jquery' ),'',true );
+    wp_enqueue_script( 'sticky-js', get_stylesheet_directory_uri() . '/assets/js/jquery.sticky.js', array( 'jquery' ),'',true );
     wp_enqueue_script( 'ajax-js', get_stylesheet_directory_uri() . '/assets/js/ajax.js', array( 'jquery' ),'',true );
 }
 add_action( 'wp_enqueue_scripts', 'custom_js' );
