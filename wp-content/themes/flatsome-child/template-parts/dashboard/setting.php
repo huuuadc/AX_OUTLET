@@ -1,3 +1,10 @@
+<?php
+//check_permission admin dashboard order
+if (!current_user_can('admin_dashboard_setting')):
+    user_permission_failed_content();
+else:
+?>
+
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -49,3 +56,5 @@
         </div>
     </div>
 </section>
+
+<?php endif;

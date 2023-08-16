@@ -33,8 +33,7 @@ wp_get_current_user();
 <?php
 
 foreach ($args as $item):
-
-    if (count($item['option']) > 0):
+    if (count($item['option']) > 0 && current_user_can($item['permission'])):
         ?>
         <li class="nav-item <?php echo  $item['active'] ? 'menu-open menu-is-opening' : ''; ?>">
             <a href="#" class="nav-link <?php echo $item['active'] ? 'active' : ''; ?>">
@@ -55,7 +54,7 @@ foreach ($args as $item):
 
 <?php
 
-    else:
+    elseif(current_user_can($item['permission'])):
 
         ?>
         <li class="nav-item">
@@ -74,8 +73,10 @@ endforeach;
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
+    <?php if(current_user_can('admin_dashboard_setting')):?>
     <div class="sidebar-custom p-3">
         <a href="/admin-dashboard/setting" class="btn btn-link"><i class="fas fa-cogs"></i></a>
         <a href="#" class="btn btn-secondary hide-on-collapse pos-right">Cứu tôi với!</a>
     </div>
+    <?php endif;?>
 </aside>
