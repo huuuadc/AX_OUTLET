@@ -201,9 +201,17 @@ class OMS_ORDER extends WC_Order{
         return $total_price;
     }
 
+    public function set_order_type( $type_name = '')
+    {
+        $type_name = $type_name ?? 'Website';
+        update_post_meta($this->get_id(),'order_type', $type_name);
+        return true;
+    }
+
     public function get_type()
     {
-        return 'Website';
+        $order_type = $this->get_meta('order_type',true,'value');
+        return $order_type == '' ?  'Website' : $order_type;
     }
 
 
