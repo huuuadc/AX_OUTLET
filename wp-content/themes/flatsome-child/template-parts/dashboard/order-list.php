@@ -1,5 +1,10 @@
 <?php
 
+//check_permission admin dashboard order
+if (!current_user_can('admin_dashboard_order')):
+    user_permission_failed_content();
+else:
+
     $item_in_page = get_option('admin_dashboard_item_in_page') ?? 10;
 
     $order_status = $_GET['status'] ?? 'any';
@@ -164,14 +169,14 @@
                                     </button>
                                     <div class="dropdown-menu" role="menu">
                                         <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list/?order_id='.get_the_ID()?>">Chi tiết đơn hàng</a>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Từ chối đơn hàng</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Xác nhận đơn hàng</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'request')">Gọi đơn vị vận chuyển</button>
-                                        <button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'shipping')">Đang giao hàng</button>
-                                        <button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivered')">Giao hàng thành công</button>
-                                        <button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivery-failed')">Giao hàng thất bại</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm-goods')">Xác nhận hoàn hàng</button>
-                                        <button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'cancelled')">Hủy đơn hàng</button>
+                                        <?php if(current_user_can('admin_dashboard_order_reject')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Từ chối đơn hàng</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_confirm')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Xác nhận đơn hàng</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_request')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'request')">Gọi đơn vị vận chuyển</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_shipping')) {?><button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'shipping')">Đang giao hàng</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_delivered')) {?><button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivered')">Giao hàng thành công</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_delivered')) {?><button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivery-failed')">Giao hàng thất bại</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_goods')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm-goods')">Xác nhận hoàn hàng</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_cancel')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'cancelled')">Hủy đơn hàng</button><?php }?>
                                     </div>
                                 </div></td>
                         </tr>
@@ -210,3 +215,5 @@
         </div>
     </div>
 </div>
+
+<?php endif;

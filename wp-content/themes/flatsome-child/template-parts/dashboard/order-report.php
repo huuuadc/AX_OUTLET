@@ -2,6 +2,11 @@
 
 use OMS\EXPORT\OMS_EXPORT;
 
+//check_permission admin dashboard order
+if (!current_user_can('admin_dashboard_order')):
+    user_permission_failed_content();
+else:
+
 $export = new OMS_EXPORT();
 
 $file_name = '';
@@ -82,3 +87,5 @@ if (isset($_GET['delete']) && file_exists($export->BASEDIR.$_GET['delete'])){
         <?php $export->export_show($export->ORDER_DIR,$file_name);?>
     </div>
 </div>
+
+<?php endif;
