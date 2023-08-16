@@ -2,6 +2,11 @@
 
 global $wpdb;
 
+//check_permission admin dashboard order
+if (!current_user_can('admin_dashboard_setting')):
+    user_permission_failed_content();
+else:
+
 $item_in_page = get_option('admin_dashboard_item_in_page') ?? '';
 
 $item_in_page_arg = [
@@ -48,3 +53,5 @@ $item_in_page_arg = [
         <button type="button" onclick="save_admin_dashboard_setting()" class="btn btn-primary">Save change</button>
     </div>
 </div>
+
+<?php endif;

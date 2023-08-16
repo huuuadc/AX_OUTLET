@@ -2,6 +2,11 @@
 
 use OMS\EXPORT\OMS_EXPORT;
 
+//check_permission admin dashboard inventory
+if (!current_user_can('admin_dashboard_stock')):
+    user_permission_failed_content();
+else:
+
 $export = new OMS_EXPORT();
 
 $file_name = '';
@@ -49,3 +54,5 @@ if (isset($_GET['delete']) && file_exists($export->BASEDIR.$export->INVENTORY_DI
         <?php $export->export_show($export->INVENTORY_DIR,$file_name);?>
     </div>
 </div>
+
+<?php endif;

@@ -6,6 +6,7 @@
                     'slug'      =>  '/admin-dashboard',
                     'active'    =>  false,
                     'icon'      =>  'fas fa-tachometer-alt',
+                    'permission' => 'admin_dashboard',
                     'option'    =>  []
             ],
             'customer' => [
@@ -13,6 +14,7 @@
                     'slug'      =>  '/customers',
                     'active'    =>  false,
                     'icon'      =>  'fas fa-address-book',
+                    'permission' => 'admin_dashboard_customer',
                     'option'    =>  [
                             [
                                     'title'     =>  'Danh sách',
@@ -33,6 +35,7 @@
                 'slug'      =>  '/orders',
                 'icon'      =>  'fas fa-boxes',
                 'active'    =>  false,
+                'permission' => 'admin_dashboard_order',
                 'option'    =>  [
                     'add' => [
                         'title'     =>  'Thêm mới',
@@ -59,6 +62,7 @@
                 'slug'      =>  '/admin-dashboard/inventory',
                 'active'    =>  false,
                 'icon'      =>  'fas fa-address-book',
+                'permission' => 'admin_dashboard_stock',
                 'option'    =>  [
                     'to' => [
                         'title'     =>  'TO',

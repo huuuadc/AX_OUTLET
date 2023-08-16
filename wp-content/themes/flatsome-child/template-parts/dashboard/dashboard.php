@@ -1,3 +1,9 @@
+<?php
+    //check_permission admin dashboard
+    if (!current_user_can('admin_dashboard')):
+       user_permission_failed_content();
+    else:
+?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
     <div class="col-lg-3 col-6">
@@ -62,3 +68,4 @@
     <!-- ./col -->
 </div>
 <!-- /.row -->
+<?php endif;

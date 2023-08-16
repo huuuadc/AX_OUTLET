@@ -49,7 +49,7 @@ if ( $show_downloads ) {
             width: 600px;
             max-width: 100%;
             margin: 0 auto;
-            border: solid 1px #666;
+            border: solid 1px #ececec;
             padding: 25px 30px;
             border-radius: 4px;
             position: relative;

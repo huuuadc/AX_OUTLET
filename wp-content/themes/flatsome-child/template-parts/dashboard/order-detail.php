@@ -1,3 +1,13 @@
+<?php
+use AX\COMPANY;
+
+
+//check_permission admin dashboard order
+if (!current_user_can('admin_dashboard_order')):
+    user_permission_failed_content();
+else:
+?>
+
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
@@ -15,8 +25,6 @@
 </div>
 <!-- /.content-header -->
 <?php
-
-use AX\COMPANY;
 
     $order_id =  $_GET['order_id'];
 
@@ -186,16 +194,21 @@ else:
                             <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=shipment'?>" target="_blank"  rel="noopener noreferrer">
                                 <button rel="noopener" target="_blank" class="btn btn-default">
                                     <i class="fas fa-print"></i> In phiếu giao hàng</button></a>
+                            <?php if(current_user_can('admin_dashboard_order_goods')) {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
-                                <i class="far fa-calendar-check"></i> Xác nhận hoàn hàng</button>
+                                <i class="far fa-calendar-check"></i> Xác nhận hoàn hàng</button><?php }?>
+                            <?php if(current_user_can('admin_dashboard_order_request')) {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-info float-right"  style="margin-right: 5px;">
-                                <i class="fas fa-people-carry"> </i> Gọi giao hàng</button>
+                                <i class="fas fa-people-carry"> </i> Gọi giao hàng</button><?php }?>
+                            <?php if(current_user_can('admin_dashboard_order_confirm')) {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm')" type="button" class="btn btn-primary float-right"  style="margin-right: 5px;">
-                                <i class="fa fa-check"></i> Xác nhận</button>
+                                <i class="fa fa-check"></i> Xác nhận</button><?php }?>
+                            <?php if(current_user_can('admin_dashboard_order_reject')) {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'reject')" type="button" class="btn btn-secondary float-right"  style="margin-right: 5px;">
-                                <i class="fas fa-ban"></i> Từ chối</button>
+                                <i class="fas fa-ban"></i> Từ chối</button><?php }?>
+                            <?php if(current_user_can('admin_dashboard_order_cancel')) {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'cancelled')" type="button" class="btn btn-danger float-right"  style="margin-right: 5px;">
-                                <i class="fas fa-times"></i> Hủy đơn</button>
+                                <i class="fas fa-times"></i> Hủy đơn</button><?php }?>
                         </div>
                     </div>
 
@@ -290,3 +303,4 @@ else:
 <!-- /.content -->
 
 <?php endif;
+    endif;
