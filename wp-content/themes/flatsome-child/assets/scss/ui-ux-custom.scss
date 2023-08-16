@@ -2104,7 +2104,8 @@ html *::-webkit-scrollbar-thumb{
     .woocommerce-form-coupon-toggle,
     .woocommerce-shipping-fields,
     .woocommerce-order-details__title,
-    .woocommerce-table--order-details {
+    .woocommerce-table--order-details,
+    .woocommerce-customer-details {
         display: none !important;
     }
     .shop_table {

@@ -166,7 +166,7 @@ class OMS_ORDER extends WC_Order{
     }
 
 
-    public function set_log($type = 'info' , $payload = '', $note ){
+    public function set_log($type = 'info' , $payload = '', $note ='' ){
         //get current user
         $current_login = wp_get_current_user();
         $user_name = $current_login->nickname;
