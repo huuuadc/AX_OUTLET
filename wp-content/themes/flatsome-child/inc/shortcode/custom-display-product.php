@@ -51,18 +51,19 @@ function customizing_order_item_name( $product_name, $item ) {
 }
 
 /* add sale label product */
-add_filter( 'woocommerce_get_price_suffix', 'add_label_sale', 9999, 10 );
-function add_label_sale( $product ) {
+add_filter( 'woocommerce_get_price_html', 'add_label_sale', 9999, 10 );
+function add_label_sale( $price, $product) {
     global $product;
     $discounted = apply_filters('advanced_woo_discount_rules_get_product_discount_price_from_custom_price', false, $product, 1, 0, 'all', true);
     if ($discounted) {
-        $initial_price = $discounted['initial_price'];
-        $discounted_price = $discounted['discounted_price'];
-        if($initial_price>0){
-            $price_discount = ceil(($initial_price-$discounted_price)*100/$initial_price);
-            echo '<span class="percent__label">-'.$price_discount.'%</span>';
-        }
+        $regular_price = (float) $discounted['initial_price'];
+        $sale_price = (float) $discounted['discounted_price'];
+
+        $precision = 1;
+        $saving_percentage = round( 100 - ( $sale_price / $regular_price * 100 ), $precision ) . '%';
+        $price .= sprintf( __('<span class="percent__label">-%s</span>', 'woocommerce' ), $saving_percentage );
     }
+    return $price;
 }
 
 /* category page title */
