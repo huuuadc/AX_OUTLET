@@ -42,26 +42,18 @@ if ( $show_downloads ) {
 <section class="woocommerce-order-details">
 	<?php do_action( 'woocommerce_order_details_before_order_table', $order ); ?>
     <style>
-        .cart-container .page__title--cart {
-            display: none;
+        .cart-container .page__title--cart, .order_details .sort_code, .order_details .iban, .order_details .bic {
+            display: none !important;
         }
         .cart-container .woocommerce {
-            width: 850px;
+            width: 600px;
             max-width: 100%;
             margin: 0 auto;
             border: solid 1px #666;
-            padding: 25px 30px 0 30px;
+            padding: 25px 30px;
             border-radius: 4px;
             position: relative;
             background-color: #f8f8f8;
-        }
-        .cart-container .woocommerce:after {
-            content: "";
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            bottom: 20px;
-            border-left: solid 1px #ddd;
         }
         .cart-container .woocommerce > .row .large-5 {
             margin-left: auto;
@@ -73,15 +65,17 @@ if ( $show_downloads ) {
             margin-top: 0;
             border: none;
             background-color: transparent;
-            padding: 0 0 0 15px;
+            padding: 0;
         }
-        @media screen and (min-width: 850px){
-            .cart-container .woocommerce > .row .large-7,
-            .cart-container .woocommerce > .row .large-5 {
-                width: 50%;
-                max-width: 50%;
-                flex-basis: 50%;
-            }
+        .cart-container .woocommerce .is-well ul {
+            margin-bottom: 0;
+        }
+        .cart-container .woocommerce > .row .large-7,
+        .cart-container .woocommerce > .row .large-5 {
+            width: 100%;
+            max-width: 100%;
+            flex-basis: 100%;
+            padding-bottom: 0;
         }
         @media screen and (max-width: 849px) {
             .cart-container .woocommerce {
@@ -105,7 +99,7 @@ if ( $show_downloads ) {
             }
         }
     </style>
-<!--
+
 	<h2 class="woocommerce-order-details__title"><?php esc_html_e( 'Order details', 'woocommerce' ); ?></h2>
 
 	<table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
@@ -159,7 +153,7 @@ if ( $show_downloads ) {
 				</tr>
 			<?php endif; ?>
 		</tfoot>
-	</table>-->
+	</table>
 
 	<?php do_action( 'woocommerce_order_details_after_order_table', $order ); ?>
 </section>
