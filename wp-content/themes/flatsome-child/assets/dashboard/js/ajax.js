@@ -442,6 +442,18 @@ function post_create_shipment(){
 
 function run_product_shop_by(action){
     let action_payload = 'action_' + action;
+    let present_discount = parseInt($('input[name="present_discount"]').val())
+    let checkbox_remove = $('input[name="checkbox_remove"]').is(":checked")
+
+    if ( !present_discount || present_discount <= 0 || present_discount > 99)
+        return $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'Danger',
+            body: 'Giá trị phần trăm giảm giá chưa đúng. Giá trị từ 1 đến 99',
+            icon: 'fas fa-info-circle',
+            autohide: true,
+            delay: 5000
+        })
 
     $.ajax({
         type: 'POST',
@@ -449,6 +461,8 @@ function run_product_shop_by(action){
         data:   {
             action: 'run_product_shop_by',
             action_payload,
+            present_discount,
+            checkbox_remove
         },
         beforeSend: function (){
             $('#card_task_scheduler').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
