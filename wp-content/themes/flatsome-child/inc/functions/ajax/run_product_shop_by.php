@@ -20,15 +20,34 @@ function run_product_shop_by()
 
     if ($post->action_payload == 'action_last_piece') {
 
-//        $myfile = fopen(__DIR__ . "/logs/update_lastpiece_".date('Y-m-d_H-i-s').".txt", "w") or die("Unable to open file!");
-//        $txt = date('Y-m-d_H-i-s');
-//        fwrite($myfile, $txt);
-//        fclose($myfile);
+        $last_piece_qty = (int) $post->last_piece_qty ?? 1;
 
+        if(!add_option('admin_dashboard_last_piece_qty',$last_piece_qty , '','no')){
+            update_option('admin_dashboard_last_piece_qty',$last_piece_qty , 'no');
+        }
 
         $ps = $wpdb->get_results("SELECT `ID` FROM {$wpdb->prefix}posts WHERE `post_status` = 'publish' AND `post_type` = 'product'");
         foreach ($ps as $p) {
-            update_lastpiece_task($p->ID);
+            update_lastpiece_task($p->ID, $last_piece_qty);
+        }
+
+        echo json_encode(array(
+            'status' => '200',
+            'messenger' => 'Đã cập nhật thành công',
+            'data' => []
+        ));
+        exit;
+
+    }
+
+    if ($post->action_payload == 'action_sales_special'  && $post->present_discount) {
+
+        $checkbox_remove = (boolean)$post->checkbox_remove ?? false;
+        $present_discount = (int) $post->present_discount;
+
+        $ps = $wpdb->get_results("SELECT `ID` FROM {$wpdb->prefix}posts WHERE `post_status` = 'publish' AND `post_type` = 'product'");
+        foreach ($ps as $p) {
+            update_sales_special($p->ID, $present_discount,$checkbox_remove);
         }
 
         echo json_encode(array(
