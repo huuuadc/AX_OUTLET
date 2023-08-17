@@ -442,10 +442,11 @@ function post_create_shipment(){
 
 function run_product_shop_by(action){
     let action_payload = 'action_' + action;
+    let last_piece_qty = parseInt($('input[name="last_piece_qty"]').val())
     let present_discount = parseInt($('input[name="present_discount"]').val())
     let checkbox_remove = $('input[name="checkbox_remove"]').is(":checked")
 
-    if ( !present_discount || present_discount <= 0 || present_discount > 99)
+    if (action === 'sales_special' && ( !present_discount || present_discount <= 0 || present_discount > 99))
         return $(document).Toasts('create', {
             class: 'bg-danger',
             title: 'Danger',
@@ -461,6 +462,7 @@ function run_product_shop_by(action){
         data:   {
             action: 'run_product_shop_by',
             action_payload,
+            last_piece_qty,
             present_discount,
             checkbox_remove
         },
