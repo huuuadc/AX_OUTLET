@@ -6,7 +6,7 @@ use Wdr\App\Controllers;
  * @param $product_id
  * @return void
  */
-function update_lastpiece_task($product_id) {
+function update_lastpiece_task($product_id, $last_piece_qty = 1) {
     $product = wc_get_product( $product_id );
     $stock_qty = 0;
     if($product->is_type('simple')) {
@@ -24,11 +24,11 @@ function update_lastpiece_task($product_id) {
         }
     }
     //echo $stock_qty;
-    if($stock_qty == 1) {
+    if($stock_qty <= $last_piece_qty) {
         wp_set_object_terms($product_id, 'co-hoi-cuoi', 'product_shop',true);
     }
     else {
-        wp_remove_object_terms($product_id, 'co-hoi-cuoi', 'product_shop',true);
+        wp_remove_object_terms($product_id, 'co-hoi-cuoi', 'product_shop');
     }
 }
 
