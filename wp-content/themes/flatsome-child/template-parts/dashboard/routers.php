@@ -10,7 +10,7 @@
                     'option'    =>  []
             ],
             'customer' => [
-                    'title'     => 'Khánh hàng',
+                    'title'     => 'Khách hàng',
                     'slug'      =>  '/customers',
                     'active'    =>  false,
                     'icon'      =>  'fas fa-address-book',
