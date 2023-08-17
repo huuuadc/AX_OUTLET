@@ -14,6 +14,7 @@ class OMS_EXPORT {
     private string $SHEET_NAME = 'sheet1';
     public string $ORDER_DIR = 'order/';
     public string $INVENTORY_DIR = 'inventory/';
+    public string $TASK_SCHEDULER = 'scheduler/';
     public function __construct()
     {
         $this->define_constants();
@@ -41,6 +42,10 @@ class OMS_EXPORT {
 
         if ( ! is_dir(  $this->BASEDIR . $this->INVENTORY_DIR) ) {
             wp_mkdir_p(  $this->BASEDIR . $this->INVENTORY_DIR);
+        }
+
+        if ( ! is_dir(  $this->BASEDIR . $this->TASK_SCHEDULER) ) {
+            wp_mkdir_p(  $this->BASEDIR . $this->TASK_SCHEDULER);
         }
     }
 
@@ -289,6 +294,11 @@ class OMS_EXPORT {
 
         return $file_name;
 
+    }
+
+    function task_scheduler_log(){
+        //Code log
+        return true;
     }
 
     function export_show(string $sub_dir = '', string $file_name = ''){
