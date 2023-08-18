@@ -1,6 +1,6 @@
 <?php
 
-use AX\ADDRESS;
+use OMS\ADDRESS;
 use TIKI\TIKI_API;
 
 add_action('woocommerce_shipping_init', 'tiki_tnsl_method');

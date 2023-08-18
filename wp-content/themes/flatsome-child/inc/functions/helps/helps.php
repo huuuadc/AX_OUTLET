@@ -44,9 +44,7 @@ function convert_string_to_range_date(string $date){
     $start_date = str_replace('/', '-', $dates['0']);
     $start_date = date('Y-m-d', strtotime($start_date.' - 1 days'));
     $end_date = str_replace('/', '-', $dates['1']);
-    write_log($end_date);
     $end_date = date('Y-m-d', strtotime($end_date.' + 1 days'));
-    write_log($end_date);
 
     return array(
                 'start_date' => $start_date,
@@ -100,6 +98,10 @@ function format_number_default(float $number): string{
     return number_format($number,'0','.',',');
 };
 
-function user_permission_failed_content(): void{
-    echo '<div class="text-center text-danger"><h5>Bạn không có quyền truy cập. Xin liên hệ quản lý web</h5></div>';
+function response(bool $status = false, string $messenger = '', array $data = []){
+    return json_encode(array(
+        'status' => $status,
+        'messenger' => $messenger,
+        'data' => $data
+    ));
 }

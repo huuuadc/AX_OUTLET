@@ -216,6 +216,84 @@ function send_update_status(id = '', status = ''){
     })
 }
 
+/**
+ *
+ * @param id
+ * @param status
+ */
+function send_update_payment(id = ''){
+
+    let commit_note = prompt('Nhận ghi chú')
+
+    if(!commit_note){
+        alert("Bạn cần nhập ghi chú trước khi thực hiên thao tác")
+        return
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        data:{
+            action: 'post_order_update_payment_status',
+            payload_action: 'order_update_payment',
+            order_id: id,
+            commit_note
+
+        },
+        beforeSend: function (){
+            $('#card_orders').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+
+        },
+        success: function (data){
+            console.log(data)
+            if (isJsonString(data)){
+                const rep = JSON.parse(data);
+                if (rep.status){
+
+                    let class_status = rep.data.class ?? 'muted';
+
+                    if (rep.data.order_payment_title)  $(`#order_payment_status_${id}`).html(`<span class="badge badge-${class_status}">${rep.data.order_payment_title}</span> `);
+                    $(document).Toasts('create', {
+                        class: 'bg-success',
+                        title: 'Success',
+                        body: `Update status: <span class="badge ${class_status}">${rep.data.order_payment_title}</span>`,
+                        icon: 'fas fa-info-circle',
+                        autohide: true,
+                        delay: 5000
+                    })
+                }else {
+                    $(document).Toasts('create', {
+                        class: 'bg-info',
+                        title: 'update false',
+                        body: `${rep.messenger} <br>${JSON.stringify(rep.data) ?? ''}`,
+                        icon: 'fas fa-info-circle',
+                        autohide: true,
+                        delay: 5000
+                    })
+                }
+            }else {
+                console.log(data)
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Error',
+                    body: `${rep.data ?? ''}`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 5000
+                })
+            }
+        },
+        complete: function (){
+            $('#card_orders>.overlay').remove()
+        },
+        error: function(errorThrown){
+
+            console.log("ERROR",errorThrown)
+
+        }
+    })
+}
+
 
 function save_company_info(){
 
