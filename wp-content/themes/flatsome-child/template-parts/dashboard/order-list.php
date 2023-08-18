@@ -134,7 +134,7 @@ else:
                             <th>TT giao hàng</th>
                             <th>TT đơn hàng</th>
                             <th>Thao tác</th>
-                            <th>Khóa đơn hàng</th>
+                            <th class="w-100">Khóa đơn hàng</th>
                         </tr>
                     </thead>
                     <tbody>
