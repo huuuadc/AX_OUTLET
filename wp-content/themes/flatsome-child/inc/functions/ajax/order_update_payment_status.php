@@ -61,7 +61,7 @@ function order_update_payment_status(){
 
     if ($_POST['payload_action'] === 'order_update_payment'){
 
-        if ($order->set_payment_status('paid') || $order->get_payment_status() == 'paid'){
+        if ($order->set_payment_status('paid') && $order->get_payment_status() != 'paid'){
             $order->set_log('success',$payload_action,$commit_note.' -- '. $old_payment_status . ' -> ' . 'Đã thanh toán');
             $data = [
                 'order_payment_title'=> 'Đã thanh toán',
