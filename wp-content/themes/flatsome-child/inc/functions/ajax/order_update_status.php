@@ -68,7 +68,7 @@ function order_update_status(){
                     'status' => true,
                     'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang reject",
                     'data' => array(
-                        'order_status' => $order->get_status(),
+                        'order_status' => $order->get_status_title(),
                         'class' => 'secondary'
                     )
                 ));
@@ -99,7 +99,7 @@ function order_update_status(){
                     'status' => true,
                     'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang confirm",
                     'data' => array(
-                        'order_status' => $order->get_status(),
+                        'order_status' => $order->get_status_title(),
                         'class' => 'primary'
                     )
                 ));
@@ -197,7 +197,7 @@ function order_update_status(){
                     'status' => true,
                     'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang request",
                     'data' => array(
-                        'order_status' => $order->get_status(),
+                        'order_status' => $order->get_status_title(),
                         'class' => 'info',
                         'tracking_id' =>$rep->data->tracking_id,
                         'tracking_url' =>$rep->data->tracking_url,
@@ -233,7 +233,7 @@ function order_update_status(){
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang shipping",
                 'data' => array(
-                    'order_status' => $order->get_status(),
+                    'order_status' => $order->get_status_title(),
                     'class' => 'info'
                 )
             ));
@@ -265,7 +265,7 @@ function order_update_status(){
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang delivered",
                 'data' => array(
-                    'order_status' => $order->get_status(),
+                    'order_status' => $order->get_status_title(),
                     'class' => 'info'
                 )
             ));
@@ -296,7 +296,7 @@ function order_update_status(){
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang delivery failed",
                 'data' => array(
-                    'order_status' => $order->get_status(),
+                    'order_status' =>$order->get_status_title(),
                     'class' => 'secondary'
                 )
             ));
@@ -327,7 +327,7 @@ function order_update_status(){
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang confirm goods",
                 'data' => array(
-                    'order_status' => $order->get_status(),
+                    'order_status' => $order->get_status_title(),
                     'class' => 'warning'
                 )
             ));
@@ -377,7 +377,7 @@ function order_update_status(){
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang cancelled",
                 'data' => array(
-                    'order_status' => $order->get_status(),
+                    'order_status' => $order->get_status_title(),
                     'class' => 'danger'
                 )
             ));

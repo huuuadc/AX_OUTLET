@@ -11,6 +11,75 @@ class OMS_ORDER extends WC_Order{
     private string $billing_district_code;
     private string $billing_ward_code;
     private $ax_address ;
+    public array $ORDER_STATUS_LABEL= array(
+        'reject' => [
+            'title' =>  'Từ chối',
+            'class_name' =>  'badge-secondary'
+        ],
+        'trash' => [
+            'title' =>  'Xóa',
+            'class_name' =>  'badge-danger'
+        ],
+        'on-hold' => [
+            'title' =>  'Đang giữ',
+            'class_name' =>  'badge-danger'
+        ],
+        'pending' => [
+            'title' =>  'Đang đợi thanh toán',
+            'class_name' =>  'badge-danger'
+        ],
+        'processing' => [
+            'title' =>  'Đang xử lý',
+            'class_name' =>  'badge-warning'
+        ],
+        'confirm' => [
+            'title' =>  'Xác nhận',
+            'class_name' =>  'badge-primary'
+        ],
+        'completed' => [
+            'title' =>  'Thành công',
+            'class_name' =>  'badge-success'
+        ],
+        'request' => [
+            'title' =>  'Gọi lấy hàng',
+            'class_name' =>  'badge-info'
+        ],
+        'shipping' => [
+            'title' =>  'Đang giao hàng',
+            'class_name' =>  'badge-info'
+        ],
+        'delivered' => [
+            'title' =>  'Đã giao hàng',
+            'class_name' =>  'badge-success'
+        ],
+        'delivery-failed' => [
+            'title' =>  'Giao hàng thất bại',
+            'class_name' =>  'badge-danger'
+        ],
+        'cancelled' => [
+            'title' =>  'Đã hủy',
+            'class_name' => 'badge-danger'
+        ],
+        'auto-draft' => [
+            'title' =>  'Tự động lưu',
+            'class_name' =>  'badge-secondary'
+        ],
+        'confirm-goods' => [
+            'title' =>  'Đã hoàn hàng',
+            'class_name' =>  'badge-warning'
+        ],
+    );
+
+    public array $PAYMENT_STATUS = [
+        'paid'  =>  [
+            'title' =>  'Đã thanh toán',
+            'class_name' =>  'badge-success'
+        ],
+        'unpaid' =>  [
+            'title' =>  'Chưa thanh toán',
+            'class_name' =>  'badge-danger'
+        ]
+    ];
 
 
     function __construct($order = 0)
@@ -189,7 +258,7 @@ class OMS_ORDER extends WC_Order{
         return $total_price;
     }
 
-    public function get_after_sell_all_item(){
+    public function get_after_sell_all_item(): int{
         $total_price = 0;
 
         if ($this->get_item_count() <= 0) return $total_price;
@@ -201,17 +270,45 @@ class OMS_ORDER extends WC_Order{
         return $total_price;
     }
 
-    public function set_order_type( $type_name = '')
-    {
+    public function set_order_type( $type_name = ''): bool {
         $type_name = $type_name ?? 'Website';
         update_post_meta($this->get_id(),'order_type', $type_name);
         return true;
     }
 
-    public function get_type()
-    {
+    public function get_type(): string {
         $order_type = $this->get_meta('order_type',true,'value');
         return $order_type == '' ?  'Website' : $order_type;
+    }
+
+    public function set_payment_status(string $payment_status = 'paid'): bool {
+        update_post_meta($this->get_id(),'payment_status', $payment_status) ;
+        return true;
+    }
+
+    public function get_payment_status(): string  {
+        $payment_status = $this->get_meta('payment_status',true,'value');
+        if (!isset( $this->PAYMENT_STATUS[$payment_status])){
+            $payment_status = 'unpaid';
+        }
+
+        return $payment_status;
+    }
+
+    public function get_payment_title(): string {
+        return $this->PAYMENT_STATUS[$this->get_payment_status()]['title'];
+    }
+
+    public function get_payment_class_name(): string {
+        return $this->PAYMENT_STATUS[$this->get_payment_status()]['class_name'];
+    }
+
+    public function get_status_title(){
+        return $this->ORDER_STATUS_LABEL[$this->get_status()]['title'];
+    }
+
+    public function get_status_class_name(){
+        return $this->ORDER_STATUS_LABEL[$this->get_status()]['class_name'];
     }
 
 

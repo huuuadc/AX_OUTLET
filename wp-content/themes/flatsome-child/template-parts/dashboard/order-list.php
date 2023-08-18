@@ -38,9 +38,6 @@ else:
 
     $status_badge = array(
             'reject' => 'badge-secondary',
-            'trash' => 'badge-danger',
-            'on-hold' => 'badge-danger',
-            'pending' => 'badge-danger',
             'processing' => 'badge-warning',
             'confirm' => 'badge-primary',
             'completed' => 'badge-success',
@@ -49,7 +46,6 @@ else:
             'delivered' => 'badge-success',
             'delivery-failed' => 'badge-danger',
             'cancelled' => 'badge-danger',
-            'auto-draft' => 'badge-secondary',
             'confirm-goods' => 'badge-warning',
     );
 
@@ -99,9 +95,7 @@ else:
                                         style="width: 100%;"
                                         data-dropdown-css-class="select2-primary"
                                 >
-                                    <?php foreach ($status_badge as $item_key => $item_value) :
-                                        if (str_contains('trash,on-hold,pending,auto-draft',$item_key)) continue;
-                                        ?>
+                                    <?php foreach ($status_badge as $item_key => $item_value) :?>
                                         <option <?php echo str_contains($order_status,$item_key) ? 'selected' :'' ?> value="wc-<?php echo $item_key?>" ><?php echo $item_key?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -160,10 +154,10 @@ else:
                             <td><?php echo $order->get_item_count()?></td>
                             <td class="text-right text-bold"><?php echo number_format( $order->get_total(),0,'.',',')?> đ</td>
                             <td class="text-uppercase"><?php echo $order->get_payment_method()?></td>
-                            <td><span class="badge badge-danger">chưa thanh toán</span></td>
+                            <td id="order_payment_status_<?php echo get_the_ID()?>"><span class="badge <?php echo $order->get_payment_class_name()?>"><?php echo $order->get_payment_title()?></span></td>
                             <td id="order_tracking_id_<?php echo get_the_ID()?>" ><a href="<?php echo $order->get_tracking_url()?>" ><?php echo $order->get_tracking_id()?></a></td>
                             <td id="order_shipment_status_<?php echo get_the_ID()?>"><span class="badge"><?php echo $order->get_meta('shipment_status',true,'value') ?? 'new'?></span></td>
-                            <td id="order_status_<?php echo get_the_ID()?>"><span class="badge <?php echo $status_badge[$order->get_status()] ?>"><?php echo $order->get_status()?></span></td>
+                            <td id="order_status_<?php echo get_the_ID()?>"><span class="badge <?php echo $order->get_status_class_name() ?>"><?php echo $order->get_status_title()?></span></td>
                             <td><div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown">
                                         <span class="sr-only">Toggle Dropdown</span>
@@ -172,6 +166,7 @@ else:
                                         <a class="dropdown-item" href="<?php echo '/admin-dashboard/order-list/?order_id='.get_the_ID()?>">Chi tiết đơn hàng</a>
                                         <?php if(current_user_can('admin_dashboard_order_reject')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'reject')">Từ chối đơn hàng</button><?php }?>
                                         <?php if(current_user_can('admin_dashboard_order_confirm')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Xác nhận đơn hàng</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_payment')) {?><button class="dropdown-item" onclick="send_update_payment(<?php echo get_the_ID() ?>)">Thanh toán</button><?php }?>
                                         <?php if(current_user_can('admin_dashboard_order_request')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'request')">Gọi đơn vị vận chuyển</button><?php }?>
                                         <?php if(current_user_can('admin_dashboard_order_shipping')) {?><button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'shipping')">Đang giao hàng</button><?php }?>
                                         <?php if(current_user_can('admin_dashboard_order_delivered')) {?><button disabled class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivered')">Giao hàng thành công</button><?php }?>
