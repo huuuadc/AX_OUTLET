@@ -311,5 +311,17 @@ class OMS_ORDER extends WC_Order{
         return $this->ORDER_STATUS_LABEL[$this->get_status()]['class_name'];
     }
 
+    public function get_order_contents_weight() {
+        $weight = 0.0;
+
+        foreach ( $this->get_items() as $item_key => $values ) {
+            if ( $values->get_product()->get_weight() > 0 ) {
+                $weight += (float) $values->get_product()->get_weight() * $values->get_quantity();
+            }
+        }
+
+        return $weight;
+    }
+
 
 }
