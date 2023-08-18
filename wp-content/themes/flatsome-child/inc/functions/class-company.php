@@ -1,8 +1,8 @@
 <?php
 
-namespace AX;
+namespace OMS;
 
-use AX\ADDRESS;
+use OMS\ADDRESS;
 
 class COMPANY {
     private string $name;

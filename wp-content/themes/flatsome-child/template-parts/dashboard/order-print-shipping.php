@@ -16,7 +16,7 @@
 <!-- /.content-header -->
 <?php
 
-use AX\COMPANY;
+use OMS\COMPANY;
 
     $order_id =  $_GET['order_id'];
 

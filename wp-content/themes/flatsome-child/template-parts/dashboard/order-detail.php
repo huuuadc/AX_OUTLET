@@ -1,5 +1,5 @@
 <?php
-use AX\COMPANY;
+use OMS\COMPANY;
 
 
 //check_permission admin dashboard order
@@ -117,9 +117,13 @@ else:
                                 <div id="card_orders" class="col-sm-4 invoice-col no-print">
                                     Trạng thái <br>
                                     <b id="order_status_<?php echo $order_id?>">
-                                    <span class="badge <?php echo $status_badge[$order_ax->get_status()] ?>"><?php echo $order_ax->get_status()?>
+                                    <span class="badge <?php echo $order_ax->get_status_class_name() ?>"><?php echo $order_ax->get_status_title()?>
                                     </span>
                                     </b><br>
+                                    <b id="order_payment_status_<?php echo $order_id?>">
+                                    <span class="badge <?php echo $order_ax->get_payment_class_name() ?>"><?php echo $order_ax->get_payment_title()?>
+                                    </span>
+                                    </b>
                                 </div>
                                 <div id="card_order_type" class="col-sm-4 invoice-col no-print">
                                     Loại đơn hàng <br>
@@ -197,6 +201,9 @@ else:
                             <?php if(current_user_can('admin_dashboard_order_goods')) {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
                                 <i class="far fa-calendar-check"></i> Xác nhận hoàn hàng</button><?php }?>
+                            <?php if(current_user_can('admin_dashboard_order_payment')) {?>
+                            <button onclick="send_update_payment(<?php echo $order_id?>)" type="button" class="btn btn-success float-right" style="margin-right: 5px;">
+                                <i class="far fa-calendar-check"></i>Thanh toán</button><?php }?>
                             <?php if(current_user_can('admin_dashboard_order_request')) {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-info float-right"  style="margin-right: 5px;">
                                 <i class="fas fa-people-carry"> </i> Gọi giao hàng</button><?php }?>

@@ -1,7 +1,7 @@
 <?php
 
 namespace TIKI;
-use AX\COMPANY;
+use OMS\COMPANY;
 
 class TIKI_API
 {
