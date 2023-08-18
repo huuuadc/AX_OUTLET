@@ -2527,6 +2527,24 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     visibility: hidden;
   }
 }
+.sticky-wrapper .is-sticky-column {
+  top: 70px !important;
+  max-height: calc(100vh - 270px);
+  transform: none !important;
+  overflow: auto !important;
+  --scrollbar-width: 5px;
+  padding-right: 10px;
+}
+.sticky-wrapper.is-sticky {
+  height: 100vh !important;
+  overflow: scroll !important;
+}
+.sticky-wrapper.is-sticky .is-sticky-column {
+  top: 70px !important;
+  max-height: calc(100vh - 70px) !important;
+  transform: none !important;
+  overflow: auto !important;
+}
 /* Mobile version */
 @media screen and (max-width: 1200px) {
   .header-top .flex-row.container {
