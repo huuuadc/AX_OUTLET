@@ -41,3 +41,4 @@ require (__DIR__.'/class-writer-xlsx.php');
 require (__DIR__.'/class-oms-order-export.php');
 require (__DIR__.'/checkout/qr_code_payment.php');
 require (__DIR__.'/email/custom-sender.php');
+require (__DIR__.'/admin/redirect_login_url.php');

@@ -1,6 +1,6 @@
 <?php
 
-use AX\ADDRESS;
+use OMS\ADDRESS;
 use TIKI\TIKI_API;
 
 add_action( 'wp_ajax_post_order_update_status', 'order_update_status' );

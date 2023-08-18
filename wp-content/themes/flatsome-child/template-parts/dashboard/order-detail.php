@@ -1,5 +1,5 @@
 <?php
-use AX\COMPANY;
+use OMS\COMPANY;
 
 
 //check_permission admin dashboard order

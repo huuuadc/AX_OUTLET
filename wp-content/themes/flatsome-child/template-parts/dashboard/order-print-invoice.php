@@ -4,7 +4,7 @@
 
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 
-use AX\COMPANY;
+use OMS\COMPANY;
 
 $order_id =  $_GET['order_id'];
 

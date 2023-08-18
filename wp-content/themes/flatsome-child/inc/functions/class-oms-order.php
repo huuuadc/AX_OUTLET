@@ -1,6 +1,6 @@
 <?php
 
-use AX\ADDRESS;
+use OMS\ADDRESS;
 
 /**
  *

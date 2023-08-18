@@ -1,6 +1,6 @@
 <?php
 
-namespace AX;
+namespace OMS;
 class ADDRESS {
 
     /**

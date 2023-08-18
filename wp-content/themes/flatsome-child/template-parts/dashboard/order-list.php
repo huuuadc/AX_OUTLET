@@ -90,7 +90,7 @@ else:
                     <div class="card-body">
                         <div class="row">
                             <div class="col-4">
-                                <label>Trạng thái đơn hàng</label>
+                                <label for="filter_order_status">Trạng thái đơn hàng</label>
                                 <select
                                         id="filter_order_status"
                                         class="select2 select2-primary"
@@ -130,16 +130,17 @@ else:
                             <th>STT</th>
                             <th>Loại Đơn Hàng</th>
                             <th>Mã đơn hàng</th>
-                            <th>Khóa đơn hàng</th>
                             <th>Ngày đặt hàng</th>
                             <th>Khách hàng</th>
                             <th>SL SP</th>
                             <th>Tổng tiền</th>
                             <th>HTTT</th>
+                            <th>TT Thanh Toán</th>
                             <th>Mã giao hàng</th>
-                            <th>Trạng thái giao hàng</th>
-                            <th>Trạng thái đơn hàng</th>
+                            <th>TT giao hàng</th>
+                            <th>TT đơn hàng</th>
                             <th>Thao tác</th>
+                            <th>Khóa đơn hàng</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -154,12 +155,12 @@ else:
                             <td><?php echo (($order_query->query_vars['paged'] -1)*$order_query->query_vars['posts_per_page']) + $count?></td>
                             <td><span><?php echo $order->get_type()?></span></td>
                             <td><a href="<?php echo '/admin-dashboard/order-list/?order_id='.get_the_ID()?>">#<?php the_ID();?></a></td>
-                            <td><?php echo $order->get_order_key()?></td>
                             <td><?php echo wp_date(get_date_format(),strtotime( $order->get_date_created()))?></td>
-                            <td><?php echo $order->get_billing_last_name() . ' ' . $order->get_billing_first_name()?></td>
+                            <td class="text-uppercase text-bold"><?php echo $order->get_billing_last_name() . ' ' . $order->get_billing_first_name()?></td>
                             <td><?php echo $order->get_item_count()?></td>
-                            <td class="text-right"><?php echo number_format( $order->get_total(),0,'.',',')?> đ</td>
-                            <td><?php echo $order->get_payment_method_title()?></td>
+                            <td class="text-right text-bold"><?php echo number_format( $order->get_total(),0,'.',',')?> đ</td>
+                            <td class="text-uppercase"><?php echo $order->get_payment_method()?></td>
+                            <td><span class="badge badge-danger">chưa thanh toán</span></td>
                             <td id="order_tracking_id_<?php echo get_the_ID()?>" ><a href="<?php echo $order->get_tracking_url()?>" ><?php echo $order->get_tracking_id()?></a></td>
                             <td id="order_shipment_status_<?php echo get_the_ID()?>"><span class="badge"><?php echo $order->get_meta('shipment_status',true,'value') ?? 'new'?></span></td>
                             <td id="order_status_<?php echo get_the_ID()?>"><span class="badge <?php echo $status_badge[$order->get_status()] ?>"><?php echo $order->get_status()?></span></td>
@@ -178,7 +179,9 @@ else:
                                         <?php if(current_user_can('admin_dashboard_order_goods')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm-goods')">Xác nhận hoàn hàng</button><?php }?>
                                         <?php if(current_user_can('admin_dashboard_order_cancel')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'cancelled')">Hủy đơn hàng</button><?php }?>
                                     </div>
-                                </div></td>
+                                </div>
+                            </td>
+                            <td><?php echo $order->get_order_key()?></td>
                         </tr>
 
                     <?php endwhile;?>
