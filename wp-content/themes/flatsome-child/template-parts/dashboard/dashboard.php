@@ -3,67 +3,56 @@
     if (!current_user_can('admin_dashboard')):
        user_permission_failed_content();
     else:
+    $quantity_order_new = wc_orders_count('processing');
+    $quantity_order_request = wc_orders_count('request');
+    $quantity_order_shipping = wc_orders_count('shipping');
+    $quantity_order_delivered = wc_orders_count('delivered');
+
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
     <div class="col-lg-3 col-6">
         <!-- small box -->
-        <div class="small-box bg-info">
-            <div class="inner">
-                <h3>150</h3>
-
-                <p>New Orders</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-bag"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
+        <?php wc_get_template('template-parts/dashboard/components/card-item.php'
+            , array('quantity' => $quantity_order_new
+            ,'class' => 'warning'
+            ,'url'=>'./order-list/?offset=1&status=wc-processing'
+            ,'title'=>'Đơn hàng mới'
+            ,'icon_big'=>'fas fa-arrow-circle-right'));
+        ?>
     </div>
     <!-- ./col -->
     <div class="col-lg-3 col-6">
         <!-- small box -->
-        <div class="small-box bg-success">
-            <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                <p>Bounce Rate</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
+        <?php wc_get_template('template-parts/dashboard/components/card-item.php'
+             , array('quantity' => $quantity_order_request
+            ,'class' => 'info'
+            ,'url'=>'./order-list/?offset=1&status=wc-request'
+            ,'title'=>'Gọi đơn vị vận chuyển'
+            ,'icon_big'=>'fas fa-arrow-circle-right'));
+        ?>
     </div>
     <!-- ./col -->
     <div class="col-lg-3 col-6">
         <!-- small box -->
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3>44</h3>
-
-                <p>User Registrations</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-person-add"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
+        <?php wc_get_template('template-parts/dashboard/components/card-item.php'
+            , array('quantity' => $quantity_order_shipping
+            ,'class' => 'info'
+            ,'url'=>'./order-list/?offset=1&status=wc-shipping'
+            ,'title'=>'Đang giao hàng'
+            ,'icon_big'=>'fas fa-arrow-circle-right'));
+        ?>
     </div>
     <!-- ./col -->
     <div class="col-lg-3 col-6">
         <!-- small box -->
-        <div class="small-box bg-danger">
-            <div class="inner">
-                <h3>65</h3>
-
-                <p>Unique Visitors</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
+        <?php wc_get_template('template-parts/dashboard/components/card-item.php'
+            , array('quantity' => $quantity_order_delivered
+            ,'class' => 'success'
+            ,'url'=>'./order-list/?offset=1&status=wc-delivered'
+            ,'title'=>'Giao hàng thành công'
+            ,'icon_big'=>'fas fa-arrow-circle-right'));
+        ?>
     </div>
     <!-- ./col -->
 </div>
