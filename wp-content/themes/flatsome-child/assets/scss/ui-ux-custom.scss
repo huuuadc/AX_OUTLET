@@ -2878,6 +2878,33 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
         }
     }
 }
+.wpforms-container {
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+        border: solid 1px #ccc !important;
+        box-shadow: none !important;
+        &:focus {
+            border-color: #333 !important;
+        }
+    }
+    .wpforms-field {
+        padding: 5px 0 10px 0;
+    }
+    .wpforms-field-label {
+        font-weight: 500;
+        font-size: 15px !important;
+        margin-bottom: 8px !important;
+    }
+    .button {
+        background-color: #666 !important;
+        font-size: 15px !important;
+        font-weight: 500 !important;
+        min-width: 100px !important;
+        border: none !important;
+    }
+}
 /* Mobile version */
 @media screen and (max-width:1200px){
     .header-top {
