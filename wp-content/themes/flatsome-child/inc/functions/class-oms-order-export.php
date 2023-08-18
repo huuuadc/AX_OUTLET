@@ -162,7 +162,6 @@ class OMS_EXPORT {
 
             if (!wc_get_order($item->ID)) continue;
             $order = new \OMS_ORDER($item->ID);
-            write_log($order->get_status());
             if ($order->get_status() == 'on-hold' || $order->get_status() == 'trash' || $order->get_status() == 'auto-draft'  ) continue;
 
             foreach ($order->get_items() as $value){
@@ -256,7 +255,6 @@ class OMS_EXPORT {
                 foreach ($variations as $item):
                 $item_variant = wc_get_product($item['variation_id']);
                 $variant_att = $item_variant->get_attributes('value');
-                write_log($variant_att);
                 $count++;
                 $row = array(
                     $count,

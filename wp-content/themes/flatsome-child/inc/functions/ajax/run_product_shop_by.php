@@ -44,7 +44,6 @@ function run_product_shop_by()
 
         $checkbox_remove = $post->checkbox_remove == 'true';
         $present_discount = (int) $post->present_discount;
-        write_log($post);
         $ps = $wpdb->get_results("SELECT `ID` FROM {$wpdb->prefix}posts WHERE `post_status` = 'publish' AND `post_type` = 'product'");
         foreach ($ps as $p) {
             update_sales_special($p->ID, $present_discount,$checkbox_remove);

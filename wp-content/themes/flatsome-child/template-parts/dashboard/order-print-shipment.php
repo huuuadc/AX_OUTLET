@@ -129,7 +129,7 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
                         <div class="p-1 w-100"> <strong>Tiền thu người nhận: </strong><?php  echo $order->get_payment_method() == 'cod' ? number_format($order->get_total(),0,',','.') : '0'?> đ</div>
                         <div class="p-1 w-100 border-left border-dark">
                             <strong>Tổng số lượng: </strong><?php echo $order->get_item_count()?><br>
-                            <strong>Tổng khối lượng: </strong><?php echo $total_weight ?? 2000?> g
+                            <strong>Tổng khối lượng: </strong><?php echo $order->get_order_contents_weight()?> kg
                         </div>
                     </div>
                     <div class="w-100 d-flex flex-col border-right border-left border-bottom border-dark">
