@@ -79,7 +79,7 @@
         <?php wc_get_template('template-parts/dashboard/components/card-table-attribute_term.php'); ?>
     </div>
     <div class="col-6">
-        <?php wc_get_template('template-parts/dashboard/components/card-table-product_price.php'); ?>
+<!--        --><?php //wc_get_template('template-parts/dashboard/components/card-table-product_price.php'); ?>
     </div>
 </div>
 
