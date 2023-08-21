@@ -24,14 +24,19 @@ $categories = $wpdb->get_results($sql);
                 <th>ID</th>
                 <th>Name</th>
                 <th>Slug</th>
+                <th>Parent ID</th>
+                <th>Parent name</th>
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($categories as $category) :?>
+            <?php foreach ($categories as $category) :
+                $parent_name = (int)$category->parent != 0 ? get_term((int)$category->parent)->name : ''; ?>
             <tr>
                 <td><?php echo $category->term_id ?></td>
                 <td><?php echo $category->name ?></td>
                 <td><?php echo $category->slug ?></td>
+                <td><?php echo $category->parent ?></td>
+                <td><?php echo  $parent_name?></td>
             </tr>
             <?php endforeach;?>
             </tbody>

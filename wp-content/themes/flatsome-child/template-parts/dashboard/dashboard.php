@@ -71,7 +71,15 @@
         <?php wc_get_template('template-parts/dashboard/components/card-table-category.php'); ?>
     </div>
     <div class="col-6">
-        <?php wc_get_template('template-parts/dashboard/components/card-table-gender.php'); ?>
+        <?php wc_get_template('template-parts/dashboard/components/card-table-attribute.php'); ?>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <?php wc_get_template('template-parts/dashboard/components/card-table-attribute_term.php'); ?>
+    </div>
+    <div class="col-6">
+        <?php wc_get_template('template-parts/dashboard/components/card-table-product_price.php'); ?>
     </div>
 </div>
 
