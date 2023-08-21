@@ -6,6 +6,7 @@ add_action( 'query_vars', 'dashboard_register_query_vars' );
 function dashboard_register_query_vars( $vars ) {
     $vars[] = 'order-list';
     $vars[] = 'order-report';
+    $vars[] = 'order-new';
     $vars[] = 'customer-witchlist';
     $vars[] = 'customer-report';
     $vars[] = 'customer-list';
@@ -21,6 +22,7 @@ function dashboard_register_page_endpoint(): void
 
     add_rewrite_endpoint('order-list', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('order-report', EP_ROOT | EP_PAGES );
+    add_rewrite_endpoint('order-new', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('customer-witchlist', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('customer-report', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('customer-list', EP_ROOT | EP_PAGES );
@@ -37,6 +39,9 @@ function dashboard_register_template($template){
       return get_template_part('page','dashboard') ;
     }
     if(get_query_var('pagename') == 'order-report'  || isset($wp->query_vars['order-report'])) {
+        return get_template_part('page','dashboard') ;
+    }
+    if(get_query_var('pagename') == 'order-new'  || isset($wp->query_vars['order-new'])) {
         return get_template_part('page','dashboard') ;
     }
     if(get_query_var('pagename') == 'customer-list'  || isset($wp->query_vars['customer-list'])) {

@@ -18,7 +18,7 @@
             ,'class' => 'warning'
             ,'url'=>'./order-list/?offset=1&status=wc-processing'
             ,'title'=>'Đơn hàng mới'
-            ,'icon_big'=>'fas fa-arrow-circle-right'));
+            ,'icon_big'=>'fas fa-cart-plus'));
         ?>
     </div>
     <!-- ./col -->
@@ -26,10 +26,10 @@
         <!-- small box -->
         <?php wc_get_template('template-parts/dashboard/components/card-item.php'
              , array('quantity' => $quantity_order_request
-            ,'class' => 'info'
+            ,'class' => 'primary'
             ,'url'=>'./order-list/?offset=1&status=wc-request'
             ,'title'=>'Gọi đơn vị vận chuyển'
-            ,'icon_big'=>'fas fa-arrow-circle-right'));
+            ,'icon_big'=>'fas fa-phone'));
         ?>
     </div>
     <!-- ./col -->
@@ -40,7 +40,7 @@
             ,'class' => 'info'
             ,'url'=>'./order-list/?offset=1&status=wc-shipping'
             ,'title'=>'Đang giao hàng'
-            ,'icon_big'=>'fas fa-arrow-circle-right'));
+            ,'icon_big'=>'fas fa-shipping-fast'));
         ?>
     </div>
     <!-- ./col -->
@@ -51,7 +51,7 @@
             ,'class' => 'success'
             ,'url'=>'./order-list/?offset=1&status=wc-delivered'
             ,'title'=>'Giao hàng thành công'
-            ,'icon_big'=>'fas fa-arrow-circle-right'));
+            ,'icon_big'=>'far fa-check-circle'));
         ?>
     </div>
     <!-- ./col -->

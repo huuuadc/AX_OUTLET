@@ -37,9 +37,9 @@
                 'active'    =>  false,
                 'permission' => 'admin_dashboard_order',
                 'option'    =>  [
-                    'add' => [
+                    'new' => [
                         'title'     =>  'Thêm mới',
-                        'slug'      =>  '/admin-dashboard/order-list',
+                        'slug'      =>  '/admin-dashboard/order-new',
                         'icon'      =>  'fa fa-list-alt',
                         'active'    =>  false
                     ],
@@ -103,6 +103,18 @@
         </section>
     </div>
 <?php endif; ?>
+
+
+
+<!--//=====================================================================-->
+<?php if  (get_query_var('pagename') == 'order-new' || isset($wp->query_vars['order-new'])) :?>
+    <?php $main_sidebar['order']['option']['new']['active'] = true?>
+    <?php $main_sidebar['order']['active'] = true?>
+    <?php if ( $main_sidebar['order']['option']['new']['active']) $main_sidebar['order']['option']['new']['slug'] = '/wp-admin/post-new.php?post_type=shop_order'; ?>
+    <?php get_template_part('template-parts/dashboard/main','sidebar', $main_sidebar) ?>
+
+            <?php get_template_part('template-parts/dashboard/order','new') ?>
+<?php endif;?>
 
 
 <!--//=====================================================================-->
