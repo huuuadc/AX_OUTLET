@@ -11,9 +11,14 @@ $brands = $wpdb->get_results($sql);
 
 ?>
 
-<div class="card">
+<div class="card collapsed-card">
     <div class="card-header">
        Thương hiệu
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
     </div>
     <div class="card-body">
         <table class="table table-bordered table-striped dataTable dtr-inline table_simple">
