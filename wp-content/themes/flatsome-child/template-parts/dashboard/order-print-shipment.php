@@ -112,7 +112,7 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
                         foreach ($order->get_items() as $item_key => $item ): $count++ ?>
                             <?php
                                 $product =  $item['variation_id'] != 0 ? wc_get_product($item['variation_id']) : wc_get_product($item->get_product_id());
-                                $product_weight = $product->get_weight();
+                                $product_weight = (int)$product->get_weight() ?? 0;
                                 $total_weight += floatval( $product_weight * $item->get_quantity() );
                             ?>
                             <tr class="p-1">
