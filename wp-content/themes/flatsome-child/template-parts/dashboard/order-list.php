@@ -118,7 +118,7 @@ else:
                 </div>
             </div>
             <div class="col-sm-12">
-                <table id="list_order" class="table table-bordered table-hover dataTable dtr-inline" style="display: block ;overflow-x: scroll; overflow-y: clip;">
+                <table id="list_order" class="table table-bordered table-hover dataTable dtr-inline table_order_simple" style="display: block ;overflow-x: scroll; overflow-y: clip;">
                     <thead>
                         <tr class="text-nowrap">
                             <th>STT</th>

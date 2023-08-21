@@ -316,13 +316,13 @@ class OMS_EXPORT {
         $count = 0;
 
 
-        echo '<table class="table table-bordered table-hover dataTable dtr-inline">';
-        echo '<tr>
+        echo '<table class="table table-bordered table-hover dataTable dtr-inline table_simple_non_btn">';
+        echo '<thead><tr>
                 <th>STT</th>
                 <th>Tên tập tin</th>
                 <th>Thời gian tạo</th>
                 <th></th>
-              </tr>';
+              </tr></thead><tbody>';
         foreach ($files as $key => $value){
             if ($value =='.' || $value == '..') continue;
             $class_check = $value == $file_name ? 'bg-warning' : '';
@@ -344,7 +344,7 @@ class OMS_EXPORT {
                 </tr>";
         }
 
-        echo '</table>';
+        echo '</tbody></table>';
     }
 
 
