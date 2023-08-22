@@ -142,6 +142,49 @@ $(function () {
         $('#post_inventory').attr('href',`./?range_date=${range_date}`)
     })
 
+    $('.table_simple').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": false,
+        "info": false,
+        "autoWidth": true,
+        "responsive": true,
+        "dom": 'Bfrtip',
+        "language": {
+            "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+        },
+        "buttons": ["copy", "csv", "excel", "pdf", "print"],
+    });
+
+    $('.table_simple_non_btn').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": false,
+        "info": false,
+        "autoWidth": true,
+        "responsive": true,
+        "language": {
+            "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+        },
+    });
+
+    $('.table_order_simple').DataTable({
+        "paging": false,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": false,
+        "info": false,
+        "autoWidth": true,
+        "responsive": true,
+        "language": {
+            "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+        },
+    });
+
+    $.widget.bridge('uibutton', $.ui.button)
+
 
 })
 
