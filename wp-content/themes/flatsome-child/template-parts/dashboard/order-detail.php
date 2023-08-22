@@ -198,9 +198,12 @@ else:
                             <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=shipment'?>" target="_blank"  rel="noopener noreferrer">
                                 <button rel="noopener" target="_blank" class="btn btn-default">
                                     <i class="fas fa-print"></i> In phiếu giao hàng</button></a>
-                            <?php if(current_user_can('admin_dashboard_order_goods')) {?>
+                            <?php if(current_user_can('admin_dashboard_order_goods') && $order_ax->get_order_type() == 'website') {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
                                 <i class="far fa-calendar-check"></i> Xác nhận hoàn hàng</button><?php }?>
+                            <?php if(current_user_can('admin_dashboard_order_completed') && $order_ax->get_order_type() != 'website') {?>
+                            <button onclick="send_update_status(<?php echo $order_id?>,'completed')" type="button" class="btn btn-success float-right">
+                                <i class="far fa-calendar-check"></i> Giao sàn</button><?php }?>
                             <?php if(current_user_can('admin_dashboard_order_payment')) {?>
                             <button onclick="send_update_payment(<?php echo $order_id?>)" type="button" class="btn btn-success float-right" style="margin-right: 5px;">
                                 <i class="far fa-calendar-check"></i>Thanh toán</button><?php }?>

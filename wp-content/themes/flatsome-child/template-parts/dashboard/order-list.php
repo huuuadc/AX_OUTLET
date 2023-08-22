@@ -145,7 +145,7 @@ else:
                         $order_query->the_post();
                         $order = new OMS_ORDER(get_the_ID());
 
-                        $disable = $order->get_order_type() == 'website' ? 'disable' : '';
+                        $disable = 'disabled' ;
 
                         ?>
                         <tr class="text-nowrap" id="order_id_<?php echo get_the_ID()?> " value="<?php echo get_the_ID()?>" >
@@ -171,10 +171,11 @@ else:
                                         <?php if(current_user_can('admin_dashboard_order_confirm')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm')">Xác nhận đơn hàng</button><?php }?>
                                         <?php if(current_user_can('admin_dashboard_order_payment')) {?><button class="dropdown-item" onclick="send_update_payment(<?php echo get_the_ID() ?>)">Thanh toán</button><?php }?>
                                         <?php if(current_user_can('admin_dashboard_order_request') && $order->get_order_type() == 'website') {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'request')">Gọi đơn vị vận chuyển</button><?php }?>
-                                        <?php if(current_user_can('admin_dashboard_order_shipping')) {?><button <?php echo $disable?> class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'shipping')">Đang giao hàng</button><?php }?>
-                                        <?php if(current_user_can('admin_dashboard_order_delivered')) {?><button <?php echo $disable?> class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivered')">Giao hàng thành công</button><?php }?>
-                                        <?php if(current_user_can('admin_dashboard_order_delivered')) {?><button <?php echo $disable?> class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivery-failed')">Giao hàng thất bại</button><?php }?>
-                                        <?php if(current_user_can('admin_dashboard_order_goods')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm-goods')">Xác nhận hoàn hàng</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_shipping') && $order->get_order_type() == 'website') {?><button <?php echo $disable?> class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'shipping')">Đang giao hàng</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_delivered') && $order->get_order_type() == 'website') {?><button <?php echo $disable?> class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivered')">Giao hàng thành công</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_delivered') && $order->get_order_type() == 'website') {?><button <?php echo $disable?> class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'delivery-failed')">Giao hàng thất bại</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_completed') && $order->get_order_type() != 'website') {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'completed')">Giao sàn</button><?php }?>
+                                        <?php if(current_user_can('admin_dashboard_order_goods') && $order->get_order_type() == 'website') {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'confirm-goods')">Xác nhận hoàn hàng</button><?php }?>
                                         <?php if(current_user_can('admin_dashboard_order_cancel')) {?><button class="dropdown-item" onclick="send_update_status(<?php echo get_the_ID() ?>, 'cancelled')">Hủy đơn hàng</button><?php }?>
                                     </div>
                                 </div>

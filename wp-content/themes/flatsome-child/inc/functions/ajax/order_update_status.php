@@ -292,6 +292,7 @@ function order_update_status(){
 
 
         if ($order->update_status('wc-delivery-failed')){
+            $order->set_log('success',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang delivery failed",
@@ -301,6 +302,40 @@ function order_update_status(){
                 )
             ));
         }else{
+            $order->set_log('danger',$payload_action,$commit_note);
+            echo json_encode(array(
+                'status' => false,
+                'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
+                'data' => []
+            ));
+        };
+
+        exit;
+
+
+    }
+
+    //
+    //
+    // Action vendor update completed order
+    //
+    //
+    if ($_POST['payload_action'] == 'order_status_completed'
+        && 'order_status_confirm' == 'order_status_'.$old_status
+        && $order->get_order_type() != 'website'){
+
+        if ($order->update_status('wc-completed')){
+            $order->set_log('success',$payload_action,$commit_note);
+            echo json_encode(array(
+                'status' => true,
+                'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang completed",
+                'data' => array(
+                    'order_status' =>$order->get_status_title(),
+                    'class' => 'success'
+                )
+            ));
+        }else{
+            $order->set_log('danger',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => false,
                 'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
