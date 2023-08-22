@@ -128,7 +128,7 @@ else:
                                 <div id="card_order_type" class="col-sm-4 invoice-col no-print">
                                     Loại đơn hàng <br>
                                     <span class="badge badge-info">
-                                        <?php echo $order_ax->get_type()?><br>
+                                        <?php echo $order_ax->get_order_type()?><br>
                                 </div>
                             </div>
                             <div class="row">

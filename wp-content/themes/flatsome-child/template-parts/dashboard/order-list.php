@@ -147,7 +147,7 @@ else:
                         ?>
                         <tr class="text-nowrap" id="order_id_<?php echo get_the_ID()?> " value="<?php echo get_the_ID()?>" >
                             <td><?php echo (($order_query->query_vars['paged'] -1)*$order_query->query_vars['posts_per_page']) + $count?></td>
-                            <td><span><?php echo $order->get_type()?></span></td>
+                            <td><span><?php echo $order->get_order_type()?></span></td>
                             <td><a href="<?php echo '/admin-dashboard/order-list/?order_id='.get_the_ID()?>">#<?php the_ID();?></a></td>
                             <td><?php echo wp_date(get_date_format(),strtotime( $order->get_date_created()))?></td>
                             <td class="text-uppercase text-bold"><?php echo $order->get_billing_last_name() . ' ' . $order->get_billing_first_name()?></td>
