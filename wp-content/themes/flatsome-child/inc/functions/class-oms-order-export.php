@@ -95,7 +95,7 @@ class OMS_EXPORT {
             $row = array(
                 $count,
                 wp_date(get_date_format(),strtotime( $order->get_date_created())),
-                $order->get_type(),
+                $order->get_order_type(),
                 '#'.$order->get_id(),
                 $order->get_order_key(),
                 $order->get_billing_last_name() . ' ' . $order->get_billing_first_name(),
