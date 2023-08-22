@@ -37,7 +37,7 @@ class OMS_ORDER extends WC_Order{
             'class_name' =>  'badge-primary'
         ],
         'completed' => [
-            'title' =>  'Thành công',
+            'title' =>  'Giao sàn',
             'class_name' =>  'badge-success'
         ],
         'request' => [
