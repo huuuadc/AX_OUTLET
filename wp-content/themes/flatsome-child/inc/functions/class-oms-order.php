@@ -68,6 +68,10 @@ class OMS_ORDER extends WC_Order{
             'title' =>  'Đã hoàn hàng',
             'class_name' =>  'badge-warning'
         ],
+        'draft'         => [
+            'title' =>  'Xóa',
+            'class_name' =>  'badge-danger'
+        ],
     );
 
     public array $PAYMENT_STATUS = [
@@ -271,14 +275,14 @@ class OMS_ORDER extends WC_Order{
     }
 
     public function set_order_type( $type_name = ''): bool {
-        $type_name = $type_name ?? 'Website';
+        $type_name = $type_name ?? 'website';
         update_post_meta($this->get_id(),'order_type', $type_name);
         return true;
     }
 
-    public function get_type(): string {
+    public function get_order_type(): string {
         $order_type = $this->get_meta('order_type',true,'value');
-        return $order_type == '' ?  'Website' : $order_type;
+        return $order_type == '' ?  'website' : $order_type;
     }
 
     public function set_payment_status(string $payment_status = 'paid'): bool {
