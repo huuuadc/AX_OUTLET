@@ -24,7 +24,7 @@ function generate_database_address(){
                     body: `Complete generate database and send info`,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             } catch (e){
                 $(document).Toasts('create', {
@@ -33,7 +33,7 @@ function generate_database_address(){
                     body: e,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             }
         },
@@ -84,7 +84,7 @@ function save_setting_tiki_api(){
                 body: `update setting tiki success`,
                 icon: 'fas fa-info-circle',
                 autohide: true,
-                delay: 5000
+                delay: 10000
             })
         },
         complete: function (){
@@ -124,7 +124,7 @@ function get_access_token_tiki(){
                 body: `get access token success`,
                 icon: 'fas fa-info-circle',
                 autohide: true,
-                delay: 5000
+                delay: 10000
             })
         },
         complete    :    function (){
@@ -181,16 +181,16 @@ function send_update_status(id = '', status = ''){
                         body: `Update status: <span class="badge badge-${class_status}">${rep.data.order_status}</span>`,
                         icon: 'fas fa-info-circle',
                         autohide: true,
-                        delay: 5000
+                        delay: 10000
                     })
                 }else {
                     $(document).Toasts('create', {
-                        class: 'bg-info',
+                        class: 'bg-danger',
                         title: 'update false',
                         body: `${rep.messenger} <br>${JSON.stringify(rep.data) ?? ''}`,
                         icon: 'fas fa-info-circle',
                         autohide: true,
-                        delay: 5000
+                        delay: 10000
                     })
                 }
             }else {
@@ -201,7 +201,7 @@ function send_update_status(id = '', status = ''){
                     body: `${rep.data ?? ''}`,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             }
         },
@@ -259,16 +259,16 @@ function send_update_payment(id = ''){
                         body: `Update status: <span class="badge ${class_status}">${rep.data.order_payment_title}</span>`,
                         icon: 'fas fa-info-circle',
                         autohide: true,
-                        delay: 5000
+                        delay: 10000
                     })
                 }else {
                     $(document).Toasts('create', {
-                        class: 'bg-info',
+                        class: 'bg-danger',
                         title: 'update false',
                         body: `${rep.messenger} <br>${JSON.stringify(rep.data) ?? ''}`,
                         icon: 'fas fa-info-circle',
                         autohide: true,
-                        delay: 5000
+                        delay: 10000
                     })
                 }
             }else {
@@ -279,7 +279,7 @@ function send_update_payment(id = ''){
                     body: `${rep.data ?? ''}`,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             }
         },
@@ -332,7 +332,7 @@ function save_company_info(){
                     body: `Update success`,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             } else {
                 $(document).Toasts('create', {
@@ -341,7 +341,7 @@ function save_company_info(){
                     body: data,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             }
         },
@@ -444,7 +444,7 @@ function save_admin_dashboard_setting(){
                     body: `Update success`,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             } else {
                 $(document).Toasts('create', {
@@ -453,7 +453,7 @@ function save_admin_dashboard_setting(){
                     body: data,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             }
         },
@@ -493,7 +493,7 @@ function post_create_shipment(){
                     body: `Update success`,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             } else {
                 $(document).Toasts('create', {
@@ -502,7 +502,7 @@ function post_create_shipment(){
                     body: data,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             }
         },
@@ -531,7 +531,7 @@ function run_product_shop_by(action){
             body: 'Giá trị phần trăm giảm giá chưa đúng. Giá trị từ 1 đến 99',
             icon: 'fas fa-info-circle',
             autohide: true,
-            delay: 5000
+            delay: 10000
         })
 
     $.ajax({
@@ -556,7 +556,7 @@ function run_product_shop_by(action){
                     body: `Update success`,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             } else {
                 $(document).Toasts('create', {
@@ -565,7 +565,7 @@ function run_product_shop_by(action){
                     body: data,
                     icon: 'fas fa-info-circle',
                     autohide: true,
-                    delay: 5000
+                    delay: 10000
                 })
             }
         },

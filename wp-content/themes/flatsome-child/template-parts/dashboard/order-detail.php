@@ -128,7 +128,7 @@ else:
                                 <div id="card_order_type" class="col-sm-4 invoice-col no-print">
                                     Loại đơn hàng <br>
                                     <span class="badge badge-info">
-                                        <?php echo $order_ax->get_type()?><br>
+                                        <?php echo $order_ax->get_order_type()?><br>
                                 </div>
                             </div>
                             <div class="row">
@@ -204,7 +204,7 @@ else:
                             <?php if(current_user_can('admin_dashboard_order_payment')) {?>
                             <button onclick="send_update_payment(<?php echo $order_id?>)" type="button" class="btn btn-success float-right" style="margin-right: 5px;">
                                 <i class="far fa-calendar-check"></i>Thanh toán</button><?php }?>
-                            <?php if(current_user_can('admin_dashboard_order_request')) {?>
+                            <?php if(current_user_can('admin_dashboard_order_request') && $order_ax->get_order_type() == 'website') {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-info float-right"  style="margin-right: 5px;">
                                 <i class="fas fa-people-carry"> </i> Gọi giao hàng</button><?php }?>
                             <?php if(current_user_can('admin_dashboard_order_confirm')) {?>

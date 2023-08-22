@@ -53,6 +53,13 @@ function order_update_payment_status(){
     $old_status = $order->get_status('value');
     $old_payment_status = $order->get_payment_title();
 
+
+    if ($old_status == 'cancelled'){
+        $order->set_log('danger',$payload_action,$commit_note);
+        echo response(false,'Đơn hàng đã bị hủy không cho cập nhật lại trạng thái thanh toán',[]);
+        exit();
+    }
+
     //
     //
     // Action payment order
