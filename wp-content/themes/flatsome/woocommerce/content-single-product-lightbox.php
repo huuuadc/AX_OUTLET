@@ -19,9 +19,10 @@ do_action( 'wc_quick_view_before_single_product' );
         float: none !important;
         margin: 0 0 25px 0 !important;
         clear: both;
-        display: table;
+        /*display: table;*/
         min-height: unset;
         line-height: 1 !important;
+        display: none;
     }
 </style>
 <div class="product-quick-view-container">
