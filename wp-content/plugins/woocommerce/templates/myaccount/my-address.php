@@ -55,7 +55,12 @@ $col    = 1;
 		$address = wc_get_account_formatted_address( $name );
 		$col     = $col * -1;
 		$oldcol  = $oldcol * -1;
-	?>
+        $first_name = get_user_meta( $customer_id, 'first_name', true );
+        $last_name = get_user_meta( $customer_id, 'last_name', true );
+        $address_1 = get_user_meta( $customer_id, 'billing_address_1', true );
+        $city  = get_user_meta( $customer_id, 'billing_city', true );
+        $address_full = $first_name.' '.$last_name.'<br>'.$address_1.', '.$city;
+    ?>
 
 	<div class="u-column<?php echo $col < 0 ? 1 : 2; ?> col-<?php echo $oldcol < 0 ? 1 : 2; ?> woocommerce-Address">
 		<header class="woocommerce-Address-title title">
@@ -64,7 +69,8 @@ $col    = 1;
 		</header>
 		<address>
 			<?php
-				echo $address ? wp_kses_post( $address ) : esc_html_e( 'You have not set up this type of address yet.', 'woocommerce' );
+				//echo $address ? wp_kses_post( $address ) : esc_html_e( 'You have not set up this type of address yet.', 'woocommerce' );
+                echo $address_1 ? wp_kses_post( $address_full ) : esc_html_e( 'You have not set up this type of address yet.', 'woocommerce' );
 			?>
 		</address>
 	</div>
