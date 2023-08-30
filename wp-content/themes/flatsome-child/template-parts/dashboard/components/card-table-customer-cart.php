@@ -44,17 +44,11 @@ global $wpdb;
                     <td><?php echo $order_customer['first_name'] . ' ' . $order_customer['last_name']?> </td>
                     <td><?php
                            foreach ($carts as $cart){
-                               if( $cart['variation_id'] == 0){
-                                   $product = wc_get_product($cart['product_id']);
-                                   echo '<a href="'. get_permalink($product->get_id())  .'">';
-                                   echo $product->get_sku() .' - '.$product->get_id() . ' - ' . $product->get_name();
-                                   echo '</a>';
-                               } else {
-                                   $product = wc_get_product($cart['variation_id']);
-                                   echo '<a href="'. get_permalink($product->get_id()) .'">';
-                                   echo $product->get_sku() .' - '.$product->get_id() . ' - ' . $product->get_name();
-                                   echo '</a>';
-                               }
+
+                               $product = $cart['variation_id'] == 0 ? wc_get_product($cart['product_id']) : wc_get_product($cart['variation_id']);
+                               echo '<a href="'. get_permalink($product->get_id())  .'">';
+                               echo $product->get_sku() .' - '.$product->get_id() . ' - ' . $product->get_name();
+                               echo '</a>';
                                echo '<br>';
                            }
 
