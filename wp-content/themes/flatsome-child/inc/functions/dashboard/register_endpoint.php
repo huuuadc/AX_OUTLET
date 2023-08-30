@@ -7,11 +7,13 @@ function dashboard_register_query_vars( $vars ) {
     $vars[] = 'order-list';
     $vars[] = 'order-report';
     $vars[] = 'order-new';
-    $vars[] = 'customer-witchlist';
+    $vars[] = 'customer-wishlist';
     $vars[] = 'customer-report';
     $vars[] = 'customer-list';
+    $vars[] = 'customer-cart';
     $vars[] = 'setting';
     $vars[] = 'inventory-report';
+    $vars[] = 'inventory-adjustment';
 
     return $vars;
 }
@@ -23,11 +25,13 @@ function dashboard_register_page_endpoint(): void
     add_rewrite_endpoint('order-list', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('order-report', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('order-new', EP_ROOT | EP_PAGES );
-    add_rewrite_endpoint('customer-witchlist', EP_ROOT | EP_PAGES );
+    add_rewrite_endpoint('customer-wishlist', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('customer-report', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('customer-list', EP_ROOT | EP_PAGES );
+    add_rewrite_endpoint('customer-cart', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('setting', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('inventory-report', EP_ROOT | EP_PAGES );
+    add_rewrite_endpoint('inventory-adjustment', EP_ROOT | EP_PAGES );
 
 }
 
@@ -47,7 +51,10 @@ function dashboard_register_template($template){
     if(get_query_var('pagename') == 'customer-list'  || isset($wp->query_vars['customer-list'])) {
         return get_template_part('page','dashboard') ;
     }
-    if(get_query_var('pagename') == 'customer-witchlist'  || isset($wp->query_vars['customer-witchlist'])) {
+    if(get_query_var('pagename') == 'customer-cart'  || isset($wp->query_vars['customer-list'])) {
+        return get_template_part('page','dashboard') ;
+    }
+    if(get_query_var('pagename') == 'customer-wishlist'  || isset($wp->query_vars['customer-wishlist'])) {
         return get_template_part('page','dashboard') ;
     }
     if(get_query_var('pagename') == 'customer-report'  || isset($wp->query_vars['customer-report'])) {
@@ -57,6 +64,9 @@ function dashboard_register_template($template){
         return get_template_part('page','dashboard') ;
     }
     if(get_query_var('pagename') == 'inventory-report' || isset($wp->query_vars['inventory-report'])) {
+        return get_template_part('page','dashboard') ;
+    }
+    if(get_query_var('pagename') == 'inventory-adjustment' || isset($wp->query_vars['inventory-adjustment'])) {
         return get_template_part('page','dashboard') ;
     }
     return $template;

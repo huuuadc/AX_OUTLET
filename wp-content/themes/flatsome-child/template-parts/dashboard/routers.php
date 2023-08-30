@@ -16,16 +16,22 @@
                     'icon'      =>  'fas fa-address-book',
                     'permission' => 'admin_dashboard_customer',
                     'option'    =>  [
-                            [
+                            'list' => [
                                     'title'     =>  'Danh sách',
-                                    'slug'      =>  '/customers',
+                                    'slug'      =>  '/admin-dashboard/customer-list',
                                     'icon'      =>  'fas fa-clipboard-list',
                                     'active'    =>  false
                             ],
-                            [
+                            'wishlist' => [
                                 'title'     =>  'Yêu thích',
-                                'slug'      =>  '/witchlist',
+                                'slug'      =>  '/admin-dashboard/customer-wishlist',
                                 'icon'      =>  'fa fa-heart',
+                                'active'    =>  false
+                            ],
+                            'cart' => [
+                                'title'     =>  'Giỏ hàng',
+                                'slug'      =>  '/admin-dashboard/customer-cart',
+                                'icon'      =>  'fa fa-shopping-cart',
                                 'active'    =>  false
                             ]
                     ]
@@ -65,14 +71,14 @@
                 'permission' => 'admin_dashboard_stock',
                 'option'    =>  [
                     'to' => [
-                        'title'     =>  'TO',
-                        'slug'      =>  '/admin-dashboard/order-list',
+                        'title'     =>  'Giảm tồn kho',
+                        'slug'      =>  '/admin-dashboard/inventory-adjustment',
                         'icon'      =>  'fas fa-clipboard-list',
                         'active'    =>  false
                     ],
                     'so' => [
-                        'title'     =>  'SO',
-                        'slug'      =>  '/admin-dashboard/order-report',
+                        'title'     =>  'Tăng tồn kho',
+                        'slug'      =>  '/admin-dashboard/inventory-adjustment',
                         'icon'      =>  'fas fa-clipboard-list',
                         'active'    =>  false
                     ],
@@ -116,7 +122,6 @@
             <?php get_template_part('template-parts/dashboard/order','new') ?>
 <?php endif;?>
 
-
 <!--//=====================================================================-->
 <?php if(  (get_query_var('pagename') == 'admin-dashboard' && isset($wp->query_vars['order-list'])) && !isset($_GET['order_id'])) :?>
 <?php $main_sidebar['order']['option']['list']['active'] = true?>
@@ -128,7 +133,6 @@
             </section>
     </div>
 <?php endif;?>
-
 
 <!--//====================================================================-->
 <?php if( (get_query_var('pagename') == 'admin-dashboard' && isset($wp->query_vars['order-list'])) && isset($_GET['order_id']) ) :
@@ -156,10 +160,7 @@
             <?php get_template_part('template-parts/dashboard/order-print','invoice',$order_id) ?>
         </section>
     <?php endif;?>
-
-</div>
-<?php endif;?>
-
+    <?php echo '</div>'; endif;?>
 
 <!--//============================================================-->
 <?php if (get_query_var('pagename') == 'admin-dashboard' && isset($wp->query_vars['order-report'])) :
@@ -171,7 +172,8 @@
     <section class="content">
         <?php get_template_part('template-parts/dashboard/order','report') ?>
     </section>
-<?php echo '</div>'; endif; ?>
+    <?php echo '</div>'; endif; ?>
+
 
 
 
@@ -185,16 +187,73 @@
         </section>
     <?php echo '</div>'; endif;?>
 
+
+
+
 <!--//=====================================================================-->
 <?php if (get_query_var('pagename') == 'inventory-report' || isset($wp->query_vars['inventory-report'])) :
+    $main_sidebar['inventory']['active'] = true;
+    $main_sidebar['inventory']['option']['report']['active'] = true;
+    get_template_part('template-parts/dashboard/main', 'sidebar', $main_sidebar);
+    echo '<div class="content-wrapper">';
+    ?>
+    <section class="content">
+        <?php get_template_part('template-parts/dashboard/inventory','report') ?>
+    </section>
+    <?php echo '</div>'; endif; ?>
+
+<!--//=====================================================================-->
+<?php if (get_query_var('pagename') == 'inventory-adjustment' || isset($wp->query_vars['inventory-adjustment'])) :
         $main_sidebar['inventory']['active'] = true;
-        $main_sidebar['inventory']['option']['report']['active'] = true;
+        $main_sidebar['inventory']['option']['so']['active'] = true;
         get_template_part('template-parts/dashboard/main', 'sidebar', $main_sidebar);
         echo '<div class="content-wrapper">';
         ?>
         <section class="content">
-            <?php get_template_part('template-parts/dashboard/inventory','report') ?>
+            <?php get_template_part('template-parts/dashboard/inventory','adjustment') ?>
         </section>
     <?php echo '</div>'; endif; ?>
+
+
+<!--//=====================================================================-->
+<?php if (get_query_var('pagename') == 'customer-list' || isset($wp->query_vars['customer-list'])) :
+    $main_sidebar['customer']['active'] = true;
+    $main_sidebar['customer']['option']['list']['active'] = true;
+    get_template_part('template-parts/dashboard/main', 'sidebar', $main_sidebar);
+    echo '<div class="content-wrapper">';
+    ?>
+    <section class="content">
+        <?php get_template_part('template-parts/dashboard/customer','list') ?>
+    </section>
+    <?php echo '</div>'; endif; ?>
+
+<!--//=====================================================================-->
+<?php if (get_query_var('pagename') == 'customer-wishlist' || isset($wp->query_vars['customer-wishlist'])) :
+    $main_sidebar['customer']['active'] = true;
+    $main_sidebar['customer']['option']['wishlist']['active'] = true;
+    get_template_part('template-parts/dashboard/main', 'sidebar', $main_sidebar);
+    echo '<div class="content-wrapper">';
+    ?>
+    <section class="content">
+        <?php get_template_part('template-parts/dashboard/customer','wishlist') ?>
+    </section>
+    <?php echo '</div>'; endif; ?>
+
+
+<!--//=====================================================================-->
+<?php if (get_query_var('pagename') == 'customer-cart' || isset($wp->query_vars['customer-cart'])) :
+    $main_sidebar['customer']['active'] = true;
+    $main_sidebar['customer']['option']['cart']['active'] = true;
+    get_template_part('template-parts/dashboard/main', 'sidebar', $main_sidebar);
+    echo '<div class="content-wrapper">';
+    ?>
+    <section class="content">
+        <?php get_template_part('template-parts/dashboard/customer','cart') ?>
+    </section>
+    <?php echo '</div>'; endif; ?>
+
+
+
+
     <!-- ./main content -->
 
