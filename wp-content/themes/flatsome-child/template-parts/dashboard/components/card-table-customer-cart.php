@@ -35,8 +35,7 @@ global $wpdb;
                 $count++;
                 $order_value = maybe_unserialize($order->session_value);
                 $order_customer = maybe_unserialize($order_value['customer']);
-                $carts = maybe_unserialize($order_value['cart']);
-                $cart_totals = maybe_unserialize($order_value['cart_totals']);
+                $carts = isset($order_value['cart']) ? maybe_unserialize($order_value['cart']): [];
                 $customer = $order_customer['id'] == 0 ? new WP_User(): get_user_by('id',$order_customer['id']);
             ?>
                 <tr>
