@@ -4,7 +4,7 @@
  *
  * @return null
  */
-//add_action( 'woocommerce_after_variations_table', 'add_size_chart', 10 );
+add_action( 'woocommerce_after_add_to_cart_button', 'add_size_chart_with_brand', 10 );
 function register_shortcodes() {
     add_shortcode( 'Size_Chart', 'add_size_chart_with_brand' );
 }
@@ -17,12 +17,13 @@ add_action( 'init', 'register_shortcodes' );
  * @return string
  */
 function add_size_chart_with_brand($atts){
+    global $post;
 
     $atts = shortcode_atts( array(
         'product_id' => ''
     ), $atts );
 
-    $product_id = $atts['product_id'];
+    $product_id = $atts['product_id'] ? $atts['product_id'] : $post->ID;
 
     $brands = wp_get_post_terms( $product_id, 'brand' );
     $genders = wp_get_post_terms( $product_id, 'gender' );
