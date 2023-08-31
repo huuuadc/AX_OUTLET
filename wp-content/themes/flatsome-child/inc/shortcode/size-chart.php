@@ -1,19 +1,36 @@
 <?php
-
-/* Display size chart */
+/**
+ * Register all shortcodes
+ *
+ * @return null
+ */
 //add_action( 'woocommerce_after_variations_table', 'add_size_chart', 10 );
-add_action( 'woocommerce_before_add_to_cart_form', 'add_size_chart_with_brand', 10 );
-function add_size_chart_with_brand(){
-    global $post;
-    ob_start();
+function register_shortcodes() {
+    add_shortcode( 'Size_Chart', 'add_size_chart_with_brand' );
+}
+add_action( 'init', 'register_shortcodes' );
+/**
+ * Produtos Shortcode Callback
+ *
+ * @param Array $atts
+ *
+ * @return string
+ */
+function add_size_chart_with_brand($atts){
 
-    $brands = wp_get_post_terms( $post->ID, 'brand' );
-    $genders = wp_get_post_terms( $post->ID, 'gender' );
+    $atts = shortcode_atts( array(
+        'product_id' => ''
+    ), $atts );
+
+    $product_id = $atts['product_id'];
+
+    $brands = wp_get_post_terms( $product_id, 'brand' );
+    $genders = wp_get_post_terms( $product_id, 'gender' );
 
     $brand_id = $brands[0]->term_id;
     $gender_id = $genders[0]->term_id;
 
-    $categories = get_the_terms( $post->ID, 'product_cat' );
+    $categories = get_the_terms( $product_id, 'product_cat' );
     $categories_ids = array();
     foreach ( $categories as $category ) {
         $categories_ids[$category->term_id] = $category->term_id;
@@ -37,11 +54,11 @@ function add_size_chart_with_brand(){
         ),
     );
 
-    $query = new WP_Query($args);
+    $loop = new WP_Query($args);
 
     $result = null;
-    if($query->have_posts()){
-        while($query->have_posts()) : $query->the_post();
+    if($loop->have_posts()){
+        while($loop->have_posts()) : $loop->the_post();
             $category_id = get_field('category');
             if(in_array($category_id,$categories_ids)){
                 $result .= '<style>.mfp-close{display:none}.mfp-close.inside{display:block;}</style>';
@@ -50,10 +67,6 @@ function add_size_chart_with_brand(){
             }
         endwhile;
         echo $result;
-        wp_reset_postdata();
     }
-
-    $content = ob_get_contents();
-    ob_end_clean();
-    echo $content;
+    wp_reset_postdata();
 }

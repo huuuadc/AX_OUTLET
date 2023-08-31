@@ -2905,6 +2905,40 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
         border: none !important;
     }
 }
+.product-lightbox {
+    .yith-wcwl-add-to-wishlist {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 2;
+        .single_add_to_wishlist {
+            padding: 10px 15px;
+            display: block;
+            font-size: 20px;
+            color: #000;
+            > span {
+                display: none;
+            }
+        }
+        .yith-wcwl-wishlistaddedbrowse, .yith-wcwl-wishlistexistsbrowse {
+            .feedback {
+                display: none;
+            }
+            > a {
+                font-size: 0;
+                display: block;
+                padding: 15px;
+                color: #000;
+                i {
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+}
+.single-product .product .price-wrapper .price .amount {
+    font-size: 18px;
+}
 /* Mobile version */
 @media screen and (max-width:1200px){
     .header-top {
