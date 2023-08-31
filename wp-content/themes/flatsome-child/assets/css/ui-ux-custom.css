@@ -2545,6 +2545,28 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
   transform: none !important;
   overflow: auto !important;
 }
+.wpforms-container input[type="text"], .wpforms-container input[type="email"], .wpforms-container input[type="tel"], .wpforms-container textarea {
+  border: solid 1px #ccc !important;
+  box-shadow: none !important;
+}
+.wpforms-container input[type="text"]:focus, .wpforms-container input[type="email"]:focus, .wpforms-container input[type="tel"]:focus, .wpforms-container textarea:focus {
+  border-color: #333 !important;
+}
+.wpforms-container .wpforms-field {
+  padding: 5px 0 10px 0;
+}
+.wpforms-container .wpforms-field-label {
+  font-weight: 500;
+  font-size: 15px !important;
+  margin-bottom: 8px !important;
+}
+.wpforms-container .button {
+  background-color: #666 !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  min-width: 100px !important;
+  border: none !important;
+}
 /* Mobile version */
 @media screen and (max-width: 1200px) {
   .header-top .flex-row.container {
