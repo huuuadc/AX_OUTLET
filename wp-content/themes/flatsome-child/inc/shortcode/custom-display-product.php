@@ -74,7 +74,7 @@ function add_text(){
     echo '</h1>';
     echo '<div class="count">'.wc_get_loop_prop( 'total' ). ' sản phẩm</div></div>';
     echo '<div class="category__sort">';
-    //woocommerce_catalog_ordering();
-    echo do_shortcode('[yith_wcan_filters slug="draft-preset-2"]');
+    woocommerce_catalog_ordering();
+    //echo do_shortcode('[yith_wcan_filters slug="draft-preset-2"]');
     echo '</div></div>';
 }
