@@ -578,3 +578,74 @@ function run_product_shop_by(action){
 
     })
 }
+
+
+function post_invoice_ls_retail( orderId = ''){
+    let commit_note = prompt('Nhận ghi chú')
+
+    if(!commit_note){
+        alert("Bạn cần nhập ghi chú trước khi thực hiên thao tác")
+        return
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        data:{
+            action: 'post_invoice_ls_retail',
+            payload_action: 'post_invoice_ls_retail',
+            order_id: orderId,
+            commit_note
+
+        },
+        beforeSend: function (){
+            $('#card_orders').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+
+        },
+        success: function (data){
+            console.log(data)
+            if (isJsonString(data)){
+                const rep = JSON.parse(data);
+                if (rep.status){
+
+                    // if (rep.data.order_status)  $(`#order_status_${id}`).html(`<span class="badge badge-${class_status}">${rep.data.order_status}</span> `);
+                    $(document).Toasts('create', {
+                        class: 'bg-success',
+                        title: 'Success',
+                        body: `Posted invoice ls retail`,
+                        icon: 'fas fa-info-circle',
+                        autohide: true,
+                        delay: 10000
+                    })
+                }else {
+                    $(document).Toasts('create', {
+                        class: 'bg-danger',
+                        title: 'update false',
+                        body: `${rep.messenger} <br>${JSON.stringify(rep.data) ?? ''}`,
+                        icon: 'fas fa-info-circle',
+                        autohide: true,
+                        delay: 10000
+                    })
+                }
+            }else {
+                console.log(data)
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Error',
+                    body: `${rep.data ?? ''}`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            }
+        },
+        complete: function (){
+            $('#card_orders>.overlay').remove()
+        },
+        error: function(errorThrown){
+
+            console.log("ERROR",errorThrown)
+
+        }
+    })
+}

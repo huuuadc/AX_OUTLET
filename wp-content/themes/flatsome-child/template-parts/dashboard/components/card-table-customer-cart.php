@@ -9,6 +9,10 @@ global $wpdb;
 
     $count = 0;
 
+    $user = (object)\OMS\ls_user_request();
+
+    var_dump($user->Password);
+
 ?>
 
 <div class="card">
