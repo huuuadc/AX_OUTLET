@@ -420,6 +420,7 @@ $('#company_district').change(function (){
 function save_admin_dashboard_setting(){
 
     let item_in_page = $('#item_in_page').val()
+    let item_fee_ship = $('#item_fee_ship').val()
     let footer_print_shipment = $('#footer_print_shipment').val()
     let product_return_policy = $('#product_return_policy').val()
 
@@ -430,7 +431,8 @@ function save_admin_dashboard_setting(){
             action: 'save_admin_dashboard_setting',
             item_in_page,
             footer_print_shipment,
-            product_return_policy
+            product_return_policy,
+            item_fee_ship
         },
         beforeSend: function (){
             $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
