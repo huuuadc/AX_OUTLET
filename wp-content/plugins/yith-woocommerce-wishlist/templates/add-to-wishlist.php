@@ -43,7 +43,7 @@ global $product;
 	data-fragment-ref="<?php echo esc_attr( $product_id ); ?>"
 	data-fragment-options="<?php echo wc_esc_json( wp_json_encode( $fragment_options ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
 >
-	<?php if ( ! $ajax_loading ) : ?>
+	<?php //if ( ! $ajax_loading ) : ?>
 		<?php if ( ! ( $disable_wishlist && ! is_user_logged_in() ) ) : ?>
 
 			<!-- ADD TO WISHLIST -->
@@ -77,5 +77,5 @@ global $product;
 				</a>
 			</div>
 		<?php endif; ?>
-	<?php endif; ?>
+	<?php //endif; ?>
 </div>

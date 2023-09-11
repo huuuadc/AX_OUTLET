@@ -28,6 +28,7 @@ do_action( 'wc_quick_view_before_single_product' );
 <div class="product-quick-view-container">
 	<div class="row row-collapse mb-0 product" id="product-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<div class="product-gallery large-6 col">
+            <?php echo do_shortcode('[yith_wcwl_add_to_wishlist]');?>
 			<div class="slider slider-show-nav product-gallery-slider main-images mb-0">
 				<?php if ( has_post_thumbnail() ) :
 
@@ -67,7 +68,6 @@ do_action( 'wc_quick_view_before_single_product' );
 			<div class="product-lightbox-inner" style="padding: 30px;">
 				<a class="plain" href="<?php the_permalink(); ?>"><h1><?php the_title(); ?></h1></a>
 				<div class="is-divider small"></div>
-
 				<?php do_action( 'woocommerce_single_product_lightbox_summary' ); ?>
 			</div>
 		</div>
