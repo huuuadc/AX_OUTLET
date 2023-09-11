@@ -11,21 +11,21 @@ include(ROOT_PATH . DS . 'Utils/AlepayUtils.php');
  */
 
 class WC_Alepay_API {
-    
+
     private $checksumKey = "";
     private $apiKey = "";
     private $callbackUrl = "";
-    
+
     public $env = "test";
     public $publicKey = "";
     public $alepayUtils;
-    
+
     public $baseURL = array(
         'dev' => 'localhost:8080',
         'test' => 'https://alepay-sandbox.nganluong.vn',
         'live' => 'https://alepay.vn'
     );
-    
+
     public $URI = array(
         'requestPayment' => '/checkout/v1/request-order',
         'calculateFee' => '/checkout/v1/calculate-fee',
@@ -36,12 +36,6 @@ class WC_Alepay_API {
     );
 
     public function __construct($opts) {
-        
-//        header('Access-Control-Allow-Origin: *');
-//        header("Access-Control-Allow-Credentials: true");
-//        header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-//        header('Access-Control-Max-Age: 1000');
-//        header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
 
         /*
          * Require curl and json extension
@@ -75,7 +69,7 @@ class WC_Alepay_API {
         if (isset($opts) && !empty($opts["env"])) {
             $this->env = $opts["env"];
         }
-        
+
         $this->alepayUtils = new AlepayUtils();
     }
 
@@ -85,25 +79,25 @@ class WC_Alepay_API {
 
     public function createCheckoutData() {
         $params = array(
-            'amount' => '5000000',
-            'buyerAddress' => '12 đường 18, quận 1',
+            'amount' => '1000',
+            'buyerAddress' => '72-74 Nguyễn Thị Minh Khai, Phường Võ Thị Sáu, Quận 1',
             'buyerCity' => 'TP. Hồ Chí Minh',
             'buyerCountry' => 'Việt Nam',
-            'buyerEmail' => 'testalepay@yopmail.com',
+            'buyerEmail' => 'huuuadc@gmail.com',
             'buyerName' => 'Nguyễn Văn Bê',
             'buyerPhone' => '0987654321',
             'cancelUrl' => 'http://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . '/demo-beta',
             'currency' => 'VND',
-            'orderCode' => 'Order-123',
-            'orderDescription' => 'Mua ai phôn 8',
+            'orderCode' => 'Order_ID',
+            'orderDescription' => 'Miêu tả',
             'paymentHours' => '5',
             'returnUrl' => $this->callbackUrl,
             'totalItem' => '1',
-            'checkoutType' => 0,
-                // 'installment' => 'true',
-                // 'month' => '3',
-                // 'bankCode' => 'Sacombank',
-                // 'paymentMethod' => 'VISA'
+            'checkoutType' => '4',
+            // 'installment' => 'true',
+            // 'month' => '3',
+            // 'bankCode' => 'Sacombank',
+            // 'paymentMethod' => 'VISA'
         );
 
         return $params;
@@ -173,11 +167,9 @@ class WC_Alepay_API {
         $result = $this->sendRequestToAlepay($data, $url);
         if ($result->errorCode == '000') {
             $dataDecrypted = $this->alepayUtils->decryptData($result->data, $this->publicKey);
-            //echo $dataDecrypted;
-            return $dataDecrypted; //namdeveloper
+            return $dataDecrypted;
         } else {
-            //echo json_encode($result);
-            return json_encode($result); //namdeveloper
+            return json_encode($result);
         }
     }
 
@@ -226,6 +218,7 @@ class WC_Alepay_API {
     }
 
     public function sendRequestToAlepay($data, $url) {
+
         $dataEncrypt = $this->alepayUtils->encryptData(json_encode($data), $this->publicKey);
         $checksum = md5($dataEncrypt . $this->checksumKey);
         $items = array(
@@ -240,10 +233,11 @@ class WC_Alepay_API {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string))
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
         );
-        $result = curl_exec($ch); //var_dump($result); die;
+        $result = curl_exec($ch);
+
         return json_decode($result);
     }
 
@@ -261,5 +255,3 @@ class WC_Alepay_API {
     }
 
 }
-
-?>
