@@ -401,10 +401,6 @@ class WC_Gateway_Alepay extends WC_Payment_Gateway {
         $log_content = 'Step 3 -----------';
         $table_name = $wpdb->prefix . 'alepay_token';
 
-        if ($this->instructions) {
-            //echo wpautop(wptexturize($this->instructions));
-        }
-
         $data = $this->alepay->decryptCallbackData($_GET['data'], $this->alepay->publicKey);
         $data = json_decode($data);
 
@@ -418,7 +414,7 @@ class WC_Gateway_Alepay extends WC_Payment_Gateway {
             //var_dump($transactionInfo); die();
             //end
 
-            if ($order->status !== 'processing' && $order->status === 'pending') {
+            if ($order->get_status() !== 'processing' && $order->get_status() === 'pending') {
                 if ($order->update_status('processing', __('Update completed after pending on Alepay. ', self::$domain))) {
                     // Reduce stock levels
                     $order->reduce_order_stock();
