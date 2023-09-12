@@ -104,6 +104,18 @@ jQuery(function ($){
 
     })
 
+    $('body').on('click','.quantity .plus',function(e){
+        e.preventDefault();
+        var max_item = $(this).parent('.quantity').find('input.qty').attr('max');
+        var more = parseInt($(this).parent('.quantity').find('input.qty').val());
+        if(more == max_item){
+            e.preventDefault();
+            alert('Chỉ còn lại ' + max_item + ' sản phẩm');
+        }
+        console.log('max: '+max_item);
+        console.log('current: '+more);
+    });
+
 })
 
 
