@@ -8,6 +8,7 @@ if (!current_user_can('admin_dashboard_setting')):
 else:
 
 $item_in_page = get_option('admin_dashboard_item_in_page') ?? '';
+$item_fee_ship = get_option('admin_dashboard_item_fee_ship') ?? '';
 
 $item_in_page_arg = [
         '10'    => 10,
@@ -26,6 +27,10 @@ $item_in_page_arg = [
         <h3>Admin dashboard setting</h3>
     </div>
     <div class="card-body">
+        <div class="form-group">
+            <label for="item_fee_ship">Item phí vận chuyển</label>
+            <input type="text" name="item_fee_ship" class="form-control" id="item_fee_ship" placeholder="Enter item no" value="<?php echo $item_fee_ship?>"/>
+        </div>
         <div class="form-group">
             <label for="item_in_page">Item in page</label>
             <select id="item_in_page" class="form-control" style="width: 100%;" >

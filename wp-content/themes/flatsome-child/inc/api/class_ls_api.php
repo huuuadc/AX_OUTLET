@@ -1,6 +1,10 @@
 <?php
 
-namespace LS;
+namespace OMS;
+
+//set time zone
+
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 
 class LS_API
 {
@@ -10,14 +14,10 @@ class LS_API
     private string $user_name = '';
     private string $user_pass = '';
     private string $api_token = '';
-
+    private array $location_code = [];
     private string $encrypt_key = 'daf_ls_api';
-
-    public string $env = 'test';
-
-    public string $baseURL = '';
-
-    public array $URI = array(
+    private string $baseURL = '';
+    private array $URI = array(
 
         'get_token' => '/api/user/loginInput',
 
@@ -43,9 +43,10 @@ class LS_API
 
 
     /**
-     * @throws Exception
+     *
+     * @throws \Exception
      */
-    public function __construct($opts)
+    public function __construct()
     {
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Credentials: true");
@@ -58,19 +59,21 @@ class LS_API
          */
 
         if (!function_exists('curl_init')) {
-            throw new Exception('LS needs the CURL PHP extension.');
+            throw new \Exception('LS needs the CURL PHP extension.');
         }
         if (!function_exists('json_decode')) {
-            throw new Exception('LS needs the JSON PHP extension.');
+            throw new \Exception('LS needs the JSON PHP extension.');
         }
 
-        if (isset($opts) && !empty($opts["user_name"])) {
-            $this->user_name = $opts["user_name"];
+        if (get_option('wc_settings_tab_ls_api_username')) {
+            $this->user_name = get_option('wc_settings_tab_ls_api_username');
         }
 
-        if (isset($opts) && !empty($opts["user_pass"])) {
-            $this->user_pass = $opts["user_pass"];
+        if (get_option('wc_settings_tab_ls_api_password')) {
+            $this->user_pass = get_option('wc_settings_tab_ls_api_password');
         }
+
+        $this->location_code = explode(',',get_option('wc_settings_tab_ls_location_code'));
 
         $this->baseURL = get_option('wc_settings_tab_ls_api_url');
 
@@ -142,6 +145,7 @@ class LS_API
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             if ($http_status != 200) {
+                write_log(json_decode( $result));
                 return array(
                     'messenger' => 'error http status code: ' . $http_status
                 );
@@ -347,29 +351,7 @@ class LS_API
 
             $url = $this->baseURL . $this->URI['post_member_create'];
 
-//            $data = array(
-//                'LoginID'       =>  $user_info['LoginID'],
-//                'Password'      =>  $user_info['Password'],
-//                'FirstName'     =>  $user_info['FirstName'],
-//                'MiddleName'    =>  $user_info['MiddleName'],
-//                'LastName'      =>  $user_info['LastName'],
-//                'DateOfBirth'   =>  $user_info['DateOfBirth'],
-//                'Phone'         =>  $user_info['Phone'],
-//                'Address'       =>  $user_info['Address'],
-//                'PostCode'      =>  $user_info['PostCode'],
-//                'Email'         =>  $user_info['Email'],
-//                'Gender'        =>  $user_info['Gender'],
-//                'City'          =>  $user_info['City'],
-//                'Distrist'      =>  $user_info['District'],
-//                'Ward'          =>  $user_info['Ward'],
-//                'Country'       =>  $user_info['Country'],
-//                'UserCreate'    =>  $user_info['UserCreate'],
-//                'AgeGroup'      =>  $user_info['AgeGroup'],
-//                'Passport'      =>  $user_info['Passport'],
-//                'Floor'         =>  $user_info['Floor'],
-//                'Block'         =>  $user_info['Block'],
-//                'Name'          =>  $user_info['Name'],
-//            );
+            $data = ls_user_request();
 
             $data = array(
                 'LoginID' => '',
@@ -389,4 +371,102 @@ class LS_API
     }
 
 
+    public function post_transaction_outlet ($data) {
+
+        $url = $this->baseURL . $this->URI['post_transaction'];
+        
+        $body = $data;
+
+        return $this->sendRequestToLS($url,$body,'POST');
+
+    }
+
+    public function post_payment_outlet ($data) {
+
+        $url = $this->baseURL . $this->URI['post_payment'];
+
+        $body = array_merge(ls_payment_request(),$data);
+
+        return $this->sendRequestToLS($url,$body,'POST');
+
+    }
+
+
+}
+
+function ls_user_request() {
+    return array(
+                'LoginID'       =>  '',
+                'Password'      =>  '',
+                'FirstName'     =>  '',
+                'MiddleName'    =>  '',
+                'LastName'      =>  '',
+                'DateOfBirth'   =>  '',
+                'Phone'         =>  '',
+                'Address'       =>  '',
+                'PostCode'      =>  '',
+                'Email'         =>  '',
+                'Gender'        =>  '',
+                'City'          =>  '',
+                'Distrist'      =>  '',
+                'Ward'          =>  '',
+                'Country'       =>  '',
+                'UserCreate'    =>  '',
+                'AgeGroup'      =>  '',
+                'Passport'      =>  '',
+                'Floor'         =>  '',
+                'Block'         =>  '',
+                'Name'          =>  '',
+    );
+}
+
+function ls_transactions_request() {
+    return array(
+
+            "Location_Code" => "DA0053",
+            "Receipt_No_" => "",
+            "Transaction_No_" => "",
+            "LineNo" => "",
+            "Item_No_" => "",
+            "SerialNo" => "",
+            "Variant_Code" => "",
+            "Trans_Date" => "",
+            "Quantity" => 0,
+            "UnitPrice" => 0,
+            "TotalPrice" => 0,
+            "DiscountRate" => 0,
+            "DiscountAmount" => 0,
+            "Disc" => 0,
+            "TotalAmt" => 0,
+            "Member_Card_No_" => "",
+            "Offer_Online_ID" => "",
+            "CouponCode" => "",
+            "CouponNo" => "",
+            "Value_Type" => 0,
+            "Category_Online_ID" => []
+    );
+}
+
+function ls_payment_request(){
+    return array(
+      "Location_Code"=> "",
+      "Transaction_No_"=> "",
+      "LineNo"=> "",
+      "Receipt_No_"=> "",
+      "Tender_Type"=> 0,
+      "Amount_Tendered"=> 0,
+      "Amount_in_Currency"=> 0,
+      "Date"=> "",
+      "Time"=> "",
+      "Quantity"=> 0,
+      "VAT_Buyer_Name"=> "",
+      "VAT_Company_Name"=> "",
+      "VAT_Tax_Code"=> "",
+      "VAT_Address"=> "",
+      "VAT_Payment_Method"=> "",
+      "VAT_Bank_Account"=> "",
+      "Member_Phone"=> "",
+      "THENH"=> "",
+      "Cash"=> ""
+    );
 }

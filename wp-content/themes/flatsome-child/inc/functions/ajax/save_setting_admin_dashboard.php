@@ -29,6 +29,10 @@ function save_admin_dashboard_setting()
         update_option('admin_dashboard_product_return_policy',$post->product_return_policy , 'no');
     }
 
+    if(!add_option('admin_dashboard_item_fee_ship',$post->item_fee_ship , '','no')){
+        update_option('admin_dashboard_item_fee_ship',$post->item_fee_ship , 'no');
+    }
+
     echo json_encode(array(
         'status' => '200',
         'messenger' => 'Save success',
