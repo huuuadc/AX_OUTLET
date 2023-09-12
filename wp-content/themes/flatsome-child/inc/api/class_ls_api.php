@@ -377,7 +377,7 @@ class LS_API
         
         $body = $data;
 
-        $this->sendRequestToLS($url,$body,'POST');
+        return $this->sendRequestToLS($url,$body,'POST');
 
     }
 
@@ -387,7 +387,7 @@ class LS_API
 
         $body = array_merge(ls_payment_request(),$data);
 
-        $this->sendRequestToLS($url,$body,'POST');
+        return $this->sendRequestToLS($url,$body,'POST');
 
     }
 

@@ -192,7 +192,6 @@ function post_invoice_ls_retail(){
             if($order_item_discounts) {
                 $UnitPrice = $order_item_discounts->item_price;
                 $TotalPrice = $order_item_discounts->item_price;
-                $DiscountRate = $DiscountRate;
                 $DiscountAmount = 0;
                 $Disc = $order_item_discounts->item_price - $order_item_discounts->discounted_price;
                 $TotalAmt = $order_item_discounts->discounted_price;
@@ -211,7 +210,7 @@ function post_invoice_ls_retail(){
 
             for($i = 0 ; $i < $item_quantity; $i++){
                 $line_no++;
-                $data_request_transactiong[] = array (
+                $data_request_transaction[] = array (
                 'Location_Code'         =>          $location_code,
                 'Receipt_No_'           =>          $order->get_id(),
                 'Transaction_No_'       =>          $order->get_id(),
@@ -335,18 +334,34 @@ function post_invoice_ls_retail(){
 
         }
 
-        $ls_api->post_payment_outlet((array)$data_request_payment);
-        $ls_api->post_transaction_outlet($data_request_transaction);
+        $response_ls_payment = $ls_api->post_payment_outlet((array)$data_request_payment);
 
-        if (false){
-//            $order->set_log('success',$payload_action,$commit_note.' -- '. $old_payment_status . ' -> ' . 'Đã thanh toán');
-//            $data = [
-//                'order_payment_title'=> 'Đã thanh toán',
-//                'class' => 'success'
-//            ];
-//            echo response(true,'Đã cập nhật trạng thái thanh toán',$data);
+        $flag_payment = false;
+        $flag_transaction = false;
+
+        write_log($response_ls_payment);
+
+        if( $response_ls_payment->Responcode == 200){
+            $order->set_log('success','post_ls_payment','Thành công');
+            $flag_payment = true;
         }else{
-            $order->set_log('danger',$payload_action,$commit_note);
+            $order->set_log('danger','post_ls_payment','Thất bại' . json_encode($response_ls_payment));
+        }
+
+        $response_ls_transaction = $ls_api->post_transaction_outlet($data_request_transaction);
+
+        if( $response_ls_transaction->Responcode == 200){
+            $order->set_log('success','post_ls_payment','Thành công');
+            $flag_transaction = true;
+        }else{
+            $order->set_log('danger','post_ls_payment','Thất bại' . json_encode($response_ls_transaction));
+        }
+
+        if ($flag_payment && $flag_transaction){
+            $order->set_log('success','post_ls','Thành công');
+            echo response(true,'Đã post ls retail',[]);
+        }else{
+            $order->set_log('danger','post_ls','Thất bại');
             echo response(false,'Post LS không thành công xin kiểm tra lại dữ liệu đơn hàng',[]);
         }
 
