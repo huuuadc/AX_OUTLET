@@ -145,6 +145,7 @@ class LS_API
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             if ($http_status != 200) {
+                write_log(json_decode( $result));
                 return array(
                     'messenger' => 'error http status code: ' . $http_status
                 );
@@ -374,7 +375,7 @@ class LS_API
 
         $url = $this->baseURL . $this->URI['post_transaction'];
         
-        $body = array_merge(ls_transactions_request(),$data);
+        $body = $data;
 
         $this->sendRequestToLS($url,$body,'POST');
 

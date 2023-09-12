@@ -69,9 +69,15 @@ function post_invoice_ls_retail(){
     //
 
     if ($_POST['payload_action'] === 'post_invoice_ls_retail'){
-
+        global $wpdb;
 
         $ls_api = new LS_API();
+
+        //===========================================================
+        //===========================================================
+        //transaction header
+        //===========================================================
+        //===========================================================
 
         $location_code= 'DA0053';
         $ls_method_type = $order->get_method_type_ls();
@@ -91,63 +97,246 @@ function post_invoice_ls_retail(){
         $data_request_payment->VAT_Buyer_Name = $order->get_formatted_billing_full_name();
         $data_request_payment->VAT_Company_Name = $order->get_billing_company();
         $data_request_payment->VAT_Tax_Code = '';
-        $data_request_payment->VAT_Address = $order->get_billing_address_full();
+        $data_request_payment->VAT_Address = $order->get_billing_address_1() . ', ' . $order->get_billing_address_full();
         $data_request_payment->VAT_Payment_Method = $ls_method_type['vat_payment_method'];
         $data_request_payment->VAT_Bank_Account = '';
         $data_request_payment->Member_Phone = $order->get_billing_phone();
-        $data_request_payment->THENH = 'THENGANHANG';
+        $data_request_payment->THENH = '5555xxxxxxxx4444';
         $data_request_payment->Cash = $order->get_total();
 
 
-
-
+        //===========================================================
+        //===========================================================
+        //transaction detail
+        //===========================================================
+        //===========================================================
         $data_request_transaction_item = (object) ls_transactions_request();
-
 
         $data_request_transaction = [];
 
         $line_no = 0;
+        $line_default = 10000;
 
-        foreach ($order->get_items() as $item) {
+        $CouponCode = '';
+        $CouponNo = '';
 
-            for($i = 0 ; $i < $item->get_quantity(); $i++){
+        foreach( $order->get_coupons() as $order_item_coupon ) {
 
-                $line_no++;
-
-                $product  = $item->get_product();
-
-                $data_request_transaction_item->Location_Code = $location_code;
-                $data_request_transaction_item->Receipt_No_ = $order->get_id();
-                $data_request_transaction_item->Transaction_No_ = $order->get_id();
-                $data_request_transaction_item->LineNo = 10000 + $line_no;
-                $data_request_transaction_item->Item_No_ = $item->get_id();
-                $data_request_transaction_item->SerialNo = 'SN0000000001';
-                $data_request_transaction_item->Variant_Code = $item->get_meta('pa_size');
-                $data_request_transaction_item->Trans_Date = $order->get_date_created()->date('Y-m-d H:i:s.v');;
-                $data_request_transaction_item->Quantity = -1;
-                $data_request_transaction_item->UnitPrice = $product->get_regular_price();
-                $data_request_transaction_item->TotalPrice = $item->get_subtotal()/$item->get_quantity();
-                $data_request_transaction_item->DiscountRate = 0;
-                $data_request_transaction_item->DiscountAmount = 0;
-                $data_request_transaction_item->Disc = 0;
-                $data_request_transaction_item->TotalAmt = 0;
-                $data_request_transaction_item->Member_Card_No_ = 'MB11111';
-                $data_request_transaction_item->Offer_Online_ID = 'MB11111';
-                $data_request_transaction_item->CouponCode = 'MB11111';
-                $data_request_transaction_item->CouponNo = 'MB11111';
-                $data_request_transaction_item->Value_Type = 'MB11111';
-                $data_request_transaction_item->Category_Online_ID = [];
-            }
-
-            $data_request_transaction[]  = $data_request_transaction_item;
+            $CouponCode = $order_item_coupon->get_code();
+            $coupon = new WC_Coupon($CouponCode);
+            $discount_type = $coupon->get_discount_type(); // Get coupon discount type
+            $coupon_amount = $coupon->get_amount(); // Get coupon amount
+            $CouponNo = $coupon->get_meta('CouponNo', true);
 
         }
 
-//        $ls_api->post_payment_outlet($data_request_payment);
-//        $ls_api->post_transaction_outlet($data_request_transaction);
+        foreach ($order->get_items() as $item) {
 
-        write_log($data_request_transaction);
-        write_log($data_request_payment);
+            $product  = $item->get_product();
+
+            $product_id = $item['product_id'];
+            $variation_id = $item['variation_id'];
+            $provar_id = $variation_id ? $variation_id : $product_id;
+            $product_cats_ids = wc_get_product_term_ids( $product_id, 'product_cat' );
+            $active_price   = $product->get_price(); // The product active raw price
+            $sale_price  = $product->get_sale_price(); // The product raw sale price
+            $regular_price     = $product->get_regular_price(); // The product raw regular price
+            $product_name   = $item->get_name(); // Get the item name (product name)
+            $item_quantity  = $item->get_quantity(); // Get the item quantity
+            $item_subtotal  = $item->get_subtotal(); // Get the item line total non discounted
+            $item_subto_tax = $item->get_subtotal_tax(); // Get the item line total tax non discounted
+            $item_total     = $item->get_total(); // Get the item line total discounted
+            $item_total_tax = $item->get_total_tax(); // Get the item line total  tax discounted
+            $item_taxes     = $item->get_taxes(); // Get the item taxes array
+            $item_tax_class = $item->get_tax_class(); // Get the item tax class
+            $item_tax_status= $item->get_tax_status(); // Get the item tax status
+            $item_downloads = $item->get_item_downloads(); // Get the item downloads
+            $projectsku = $product->get_sku();
+            $DiscountRate = 0; //default
+            $Value_Type = 0; //kh&#1092;ng c&#1091; gi&#7843;m gi&#1073;
+            $DiscountAmount = 0; //default
+
+            $order_item_discounts = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM ".$wpdb->prefix."wdr_order_item_discounts WHERE item_id = " . $provar_id . " AND item_id != 0 AND order_id = " . $order->get_id() ) );
+
+            if($order_item_discounts) {
+                $wdr_rule = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM ".$wpdb->prefix."wdr_rules WHERE id = " . $order_item_discounts->rule_id ) );
+                if($wdr_rule) {
+                    $wdr_rule_discount_type = $wdr_rule->discount_type;
+                    switch ($wdr_rule_discount_type) {
+                        case 'wdr_simple_discount':
+                            $product_adjustments = json_decode($wdr_rule->product_adjustments, true);
+                            if($product_adjustments['type'] == 'percentage') {
+                                $Value_Type = 1;
+                                $DiscountRate = $product_adjustments['value'];
+                            }elseif($product_adjustments['type'] == 'flat') {
+                                $Value_Type = 2;
+                                $DiscountAmount = $product_adjustments['value'];
+                            }
+                            break;
+
+                        case 'wdr_cart_discount':
+                            $cart_adjustments = json_decode($wdr_rule->cart_adjustments, true);
+                            if($cart_adjustments['type'] == 'percentage') {
+                                $Value_Type = 1;
+                                $DiscountRate = $cart_adjustments['value'];
+                            }
+                            break;
+
+                        default:
+                            break;
+
+                    }
+                }
+            }
+
+            if($order_item_discounts) {
+                $UnitPrice = $order_item_discounts->item_price;
+                $TotalPrice = $order_item_discounts->item_price;
+                $DiscountRate = $DiscountRate;
+                $DiscountAmount = 0;
+                $Disc = $order_item_discounts->item_price - $order_item_discounts->discounted_price;
+                $TotalAmt = $order_item_discounts->discounted_price;
+                $Offer_Online_ID = $order_item_discounts->rule_id;
+            } else {
+                $UnitPrice = $regular_price;
+                $TotalPrice = $item_subtotal / $item_quantity;
+                $DiscountRate = "";
+                $Disc = "";
+                $DiscountAmount = "";
+                $TotalAmt = $item_total / $item_quantity;
+                $Offer_Online_ID = "";
+            }
+
+            $product_cats_ids = wc_get_product_term_ids( $product_id, 'product_cat' );
+
+            for($i = 0 ; $i < $item_quantity; $i++){
+                $line_no++;
+                $data_request_transactiong[] = array (
+                'Location_Code'         =>          $location_code,
+                'Receipt_No_'           =>          $order->get_id(),
+                'Transaction_No_'       =>          $order->get_id(),
+                'LineNo'                =>          $line_default + $line_no,
+                'LineNo_Online'         =>          $item->get_id(),
+                'Item_No_'              =>          get_post_meta($product_id, 'offline_id', true),
+                'SerialNo'              =>          '',
+                'Variant_Code'          =>          $item->get_meta('pa_size'),
+                'Trans_Date'            =>          date('Y-m-d') . ' ' . date('H:i:s.v'),
+                'Quantity'              =>          -1,
+                'UnitPrice'             =>          $UnitPrice,
+                'TotalPrice'            =>          $TotalPrice,
+                'DiscountRate'          =>          $DiscountRate,
+                'DiscountAmount'        =>          $DiscountAmount,
+                'Disc'                  =>          $Disc,
+                'TotalAmt'              =>          $TotalAmt,
+                'Member_Card_No_'       =>          '60082550',
+                'Offer_Online_ID'       =>          $Offer_Online_ID,
+                'CouponCode'            =>          $CouponCode,
+                'CouponNo'              =>          $CouponNo,
+                'Value_Type'            =>          $Value_Type,
+                'Category_Online_ID'    =>          $product_cats_ids
+                );
+            }
+
+        }
+
+        //add fee ship
+
+        $ship_fee = $order->get_shipping_total();
+        $qty_simple = 1000;
+
+        $qty_ship_fee = intdiv($ship_fee,$qty_simple) ?? 0;
+        if(fmod($ship_fee,$qty_simple) > $qty_simple/2){
+            $qty_ship_fee = $qty_ship_fee + 1 ;
+        }
+        $line_no++;
+        $data_request_transaction_item->Location_Code = $location_code;
+        $data_request_transaction_item->Receipt_No_ = $order->get_id();
+        $data_request_transaction_item->Transaction_No_ = $order->get_id();
+        $data_request_transaction_item->LineNo = $line_default + $line_no;
+        $data_request_transaction_item->Item_No_ = get_option('admin_dashboard_item_fee_ship');
+        $data_request_transaction_item->SerialNo = '';
+        $data_request_transaction_item->Variant_Code = '000';
+        $data_request_transaction_item->Trans_Date = date('Y-m-d') . ' ' . date('H:i:s.v');
+        $data_request_transaction_item->Quantity = -$qty_ship_fee;
+        $data_request_transaction_item->UnitPrice = $qty_simple;
+        $data_request_transaction_item->TotalPrice = $qty_ship_fee* $qty_simple;
+        $data_request_transaction_item->DiscountRate = 0;
+        $data_request_transaction_item->DiscountAmount = 0;
+        $data_request_transaction_item->Disc = 0;
+        $data_request_transaction_item->TotalAmt = 0;
+        $data_request_transaction_item->Member_Card_No_ = '60082550';
+        $data_request_transaction_item->Offer_Online_ID = '';
+        $data_request_transaction_item->CouponCode = '';
+        $data_request_transaction_item->CouponNo = '';
+        $data_request_transaction_item->Value_Type = '';
+        $data_request_transaction_item->Category_Online_ID = [];
+
+        $data_request_transaction[]  = (array)$data_request_transaction_item;
+
+        //add discout cart
+        $order_discounts = $wpdb->get_row( $wpdb->prepare( "SELECT oid.*, r.id AS rule_id, r.discount_type AS rule_discount_type, r.cart_adjustments AS rule_cart_adjustments FROM ".$wpdb->prefix."wdr_order_item_discounts oid INNER JOIN ".$wpdb->prefix."wdr_rules r ON oid.rule_id = r.id WHERE oid.item_id = 0 AND oid.order_id = " . $order->get_id() ) );
+        if($order_discounts && $order_discounts->rule_discount_type == 'wdr_cart_discount') {
+            $Offer_Online_ID = $order_discounts->rule_id;
+            $order_discounts->rule_cart_adjustments = json_decode($order_discounts->rule_cart_adjustments);
+
+            if($order_discounts->rule_cart_adjustments->type == 'percentage') {
+
+                $Value_Type = 1;
+                $DiscountRate = $order_discounts->rule_cart_adjustments->value;
+                $UnitPrice = $TotalPrice = $order->get_subtotal();
+                $Disc = $UnitPrice*$DiscountRate/100;
+                $DiscountAmount = "";
+                $TotalAmt = $TotalPrice - $Disc;
+
+            } else {
+                $Value_Type = 2;
+                $DiscountRate = "";
+                $Disc = "";
+                $UnitPrice = "";
+                $TotalPrice = "";
+                $DiscountAmount = 0;
+                $TotalAmt = "";
+                if($order_discounts->rule_cart_adjustments->type == 'flat_in_subtotal') {
+                    $Value_Type = 2;
+                    $DiscountRate = "";
+                    $Disc = "";
+                    $UnitPrice = $TotalPrice = $order->get_subtotal();
+                    $DiscountAmount = $order_discounts->rule_cart_adjustments->value;
+                    $TotalAmt = $UnitPrice - $DiscountAmount;
+                }
+                elseif($order_discounts->rule_cart_adjustments->type == '000') {
+                }
+            }
+
+                $line_no++;
+                $data_request_transaction_item->Location_Code = $location_code;
+                $data_request_transaction_item->Receipt_No_ = $order->get_id();
+                $data_request_transaction_item->Transaction_No_ = $order->get_id();
+                $data_request_transaction_item->LineNo = $line_default + $line_no;
+                $data_request_transaction_item->Item_No_ = get_option('admin_dashboard_item_fee_ship');
+                $data_request_transaction_item->SerialNo = '';
+                $data_request_transaction_item->Variant_Code = '';
+                $data_request_transaction_item->Trans_Date = date('Y-m-d') . ' ' . date('H:i:s.v');
+                $data_request_transaction_item->Quantity = '';
+                $data_request_transaction_item->UnitPrice = $UnitPrice;
+                $data_request_transaction_item->TotalPrice = $TotalPrice;
+                $data_request_transaction_item->DiscountRate = $DiscountRate;
+                $data_request_transaction_item->DiscountAmount = $DiscountAmount;
+                $data_request_transaction_item->Disc = $Disc;
+                $data_request_transaction_item->TotalAmt = $TotalAmt;
+                $data_request_transaction_item->Member_Card_No_ = '60082550';
+                $data_request_transaction_item->Offer_Online_ID = $Offer_Online_ID;
+                $data_request_transaction_item->CouponCode = '';
+                $data_request_transaction_item->CouponNo = '';
+                $data_request_transaction_item->Value_Type = $Value_Type;
+                $data_request_transaction_item->Category_Online_ID = [];
+
+                $data_request_transaction[]  = (array)$data_request_transaction_item;
+
+        }
+
+        $ls_api->post_payment_outlet((array)$data_request_payment);
+        $ls_api->post_transaction_outlet($data_request_transaction);
 
         if (false){
 //            $order->set_log('success',$payload_action,$commit_note.' -- '. $old_payment_status . ' -> ' . 'Đã thanh toán');
