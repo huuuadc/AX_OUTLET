@@ -404,6 +404,8 @@ class WC_Gateway_Alepay extends WC_Payment_Gateway {
         $data = $this->alepay->decryptCallbackData($_GET['data'], $this->alepay->publicKey);
         $data = json_decode($data);
 
+        $order_oms = new OMS_ORDER($order_id);
+
         if ($data->errorCode === '000') {
 
             // update order status
@@ -411,13 +413,18 @@ class WC_Gateway_Alepay extends WC_Payment_Gateway {
             $transactionCode = $data->data;
             $transactionInfo = $this->alepay->getTransactionInfo($transactionCode);
             update_post_meta($order_id, '_alepay_transaction_info', $transactionInfo );
-            //var_dump($transactionInfo); die();
-            //end
 
             if ($order->get_status() !== 'processing' && $order->get_status() === 'pending') {
                 if ($order->update_status('processing', __('Update completed after pending on Alepay. ', self::$domain))) {
+
+                    $note ='Mã thanh toán thành công với alepay: ' .$transactionCode;
+                    $order_oms->set_log('success','alepay_response',$note);
+
+                    //update payment status
+                    $order_oms->set_payment_status();
+
                     // Reduce stock levels
-                    $order->reduce_order_stock();
+                    wc_reduce_stock_levels($order_id);
 
                     // Remove cart
                     WC()->cart->empty_cart();
@@ -425,6 +432,7 @@ class WC_Gateway_Alepay extends WC_Payment_Gateway {
                     // Ghi log
                     $log_content .= PHP_EOL.'- Da cap nhat trang thai hoa don sang [processing] ';
                 } else {
+                    $order_oms->set_log('danger','alepay_response', 'Lỗi update status');
                     $log_content .= PHP_EOL.'- Co loi khi cap nhat trang thai hoa don sang [processing] ';
                 }
             }
@@ -447,6 +455,7 @@ class WC_Gateway_Alepay extends WC_Payment_Gateway {
             // ghi log
             $log_content .= PHP_EOL.'- Thanh toan thanh cong';
         } else {
+            $order_oms->set_log('danger','alepay_response','Mã lỗi thanh toán với alepay: ' . $data->errorCode);
             $log_content .= PHP_EOL.'- Thanh toan loi voi errorCode: '.$data->errorCode;
         }
 
