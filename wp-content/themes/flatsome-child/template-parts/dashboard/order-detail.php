@@ -204,20 +204,23 @@ else:
                             <?php if(current_user_can('admin_dashboard_order_completed') && $order_ax->get_order_type() != 'website') {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'completed')" type="button" class="btn btn-success float-right">
                                 <i class="far fa-calendar-check"></i> Giao sàn</button><?php }?>
+                            <?php if(!current_user_can('admin_dashboard_order_post_ls') && $order_ax->get_order_type() == 'website') {?>
+                            <button onclick="post_invoice_ls_retail(<?php echo $order_id?>)" type="button" class="btn btn-default float-right mr-1">
+                                <i class="far fa-calendar-check"></i> Post LS</button><?php }?>
                             <?php if(current_user_can('admin_dashboard_order_payment')) {?>
-                            <button onclick="send_update_payment(<?php echo $order_id?>)" type="button" class="btn btn-success float-right" style="margin-right: 5px;">
+                            <button onclick="send_update_payment(<?php echo $order_id?>)" type="button" class="btn btn-success float-right mr-1">
                                 <i class="far fa-calendar-check"></i>Thanh toán</button><?php }?>
                             <?php if(current_user_can('admin_dashboard_order_request') && $order_ax->get_order_type() == 'website') {?>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-info float-right"  style="margin-right: 5px;">
+                            <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-info float-right mr-1">
                                 <i class="fas fa-people-carry"> </i> Gọi giao hàng</button><?php }?>
                             <?php if(current_user_can('admin_dashboard_order_confirm')) {?>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'confirm')" type="button" class="btn btn-primary float-right"  style="margin-right: 5px;">
+                            <button onclick="send_update_status(<?php echo $order_id?>,'confirm')" type="button" class="btn btn-primary float-right mr-1" >
                                 <i class="fa fa-check"></i> Xác nhận</button><?php }?>
                             <?php if(current_user_can('admin_dashboard_order_reject')) {?>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'reject')" type="button" class="btn btn-secondary float-right"  style="margin-right: 5px;">
+                            <button onclick="send_update_status(<?php echo $order_id?>,'reject')" type="button" class="btn btn-secondary float-right mr-1" >
                                 <i class="fas fa-ban"></i> Từ chối</button><?php }?>
                             <?php if(current_user_can('admin_dashboard_order_cancel')) {?>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'cancelled')" type="button" class="btn btn-danger float-right"  style="margin-right: 5px;">
+                            <button onclick="send_update_status(<?php echo $order_id?>,'cancelled')" type="button" class="btn btn-danger float-right mr-1" >
                                 <i class="fas fa-times"></i> Hủy đơn</button><?php }?>
                         </div>
                     </div>

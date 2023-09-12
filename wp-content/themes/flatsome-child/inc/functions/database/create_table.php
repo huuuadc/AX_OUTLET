@@ -1,5 +1,7 @@
 <?php
 
+use OMS\TIKI_API;
+
 /**
  *
  * Create table province, district, ward
@@ -70,7 +72,7 @@ function create_address_shipment(): bool
 
         }
 
-        $api_tiki = new \TIKI\TIKI_API();
+        $api_tiki = new TIKI_API();
 
         $data_region = $api_tiki->get_regions_tiki();
 

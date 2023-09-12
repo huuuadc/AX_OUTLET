@@ -1,6 +1,6 @@
 <?php
 
-namespace TIKI;
+namespace OMS;
 use OMS\COMPANY;
 
 class TIKI_API

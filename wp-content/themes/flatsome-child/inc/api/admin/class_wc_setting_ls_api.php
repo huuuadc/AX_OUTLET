@@ -137,6 +137,12 @@ class WC_Settings_Tab_Ls_Api {
                 'desc' => __( '<strong>test: http://dafc_ecom.dafc.com.vn:1818</strong><br><strong>prod: https://jql_online.dafc.com.vn</strong>', 'woocommerce-settings-tab-ls-api' ),
                 'id'   => 'wc_settings_tab_ls_api_url'
             ),
+            'location_code' => array(
+                'name' => __( 'Location Code', 'woocommerce-settings-tab-ls-api' ),
+                'type' => 'text',
+                'desc' => __( '' ),
+                'id'   => 'wc_settings_tab_ls_location_code'
+            ),
             'ls_test_connect' => array(
                 'name'     => __( 'Test Connect', 'woocommerce-settings-tab-ls-api' ),
                 'type'     => 'button',

@@ -1,5 +1,7 @@
 <?php
 
+use OMS\LS_API;
+
 add_action( 'wp_ajax_post_check_connect_ls', 'check_connect_ls' );
 add_action( 'wp_ajax_nopriv_post_check_connect_ls', 'check_connect_ls' );
 function check_connect_ls(){
@@ -19,7 +21,7 @@ function check_connect_ls(){
 
     $payload_login = array('user_name'=> $username, 'user_pass'=> $password, 'base_url'=> $baseurl);
 
-    $api_ls = new \LS\LS_API($payload_login);
+    $api_ls = new LS_API($payload_login);
 
     $token = $api_ls->checkConnectLs();
 
