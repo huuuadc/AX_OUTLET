@@ -257,10 +257,10 @@ class OMS_ORDER extends WC_Order
     {
         //get current user
         $current_login = wp_get_current_user();
-        $user_name = $current_login->nickname;
+        $user_name = $current_login->nickname ?? 'Customer';
         $order_log = $this->get_log();
-        $order_log[] = $user_name . '; ' . date('Y-m-d H:i:s') . '; ' . $_POST['payload_action'] . '; ' . $type . '; ' . $note;
-        update_post_meta($this->get_id(), 'order_user_log', implode('|', $order_log));
+        $order_log[] =  $user_name . '; ' . date('Y-m-d H:i:s') . '; ' . $payload . '; '. $type .'; '. $note ;
+        update_post_meta($this->get_id(),'order_user_log',implode('|',$order_log));
 
     }
 
