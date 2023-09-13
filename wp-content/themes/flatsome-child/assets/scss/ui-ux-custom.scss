@@ -2053,7 +2053,7 @@ html *::-webkit-scrollbar-thumb{
         .wishlist-button {
             border: none;
             i {
-                font-size: 22px;
+                font-size: 20px;
             }
             &.wishlist-added {
                 opacity: 1;
@@ -2067,6 +2067,16 @@ html *::-webkit-scrollbar-thumb{
     }
     .accordion-title {
         font-weight: 600;
+    }
+    .woocommerce-product-gallery {
+        .image-tools {
+            opacity: 1;
+            .wishlist-button {
+                i {
+                    font-size: 24px;
+                }
+            }
+        }
     }
 }
 .woocommerce-bacs-bank-details {
@@ -2951,7 +2961,7 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     }
     .slick-slide {
         color: #FFF;
-        width: 300px !important;
+        width: 500px !important;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -3043,12 +3053,12 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 .brand_menu, .nav .brand_menu {
     padding-left: 1.3em !important;
     li, li:first-child {
-        margin-left: 2em !important;
+        margin-left: 1.3em !important;
         margin-bottom: 10px;
         a {
             color: #333;
-            font-size: 13px;
-            text-transform: uppercase;
+            font-size: 14px;
+            text-transform: capitalize;
             display: inline-block;
             font-weight: 400;
             transition: all 0.15s linear;
