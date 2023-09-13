@@ -27,6 +27,24 @@ jQuery(function ($){
 
     checkDiscount();
 
+    function checkQty(){
+        $('.quantity input.qty').each(function(){
+            var max_item = parseInt($(this).attr('max'));
+            var current = parseInt($(this).val());
+            if(current==max_item){
+                $(this).next('.button').removeClass('plus').addClass('plus_disable');
+
+                $(this).next('.plus_disable').click(function(e){
+                    e.preventDefault();
+                    alert('Chỉ còn lại ' + max_item + ' sản phẩm');
+                });
+            }
+            console.log('max: '+max_item);
+            console.log('current: '+current);
+        });
+    }
+    checkQty();
+
     $('body').on('click','.woocommerce-remove-coupon',function(){
         $(document).on( "ajaxComplete", function( event, xhr, settings ) {
             checkDiscount();
@@ -36,6 +54,7 @@ jQuery(function ($){
     $('body').on('change','.quantity .input-text.qty', function (){
         $(document).on( "ajaxComplete", function( event, xhr, settings ) {
             checkDiscount();
+            checkQty();
         });
     });
 
@@ -103,18 +122,6 @@ jQuery(function ($){
         $('body').trigger('update_checkout');
 
     })
-
-    $('body').on('click','.quantity .plus',function(e){
-        e.preventDefault();
-        var max_item = $(this).parent('.quantity').find('input.qty').attr('max');
-        var more = parseInt($(this).parent('.quantity').find('input.qty').val());
-        if(more == max_item){
-            e.preventDefault();
-            alert('Chỉ còn lại ' + max_item + ' sản phẩm');
-        }
-        console.log('max: '+max_item);
-        console.log('current: '+more);
-    });
 
 })
 
