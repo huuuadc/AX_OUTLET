@@ -2956,6 +2956,20 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
 .single-product .product .price-wrapper .price .amount {
     font-size: 18px;
 }
+.woocommerce-MyAccount-content .woocommerce-orders-table {
+    .button {
+        margin: 3px !important;
+        border-radius: 3px;
+    }
+}
+.logged-in .myaccount__container #my-account-menu.layout-simple .user-info .logout a, .button {
+    border-radius: 3px;
+}
+.payment_methods {
+    li {
+        list-style: none;
+    }
+}
 .brand_slider {
     .slick-track {
         display: flex;
