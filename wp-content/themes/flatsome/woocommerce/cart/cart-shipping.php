@@ -35,7 +35,7 @@ $calculator_text          = '';
 						<?php if ( $available_methods ) : ?>
 							<ul id="shipping_method" class="shipping__list woocommerce-shipping-methods">
 								<?php foreach ( $available_methods as $method ) : ?>
-									<li class="shipping__list_item">
+									<li class="shipping__list_item hidden">
 										<?php
 										if ( 1 < count( $available_methods ) ) {
 											printf( '<input type="radio" name="shipping_method[%1$d]" data-index="%1$d" id="shipping_method_%1$d_%2$s" value="%3$s" class="shipping_method" %4$s />', $index, esc_attr( sanitize_title( $method->id ) ), esc_attr( $method->id ), checked( $method->id, $chosen_method, false ) ); // WPCS: XSS ok.
@@ -46,6 +46,7 @@ $calculator_text          = '';
 										do_action( 'woocommerce_after_shipping_rate', $method, $index );
 										?>
 									</li>
+                                    <li class="text"><?php echo __( 'Vui lòng nhập địa chỉ để tính phí giao hàng', 'woocommerce' );?></li>
 								<?php endforeach; ?>
 							</ul>
 							<?php if ( is_cart() && get_theme_mod( 'cart_estimate_text', 1 ) ) : ?>
