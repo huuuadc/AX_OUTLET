@@ -46,13 +46,11 @@ jQuery(function ($){
     checkQty();
 
     function checkShipping(){
-        $('.shipping__list').each(function(){
-            if($(this).find('.amount').length){
-                $(this).find('.shipping__list_item').removeClass('hidden');
-                $(this).find('.text').addClass('hidden');
+        $('.shipping__table').each(function(){
+            if($(this).find('.shipping__list_item .amount').length){
+                $(this).removeClass('hidden');
             }else{
-                $(this).find('.shipping__list_item').addClass('hidden');
-                $(this).find('.text').removeClass('hidden');
+                $(this).addClass('hidden');
             }
         });
     }
