@@ -171,7 +171,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
             <?php $column_count ++; ?>
             <th class="product-remove" width="200" style="text-align:center;">
 				<span class="nobr">
-                    Action
+                    <?php echo __( 'Thao tác', 'yith-woocommerce-wishlist' );?>
 					<?php
                     /**
                      * APPLY_FILTERS: yith_wcwl_wishlist_view_remove_heading

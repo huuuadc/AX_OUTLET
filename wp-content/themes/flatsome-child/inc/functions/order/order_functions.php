@@ -14,6 +14,7 @@ function oms_get_channel_statuses() {
         'shopee'        => _x( 'Shopee', 'Channel type', 'oms' ),
         'tiktok'        => _x( 'Tik tok', 'Channel type', 'oms' ),
         'tiki'          => _x( 'Tiki', 'Channel type', 'oms' ),
+        'toout'          => _x( 'TO Out', 'Channel type', 'oms' ),
     );
 }
 

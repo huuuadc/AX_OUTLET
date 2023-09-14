@@ -1,6 +1,6 @@
 <?php
 
-namespace TIKI;
+namespace OMS;
 use OMS\COMPANY;
 
 class TIKI_API
@@ -110,14 +110,13 @@ class TIKI_API
      * @return false|mixed|string[]
      */
 
-    public function sendRequestToTiki($url, $data = '', $method = 'GET')
+    public function sendRequestToTiki($url, $data = [], $method = 'GET')
     {
 
         try {
 
-            write_log($data);
-
             $data_request = json_encode($data);
+            write_log('Tiki request: '.$data_request);
 
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -134,22 +133,18 @@ class TIKI_API
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer ' . $this->ACCESS_TOKEN));
             }
 
-            $result = curl_exec($ch);
+            $result = json_decode( curl_exec($ch));
 
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             if ($http_status != 200) {
-                write_log("===========================================");
-                write_log("===============request======================");
-                write_log($result);
-                write_log("===============request======================");
-                write_log("===========================================");
-                return  json_decode( $result);
+                write_log('Tiki response error: '.json_encode($result));
+                return  $result;
             }
 
-            write_log($result);
+            write_log('Tiki response success: '. json_encode($result));
 
-            return json_decode($result);
+            return $result;
         } catch (\Throwable $th) {
 
             write_log( $th->getMessage());
@@ -165,7 +160,7 @@ class TIKI_API
 
         $url = $this->baseURL . $this->URI['get_list_regions'];
 
-        $response = $this->sendRequestToTiki($url,'','GET');
+        $response = $this->sendRequestToTiki($url,[],'GET');
 
         return $response->data;
 
@@ -180,7 +175,7 @@ class TIKI_API
 
         $url = $this->baseURL . $this->URI['get_list_regions'].'/'.$region_id;
 
-        $response = $this->sendRequestToTiki($url,'','GET');
+        $response = $this->sendRequestToTiki($url,[],'GET');
 
         return $response->data;
 
@@ -195,7 +190,7 @@ class TIKI_API
 
         $url = $this->baseURL . $this->URI['get_list_regions'].'/'.$region_id. $this->URI['get_list_districts'];
 
-        $response = $this->sendRequestToTiki($url,'','GET');
+        $response = $this->sendRequestToTiki($url,[],'GET');
 
         return $response->data;
 
@@ -211,7 +206,7 @@ class TIKI_API
 
         $url = $this->baseURL . $this->URI['get_list_regions'].'/'.$region_id. $this->URI['get_list_districts'].'/'.$district_id;
 
-        $response = $this->sendRequestToTiki($url,'','GET');
+        $response = $this->sendRequestToTiki($url,[],'GET');
 
         return $response->data;
 
@@ -227,7 +222,7 @@ class TIKI_API
 
         $url = $this->baseURL . $this->URI['get_list_regions'].'/'.$region_id. $this->URI['get_list_districts'].'/'.$district_id. $this->URI['get_list_ward'];
 
-        $response = $this->sendRequestToTiki($url,'','GET');
+        $response = $this->sendRequestToTiki($url,[],'GET');
 
         return $response->data;
 
@@ -244,7 +239,7 @@ class TIKI_API
 
         $url = $this->baseURL . $this->URI['get_list_regions'].'/'.$region_id. $this->URI['get_list_districts'].'/'.$district_id. $this->URI['get_list_ward'].'/'.$ward_id;
 
-        $response = $this->sendRequestToTiki($url,'','GET');
+        $response = $this->sendRequestToTiki($url,[],'GET');
 
         return $response->data;
 

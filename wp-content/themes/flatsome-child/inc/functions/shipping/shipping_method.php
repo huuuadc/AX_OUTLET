@@ -1,7 +1,7 @@
 <?php
 
 use OMS\ADDRESS;
-use TIKI\TIKI_API;
+use OMS\TIKI_API;
 
 add_action('woocommerce_shipping_init', 'tiki_tnsl_method');
 function tiki_tnsl_method() {

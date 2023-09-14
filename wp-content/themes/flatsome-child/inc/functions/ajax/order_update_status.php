@@ -1,7 +1,7 @@
 <?php
 
 use OMS\ADDRESS;
-use TIKI\TIKI_API;
+use OMS\TIKI_API;
 
 add_action( 'wp_ajax_post_order_update_status', 'order_update_status' );
 add_action( 'wp_ajax_nopriv_post_order_update_status', 'order_update_status' );
