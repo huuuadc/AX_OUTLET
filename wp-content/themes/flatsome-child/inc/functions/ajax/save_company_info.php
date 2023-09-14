@@ -21,6 +21,10 @@ function save_company_info()
         update_option('web_company_name',$post->web_company_name , 'no');
     }
 
+    if(!add_option('web_company_code',$post->web_company_code , '','no')){
+        update_option('web_company_code',$post->web_company_code , 'no');
+    }
+
     if(!add_option('web_company_email',$post->web_company_email, '','no')){
         update_option('web_company_email',$post->web_company_email, 'no');
     }
