@@ -115,3 +115,9 @@ function logo_login() { ?>
     </style>
 <?php }
 add_action( 'login_enqueue_scripts', 'logo_login' );
+
+
+function isJson($string): bool {
+    json_decode($string);
+    return json_last_error() === JSON_ERROR_NONE;
+}

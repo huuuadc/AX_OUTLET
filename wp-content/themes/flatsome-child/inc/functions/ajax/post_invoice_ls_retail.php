@@ -79,15 +79,32 @@ function post_invoice_ls_retail(){
         //===========================================================
         //===========================================================
 
-        $location_code= 'DA0053';
+        $location_code = get_option('wc_settings_tab_ls_location_code');
+        if (!$location_code) {
+          echo response(false,'Chưa cài đặt mã kho',[]);
+          exit;
+        }
+        $item_no_ship = get_option('admin_dashboard_item_fee_ship');
+        if (!$item_no_ship) {
+          echo response(false,'Chưa cài đặt mã item phí vận chuyển',[]);
+          exit;
+        }
+        $member_card_guest = get_option('admin_dashboard_member_card_guest');
+        if (!$member_card_guest) {
+          echo response(false,'Chưa cài đặt mã thẻ khách lẽ',[]);
+          exit;
+        }
+        $order_number = $order->get_id();
+        $order_no = get_option('web_company_code') ? get_option('web_company_code').$order_number : 'OL'.$order_number;
+
         $ls_method_type = $order->get_method_type_ls();
 
         $data_request_payment = (object) ls_payment_request();
 
         $data_request_payment->Location_Code = $location_code;
-        $data_request_payment->Transaction_No_ = $order->get_id();
+        $data_request_payment->Transaction_No_ = $order_no;
         $data_request_payment->LineNo = 30000;
-        $data_request_payment->Receipt_No_ = $order->get_id();
+        $data_request_payment->Receipt_No_ = $order_no;
         $data_request_payment->Tender_Type = $ls_method_type['tender_type'];
         $data_request_payment->Amount_Tendered = $order->get_total();
         $data_request_payment->Amount_in_Currency = $order->get_total();
@@ -101,7 +118,7 @@ function post_invoice_ls_retail(){
         $data_request_payment->VAT_Payment_Method = $ls_method_type['vat_payment_method'];
         $data_request_payment->VAT_Bank_Account = '';
         $data_request_payment->Member_Phone = $order->get_billing_phone();
-        $data_request_payment->THENH = '5555xxxxxxxx4444';
+        $data_request_payment->THENH = $order->get_number_card_payment();
         $data_request_payment->Cash = $order->get_total();
 
 
@@ -212,8 +229,8 @@ function post_invoice_ls_retail(){
                 $line_no++;
                 $data_request_transaction[] = array (
                 'Location_Code'         =>          $location_code,
-                'Receipt_No_'           =>          $order->get_id(),
-                'Transaction_No_'       =>          $order->get_id(),
+                'Receipt_No_'           =>          $order_no,
+                'Transaction_No_'       =>          $order_no,
                 'LineNo'                =>          $line_default + $line_no,
                 'LineNo_Online'         =>          $item->get_id(),
                 'Item_No_'              =>          get_post_meta($product_id, 'offline_id', true),
@@ -227,7 +244,7 @@ function post_invoice_ls_retail(){
                 'DiscountAmount'        =>          $DiscountAmount,
                 'Disc'                  =>          $Disc,
                 'TotalAmt'              =>          $TotalAmt,
-                'Member_Card_No_'       =>          '60082550',
+                'Member_Card_No_'       =>          $member_card_guest,
                 'Offer_Online_ID'       =>          $Offer_Online_ID,
                 'CouponCode'            =>          $CouponCode,
                 'CouponNo'              =>          $CouponNo,
@@ -249,21 +266,21 @@ function post_invoice_ls_retail(){
         }
         $line_no++;
         $data_request_transaction_item->Location_Code = $location_code;
-        $data_request_transaction_item->Receipt_No_ = $order->get_id();
-        $data_request_transaction_item->Transaction_No_ = $order->get_id();
+        $data_request_transaction_item->Receipt_No_ = $order_no;
+        $data_request_transaction_item->Transaction_No_ = $order_no;
         $data_request_transaction_item->LineNo = $line_default + $line_no;
-        $data_request_transaction_item->Item_No_ = get_option('admin_dashboard_item_fee_ship');
+        $data_request_transaction_item->Item_No_ = $item_no_ship;
         $data_request_transaction_item->SerialNo = '';
         $data_request_transaction_item->Variant_Code = '000';
         $data_request_transaction_item->Trans_Date = date('Y-m-d') . ' ' . date('H:i:s.v');
         $data_request_transaction_item->Quantity = -$qty_ship_fee;
-        $data_request_transaction_item->UnitPrice = $qty_simple;
+        $data_request_transaction_item->UnitPrice =  $qty_simple;
         $data_request_transaction_item->TotalPrice = $qty_ship_fee* $qty_simple;
         $data_request_transaction_item->DiscountRate = 0;
         $data_request_transaction_item->DiscountAmount = 0;
         $data_request_transaction_item->Disc = 0;
-        $data_request_transaction_item->TotalAmt = 0;
-        $data_request_transaction_item->Member_Card_No_ = '60082550';
+        $data_request_transaction_item->TotalAmt = $qty_ship_fee* $qty_simple;
+        $data_request_transaction_item->Member_Card_No_ = $member_card_guest;
         $data_request_transaction_item->Offer_Online_ID = '';
         $data_request_transaction_item->CouponCode = '';
         $data_request_transaction_item->CouponNo = '';
@@ -309,8 +326,8 @@ function post_invoice_ls_retail(){
 
                 $line_no++;
                 $data_request_transaction_item->Location_Code = $location_code;
-                $data_request_transaction_item->Receipt_No_ = $order->get_id();
-                $data_request_transaction_item->Transaction_No_ = $order->get_id();
+                $data_request_transaction_item->Receipt_No_ = $order_no;
+                $data_request_transaction_item->Transaction_No_ = $order_no;
                 $data_request_transaction_item->LineNo = $line_default + $line_no;
                 $data_request_transaction_item->Item_No_ = get_option('admin_dashboard_item_fee_ship');
                 $data_request_transaction_item->SerialNo = '';
@@ -323,7 +340,7 @@ function post_invoice_ls_retail(){
                 $data_request_transaction_item->DiscountAmount = $DiscountAmount;
                 $data_request_transaction_item->Disc = $Disc;
                 $data_request_transaction_item->TotalAmt = $TotalAmt;
-                $data_request_transaction_item->Member_Card_No_ = '60082550';
+                $data_request_transaction_item->Member_Card_No_ = $member_card_guest;
                 $data_request_transaction_item->Offer_Online_ID = $Offer_Online_ID;
                 $data_request_transaction_item->CouponCode = '';
                 $data_request_transaction_item->CouponNo = '';
@@ -334,34 +351,38 @@ function post_invoice_ls_retail(){
 
         }
 
-        $response_ls_payment = $ls_api->post_payment_outlet((array)$data_request_payment);
 
         $flag_payment = false;
         $flag_transaction = false;
 
-        write_log($response_ls_payment);
+        $response_ls_payment = $ls_api->post_payment_outlet((array)$data_request_payment);
+//        write_log($data_request_payment);
+//        $response_ls_payment = '';
 
-        if( $response_ls_payment->Responcode == 200){
-            $order->set_log('success','post_ls_payment','Thành công');
-            $flag_payment = true;
-        }else{
-            $order->set_log('danger','post_ls_payment','Thất bại' . json_encode($response_ls_payment));
-        }
+        if( isset($response_ls_payment->Responcode) && $response_ls_payment->Responcode == 200) $flag_payment = true;
 
         $response_ls_transaction = $ls_api->post_transaction_outlet($data_request_transaction);
+//        write_log($data_request_transaction);
+//        $response_ls_transaction = '';
 
-        if( $response_ls_transaction->Responcode == 200){
-            $order->set_log('success','post_ls_payment','Thành công');
-            $flag_transaction = true;
-        }else{
-            $order->set_log('danger','post_ls_payment','Thất bại' . json_encode($response_ls_transaction));
-        }
+        if( isset($response_ls_transaction->Responcode) && $response_ls_transaction->Responcode == 200) $flag_transaction = true;
 
         if ($flag_payment && $flag_transaction){
             $order->set_log('success','post_ls','Thành công');
             echo response(true,'Đã post ls retail',[]);
         }else{
-            $order->set_log('danger','post_ls','Thất bại');
+            if (!$flag_payment && !$flag_transaction) $order->set_log(
+                'danger',
+                'post_ls',
+                'Không thể post header và detail. Header response:' . json_encode($response_ls_payment).' - Detail response: ' . json_encode($response_ls_transaction));
+            if (!$flag_payment && $flag_transaction) $order->set_log(
+                'danger',
+                'post_ls',
+                'Post detail thành công, header post lỗi. Header response:' . json_encode($response_ls_payment));
+            if ($flag_payment && !$flag_transaction) $order->set_log(
+                'danger',
+                'post_ls',
+                'Post header thành công, detail post lỗi. Detail response: ' . json_encode($response_ls_transaction));
             echo response(false,'Post LS không thành công xin kiểm tra lại dữ liệu đơn hàng',[]);
         }
 

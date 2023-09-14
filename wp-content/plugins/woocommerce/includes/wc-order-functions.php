@@ -163,7 +163,9 @@ function wc_generate_order_key( $key = '' ) {
 		$key = wp_generate_password( 13, false );
 	}
 
-	return 'wc_' . apply_filters( 'woocommerce_generate_order_key', 'order_' . $key );
+    $code = strtolower(get_option('web_company_code')) ?? 'wc';
+
+	return $code . '_' . apply_filters( 'woocommerce_generate_order_key', 'order_' . $key );
 }
 
 /**
