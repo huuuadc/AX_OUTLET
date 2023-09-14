@@ -39,20 +39,35 @@ jQuery(function ($){
                     alert('Chỉ còn lại ' + max_item + ' sản phẩm');
                 });
             }
-            console.log('max: '+max_item);
-            console.log('current: '+current);
+            //console.log('max: '+max_item);
+            //console.log('current: '+current);
         });
     }
     checkQty();
 
+    function checkShipping(){
+        $('.shipping__list').each(function(){
+            if($(this).find('.amount').length){
+                $(this).find('.shipping__list_item').removeClass('hidden');
+                $(this).find('.text').addClass('hidden');
+            }else{
+                $(this).find('.shipping__list_item').addClass('hidden');
+                $(this).find('.text').removeClass('hidden');
+            }
+        });
+    }
+    $(document).ajaxStop(function() {
+        checkShipping();
+    });
+
     $('body').on('click','.woocommerce-remove-coupon',function(){
-        $(document).on( "ajaxComplete", function( event, xhr, settings ) {
+        $(document).ajaxStop(function() {
             checkDiscount();
         });
     });
 
     $('body').on('change','.quantity .input-text.qty', function (){
-        $(document).on( "ajaxComplete", function( event, xhr, settings ) {
+        $(document).ajaxStop(function() {
             checkDiscount();
             checkQty();
         });
@@ -84,7 +99,9 @@ jQuery(function ($){
             }
 
         })
-
+        $(document).ajaxStop(function() {
+            checkShipping();
+        });
     })
 
     $('#billing_district').change(function (){
@@ -114,13 +131,17 @@ jQuery(function ($){
             }
 
         })
-
+        $(document).ajaxStop(function() {
+            checkShipping();
+        });
     })
 
     $('#billing_ward').change(function (){
 
         $('body').trigger('update_checkout');
-
+        $(document).ajaxStop(function() {
+            checkShipping();
+        });
     })
 
 })
