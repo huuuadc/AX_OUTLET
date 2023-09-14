@@ -9,6 +9,7 @@ else:
 
 $item_in_page = get_option('admin_dashboard_item_in_page') ?? '';
 $item_fee_ship = get_option('admin_dashboard_item_fee_ship') ?? '';
+$member_card_guest = get_option('admin_dashboard_member_card_guest') ?? '';
 
 $item_in_page_arg = [
         '10'    => 10,
@@ -28,8 +29,12 @@ $item_in_page_arg = [
     </div>
     <div class="card-body">
         <div class="form-group">
+            <label for="member_card_guest">Mã thẻ thành viên khách lẽ</label>
+            <input type="text" name="member_card_guest" class="form-control" id="member_card_guest" placeholder="Nhập mã số thẻ khách lẽ" value="<?php echo $member_card_guest?>"/>
+        </div>
+        <div class="form-group">
             <label for="item_fee_ship">Item phí vận chuyển</label>
-            <input type="text" name="item_fee_ship" class="form-control" id="item_fee_ship" placeholder="Enter item no" value="<?php echo $item_fee_ship?>"/>
+            <input type="text" name="item_fee_ship" class="form-control" id="item_fee_ship" placeholder="Nhập mã phí vận chuyển" value="<?php echo $item_fee_ship?>"/>
         </div>
         <div class="form-group">
             <label for="item_in_page">Item in page</label>

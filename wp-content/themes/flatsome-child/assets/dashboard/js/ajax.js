@@ -187,7 +187,7 @@ function send_update_status(id = '', status = ''){
                     $(document).Toasts('create', {
                         class: 'bg-danger',
                         title: 'update false',
-                        body: `${rep.messenger} <br>${JSON.stringify(rep.data) ?? ''}`,
+                        body: `${rep.messenger} ?? ''}`,
                         icon: 'fas fa-info-circle',
                         autohide: true,
                         delay: 10000
@@ -298,6 +298,7 @@ function send_update_payment(id = ''){
 function save_company_info(){
 
     let web_company_name        =       $('#company_name').val()
+    let web_company_code        =       $('#company_code').val()
     let web_company_email       =       $('#company_email').val()
     let web_company_phone       =       $('#company_phone').val()
     let web_company_country     =       $('#company_country').val()
@@ -306,12 +307,23 @@ function save_company_info(){
     let web_company_ward        =       $('#company_ward').val()
     let web_company_address     =       $('#company_address').val()
 
+    if (web_company_code.length > 2 || web_company_code.length < 2)
+        return $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'warning',
+        body: `Mã công ty không được lớn hoặc nhỏ hơn 2`,
+        icon: 'fas fa-info-circle',
+        autohide: true,
+        delay: 10000
+    });
+
     $.ajax({
         type    :   'POST',
         url     :   '/wp-admin/admin-ajax.php',
         data    :   {
             action  :   'save_company_info',
             web_company_name,
+            web_company_code,
             web_company_email,
             web_company_phone,
             web_company_country,
@@ -423,6 +435,7 @@ function save_admin_dashboard_setting(){
     let item_fee_ship = $('#item_fee_ship').val()
     let footer_print_shipment = $('#footer_print_shipment').val()
     let product_return_policy = $('#product_return_policy').val()
+    let member_card_guest = $('#member_card_guest').val()
 
     $.ajax({
         type:   'POST',
@@ -432,7 +445,8 @@ function save_admin_dashboard_setting(){
             item_in_page,
             footer_print_shipment,
             product_return_policy,
-            item_fee_ship
+            item_fee_ship,
+            member_card_guest
         },
         beforeSend: function (){
             $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')

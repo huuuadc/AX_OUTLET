@@ -112,19 +112,19 @@ class LS_API
     /**
      *  send request to ls
      * @param  $url : string
-     * @param  $data : array
-     * @param  $method : string default GET, GET, POST, PUT, PATCH, DELETE, OPTIONS
+     * @param string $data : array
+     * @param string $method : string default GET, GET, POST, PUT, PATCH, DELETE, OPTIONS
      *
-     * @return array
+     * @return object
      *
      */
 
-    public function sendRequestToLS($url, $data = '', $method = 'GET')
+    public function sendRequestToLS($url, array $data = [], string $method = 'GET'): object
     {
 
         try {
-            write_log($data);
             $data_string = json_encode($data);
+            write_log('LS request: '. $data_string);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                     'Content-Type: application/json',
@@ -145,20 +145,23 @@ class LS_API
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             if ($http_status != 200) {
-                write_log(json_decode( $result));
-                return array(
+                write_log('LS response error: '. $result);
+                return (object)array(
+                    'Responcode' => $http_status,
                     'messenger' => 'error http status code: ' . $http_status
                 );
             }
 
-            write_log(json_decode($result));
-            write_log('============================================');
+            write_log('LS response success: ' . $result);
 
             return json_decode($result);
         } catch (\Throwable $th) {
 
-            write_log( $th->getMessage());
-            return false;
+            write_log($th->getMessage());
+            return (object)array(
+                'Responcode' => 500,
+                'Message' => 'Error Code'
+            );
         }
     }
 
@@ -229,7 +232,7 @@ class LS_API
 
         $url = $this->baseURL . $this->URI['get_token'] . '?UserNames=' . $this->user_name . '&Password=' . $this->user_pass;
 
-        $response = $this->sendRequestToLS($url, '', 'POST');
+        $response = $this->sendRequestToLS($url, [], 'POST');
 
         if (isset($response->status) && $response->status == 200) {
 
@@ -264,7 +267,7 @@ class LS_API
 
         $url = $this->baseURL . $this->URI['get_token'] . '?UserNames=' . $this->user_name . '&Password=' . $this->user_pass;
 
-        $response = $this->sendRequestToLS($url, '', 'POST');
+        $response = $this->sendRequestToLS($url, [], 'POST');
 
 
         if (isset($response->status) && $response->status == 200) {
@@ -294,7 +297,7 @@ class LS_API
             $url = $url . '&AccountNo=' . $account_no;
         }
 
-        return $this->sendRequestToLS($url, '', 'GET');
+        return $this->sendRequestToLS($url, [], 'GET');
 
     }
 
@@ -307,7 +310,7 @@ class LS_API
     {
 
         $url = $this->baseURL . $this->URI['get_member_his'] . '?AccountNo=' . $account_no;
-        return $this->sendRequestToLS($url, '', 'GET');
+        return $this->sendRequestToLS($url, [], 'GET');
 
     }
 
@@ -324,7 +327,7 @@ class LS_API
 
             $url = $this->baseURL . $this->URI['get_member_check'] . '?Phone=' . $number_phone . '&ClubCode=' . $club_code;
 
-            return $this->sendRequestToLS($url, '', 'GET');
+            return $this->sendRequestToLS($url, [], 'GET');
 
         } catch (\Throwable $th) {
 
@@ -385,9 +388,7 @@ class LS_API
 
         $url = $this->baseURL . $this->URI['post_payment'];
 
-        $body = array_merge(ls_payment_request(),$data);
-
-        return $this->sendRequestToLS($url,$body,'POST');
+        return $this->sendRequestToLS($url,$data,'POST');
 
     }
 

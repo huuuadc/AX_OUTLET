@@ -3,6 +3,7 @@
 global $wpdb;
 
 $company_name = get_option('web_company_name') ?? '';
+$company_code = get_option('web_company_code') ?? '';
 $company_email = get_option('web_company_email') ?? '';
 $company_phone = get_option('web_company_phone') ?? '';
 $company_url_logo = get_option('web_company_url_logo') ?? '';
@@ -53,6 +54,10 @@ foreach ($data_wards as $value){
         <div class="form-group">
             <label for="company_name">Company name</label>
             <input type="text" name="company_name" class="form-control" id="company_name" placeholder="Enter company name" value="<?php echo $company_name?>">
+        </div>
+        <div class="form-group">
+            <label for="company_code">Company Code</label>
+            <input type="text" name="company_code" class="form-control" id="company_code" placeholder="Enter company code" value="<?php echo $company_code?>">
         </div>
         <div class="form-group">
             <label for="company_email">Email address</label>
