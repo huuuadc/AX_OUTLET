@@ -383,4 +383,15 @@ class OMS_ORDER extends WC_Order
 
     }
 
+    public function get_number_card_payment(){
+        if($this->get_payment_method() == "alepay") {
+            $alepay_transaction_info = get_post_meta($this->get_id(), '_alepay_transaction_info', true);
+            if(isJson($alepay_transaction_info)) {
+                $alepay_transaction_info = json_decode($alepay_transaction_info);
+                return substr($alepay_transaction_info->cardNumber, -4);
+            }
+        }
+        return '';
+    }
+
 }
