@@ -207,6 +207,7 @@ class Utils {
 			'{customer_note}'         => esc_html__( 'Customer note', 'viwec-email-template-customizer' ),
 			'{customer_phone_number}' => '0123-456-789',
 			'{coupon_expire_date}'    => date_i18n( $date_format, current_time( 'U' ) + MONTH_IN_SECONDS ),
+			'{user_gender}'            => esc_html__( 'Mr.', 'viwec-email-template-customizer' ),
 			'{first_name}'            => esc_html__( 'John', 'viwec-email-template-customizer' ),
 			'{home_url}'              => home_url(),
 			'{last_name}'             => esc_html__( 'Doe', 'viwec-email-template-customizer' ),
@@ -415,6 +416,7 @@ class Utils {
 			'{order_number_with_url_edit}' => '',
 			'{customer_name}'              => '',
 			'{customer_phone_number}'      => '',
+			'{user_gender}'                 => '',
 			'{first_name}'                 => '',
 			'{last_name}'                  => '',
 			'{order_date}'                 => '',
@@ -479,8 +481,11 @@ class Utils {
 						$coupons = '';
 					}
 
-					$user                       = $object->get_user();
+					$user = $object->get_user();
+                    $user_id = $object->user_id;
 					$shortcodes['{user_login}'] = $user->user_login ?? '';
+
+                    $gender = get_user_meta($user_id, 'user_registration_user_gender', true);
 
 					$shortcodes['{order_id}']                   = $object->get_id();
 					$shortcodes['{order_number}']               = $object->get_order_number();
@@ -489,6 +494,7 @@ class Utils {
 					$shortcodes['{view_order_url}']             = $object->get_view_order_url();
 					$shortcodes['{customer_name}']              = $object->get_formatted_billing_full_name();
 					$shortcodes['{user_name}']                  = $object->get_formatted_billing_full_name();
+					$shortcodes['{user_gender}']                = $gender;
 					$shortcodes['{first_name}']                 = $object->get_billing_first_name();
 					$shortcodes['{last_name}']                  = $object->get_billing_last_name();
 					$shortcodes['{user_email}']                 = $object->get_billing_email();
@@ -537,6 +543,7 @@ class Utils {
 
 					if ( isset( $object->object->ID ) ) {
 						$user_id                    = $object->object->ID;
+						$shortcodes['{user_gender}'] = get_user_meta( $object->user_email, 'user_gender', true );
 						$shortcodes['{first_name}'] = get_user_meta( $user_id, 'first_name', true );
 						$shortcodes['{last_name}']  = get_user_meta( $user_id, 'last_name', true );
 
@@ -560,8 +567,10 @@ class Utils {
 						$pw                                     = $object->register_data['password'] ?? '';
 						$as_pw                                  = strlen( $pw ) > 3 ? substr_replace( $pw, str_repeat( "*", strlen( $pw ) - 3 ), 2, strlen( $pw ) - 3 ) : $pw;
 						$user_id                                = $object->ID;
+                        $gender = get_user_meta($object->user_email, 'user_gender', true);
 						$shortcodes['{customer_name}']          = $object->register_data['user_name'] ?? '';
 						$shortcodes['{user_name}']              = $object->register_data['user_name'] ?? '';
+						$shortcodes['{user_gender}']            = $gender ?? '';
 						$shortcodes['{first_name}']             = $object->register_data['first_name'] ?? '';
 						$shortcodes['{last_name}']              = $object->register_data['last_name'] ?? '';
 						$shortcodes['{user_password}']          = $pw;
@@ -721,6 +730,7 @@ class Utils {
 
 		$shortcode_for_order = [
 			'{customer_name}'         => esc_html__( 'John Doe', 'viwec-email-template-customizer' ),
+			'{user_gender}'           => esc_html__( 'Mr.', 'viwec-email-template-customizer' ),
 			'{first_name}'            => esc_html__( 'John', 'viwec-email-template-customizer' ),
 			'{last_name}'             => esc_html__( 'Doe', 'viwec-email-template-customizer' ),
 			'{customer_email}'        => 'johndoe@domain.com',

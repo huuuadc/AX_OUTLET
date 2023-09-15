@@ -581,6 +581,7 @@ class UR_Emailer {
 		$smart_tags = array(
 			'{{user_id}}',
 			'{{username}}',
+			'{{last_name}}',
 			'{{email}}',
 			'{{email_token}}',
 			'{{blog_info}}',
@@ -605,6 +606,7 @@ class UR_Emailer {
 
 		$default_values = array(
 			'username'    => '',
+			'last_name'    => get_user_meta( get_current_user_id(), 'last_name', true ),
 			'user_id'    => get_current_user_id(),
 			'email'       => '',
 			'email_token' => '',
