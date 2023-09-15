@@ -1,6 +1,7 @@
 <?php
 
 use OMS\ADDRESS;
+use OMS\LS_API;
 
 /**
  *
@@ -392,6 +393,66 @@ class OMS_ORDER extends WC_Order
             }
         }
         return '';
+    }
+
+    public function check_stock_ls(): bool {
+
+        $ls_api = new LS_API();
+        $items = $this->get_items();
+        $data = (object)\OMS\ls_request_check_stock_v3();
+
+        //Khởi tạo inventory = 0;
+        $data->Inventory = 0;
+
+        $arg_data = [];
+        foreach ($items as $item) {
+
+            $product = wc_get_product($item->get_product_id());
+            $data->LocationCode = $ls_api->location_code[0] ?? '';
+            $data->ItemNo = $product->get_sku();
+//            $data->ItemNo = '1117342';
+            if ($item['variation_id'] > 0) {
+                $product_variant = wc_get_product($item['variation_id']);
+                $data->BarcodeNo = $product_variant->get_sku();
+//                $data->BarcodeNo = '1117342000';
+            } else {
+                $data->BarcodeNo = '';
+            }
+
+            $data->Qty = $item->get_quantity();
+
+            $arg_data[] = (array)$data;
+        }
+
+        $response = $ls_api->post_product_check_stock_v3($arg_data);
+//        write_log($response);
+        $safe_stock = true;
+        foreach ($arg_data as $key => $item){
+
+            if($item['BarcodeNo'] == ''){
+                foreach ($response->data as $value){
+                    if($value->ItemNo == $item['ItemNo'])
+                        $arg_data[$key]['Inventory'] = $value->Inventory ?? 0;
+                }
+            }
+
+            if($item['BarcodeNo'] != ''){
+                foreach ($response->data as $value){
+                    if($value->ItemNo == $item['ItemNo']
+                        && $value->BarcodeNo == $item['BarcodeNo'])
+                        $item['Inventory'] = $value->Inventory ?? 0;
+                        $arg_data[$key]['Inventory'] = $value->Inventory ?? 0;
+                }
+            }
+
+            if($item['Inventory'] < $item['Qty']){
+                $this->set_log('danger','check_stock',$item['ItemNo'] . ' không còn tồn' . ' : '. json_encode( $arg_data[$key]));
+                $safe_stock = false;
+            }
+
+        }
+
+        return $safe_stock;
     }
 
 }

@@ -93,7 +93,13 @@ function order_update_status(){
     //
     if ($_POST['payload_action'] == 'order_status_confirm' && ('processing' == $old_status || 'reject' == $old_status)){
 
-            if ($order->update_status('wc-confirm')){
+        //Check stock với ls
+        if (!$order->check_stock_ls()){
+            echo response(false,'Không còn tồn trên ls retail',[]);
+            exit;
+        }
+
+        if ($order->update_status('wc-confirm')){
                 $order->set_log('success',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => true,
