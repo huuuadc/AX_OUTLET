@@ -27,7 +27,7 @@ $calculator_text          = '';
 ?>
 <tr class="woocommerce-shipping-totals shipping <?php if ( get_theme_mod( 'cart_boxed_shipping_labels', 0 ) && 1 < count( $available_methods ) ) echo 'shipping--boxed'; ?>">
 	<td class="shipping__inner" colspan="2">
-		<table class="shipping__table <?php if ( 1 < count( $available_methods ) ) : ?>shipping__table--multiple<?php endif; ?>">
+		<table class="shipping__table hidden <?php if ( 1 < count( $available_methods ) ) : ?>shipping__table--multiple<?php endif; ?>">
 			<tbody>
 				<tr>
 					<th <?php if ( 1 < count( $available_methods ) ) : ?> colspan="2" <?php endif; ?>><?php echo wp_kses_post( $package_name ); ?></th>
@@ -42,7 +42,8 @@ $calculator_text          = '';
 										} else {
 											printf( '<input type="hidden" name="shipping_method[%1$d]" data-index="%1$d" id="shipping_method_%1$d_%2$s" value="%3$s" class="shipping_method" />', $index, esc_attr( sanitize_title( $method->id ) ), esc_attr( $method->id ) ); // WPCS: XSS ok.
 										}
-										printf( '<label class="shipping__list_label" for="shipping_method_%1$s_%2$s">%3$s</label>', $index, esc_attr( sanitize_title( $method->id ) ), wc_cart_totals_shipping_method_label( $method ) ); // WPCS: XSS ok.
+                                        $method_str = str_replace('Tiêu chuẩn:','',wc_cart_totals_shipping_method_label( $method ));
+										printf( '<label class="shipping__list_label" style="justify-content:end;" for="shipping_method_%1$s_%2$s">%3$s</label>', $index, esc_attr( sanitize_title( $method->id ) ), $method_str ); // WPCS: XSS ok.
 										do_action( 'woocommerce_after_shipping_rate', $method, $index );
 										?>
 									</li>
