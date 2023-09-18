@@ -286,14 +286,10 @@ class LS_API
      * @return array|false|string[]
      *
      */
-    public function get_member_information($page_size = 10, $account_no = '')
+    public function get_member_information($phone_no = '')
     {
 
-        $url = $this->baseURL . $this->URI['get_member_info'] . '?PageSize=' . $page_size;
-
-        if ($account_no) {
-            $url = $url . '&AccountNo=' . $account_no;
-        }
+        $url = $this->baseURL . $this->URI['get_member_info'] . '?phoneNo=' . $phone_no;
 
         return $this->sendRequestToLS($url, [], 'GET');
 
