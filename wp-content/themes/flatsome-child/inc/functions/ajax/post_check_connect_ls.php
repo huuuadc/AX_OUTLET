@@ -4,6 +4,9 @@ use OMS\LS_API;
 
 add_action( 'wp_ajax_post_check_connect_ls', 'check_connect_ls' );
 add_action( 'wp_ajax_nopriv_post_check_connect_ls', 'check_connect_ls' );
+/**
+ * @throws Exception
+ */
 function check_connect_ls(){
 
     if(!isset($_POST['action']) && $_POST['action'] !== 'post_check_connect_ls') {

@@ -51,3 +51,65 @@ function save_meta_box_channel_type($post_id){
     if (isset($_POST['channel_status'])) $oms_order->set_order_type($_POST['channel_status']) ;
     return true;
 }
+
+function check_stock_ls($items = []): array {
+
+    $ls_api = new \OMS\LS_API();
+
+    $data = (object)\OMS\ls_request_check_stock_v3();
+
+    //Khởi tạo inventory = 0;
+    $data->Inventory = 0;
+
+    $arg_data = [];
+    $data_check = [];
+    foreach ($items as $item) {
+
+        $product = wc_get_product($item['product_id']);
+        $data->LocationCode = $ls_api->location_code[0] ?? '';
+        $data->ItemNo = $product->get_sku();
+//            $data->ItemNo = '1117342';
+        if ($item['variation_id'] > 0) {
+            $product_variant = wc_get_product($item['variation_id']);
+            $data->ItemName = $product_variant->get_name();
+            $data->BarcodeNo = $product_variant->get_sku();
+//                $data->BarcodeNo = '1117342000';
+        } else {
+            $data->ItemName = $product->get_name();
+            $data->BarcodeNo = '';
+        }
+
+        $data->Qty = $item['qty'];
+
+        $arg_data[] = (array)$data;
+    }
+
+    $response = $ls_api->post_product_check_stock_v3($arg_data);
+
+    foreach ($arg_data as $key => $item){
+
+        if($item['BarcodeNo'] == ''){
+            foreach ($response->data as $value){
+                if($value->ItemNo == $item['ItemNo'])
+                    $item['Inventory'] = $value->Inventory ?? 0;
+                    $arg_data[$key]['Inventory'] = $value->Inventory ?? 0;
+            }
+        }
+
+        if($item['BarcodeNo'] != ''){
+            foreach ($response->data as $value){
+                if($value->ItemNo == $item['ItemNo']
+                    && $value->BarcodeNo == $item['BarcodeNo'])
+                    $item['Inventory'] = $value->Inventory ?? 0;
+                $arg_data[$key]['Inventory'] = $value->Inventory ?? 0;
+            }
+        }
+
+        if($item['Inventory'] < $item['Qty']){
+            $data_check[] = $item['ItemName'];
+        }
+
+    }
+
+    return $data_check;
+}
