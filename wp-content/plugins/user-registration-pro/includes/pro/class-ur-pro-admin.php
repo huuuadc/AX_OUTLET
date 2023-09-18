@@ -33,7 +33,6 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 			add_action( 'user_registration_auto_generate_password', array( $this, 'user_registration_pro_auto_generate_password' ) );
 			add_filter( 'user_registration_success_params', array( $this, 'user_registration_after_register_mail' ), 10, 4 );
 
-			add_filter( 'user_registration_email_classes', array( $this, 'get_emails' ), 10, 1 );
 			// Frontend message settings.
 			add_filter( 'user_registration_frontend_messages_settings', array( $this, 'add_auto_generated_password_frontend_message' ) );
 			add_action( 'admin_init', array( $this, 'actions' ) );
@@ -63,15 +62,26 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 
 			add_filter( 'user_registration_multi_select2_field_advance_settings', array( $this, 'ur_pro_auto_populate_advance_setting' ), 10, 3 );
 			add_filter( 'user_registration_timepicker_field_advance_settings', array( $this, 'ur_pro_auto_populate_advance_setting' ), 10, 3 );
-			//add_filter( 'user_registration_phone_field_advance_settings', array( $this, 'ur_pro_auto_populate_advance_setting' ), 10, 3 );
+			add_filter( 'user_registration_phone_field_advance_settings', array( $this, 'ur_pro_auto_populate_advance_setting' ), 10, 3 );
 			add_filter( 'user_registration_select2_field_advance_settings', array( $this, 'ur_pro_auto_populate_advance_setting' ), 10, 3 );
 			// Validate as unique field in advance settings.
 			$field_type = array( 'nickname', 'display_name', 'first_name', 'last_name', 'text', 'user_url' );
 			foreach ( $field_type as $field ) {
 				add_filter( $field . '_custom_advance_settings', array( $this, 'ur_pro_validate_as_unique' ), 10, 3 );
 			}
-			//add_filter( 'user_registration_phone_field_advance_settings', array( $this, 'ur_pro_validate_as_unique' ), 10, 3 );
+			add_filter( 'user_registration_phone_field_advance_settings', array( $this, 'ur_pro_validate_as_unique' ), 10, 3 );
 			add_filter( 'user_registration_field_options_general_settings', array( $this, 'add_form_field_tooltip_options' ), 10, 2 );
+
+			// Pattern validation in advance settings.
+			$pattern_fields = user_registration_pro_pattern_validation_fields();
+			foreach ( $pattern_fields as $field ) {
+				if ( 'phone' == $field || 'custom_url' == $field ) {
+					add_filter( 'user_registration_' . $field . '_field_advance_settings', array( $this, 'ur_pro_pattern_validation' ), 10, 3 );
+				} else {
+					add_filter( $field . '_custom_advance_settings', array( $this, 'ur_pro_pattern_validation' ), 10, 3 );
+				}
+			}
+
 			// Validate field as unique when admin update the user profile from admin users table.
 			add_action( 'user_registration_after_admin_save_profile_validation', array( $this, 'validate_unique_field_profile_update_by_admin' ), 10, 2 );
 			add_action( 'user_profile_update_errors', array( $this, 'check_unique_fields' ), 10, 3 );
@@ -82,6 +92,135 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 			foreach ( $restricted_fields as $field ) {
 				add_filter( $field . '_custom_advance_settings', array( $this, 'ur_pro_restrict_copy_paste' ), 10, 3 );
 			}
+			add_action(
+				'user_registration_after_admin_save_profile_validation',
+				array( $this, 'user_registration_pro_sync_external_fields_after_admin_save_profile_validation' ),
+				10,
+				2
+			);
+
+			add_filter( 'user_registration_redirect_after_registration_options', array( $this, 'add_role_based_redirection_option' ) );
+			add_filter( 'user_registration_get_form_settings', array( $this, 'add_role_based_redirection_setting' ), 1, 1 );
+			add_filter( 'user_registration_form_settings_save', array( $this, 'save_role_based_redirection_form_settings' ), 10, 3 );
+
+			// License Expiry Notice.
+			add_action( 'admin_notices', array( $this, 'user_registration_license_expiry_notice' ) );
+		}
+
+		/**
+		 * Display Expiry notice.
+		 *
+		 * @since 3.2.4
+		 */
+		public function user_registration_license_expiry_notice() {
+			// Get the license expiry date.
+			$license_data = ur_get_license_plan();
+
+			if ( empty( $license_data ) || 'lifetime' === $license_data->expires ) {
+				return;
+			}
+
+			$license_expiry_date = strtotime( $license_data->expires );
+
+			// Check if the expiration date has passed.
+			if ( $license_expiry_date < time() ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				// Get the last dismissed time.
+				$last_dismissed_time = get_option( 'user_registration_license_expiry_notice_last_dismissed_time' );
+				$last_notice_count   = get_option( 'user_registration_license_expiry_notice_last_notice_count', 0 );
+				// Check if the notice has been dismissed before.
+				if ( ! $last_dismissed_time && ! $last_notice_count ) {
+					$this->user_registration_expiry_notice_content();
+				} elseif ( '1' === $last_notice_count && strtotime( '+1 days', strtotime( $last_dismissed_time ) ) <= time() ) {
+					$this->user_registration_expiry_notice_content();
+				} elseif ( '2' === $last_notice_count && strtotime( '+7 days', strtotime( $last_dismissed_time ) ) <= time() ) {
+					$this->user_registration_expiry_notice_content();
+				} elseif ( '3' === $last_notice_count && strtotime( '+15 days', strtotime( $last_dismissed_time ) ) <= time() ) {
+					$this->user_registration_expiry_notice_content();
+				} elseif ( '4' === $last_notice_count && strtotime( '+30 days', strtotime( $last_dismissed_time ) ) <= time() ) {
+					$this->user_registration_expiry_notice_content();
+				} elseif ( '5' === $last_notice_count && strtotime( '+60 days', strtotime( $last_dismissed_time ) ) <= time() ) {
+					$this->user_registration_expiry_notice_content();
+				}
+			}
+
+		}
+
+		/**
+		 * License expiry notice message.
+		 *
+		 * @since 3.2.4
+		 */
+		public function user_registration_expiry_notice_content() {
+			?>
+			<div class="ur-license-expiry-notice notice notice-error is-dismissible">
+				<p>
+			<?php
+			/* translators:My Account Page */
+			echo wp_kses_post( sprintf( __( ' Your license has been expired. Please renew the license from %1$sMy Account Page%2$s.', 'user-registration' ), '<a href="https://wpeverest.com/login/" target="_blank">', '</a>' ) );
+			?>
+				</p>
+			</div>
+			<?php
+		}
+
+		/**
+		 * Sync External Field when update user from admin side.
+		 *
+		 * @param int   $user_id User ID.
+		 * @param array $profile Form Details.
+		 */
+		public function user_registration_pro_sync_external_fields_after_admin_save_profile_validation( $user_id, $profile ) {
+
+			if ( isset( $_POST['ur_user_user_status'] ) && 1 != $_POST['ur_user_user_status'] ) {
+				return;
+			}
+
+			$form_id = ur_get_form_id_by_userid( $user_id );
+
+			$valid_form_data = array();
+
+			foreach ( $_POST as $post_key => $post_data ) {
+
+				$pos = strpos( $post_key, 'user_registration_' );
+
+				if ( false !== $pos ) {
+					$new_string = substr_replace( $post_key, '', $pos, strlen( 'user_registration_' ) );
+
+					if ( ! empty( $new_string ) ) {
+						$valid_form_data[ $new_string ]               = new stdClass();
+						$valid_form_data[ $new_string ]->value        = $post_data;
+						$valid_form_data[ $new_string ]->field_type   = $profile[ $post_key ]['type'];
+						$valid_form_data[ $new_string ]->label        = $profile[ $post_key ]['label'];
+						$valid_form_data[ $new_string ]->field_name   = $new_string;
+						$valid_form_data[ $new_string ]->extra_params = array(
+							'field_key' => $profile[ $post_key ]['field_key'],
+							'label'     => $profile[ $post_key ]['label'],
+						);
+					}
+				} else {
+					$key        = 'email' === $post_key ? 'user_email' : $post_key;
+					$field_data = 'user_registration_' . $key;
+					$data       = isset( $profile[ $field_data ] ) ? $profile[ $field_data ] : array();
+
+					if ( ! empty( $data ) ) {
+						$valid_form_data[ $key ]               = new stdClass();
+						$valid_form_data[ $key ]->value        = $post_data;
+						$valid_form_data[ $key ]->field_type   = $profile[ $field_data ]['type'];
+						$valid_form_data[ $key ]->label        = $profile[ $field_data ]['label'];
+						$valid_form_data[ $key ]->field_name   = $key;
+						$valid_form_data[ $key ]->extra_params = array(
+							'field_key' => $profile[ $field_data ]['field_key'],
+							'label'     => $profile[ $field_data ]['label'],
+						);
+					}
+				}
+			}
+
+			if ( count( $valid_form_data ) < 1 ) {
+				return;
+			}
+			user_registration_pro_sync_external_field( $valid_form_data, $form_id, $user_id );
+
 		}
 
 		/**
@@ -94,7 +233,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 			$is_already_compatible = get_option( 'user_registration_pro_whitelist_compatibility', false );
 
 			if ( ! $is_already_compatible ) {
-				$ur_pro_whitelist_option = get_option( 'user_registration_pro_domain_restriction_settings','' );
+				$ur_pro_whitelist_option = get_option( 'user_registration_pro_domain_restriction_settings', '' );
 
 				if ( ! empty( $ur_pro_whitelist_option ) ) {
 					$this->handle_backward_compatibility_for_individual_form( $ur_pro_whitelist_option );
@@ -119,7 +258,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 				update_post_meta( $form->ID, 'user_registration_form_setting_enable_whitelist_domain', true );
 				update_post_meta( $form->ID, 'user_registration_form_setting_whitelist_domain', 'allowed' );
 				$whitelist = array_map( 'trim', explode( PHP_EOL, $ur_pro_whitelist_option ) );
-				update_post_meta( $form->ID, 'user_registration_form_setting_domain_restriction_settings', implode( ",", $whitelist ) );
+				update_post_meta( $form->ID, 'user_registration_form_setting_domain_restriction_settings', implode( ',', $whitelist ) );
 			}
 
 			update_option( 'user_registration_pro_whitelist_compatibility', true );
@@ -200,15 +339,16 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 					'user-registration-pro-admin',
 					'user_registration_pro_admin_script_data',
 					array(
-						'ajax_url'                               => admin_url( 'admin-ajax.php' ),
-						'ur_pro_external_fields_mapping_output'  => $this->ur_pro_external_fields_mapping_output(),
-						'ur_pro_form_fields'                     => $this->get_forms_all_fields_data(),
-						'ur_pro_db_tables'                       => user_registration_get_all_db_tables(),
-						'ur_pro_install_extension'               => wp_create_nonce( 'ur_pro_install_extension_nonce' ),
-						'ur_pro_get_db_columns_by_table'         => wp_create_nonce( 'ur_pro_get_db_columns_by_table_nonce' ),
-						'ur_pro_get_form_fields_by_form_id'      => wp_create_nonce( 'ur_pro_get_form_fields_by_form_id_nonce' ),
+						'ajax_url'                        => admin_url( 'admin-ajax.php' ),
+						'ur_pro_external_fields_mapping_output' => $this->ur_pro_external_fields_mapping_output(),
+						'ur_pro_form_fields'              => $this->get_forms_all_fields_data(),
+						'ur_pro_db_tables'                => user_registration_get_all_db_tables(),
+						'ur_pro_install_extension'        => wp_create_nonce( 'ur_pro_install_extension_nonce' ),
+						'ur_pro_get_db_columns_by_table'  => wp_create_nonce( 'ur_pro_get_db_columns_by_table_nonce' ),
+						'ur_pro_get_license_expiry_count' => wp_create_nonce( 'ur_pro_get_license_expiry_count_nonce' ),
+						'ur_pro_get_form_fields_by_form_id' => wp_create_nonce( 'ur_pro_get_form_fields_by_form_id_nonce' ),
 						'ur_pro_extension_installed_failed_text' => __( 'Installation Failed !!', 'user-registration' ),
-						'ur_pro_db_prefix' => $wpdb->prefix,
+						'ur_pro_db_prefix'                => $wpdb->prefix,
 					)
 				);
 			}
@@ -219,8 +359,8 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		 */
 		public function ur_pro_external_fields_mapping_output() {
 			global $wpdb;
-			$form_id              = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;
-			$get_all_fields       = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
+			$form_id                = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;
+			$get_all_fields         = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
 			$external_fields_mapped = $this->get_external_field_mapping_list( $form_id, $get_all_fields );
 
 			if ( $external_fields_mapped ) {
@@ -246,7 +386,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 				$output .= '<div class="ur-pro-mapping-warning-notice" >';
 				$output .= '<span style="color:red;font-weight:bold" >' . esc_html__( 'Please make sure all fields are valid before saving the form.', 'user-registration' ) . '</span>';
 
-				$output .= '</div><br/>';
+				$output    .= '</div><br/>';
 				$get_tables = user_registration_get_all_db_tables();
 				if ( ! empty( $get_tables ) ) {
 					// $selected_table = $wpdb->prefix . 'usermeta';
@@ -275,19 +415,19 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 				$output .= '<ul class="ur-pro-field-mapping-box" data-last-key="1">';
 
 				$data_key = 1;
-				$output .= '<li class="ur-pro-external-field-map-group">';
-				$output .= '<div class="ur-pro-external-field-map-form-group" style="text-align:center;" >';
-				$output .= '<b>' . esc_html__( 'Form Fields', 'user-registration' ) . '</b>';
-				$output .= '</div>';
-				$output .= '<div class="ur-pro-operator"></div>';
-				$output .= '<div class="ur-pro-value">';
-				$output .= '<b>' . esc_html__( 'External Field Keys', 'user-registration' ) . '</b>';
-				$output .= '</div>';
-				$output .= '</li>';
-				$output .= '<li class="ur-pro-external-field-map-group" data-key="' . $data_key . '">';
-				$output .= '<div class="ur-pro-external-field-map-form-group">';
-				$output .= '<select class="ur-pro-fields ur-pro-field-map-select" name="ur_pro_external_map_form_fields[' . $data_key . ']">';
-				$output .= '<option value="">' . esc_html__( '-- Select Field --', 'user-registration' ) . '</option>';
+				$output  .= '<li class="ur-pro-external-field-map-group">';
+				$output  .= '<div class="ur-pro-external-field-map-form-group" style="text-align:center;" >';
+				$output  .= '<b>' . esc_html__( 'Form Fields', 'user-registration' ) . '</b>';
+				$output  .= '</div>';
+				$output  .= '<div class="ur-pro-operator"></div>';
+				$output  .= '<div class="ur-pro-value">';
+				$output  .= '<b>' . esc_html__( 'External Field Keys', 'user-registration' ) . '</b>';
+				$output  .= '</div>';
+				$output  .= '</li>';
+				$output  .= '<li class="ur-pro-external-field-map-group" data-key="' . $data_key . '">';
+				$output  .= '<div class="ur-pro-external-field-map-form-group">';
+				$output  .= '<select class="ur-pro-fields ur-pro-field-map-select" name="ur_pro_external_map_form_fields[' . $data_key . ']">';
+				$output  .= '<option value="">' . esc_html__( '-- Select Field --', 'user-registration' ) . '</option>';
 
 				foreach ( $get_all_fields as $ind_field_key => $ind_field_value ) {
 					$output .= '<option value="' . esc_attr__( $ind_field_key, 'user-registration' ) . '" data-type="' . esc_attr__( $ind_field_value['field_key'], 'user-registration' ) . '"> ' . $ind_field_value['label'] . ' </option>';
@@ -317,10 +457,10 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		 * @return array
 		 */
 		public function get_forms_all_fields_data() {
-			$form_id              = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;
-			$get_all_fields       = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
+			$form_id        = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;
+			$get_all_fields = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
 			return array(
-				'all_form_fields'      => $get_all_fields,
+				'all_form_fields' => $get_all_fields,
 			);
 		}
 
@@ -345,9 +485,9 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 
 				$output .= '<select class="ur-pro-db-table-section" name="ur-pro-db-table-section">';
 
-				$usermeta_table = $wpdb->prefix . 'usermeta';
-				$selected_db_table = isset( $field_mapping_settings[0]['db_table'] ) ? $field_mapping_settings[0]['db_table'] : $usermeta_table;
-				$selected_meta_table = $usermeta_table === $selected_db_table ? 'selected="selected"' : '';
+				$usermeta_table          = $wpdb->prefix . 'usermeta';
+				$selected_db_table       = isset( $field_mapping_settings[0]['db_table'] ) ? $field_mapping_settings[0]['db_table'] : $usermeta_table;
+				$selected_meta_table     = $usermeta_table === $selected_db_table ? 'selected="selected"' : '';
 				$selected_external_table = $usermeta_table !== $selected_db_table ? 'selected="selected"' : '';
 
 				$output .= '<option value="usermeta_table" ' . $selected_meta_table . '>Usermeta Table</option>';
@@ -367,20 +507,20 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 					$output .= '<option value="">-- Select Table Name --</option>';
 					foreach ( $get_tables as $key => $table_name ) {
 						$selected = $selected_db_table === $table_name ? 'selected="selected"' : '';
-						$output .= '<option value="' . esc_attr( $table_name ) . '" ' . $selected . '> ' . $table_name . ' </option>';
+						$output  .= '<option value="' . esc_attr( $table_name ) . '" ' . $selected . '> ' . $table_name . ' </option>';
 					}
 					$output .= '</select><br/>';
 
-					$get_columns = user_registration_get_columns_by_table( $selected_db_table );
-					$selected_user_id_db_column = isset( $field_mapping_settings[0]['user_id_db_column'] ) ? $field_mapping_settings[0]['user_id_db_column'] : '';
-					$selected_field_key_db_column = isset( $field_mapping_settings[0]['field_key_db_column'] ) ? $field_mapping_settings[0]['field_key_db_column'] : '';
+					$get_columns                    = user_registration_get_columns_by_table( $selected_db_table );
+					$selected_user_id_db_column     = isset( $field_mapping_settings[0]['user_id_db_column'] ) ? $field_mapping_settings[0]['user_id_db_column'] : '';
+					$selected_field_key_db_column   = isset( $field_mapping_settings[0]['field_key_db_column'] ) ? $field_mapping_settings[0]['field_key_db_column'] : '';
 					$selected_field_value_db_column = isset( $field_mapping_settings[0]['field_value_db_column'] ) ? $field_mapping_settings[0]['field_value_db_column'] : '';
 
 					$output .= '<label class="user_registration_user_id_db_column_label">  ' . esc_html__( 'Column for User ID', 'user-registration' ) . ' <span class="user-registration-help-tip" data-tip="' . esc_html__( "Select plugin's table user id column name where user id will be stored.", 'user-registration' ) . '"></span> </label><select name="user_registration_user_id_db_column" class="ur_pro_user_id_db_column">';
 					$output .= '<option value="">-- Select Column for User ID --</option>';
 					foreach ( $get_columns as $key => $column_name ) {
 						$selected = $selected_user_id_db_column === $column_name ? 'selected="selected"' : '';
-						$output .= '<option value="' . esc_attr( $column_name ) . '" ' . $selected . '> ' . $column_name . ' </option>';
+						$output  .= '<option value="' . esc_attr( $column_name ) . '" ' . $selected . '> ' . $column_name . ' </option>';
 					}
 					$output .= '</select><br/>';
 
@@ -388,7 +528,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 					$output .= '<option value="">-- Select Column for Field Key --</option>';
 					foreach ( $get_columns as $key => $column_name ) {
 						$selected = $selected_field_key_db_column === $column_name ? 'selected="selected"' : '';
-						$output .= '<option value="' . esc_attr( $column_name ) . '" ' . $selected . '> ' . $column_name . ' </option>';
+						$output  .= '<option value="' . esc_attr( $column_name ) . '" ' . $selected . '> ' . $column_name . ' </option>';
 					}
 					$output .= '</select><br/>';
 
@@ -396,7 +536,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 					$output .= '<option value="">-- Select Column for Field Value --</option>';
 					foreach ( $get_columns as $key => $column_name ) {
 						$selected = $selected_field_value_db_column === $column_name ? 'selected="selected"' : '';
-						$output .= '<option value="' . esc_attr( $column_name ) . '" ' . $selected . '> ' . $column_name . ' </option>';
+						$output  .= '<option value="' . esc_attr( $column_name ) . '" ' . $selected . '> ' . $column_name . ' </option>';
 					}
 					$output .= '</select><br/>';
 
@@ -428,7 +568,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 
 							foreach ( $get_all_fields as $ind_field_key => $ind_field_value ) {
 								$selectedField = $mapping_row['ur_field'] == $ind_field_key ? 'selected="selected"' : '';
-								$output .= '<option value="' . esc_attr__( $ind_field_key, 'user-registration' ) . '" data-type="' . esc_attr__( $ind_field_value['field_key'], 'user-registration' ) . '" ' . $selectedField . '> ' . $ind_field_value['label'] . ' </option>';
+								$output       .= '<option value="' . esc_attr__( $ind_field_key, 'user-registration' ) . '" data-type="' . esc_attr__( $ind_field_value['field_key'], 'user-registration' ) . '" ' . $selectedField . '> ' . $ind_field_value['label'] . ' </option>';
 							}
 							$output .= '</select></div>';
 							$output .= '<div class="ur-pro-operator"> <i class="dashicons dashicons-arrow-right-alt"></i> </div>';
@@ -449,19 +589,19 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 					$output .= '<ul class="ur-pro-field-mapping-box" data-last-key="1">';
 
 					$data_key = 1;
-					$output .= '<li class="ur-pro-external-field-map-group">';
-					$output .= '<div class="ur-pro-external-field-map-form-group" style="text-align:center;" >';
-					$output .= '<b>' . esc_html__( 'Form Fields', 'user-registration' ) . '</b>';
-					$output .= '</div>';
-					$output .= '<div class="ur-pro-operator"></div>';
-					$output .= '<div class="ur-pro-value">';
-					$output .= '<b>' . esc_html__( 'External Field Keys', 'user-registration' ) . '</b>';
-					$output .= '</div>';
-					$output .= '</li>';
-					$output .= '<li class="ur-pro-external-field-map-group" data-key="' . $data_key . '">';
-					$output .= '<div class="ur-pro-external-field-map-form-group">';
-					$output .= '<select class="ur-pro-fields ur-pro-field-map-select" name="ur_pro_external_map_form_fields[' . $data_key . ']">';
-					$output .= '<option value="">' . esc_html__( '-- Select Field --', 'user-registration' ) . '</option>';
+					$output  .= '<li class="ur-pro-external-field-map-group">';
+					$output  .= '<div class="ur-pro-external-field-map-form-group" style="text-align:center;" >';
+					$output  .= '<b>' . esc_html__( 'Form Fields', 'user-registration' ) . '</b>';
+					$output  .= '</div>';
+					$output  .= '<div class="ur-pro-operator"></div>';
+					$output  .= '<div class="ur-pro-value">';
+					$output  .= '<b>' . esc_html__( 'External Field Keys', 'user-registration' ) . '</b>';
+					$output  .= '</div>';
+					$output  .= '</li>';
+					$output  .= '<li class="ur-pro-external-field-map-group" data-key="' . $data_key . '">';
+					$output  .= '<div class="ur-pro-external-field-map-form-group">';
+					$output  .= '<select class="ur-pro-fields ur-pro-field-map-select" name="ur_pro_external_map_form_fields[' . $data_key . ']">';
+					$output  .= '<option value="">' . esc_html__( '-- Select Field --', 'user-registration' ) . '</option>';
 
 					foreach ( $get_all_fields as $ind_field_key => $ind_field_value ) {
 						$output .= '<option value="' . esc_attr__( $ind_field_key, 'user-registration' ) . '" data-type="' . esc_attr__( $ind_field_value['field_key'], 'user-registration' ) . '"> ' . $ind_field_value['label'] . ' </option>';
@@ -480,27 +620,11 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 					$output .= '</ul>';
 				}
 
-
 				$output .= '</div>';
 				$output .= '</div>';
 				$output .= '</div>';
 				return $output;
 			}
-		}
-
-		/**
-		 * Get all emails triggered.
-		 *
-		 * @return array $emails List of all emails.
-		 */
-		public function get_emails( $emails ) {
-			$emails['User_Registration_Settings_Generated_Password_Email']   = include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-generated-password-email.php';
-			$emails['User_Registration_Settings_Delete_Account_Email']       = include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-delete-account-email.php';
-			$emails['User_Registration_Settings_Delete_Account_Admin_Email'] = include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-delete-account-admin-email.php';
-			$emails['User_Registration_Settings_Prevent_Concurrent_Login_Email'] = include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-prevent-concurrent-login-email.php';
-			$emails['User_Registration_Settings_Email_Verified_Admin_Email']    = include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-email-verified-admin-email.php';
-
-			return $emails;
 		}
 
 		/**
@@ -565,7 +689,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		 * @since 1.0.0
 		 */
 		public function user_registration_pro_auto_generate_password( $form_id ) {
-			$password_length   = ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_generated_password_length' );
+			$password_length = ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_generated_password_length' );
 			$user_pass       = trim( wp_generate_password( $password_length, true, true ) );
 			add_filter(
 				'user_registration_auto_generated_password',
@@ -592,9 +716,9 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		 * @param int     $user_id ID of the user
 		 */
 		public function user_registration_after_register_mail( $success_params, $valid_form_data, $form_id, $user_id ) {
-			$enable_auto_password_generation   = ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_password_activate' );
+			$enable_auto_password_generation = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_password_activate' ) );
 
-			if ( 'yes' === $enable_auto_password_generation || '1' === $enable_auto_password_generation ) {
+			if ( $enable_auto_password_generation ) {
 				$this->send_auto_generated_password_email( $user_id, $form_id, $valid_form_data );
 				$success_params['auto_password_generation_success_message'] = get_option( 'user_registration_pro_auto_password_generation_message', esc_html( 'An email with a password to access your account has been sent to your email.' ) );
 			}
@@ -628,7 +752,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 
 			$subject = get_option( 'user_registration_pro_auto_generated_password_email_subject', 'Your password for logging into {{blog_info}}' );
 
-			$settings                  = new User_Registration_Settings_Generated_Password_Email();
+			$settings                  = new UR_Settings_Auto_Generated_Password_Email();
 			$message                   = $settings->user_registration_get_auto_generated_password_email();
 			$message                   = get_option( 'user_registration_pro_auto_generated_password_email_content', $message );
 			$form_id                   = ur_get_form_id_by_userid( $user_id );
@@ -640,7 +764,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 			// Get selected email template id for specific form.
 			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
-			if ( 'yes' === get_option( 'user_registration_pro_enable_auto_generated_password_email', 'yes' ) ) {
+			if ( ur_option_checked( 'user_registration_enable_auto_generated_password_email', true ) ) {
 				UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $header, '', $template_id );
 			}
 		}
@@ -710,7 +834,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 				foreach ( $popups->posts as $popup ) {
 					$popup_content = json_decode( $popup->post_content );
 
-					if ( '1' === $popup_content->popup_status ) {
+					if ( ur_string_to_bool( $popup_content->popup_status ) ) {
 						$active_popup_count++;
 					}
 				}
@@ -750,7 +874,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 				$post_id[]     = $popup->ID;
 				$popup_content = json_decode( $popup->post_content );
 
-				if ( '1' === $popup_content->popup_status ) {
+				if ( ur_string_to_bool( $popup_content->popup_status ) ) {
 					$menus[ 'user-registration-modal-link-' . $popup->ID ] = sprintf( __( '%s', 'user-registration' ), $popup_content->popup_title );
 				}
 			}
@@ -759,10 +883,10 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 			<div id="posttype-user-registration-modal" class="posttypediv">
 				<div id="tabs-panel-user-registration-modal" class="tabs-panel tabs-panel-active">
 					<ul id="user-registration-modal-checklist" class="categorychecklist form-no-clear">
-					<?php
-					$i = - 1;
-					foreach ( $menus as $key => $value ) :
-						?>
+			<?php
+			$i = - 1;
+			foreach ( $menus as $key => $value ) :
+				?>
 							<li>
 								<label class="menu-item-title">
 									<input type="checkbox" class="menu-item-checkbox"
@@ -770,7 +894,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 										   value="<?php echo esc_attr( $i ); ?>"/> <?php echo esc_html( $value ); ?>
 								</label>
 								<input type="hidden" class="menu-item-type"
-									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="post"/>
+									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom"/>
 								<input type="hidden" class="menu-item-title"
 									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
 									   value="<?php echo esc_html( $value ); ?>"/>
@@ -781,10 +905,10 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"
 									   value="user-registration-modal-link <?php echo $key; ?>"/>
 							</li>
-							<?php
-							$i --;
-							endforeach;
-					?>
+					<?php
+					$i --;
+					endforeach;
+			?>
 					</ul>
 				</div>
 				<p class="button-controls">
@@ -829,7 +953,6 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 			include_once UR_ABSPATH . 'templates/pro/dashboard.php';
 		}
 
-
 		/**
 		 * Render Pro Section
 		 *
@@ -856,7 +979,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 
 				'setting_data' => array(
 					array(
-						'type'              => 'checkbox',
+						'type'              => 'toggle',
 						'label'             => __( 'Enable Keyboard Friendly Form', 'user-registration' ),
 						'description'       => '',
 						'required'          => false,
@@ -864,11 +987,11 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 						'class'             => array( 'ur-enhanced-select' ),
 						'input_class'       => array(),
 						'custom_attributes' => array(),
-						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_keyboard_friendly_form', 'no' ),
+						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_keyboard_friendly_form', false ),
 						'tip'               => __( 'Fill the form easily using keyboard quick keys.', 'user-registration' ),
 					),
 					array(
-						'type'              => 'checkbox',
+						'type'              => 'toggle',
 						'label'             => __( 'Enable Reset Button', 'user-registration' ),
 						'description'       => '',
 						'required'          => false,
@@ -876,7 +999,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 						'class'             => array( 'ur-enhanced-select' ),
 						'input_class'       => array(),
 						'custom_attributes' => array(),
-						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_reset_button', 'yes' ),
+						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_reset_button', false ),
 						'tip'               => __( 'To reset the default values of user in registration form', 'user-registration' ),
 					),
 					array(
@@ -904,7 +1027,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 						'tip'               => __( 'Custom css class to embed in the reset button. You can enter multiple classes seperated with space.', 'user-registration' ),
 					),
 					array(
-						'type'              => 'checkbox',
+						'type'              => 'toggle',
 						'label'             => __( 'Enable Form Field Icon', 'user-registration' ),
 						'description'       => '',
 						'required'          => false,
@@ -912,38 +1035,38 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 						'class'             => array( 'ur-enhanced-select' ),
 						'input_class'       => array(),
 						'custom_attributes' => array(),
-						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_enable_field_icon', 'yes' ),
+						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_enable_field_icon', false ),
 						'tip'               => __( 'To show the field icon in user registration form', 'user-registration' ),
 					),
 					array(
-						'type'              => 'checkbox',
+						'type'              => 'toggle',
 						'label'             => __( 'Activate Auto Generated Password', 'user-registration' ),
 						'tip'               => __( 'Enable auto generated password', 'user-registration' ),
 						'id'                => 'user_registration_pro_auto_password_activate',
 						'class'             => array( 'ur-enhanced-select' ),
 						'input_class'       => array(),
 						'custom_attributes' => array(),
-						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_password_activate', 'yes' ),
+						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_password_activate', false ),
 					),
 					array(
-						'type'              => 'number',
-						'label'             => __( 'Password Length', 'user-registration' ),
-						'tip'               => __( 'The length of password you want to generate.', 'user-registration' ),
-						'id'                => 'user_registration_pro_auto_generated_password_length',
-						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_generated_password_length', 10 ),
+						'type'    => 'number',
+						'label'   => __( 'Password Length', 'user-registration' ),
+						'tip'     => __( 'The length of password you want to generate.', 'user-registration' ),
+						'id'      => 'user_registration_pro_auto_generated_password_length',
+						'default' => ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_generated_password_length', 10 ),
 					),
 					array(
-						'type'              => 'checkbox',
+						'type'              => 'toggle',
 						'label'             => __( 'Activate Spam Protection By Honeypot', 'user-registration' ),
 						'tip'               => __( 'Select forms where you want to enable this feature.', 'user-registration' ),
 						'id'                => 'user_registration_pro_spam_protection_by_honeypot_enable',
 						'class'             => array( 'ur-enhanced-select' ),
 						'input_class'       => array(),
 						'custom_attributes' => array(),
-						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_pro_spam_protection_by_honeypot_enable', 'yes' ),
+						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_pro_spam_protection_by_honeypot_enable', false ),
 					),
 					array(
-						'type'              => 'checkbox',
+						'type'              => 'toggle',
 						'label'             => __( 'Enable Whitelist/Blacklist Domain', 'user-registration' ),
 						'description'       => '',
 						'required'          => false,
@@ -964,9 +1087,9 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 						'custom_attributes' => array(),
 						'input_class'       => array(),
 						'required'          => false,
-						'options'  => array(
-							'allowed'  => esc_html__( "Allowed Domains", "user-registration" ),
-							'denied'   => esc_html__( "Denied Domains", "user-registration" ),
+						'options'           => array(
+							'allowed' => esc_html__( 'Allowed Domains', 'user-registration' ),
+							'denied'  => esc_html__( 'Denied Domains', 'user-registration' ),
 						),
 						'tip'               => __( 'Choose Allowed/Denied to Whitelist/Blacklist domains respectively.', 'user-registration' ),
 					),
@@ -975,7 +1098,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 						'description' => __( 'Multiple domain must be separated by comma.', 'user-registration' ),
 						'id'          => 'user_registration_form_setting_domain_restriction_settings',
 						'placeholder' => 'for eg. gmail.com, outlook.com',
-						'default'     =>  ur_get_single_post_meta( $form_id, 'user_registration_form_setting_domain_restriction_settings', '' ),
+						'default'     => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_domain_restriction_settings', '' ),
 						'type'        => 'textarea',
 						'rows'        => 8,
 						'cols'        => 40,
@@ -983,7 +1106,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 						'tip'         => __( 'Add the domain lists to whitelist/blacklist them.', 'user-registration' ),
 					),
 					array(
-						'type'              => 'checkbox',
+						'type'              => 'toggle',
 						'label'             => __( 'Enable form field mapping with external fields', 'user-registration' ),
 						'description'       => '',
 						'required'          => false,
@@ -991,7 +1114,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 						'class'             => array( 'ur-enhanced-select' ),
 						'input_class'       => array(),
 						'custom_attributes' => array(),
-						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_enable_external_fields_mapping', 'no' ),
+						'default'           => ur_get_single_post_meta( $form_id, 'user_registration_enable_external_fields_mapping', false ),
 						'tip'               => __( 'To enable mapping the external fields with user registration fields', 'user-registration' ),
 					),
 				),
@@ -1010,7 +1133,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		public function save_pro_settings( $settings, $form_id = 0 ) {
 
 			$pro_setting = $this->get_pro_settings( $form_id );
-			$settings       = array_merge( $settings, $pro_setting );
+			$settings    = array_merge( $settings, $pro_setting );
 
 			return $settings;
 		}
@@ -1022,7 +1145,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		 * @return void.
 		 */
 		public function save_pro_form_settings( $post ) {
-			$form_id                 = absint( $post['form_id'] );
+			$form_id                          = absint( $post['form_id'] );
 			$ur_pro_external_mapping_settings = isset( $post['ur_pro_external_mapping_settings'] ) ? wp_unslash( $post['ur_pro_external_mapping_settings'] ) : array();
 
 			// conditional user role settings save.
@@ -1058,6 +1181,62 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 							'prompt_password' => __( 'Prompt password popup before delete account.', 'user-registration' ),
 						),
 					),
+					array(
+						'title'    => __( 'Auto Logout After Inactivity', 'user-registration' ),
+						'desc'     => __( 'Logout users automatically after a certain period of inactivity.', 'user-registration' ),
+						'id'       => 'user_registration_auto_logout_inactivity_time',
+						'type'     => 'select',
+						'class'    => 'ur-enhanced-select-nostd',
+						'desc_tip' => true,
+						'default'  => get_option( 'user_registration_auto_logout_inactivity_time', '' ),
+						'options'  => apply_filters(
+							'user_registration_auto_logout_inactivity_period',
+							array(
+								''   => __( 'None', 'user-registration' ),
+								'5'  => __( '5 minutes', 'user-registration' ),
+								'10' => __( '10 minutes', 'user-registration' ),
+								'15' => __( '15 minutes', 'user-registration' ),
+								'20' => __( '20 minutes', 'user-registration' ),
+								'30' => __( '30 minutes', 'user-registration' ),
+								'60' => __( '60 minutes', 'user-registration' ),
+							)
+						),
+						'css'      => 'min-width: 350px;',
+					),
+					array(
+						'title'    => __( 'Logout Timeout Period', 'user-registration' ),
+						'desc'     => __( 'Time to show the countdown screen before logging out the user.', 'user-registration' ),
+						'id'       => 'user_registration_timeout_countdown_inactive_period',
+						'type'     => 'select',
+						'class'    => 'ur-enhanced-select-nostd',
+						'desc_tip' => true,
+						'default'  => get_option( 'user_registration_timeout_countdown_inactive_period' ),
+						'options'  => apply_filters(
+							'user_registration_timeout_countdown_inactive_period',
+							array(
+								'10' => __( '10 seconds', 'user-registration' ),
+								'15' => __( '15 seconds', 'user-registration' ),
+								'20' => __( '20 seconds', 'user-registration' ),
+								'30' => __( '30 seconds', 'user-registration' ),
+								'60' => __( '60 seconds', 'user-registration' ),
+							)
+						),
+						'css'      => 'min-width: 350px;',
+					),
+					array(
+						'title'    => __( 'Logout Roles', 'user-registration' ),
+						'desc'     => __( 'Select the roles to apply auto logout after inactivity.', 'user-registration' ),
+						'id'       => 'user_registration_role_based_inactivity',
+						'type'     => 'multiselect',
+						'class'    => 'ur-enhanced-select',
+						'desc_tip' => true,
+						'options'  => apply_filters(
+							'user_registration_role_based_inactivity',
+							ur_get_default_admin_roles()
+						),
+						'css'      => 'min-width: 350px; select2',
+						'default'  => array( 'subscriber' ),
+					),
 				)
 			);
 
@@ -1074,6 +1253,13 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		public function ur_pro_add_advanced_settings( $advanced_settings ) {
 			// Add new settings to advanced options.
 			$advanced_options = $advanced_settings['sections']['advanced_settings']['settings'];
+
+			foreach ( $advanced_options as $option_index => $option ) {
+				if ( $option['id'] === 'user_registration_allow_usage_tracking' ) {
+					$advanced_options[ $option_index ]['desc'] = sprintf( __( 'Help us improve the plugin\'s features by sharing %1$snon-sensitive plugin data%2$s with us.', 'user-registration' ), '<a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">', '</a>' );
+				}
+			}
+
 			$advanced_options = array_merge(
 				$advanced_options,
 				array(
@@ -1105,6 +1291,67 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 
 			$advanced_settings['sections']['advanced_settings']['settings'] = $advanced_options;
 
+			$advanced_settings_section     = $advanced_settings['sections'];
+			$privacy_settings_section      = array(
+				'privacy_settings' =>
+						array(
+							'title'    => __( 'Privacy', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
+							'settings' => array(
+								array(
+									'title'    => __( 'Enable Privacy Tab', 'user-registration' ),
+									'desc_tip' => __( 'Check to enable privacy tab in the my account.', 'user-registration' ),
+									'id'       => 'user_registration_enable_privacy_tab',
+									'type'     => 'toggle',
+									'css'      => 'min-width: 350px;',
+									'default'  => 'false',
+								),
+								array(
+									'title'    => __( 'Allow Profile Privacy', 'user-registration' ),
+									'desc'     => __( 'Enable user to select their profile to be private or public', 'user-registration' ),
+									'id'       => 'user_registration_enable_profile_privacy',
+									'type'     => 'toggle',
+									'desc_tip' => true,
+									'css'      => 'min-width: 350px;',
+									'class'    => 'privacy-tab-settings',
+									'default'  => 'true',
+								),
+								array(
+									'title'    => __( 'Allow Search Engine Indexing', 'user-registration' ),
+									'desc'     => __( 'Enable user to either allow or disallow search engine indexing of their profile', 'user-registration' ),
+									'id'       => 'user_registration_enable_profile_indexing',
+									'type'     => 'toggle',
+									'desc_tip' => true,
+									'css'      => 'min-width: 350px;',
+									'class'    => 'privacy-tab-settings',
+									'default'  => 'true',
+								),
+								array(
+									'title'    => __( 'Allow Download Personal Data', 'user-registration' ),
+									'desc'     => __( 'Enable users to send a request to download personal data', 'user-registration' ),
+									'id'       => 'user_registration_enable_download_personal_data',
+									'type'     => 'toggle',
+									'desc_tip' => true,
+									'css'      => 'min-width: 350px;',
+									'class'    => 'privacy-tab-settings',
+									'default'  => 'true',
+								),
+								array(
+									'title'    => __( 'Allow Erase Personal Data', 'user-registration' ),
+									'desc'     => __( 'Enable users to send a request to erase their personal data', 'user-registration' ),
+									'id'       => 'user_registration_enable_erase_personal_data',
+									'type'     => 'toggle',
+									'desc_tip' => true,
+									'css'      => 'min-width: 350px;',
+									'class'    => 'privacy-tab-settings',
+									'default'  => 'true',
+								),
+							),
+						),
+			);
+			$advanced_settings['sections'] = array_merge( $advanced_settings_section, $privacy_settings_section );
+
 			return $advanced_settings;
 		}
 
@@ -1124,19 +1371,19 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 						'title'    => __( 'Enable Login Icon Field', 'user-registration' ),
 						'desc'     => __( 'This option lets you to enable icon field in login form', 'user-registration' ),
 						'id'       => 'user_registration_pro_general_setting_login_form',
-						'type'     => 'checkbox',
+						'type'     => 'toggle',
 						'desc_tip' => __( 'Check to field to enable icon field in login form', 'user-registration' ),
 						'css'      => 'min-width: 350px;',
-						'default'  => 'no',
+						'default'  => 'false',
 					),
 					array(
-						'title'      => __( 'Prevent Active Login', 'user-registration' ),
-						'desc'       => __( 'Enable Prevent Concurrent Login', 'user-registration' ),
-						'id'         => 'user_registration_pro_general_setting_prevent_active_login',
-						'type'       => 'checkbox',
-						'desc_tip'   => __( 'Check this option to prevent the active logins.', 'user-registration' ),
-						'css'        => 'min-width: 350px;',
-						'default'    => 'no',
+						'title'    => __( 'Prevent Active Login', 'user-registration' ),
+						'desc'     => __( 'Enable Prevent Concurrent Login', 'user-registration' ),
+						'id'       => 'user_registration_pro_general_setting_prevent_active_login',
+						'type'     => 'toggle',
+						'desc_tip' => __( 'Check this option to prevent the active logins.', 'user-registration' ),
+						'css'      => 'min-width: 350px;',
+						'default'  => 'false',
 
 					),
 					array(
@@ -1152,10 +1399,19 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 						'title'    => __( 'Enable Redirect Back to Previous Page', 'user-registration' ),
 						'desc'     => __( 'This option lets you to enable redirect back to previous page after login', 'user-registration' ),
 						'id'       => 'user_registration_pro_general_setting_redirect_back_to_previous_page',
-						'type'     => 'checkbox',
+						'type'     => 'toggle',
 						'desc_tip' => __( 'Check to field to enable redirect back to previous page after login', 'user-registration' ),
 						'css'      => 'min-width: 350px;',
-						'default'  => 'no',
+						'default'  => 'false',
+					),
+					array(
+						'title'    => __( 'Enable Passwordless Login', 'user-registration' ),
+						'desc'     => __( 'This option lets you to enable passwordless login.', 'user-registration' ),
+						'id'       => 'user_registration_pro_passwordless_login',
+						'type'     => 'toggle',
+						'desc_tip' => __( 'This feature allows users to log in via email link instead of a password.', 'user-registration' ),
+						'css'      => 'min-width: 350px;',
+						'default'  => 'false',
 					),
 				)
 			);
@@ -1172,12 +1428,12 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		 * @since 3.0.1
 		 */
 		public function ur_pro_add_addons_page_footer( $addon ) {
-			$license_plan = ur_get_license_plan();
-
+			$license_data = ur_get_license_plan();
+			$license_plan = isset( $license_data->item_plan ) ? $license_data->item_plan : '';
 			?>
 			<?php if ( in_array( trim( $license_plan ), $addon->plan, true ) ) : ?>
 					<div class="action-buttons">
-						<?php if ( is_plugin_active( $addon->slug . '/' . $addon->slug . '.php' ) ) : ?>
+						<?php if ( is_plugin_active( $addon->slug . '/' . $addon->slug . '.php' ) && file_exists( WP_PLUGIN_DIR . '/' . $addon->slug . '/' . $addon->slug . '.php' ) ) : ?>
 							<?php
 								/* translators: %s: Add-on title */
 								$aria_label  = sprintf( esc_html__( 'Deactivate %s now', 'user-registration' ), $addon->title );
@@ -1215,15 +1471,64 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 							<a class="button button-primary activate-now" href="<?php echo esc_url( $url ); ?>" aria-label="<?php echo esc_attr( $aria_label ); ?>"><?php esc_html_e( 'Activate', 'user-registration' ); ?></a>
 						<?php else : ?>
 							<?php
-							/* translators: %s: Add-on title */
-							$aria_label = sprintf( esc_html__( 'Install %s now', 'user-registration' ), $addon->title );
+							if ( strpos( $addon->slug, 'payments' ) && strpos( $addon->slug, 'stripe' ) ) {
+								$slug = explode( ' ', $addon->slug );
+								$slug = explode( ' ', $addon->slug );
+
+								if ( ! is_plugin_active( $slug[0] . '/' . $slug[0] . '.php' ) && ! is_plugin_active( $slug[1] . '/' . $slug[1] . '.php' ) ) {
+
+									if ( ! file_exists( WP_PLUGIN_DIR . '/' . $slug[0] . '/' . $slug[0] . '.php' ) || ! file_exists( WP_PLUGIN_DIR . '/' . $slug[1] . '/' . $slug[1] . '.php' ) ) {
+										?>
+										<?php
+										/* translators: %s: Add-on title */
+										$aria_label = sprintf( esc_html__( 'Install %s now', 'user-registration' ), $addon->title );
+										?>
+										<a href="#" class="button install-now user-registration-install-extensions" data-name="<?php echo esc_attr( $addon->name ); ?>" data-slug="<?php echo esc_attr( $addon->slug ); ?>" data-name="<?php echo esc_attr( $addon->name ); ?>" aria-label="<?php echo esc_attr( $aria_label ); ?>"><?php esc_html_e( 'Install Addon', 'user-registration' ); ?></a>
+										<?php
+									} else {
+										$plugins = array(
+											plugin_basename( $slug[0] . '/' . $slug[0] . '.php' ),
+											plugin_basename( $slug[1] . '/' . $slug[1] . '.php' ),
+										);
+										$action  = 'activate-selected';
+
+										$url = add_query_arg(
+											array(
+												'action'   => $action,
+
+												'_wpnonce' => wp_create_nonce( 'bulk-plugins' ),
+											),
+											admin_url( 'plugins.php' )
+										);
+
+										?>
+									<form method="post" class="activate-now" action="<?php echo esc_url( $url ); ?>">
+										<?php
+										foreach ( $plugins as $plugin ) {
+											echo '<input type="hidden" name="checked[]" value="' . esc_attr( $plugin ) . '"/>';
+										}
+										?>
+
+									<button type="submit" class="button button-primary activate-now form" href="<?php echo esc_url( $url ); ?>" ><?php esc_html_e( 'Activate', 'user-registration' ); ?></button>
+									</form>
+										<?php
+									}
+								}
+							} else {
+								?>
+								<?php
+								/* translators: %s: Add-on title */
+								$aria_label = sprintf( esc_html__( 'Install %s now', 'user-registration' ), $addon->title );
+								?>
+								<a href="#" class="button install-now user-registration-install-extensions" data-name="<?php echo esc_attr( $addon->name ); ?>" data-slug="<?php echo esc_attr( $addon->slug ); ?>" data-name="<?php echo esc_attr( $addon->name ); ?>" aria-label="<?php echo esc_attr( $aria_label ); ?>"><?php esc_html_e( 'Install Addon', 'user-registration' ); ?></a>
+								<?php
+							}
 							?>
-							<a href="#" class="button install-now" data-slug="<?php echo esc_attr( $addon->slug ); ?>" data-name="<?php echo esc_attr( $addon->name ); ?>" aria-label="<?php echo esc_attr( $aria_label ); ?>"><?php esc_html_e( 'Install Addon', 'user-registration' ); ?></a>
 						<?php endif; ?>
 					</div>
 				<?php else : ?>
 					<div class="action-buttons upgrade-plan">
-						<a class="button upgrade-now" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=evf-upgrade-to-pro" target="_blank"><?php esc_html_e( 'Upgrade Plan', 'user-registration' ); ?></a>
+						<a class="button upgrade-now" href="https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro" target="_blank"><?php esc_html_e( 'Upgrade Plan', 'user-registration' ); ?></a>
 					</div>
 				<?php endif; ?>
 				<?php
@@ -1281,20 +1586,16 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 			$custom_setting = array(
 
 				'enable_prepopulate' => array(
-					'label'       => __( 'Allow field to be populated dynamically', 'user-registration' ),
-					'data-id'     => $field_id . '_enable_prepopulate',
-					'name'        => $field_id . '[enable_prepopulate]',
-					'class'       => $field_class . ' ur-settings-field-prepopulate',
-					'type'        => 'select',
-					'required'    => false,
-					'default'     => 'false',
-					'options'  => array(
-						'true'  => 'Yes',
-						'false' => 'No',
-					),
-					'tip'         => __( 'Enable this option to allow field to be populated dynamically', 'user-registration' ),
+					'label'    => __( 'Allow field to be populated dynamically', 'user-registration' ),
+					'data-id'  => $field_id . '_enable_prepopulate',
+					'name'     => $field_id . '[enable_prepopulate]',
+					'class'    => $field_class . ' ur-settings-field-prepopulate',
+					'type'     => 'toggle',
+					'required' => false,
+					'default'  => 'false',
+					'tip'      => __( 'Enable this option to allow field to be populated dynamically', 'user-registration' ),
 				),
-				'parameter_name' => array(
+				'parameter_name'     => array(
 					'label'       => __( 'Parameter Name', 'user-registration' ),
 					'data-id'     => $field_id . '_parameter_name',
 					'name'        => $field_id . '[parameter_name]',
@@ -1327,13 +1628,9 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 					'data-id'  => $field_id . '_validate_unique',
 					'name'     => $field_id . '[validate_unique]',
 					'class'    => $field_class . ' ur-settings-field-validate-unique',
-					'type'     => 'select',
+					'type'     => 'toggle',
 					'required' => false,
 					'default'  => 'false',
-					'options'  => array(
-						'true'  => 'Yes',
-						'false' => 'No',
-					),
 					'tip'      => __( 'Limit user input to unique values only. It will require that a value entered in the field is unique and doesn\'t previously exist for this field in the entry database.', 'user-registration' ),
 				),
 				'validation_message' => array(
@@ -1352,6 +1649,54 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		}
 
 		/**
+		 * Pattern validation field setting.
+		 *
+		 * @param array  $fields list of fields.
+		 * @param int    $field_id Field ID.
+		 * @param string $field_class Field class.
+		 *
+		 * @since 3.0.8
+		 */
+		public function ur_pro_pattern_validation( $fields, $field_id, $field_class ) {
+			$pattern_setting = array(
+				'enable_pattern' => array(
+					'label'       => __( 'Enable Pattern Validation', 'user-registration' ),
+					'data-id'     => $field_id . '_enable_pattern',
+					'name'        => $field_id . '[enable_pattern]',
+					'class'       => $field_class . ' ur-settings-custom-class',
+					'type'        => 'toggle',
+					'required'    => false,
+					'default'     => 'false',
+					'tip'         => __( 'Enable this option to allow pattern validation for this field.', 'user-registration' ),
+				),
+				'pattern_value'   => array(
+					'label'       => __( 'Pattern Value', 'user-registration' ),
+					'data-id'     => $field_id . '_pattern_value',
+					'name'        => $field_id . '[pattern_value]',
+					'class'       => $field_class . ' ur-settings-pattern_value',
+					'type'        => 'text',
+					'required'    => false,
+					'default'     => '',
+					'placeholder' => __( 'Enter pattern value', 'user-registration' ),
+					'tip'         => __( 'Pattern value is checked against.', 'user-registration' ),
+				),
+				'pattern_message' => array(
+					'label'       => __( 'Pattern Message', 'user-registration' ),
+					'data-id'     => $field_id . '_pattern_message',
+					'name'        => $field_id . '[pattern_message]',
+					'class'       => $field_class . ' ur-settings-pattern_message',
+					'type'        => 'text',
+					'required'    => false,
+					'default'     => __( 'Please provide a valid value for this field.', 'user-registration' ),
+					'placeholder' => __( 'Enter pattern message', 'user-registration' ),
+					'tip'         => __( 'If the pattern value does not match it will show this message.', 'user-registration' ),
+				),
+			);
+			$fields               = array_merge( $fields, $pattern_setting );
+			return $fields;
+		}
+
+		/**
 		 * Restrict copy/paste field setting.
 		 *
 		 * @param array  $fields list of fields.
@@ -1360,7 +1705,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		 *
 		 * @since 3.0.8
 		 */
-		public function ur_pro_restrict_copy_paste( $fields, $field_id, $field_class ){
+		public function ur_pro_restrict_copy_paste( $fields, $field_id, $field_class ) {
 			$restrict_copy_settings = array(
 				'disable_copy_paste' => array(
 					'label'    => __( 'Restrict copy/cut/paste', 'user-registration' ),
@@ -1390,19 +1735,29 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		 * @return array.
 		 */
 		public function add_form_field_tooltip_options( $setting, $field_id ) {
+			$exclude_tooltip = apply_filters(
+				'user_registration_exclude_tooltip',
+				array(
+					'section_title',
+					'hidden',
+				)
+			);
+			$strip_id        = str_replace( 'user_registration_', '', $field_id );
+
+			if ( in_array( $strip_id, $exclude_tooltip, true ) ) {
+				return $setting;
+			}
+
 			$custom_options = array(
 				'tooltip'         => array(
 					'setting_id'  => 'tooltip',
-					'type'        => 'select',
+					'type'        => 'toggle',
 					'label'       => __( 'Enable Tooltip', 'user-registration' ),
 					'name'        => 'ur_general_setting[tooltip]',
 					'placeholder' => '',
 					'required'    => true,
-					'options'     => array(
-						'no'  => __( 'No', 'user-registration' ),
-						'yes' => __( 'Yes', 'user-registration' ),
-					),
 					'tip'         => __( 'Show tooltip icon beside field label.', 'user-registration' ),
+					'default'     => 'false',
 				),
 				'tooltip_message' => array(
 					'setting_id'  => 'tooltip-message',
@@ -1439,7 +1794,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 					if ( 'url' === $key ) {
 						$key = 'user_' . $key;
 					}
-					$field_key    = str_replace( 'user_registration_', '', $key );
+					$field_key                  = str_replace( 'user_registration_', '', $key );
 					$single_field[ $field_key ] = $value;
 				}
 			}
@@ -1447,7 +1802,7 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 			foreach ( $profile as $key_name => $field_item ) {
 				foreach ( $field_item as $key => $field_value ) {
 					if ( isset( $key ) && 'validate_unique' === $key ) {
-						if ( 'true' === $field_value ) {
+						if ( ur_string_to_bool( $field_value ) ) {
 							$field_name = str_replace( 'user_registration_', '', $key_name );
 							$message    = $field_item['validate_message'];
 							$label      = $field_item['label'];
@@ -1508,15 +1863,14 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 		/**
 		 * Outputs Custom Fields Selection area to the Export User page.
 		 *
-		 * @param int $form_id
+		 * @param int $form_id Form Id.
 		 * @return void
 		 */
 		public function display_custom_fields_options( $form_id = '' ) {
 
 			echo '<div class="ur-export-custom-fields">
-					<p>Select Fields to Export</p>
-					<div class="ur-form-fields-container">
-						<input type="checkbox" name="csv-export-all-fields" class="ur-all-fields-option" checked>&nbsp;Select All<hr />';
+					<p>' . esc_html__( 'Select Fields to Export', 'user-registration' ) . '</p>
+					<div class="ur-form-fields-container">';
 
 			$fields_dict = UR()->form->get_form_fields(
 				$form_id,
@@ -1525,14 +1879,160 @@ if ( ! class_exists( 'User_Registration_Pro_Admin' ) ) {
 					'hide_fields'  => true,
 				)
 			);
-
+			echo '<select name= "csv-export-custom-fields[]" class="ur-custom-fields-input forms-list ur-select2-multiple" multiple>';
 			foreach ( $fields_dict as $field_id => $field_label ) {
-				echo '<input type="checkbox" name="csv-export-custom-fields[]" class="ur-custom-fields-input" value="' .
-				esc_attr( $field_id ) . '" checked>&nbsp;' . esc_html( $field_label ) . '<br />';
+				echo '<option class="ur-field-option" value="' . esc_attr( $field_id ) . '">' . esc_html( $field_label ) . '</option>';
+			}
+			echo '</select>';
+			echo '</div><div>';
+			if ( ! empty( $fields_dict ) ) {
+
+				$additional_info_fields = array(
+					'user_id'          => __( 'User ID', 'user-registration' ),
+					'user_role'        => __( 'User Role', 'user-registration' ),
+					'ur_user_status'   => __( 'User Status', 'user-registration' ),
+					'date_created'     => __( 'User Registered', 'user-registration' ),
+					'date_created_gmt' => __( 'User Registered GMT', 'user-registration' ),
+				);
+				echo '<p>' . esc_html__( 'Select Additional to Export', 'user-registration' ) . '</p>
+						<div class="ur-form-additional-fields-container">';
+				echo '<input type="hidden" name="all_fields_dict" class="ur_export_csv_additional_fields_dict" value="' . esc_attr( wp_json_encode( $fields_dict ) ) . '"/>';
+				echo '<select name= "all_selected_fields_dict[]" class="forms-list ur-select2-multiple" multiple>';
+
+				foreach ( $additional_info_fields as $field_id => $field_label ) {
+					echo '<option class="" value="' . esc_attr( $field_id ) . '">' . esc_html( $field_label ) . '</option>';
+				}
+				echo '</select></div>';
+				echo '<p>' . esc_html__( 'Export Formats', 'user-registration' ) . '</p><div>';
+				echo '<select name = "export_format">
+				<option value = "csv">' . esc_html__( 'Export as CSV', 'user-registration' ) . '</option>
+				<option value = "json">' . esc_html__( 'Export as JSON', 'user-registration' ) . '</option>
+				</select>';
+				echo '</div>';
+				echo '<p>' . esc_html__( 'Registered Date Range', 'user-registration' ) . '</p><div>';
+				echo '<input type = "button" id = "date_range" name = "date_range"/>
+				<input type="hidden" id="from_date" value="" name="from_date"/><input type="hidden" value="" id="to_date" name="to_date" />';
+				echo '</div></div><br>';
+			}
+		}
+
+
+		/**
+		 * Add Role Based Redirection option in Redirection Settings dropdown.
+		 *
+		 * @param [array] $options Options.
+		 * @return array
+		 */
+		public function add_role_based_redirection_option( $options ) {
+
+			$options['role-based-redirection'] = __( 'Role Based Redirection', 'user-registration' );
+
+			return $options;
+		}
+
+
+		/**
+		 * Add Role Based Redirection settings to the form settings array.
+		 *
+		 * @param [array] $form_settings Form Settings.
+		 * @return array
+		 */
+		public function add_role_based_redirection_setting( $form_settings ) {
+
+			$form_id = $form_settings['form_id'];
+
+			$form_settings['setting_data'][] = array(
+				'type'              => 'html',
+				'label'             => __( 'Role Based Redirection', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_role_based_redirection',
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'html_content'      => $this->ur_get_form_setting_role_based_redirection_html( $form_id ),
+				'tip'               => __( 'Set role based redirection pages for this form.', 'user-registration' ),
+			);
+
+			return $form_settings;
+		}
+
+
+		/**
+		 * Returns the html for role based redirection form settings.
+		 *
+		 * @param [integer] $form_id Form Id.
+		 * @return string
+		 */
+		public function ur_get_form_setting_role_based_redirection_html( $form_id ) {
+
+			$selected_roles_pages = get_option( 'ur_pro_settings_redirection_after_registration', array() );
+			$selected_roles_pages = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_role_based_redirection', $selected_roles_pages );
+			$pages                = get_pages();
+
+			$settings  = '<table class="ur_emails widefat" cellspacing="0">';
+			$settings .= '<tbody>';
+
+			foreach ( ur_get_default_admin_roles() as $key => $value ) {
+
+				$settings .= '<tr><td class="">';
+				$settings .= __( $value, 'user-registration' );
+				$settings .= '</td>';
+				$settings .= '<td class="">';
+				$settings .= '<select name="user_registration_form_setting_role_based_redirection-' . $key . '" id="' . $key . '" >';
+				$settings .= '<option value="" >---Select a page---</option>';
+
+				foreach ( $pages as $page ) {
+
+					if ( ! empty( $selected_roles_pages ) && isset( $selected_roles_pages[ $key ] ) && $selected_roles_pages[ $key ] === $page->ID ) {
+						$selected = 'selected=selected';
+					} else {
+						$selected = '';
+					}
+					$settings .= '<option value="' . $page->ID . '" ' . $selected . ' >' . $page->post_title . '</option>';
+				}
+				$settings .= '</select>';
+				$settings .= '</td>';
+				$settings .= '</tr>';
 			}
 
-			echo '</div></div><br/>';
-			echo '<input type="hidden" name="all_fields_dict" class="ur_export_csv_fields_dict" value="' . esc_attr( wp_json_encode( $fields_dict ) ) .  '"/>';
+			$settings .= '</tbody>';
+			$settings .= '</table>';
+
+			return $settings;
+		}
+
+
+		/**
+		 * Save Role Based Redirection Settings.
+		 *
+		 * @param [array]   $fields Fields.
+		 * @param [integer] $form_id Form Id.
+		 * @param [array]   $settings Settings.
+		 * @return array
+		 */
+		public function save_role_based_redirection_form_settings( $fields, $form_id, $settings ) {
+
+			$redirection_settings = array();
+
+			foreach ( $settings as $key => $setting ) {
+				$key = $setting['name'];
+				if ( 0 === strpos( $key, 'user_registration_form_setting_role_based_redirection-' ) ) {
+					$role                          = str_replace( 'user_registration_form_setting_role_based_redirection-', '', $key );
+					$value                         = empty( $setting['value'] ) ? 0 : intval( $setting['value'] );
+					$redirection_settings[ $role ] = $value;
+				}
+			}
+
+			$fields = array_filter(
+				$fields,
+				function( $setting ) {
+					return 'user_registration_form_setting_role_based_redirection' !== $setting['id'];
+				}
+			);
+
+			if ( ! empty( $redirection_settings ) ) {
+				update_post_meta( absint( $form_id ), 'user_registration_form_setting_role_based_redirection', $redirection_settings );
+			}
+
+			return $fields;
 		}
 	}
 }

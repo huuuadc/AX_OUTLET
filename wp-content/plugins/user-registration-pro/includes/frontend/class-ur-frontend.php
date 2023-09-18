@@ -31,6 +31,73 @@ class UR_Frontend {
 		add_action( 'after_setup_theme', array( $this, 'prevent_admin_access' ) );
 		add_action( 'login_init', array( $this, 'prevent_core_login_page' ) );
 		add_filter( 'user_registration_my_account_shortcode', array( $this, 'user_registration_my_account_layout' ) );
+		add_filter( 'user_registration_before_save_profile_details', array( $this, 'user_registration_before_save_profile_details' ), 10, 3 );
+	}
+
+	/**
+	 * Upload Files while edit profile saved.
+	 *
+	 * @param array $profile Profile Data.
+	 * @param int   $user_id User ID.
+	 * @param int   $form_id Form ID.
+	 */
+	public function user_registration_before_save_profile_details( $profile, $user_id, $form_id ) {
+
+		// phpcs:disable WordPress.Security.NonceVerification
+
+		$valid_form_data        = array();
+		$previous_attachment_id = get_user_meta( $user_id, 'user_registration_profile_pic_url' );
+
+		$disable_profile_pic = ur_option_checked( 'user_registration_disable_profile_picture', false );
+
+		if ( $disable_profile_pic ) {
+			return $profile;
+		}
+
+		if ( ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+			if ( isset( $_POST['profile_pic_url'] ) || isset( $_POST['profile-pic-url'] ) ) {
+				$value = isset( $_POST['profile_pic_url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile_pic_url'] ) ) : ( isset( $_POST['profile-pic-url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile-pic-url'] ) ) : '' );
+				if ( ! is_array( $value ) && ! ur_is_valid_url( $value ) ) {
+					$valid_form_data['profile_pic_url']        = new stdClass();
+					$valid_form_data['profile_pic_url']->value = $value;
+				}
+			}
+		} else {
+			if ( isset( $_POST['form_data'] ) ) {
+				$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+				foreach ( $form_data as $data ) {
+					if ( 'user_registration_profile_pic_url' === $data->field_name ) {
+						if ( ! is_array( $data->value ) && ! ur_is_valid_url( $data->value ) ) {
+							$valid_form_data['profile_pic_url']        = new stdClass();
+							$valid_form_data['profile_pic_url']->value = isset( $data->value ) ? $data->value : '';
+						}
+					}
+				}
+			}
+		}
+		if ( ! empty( $valid_form_data ) ) {
+			/**
+			 * Remove previous uploaded profile picture.
+			 */
+			$removed_attachment_id = isset( $_POST['ur_removed_profile_pic'] ) ?
+				(array) json_decode( sanitize_text_field( wp_unslash( $_POST['ur_removed_profile_pic'] ) ) ) :
+				array();
+
+			if ( ! empty( $previous_attachment_id ) && ! empty( $removed_attachment_id ) && ! empty( $previous_attachment_id[0] ) ) {
+				if ( in_array( $previous_attachment_id[0], $removed_attachment_id ) ) {
+					unlink( get_attached_file( $previous_attachment_id[0] ) );
+					wp_delete_attachment( $previous_attachment_id[0], true );
+				}
+			}
+			ur_upload_profile_pic( $valid_form_data, $user_id );
+		}
+		if ( isset( $profile['user_registration_profile_pic_url'] ) ) {
+			unset( $profile['user_registration_profile_pic_url'] );
+		}
+		return $profile;
+
+		// phpcs:enable WordPress.Security.NonceVerification
 	}
 
 		/**
@@ -127,68 +194,25 @@ class UR_Frontend {
 		$login_page     = get_post( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
 		$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
 		$matched        = 0;
+		$page_id = 0;
 
 		if ( ( isset( $_POST['learndash-login-form'] ) || isset( $_POST['learndash-registration-form'] ) ) ) { //phpcs:ignore
 			return;
 		}
 
 		if ( ! empty( $login_page ) ) {
-			$shortcodes = parse_blocks( $login_page->post_content );
-			foreach ( $shortcodes as $shortcode ) {
-				if ( ! empty( $shortcode['blockName'] ) ) {
-					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
-						$matched = 1;
-						break;
-					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
-						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
-						if ( 1 > absint( $matched ) ) {
-							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
-						}
-						if ( 0 < absint( $matched ) ) {
-							break;
-						}
-					}
-				} else {
-					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $login_page->post_content );
-					if ( 1 > absint( $matched ) ) {
-						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $login_page->post_content );
-					}
-					if ( 0 < absint( $matched ) ) {
-						break;
-					}
-				}
+			$matched    = ur_find_my_account_in_page( $login_page->ID );
+			if ( $matched > 0 ) {
+				$page_id = $login_page->ID;
 			}
-			$page_id = $login_page->ID;
-		} elseif ( ! empty( $myaccount_page ) ) {
-			$shortcodes = parse_blocks( $myaccount_page->post_content );
-			foreach ( $shortcodes as $shortcode ) {
-				if ( ! empty( $shortcode['blockName'] ) ) {
-					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
-						$matched = 1;
-						break;
-					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
-						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
-						if ( 1 > absint( $matched ) ) {
-							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
-						}
-						if ( 0 < absint( $matched ) ) {
-							break;
-						}
-					}
-				} else {
-					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
-					if ( 1 > absint( $matched ) ) {
-						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
-					}
-					if ( 0 < absint( $matched ) ) {
-						break;
-					}
-				}
+		} elseif ( ! empty( $myaccount_page ) && 0 !== $page_id ) {
+			$matched    = ur_find_my_account_in_page( $myaccount_page->ID );
+			if ( $matched > 0 ) {
+				$page_id = $myaccount_page->ID;
 			}
-			$page_id = $myaccount_page->ID;
 		}
 
-		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) && 1 <= absint( $matched ) ) {
+		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', false ) && 0 < absint( $matched ) ) {
 
 			// Redirect to core login reset password page on multisite.
 			if ( is_multisite() && ( 'lostpassword' === $action || 'resetpass' === $action ) ) {

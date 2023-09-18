@@ -59,6 +59,7 @@ class UR_Shortcode_My_Account {
 		global $wp, $post;
 		wp_enqueue_script( 'tooltipster' );
 		wp_enqueue_script( 'user-registration' );
+		wp_enqueue_script( 'ur-common' );
 
 		if ( ! is_user_logged_in() ) {
 
@@ -72,8 +73,10 @@ class UR_Shortcode_My_Account {
 			}
 
 			// After password reset, add confirmation message.
-			if ( ! empty( $_GET['password-reset'] ) ) {
+			$is_password_resetted = get_transient( 'ur_password_resetted_flag' );
+			if ( ! empty( $is_password_resetted ) ) {
 				ur_add_notice( __( 'Your password has been reset successfully.', 'user-registration' ) );
+				delete_transient( 'ur_password_resetted_flag' );
 			}
 
 			$render_default = apply_filters( 'user_registration_my_account_render_default', true, $atts );
@@ -81,7 +84,7 @@ class UR_Shortcode_My_Account {
 			if ( isset( $wp->query_vars['ur-lost-password'] ) ) {
 				self::lost_password();
 			} elseif ( $render_default ) {
-				$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+				$recaptcha_enabled = ur_option_checked( 'user_registration_login_options_enable_recaptcha', false );
 				$recaptcha_node    = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 				ob_start();
 
@@ -237,12 +240,40 @@ class UR_Shortcode_My_Account {
 	public static function edit_account() {
 		$user_id                   = get_current_user_id();
 		$form_id                   = ur_get_form_id_by_userid( $user_id );
-		$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
+		$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
 		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
 		wp_enqueue_script( 'ur-form-validator' );
 
-		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
+		if ( $enable_strong_password ) {
+			wp_dequeue_script( 'wc-password-strength-meter' );
+			wp_enqueue_script( 'ur-password-strength-meter' );
+		}
+
+		ur_get_template(
+			'myaccount/form-edit-password.php',
+			array(
+				'user'                      => get_user_by( 'id', get_current_user_id() ),
+				'enable_strong_password'    => $enable_strong_password,
+				'minimum_password_strength' => $minimum_password_strength,
+			)
+		);
+	}
+
+	/**
+	 * Change Password page.
+	 *
+	 * @since 2.2.7
+	 */
+	public static function edit_password() {
+		$user_id                   = get_current_user_id();
+		$form_id                   = ur_get_form_id_by_userid( $user_id );
+		$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
+		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+
+		wp_enqueue_script( 'ur-form-validator' );
+
+		if ( $enable_strong_password ) {
 			wp_dequeue_script( 'wc-password-strength-meter' );
 			wp_enqueue_script( 'ur-password-strength-meter' );
 		}
@@ -278,10 +309,10 @@ class UR_Shortcode_My_Account {
 
 				if ( ! empty( $user ) ) {
 					$form_id                   = ur_get_form_id_by_userid( $user->ID );
-					$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
+					$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
 					$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
-					if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
+					if ( $enable_strong_password ) {
 
 						// Enqueue script.
 						wp_enqueue_script( 'ur-password-strength-meter' );
@@ -305,9 +336,9 @@ class UR_Shortcode_My_Account {
 			}
 		}
 
-		$recaptcha_enabled = apply_filters( 'user_registration_lost_password_options_enable_recaptcha', 'no' );
+		$recaptcha_enabled = ur_string_to_bool( apply_filters( 'user_registration_lost_password_options_enable_recaptcha', false ) );
 
-		if ( 'yes' === $recaptcha_enabled ) {
+		if ( $recaptcha_enabled ) {
 			wp_enqueue_script( 'user-registration' );
 		}
 		$recaptcha_node = ur_get_recaptcha_node( 'lost_password', $recaptcha_enabled );

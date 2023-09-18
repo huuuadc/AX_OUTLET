@@ -2,7 +2,7 @@
 /**
  * Configure Email
  *
- * @package  User_Registration_Settings_Email_Verified_Admin_Email
+ * @package  UR_Settings_Email_Verified_Admin_Email
  * @extends  UR_Settings_Email
  */
 
@@ -10,12 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'User_Registration_Settings_Email_Verified_Admin_Email', false ) ) :
+if ( ! class_exists( 'UR_Settings_Email_Verified_Admin_Email', false ) ) :
 
 	/**
-	 * User_Registration_Settings_Email_Verified_Admin_Email Class.
+	 * UR_Settings_Email_Verified_Admin_Email Class.
 	 */
-	class User_Registration_Settings_Email_Verified_Admin_Email {
+	class UR_Settings_Email_Verified_Admin_Email {
 		/**
 		 * Constructor.
 		 */
@@ -35,20 +35,24 @@ if ( ! class_exists( 'User_Registration_Settings_Email_Verified_Admin_Email', fa
 			$settings = apply_filters(
 				'user_registration_pro_email_verified_admin_email',
 				array(
-					'title' => __( 'Emails', 'user-registration' ),
+					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'admin_email' => array(
-							'title' => __( 'Email Verified - Awaiting Admin Approval Email', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
-							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
-							'settings' => array(
+							'title'        => __( 'Email Verified - Awaiting Admin Approval Email', 'user-registration' ),
+							'type'         => 'card',
+							'desc'         => '',
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'preview_link' => ur_email_preview_link(
+								__( 'Preview', 'user-registration' ),
+								$this->id
+							),
+							'settings'     => array(
 								array(
 									'title'    => __( 'Enable this email', 'user-registration' ),
 									'desc'     => __( 'Enable this email to send to admin requesting admin approval after user has successfully confirmed email.', 'user-registration' ),
 									'id'       => 'user_registration_enable_email_verified_admin_email',
 									'default'  => 'yes',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 								array(
@@ -111,4 +115,4 @@ if ( ! class_exists( 'User_Registration_Settings_Email_Verified_Admin_Email', fa
 	}
 endif;
 
-return new User_Registration_Settings_Email_Verified_Admin_Email();
+return new UR_Settings_Email_Verified_Admin_Email();

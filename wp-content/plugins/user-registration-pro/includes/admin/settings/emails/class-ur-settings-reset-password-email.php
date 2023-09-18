@@ -38,17 +38,21 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'reset_password_email' => array(
-							'title'     => __( 'Reset Password Email', 'user-registration' ),
-							'type'      => 'card',
-							'desc'      => '',
-							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
-							'settings'  => array(
+							'title'        => __( 'Reset Password Email', 'user-registration' ),
+							'type'         => 'card',
+							'desc'         => '',
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'preview_link' => ur_email_preview_link(
+								__( 'Preview', 'user-registration' ),
+								$this->id
+							),
+							'settings'     => array(
 								array(
 									'title'    => __( 'Enable this email', 'user-registration' ),
-									'desc'     => __( 'Enable this email sent to the user when a user requests for reset password.', 'user-registration' ),
+									'desc'     => __( 'Enable this to send an email to the user when they request for a password reset.', 'user-registration' ),
 									'id'       => 'user_registration_enable_reset_password_email',
 									'default'  => 'yes',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 								array(

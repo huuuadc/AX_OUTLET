@@ -37,6 +37,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<table>
 				<?php
 				foreach ( $user_data_to_show as $key => $value ) {
+					if ( 'hidden' === $value['field_key'] ) {
+						continue;
+					}
 					?>
 						<tr>
 							<th>
@@ -50,7 +53,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 								if ( 'wysiwyg' === $value['field_key'] ) {
 									$value['value'] = html_entity_decode( $value['value'] );
 								}
-
+								if ( 'user_url' === $value['field_key'] ) {
+									$value['value'] = sprintf( '<a href="%s" target="_blank">%s</a>', esc_attr( $value['value'] ), $value['value'] );
+								}
 								echo wp_kses_post( $value['value'] );
 								?>
 							</td>

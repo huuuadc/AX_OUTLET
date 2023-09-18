@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'User_Registration_Settings_Generated_Password_Email', false ) ) :
+if ( ! class_exists( 'UR_Settings_Auto_Generated_Password_Email', false ) ) :
 
 	/**
-	 * User_Registration_Settings_Generated_Password_Email Class.
+	 * UR_Settings_Auto_Generated_Password_Email Class.
 	 */
-	class User_Registration_Settings_Generated_Password_Email {
+	class UR_Settings_Auto_Generated_Password_Email {
 
 		public function __construct() {
 			$this->id          = 'auto_generated_password_email';
@@ -35,20 +35,24 @@ if ( ! class_exists( 'User_Registration_Settings_Generated_Password_Email', fals
 			$settings = apply_filters(
 				'user_registration_generated_password_email',
 				array(
-					'title' => __( 'Emails', 'user-registration' ),
-					'sections' => array (
+					'title'    => __( 'Emails', 'user-registration' ),
+					'sections' => array(
 						'generated_password_email' => array(
-							'title' => __( 'Generated Password Email', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
-							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
-							'settings' => array(
+							'title'        => __( 'Generated Password Email', 'user-registration' ),
+							'type'         => 'card',
+							'desc'         => '',
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'preview_link' => ur_email_preview_link(
+								__( 'Preview', 'user-registration' ),
+								$this->id
+							),
+							'settings'     => array(
 								array(
 									'title'    => __( 'Enable this email', 'user-registration' ),
 									'desc'     => __( 'Enable this email sent to the user after succesful registration.', 'user-registration' ),
-									'id'       => 'user_registration_pro_enable_auto_generated_password_email',
+									'id'       => 'user_registration_enable_auto_generated_password_email',
 									'default'  => 'yes',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 								array(
@@ -105,4 +109,4 @@ Thank You!',
 	}
 endif;
 
-return new User_Registration_Settings_Generated_Password_Email();
+return new UR_Settings_Auto_Generated_Password_Email();

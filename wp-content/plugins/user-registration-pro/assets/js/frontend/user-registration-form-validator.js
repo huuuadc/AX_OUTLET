@@ -28,7 +28,7 @@
 			// Prevent invalid key input in number fields.
 			$("[type='number']").keypress(function (event) {
 				var keyCode = event.keyCode;
-				if ( keyCode < 48 || keyCode > 57 ) {
+				if (keyCode < 48 || keyCode > 57) {
 					event.preventDefault();
 				}
 			});
@@ -220,8 +220,13 @@
 								element.hasClass("ur-quantity")
 							) {
 								error.insertAfter(element.parent());
-							}else if ( "url" === element.attr("type") ) {
-								error.insertAfter( element.parent() );
+							} else if (
+								"text" === element.attr("type") &&
+								element.hasClass("ur-payment-price")
+							) {
+								error.insertAfter(element);
+							} else if ("url" === element.attr("type")) {
+								error.insertAfter(element.parent());
 							} else {
 								error.insertAfter(element.parent().parent());
 							}
@@ -231,11 +236,13 @@
 						var $element = $(element),
 							$parent = $element.closest(".form-row"),
 							inputName = $element.attr("name");
+							$element.removeClass('ur-input-border-green').addClass('ur-input-border-red');
 					},
 					unhighlight: function (element, errorClass, validClass) {
 						var $element = $(element),
 							$parent = $element.closest(".form-row"),
 							inputName = $element.attr("name");
+							$element.removeClass('ur-input-border-red').addClass('ur-input-border-green');
 
 						if (
 							$element.attr("type") === "radio" ||
@@ -260,8 +267,7 @@
 						if (
 							$(form).hasClass("register") ||
 							($(form).hasClass("edit-profile") &&
-								"yes" ===
-									user_registration_params.ajax_submission_on_edit_profile)
+								user_registration_params.ajax_submission_on_edit_profile)
 						) {
 							return false;
 						}
@@ -358,10 +364,14 @@
 				var form_id = this_node.closest(".ur-frontend-form").attr("id");
 
 				rules.user_confirm_email = {
+					required: true,
 					equalTo: "#" + form_id + " #user_email",
 				};
-				messages.user_confirm_email =
-					user_registration_params.message_confirm_email_fields;
+				messages.user_confirm_email = {
+					required: user_registration_params.message_required_fields,
+					equalTo:
+						user_registration_params.message_confirm_email_fields,
+				};
 			}
 
 			if (this_node.hasClass("edit-password")) {
@@ -383,10 +393,14 @@
 				var form_id = this_node.closest(".ur-frontend-form").attr("id");
 
 				rules.user_confirm_password = {
+					required: true,
 					equalTo: "#" + form_id + " #user_pass",
 				};
-				messages.user_confirm_password =
-					user_registration_params.message_confirm_password_fields;
+				messages.user_confirm_password = {
+					required: user_registration_params.message_required_fields,
+					equalTo:
+						user_registration_params.message_confirm_password_fields,
+				};
 			}
 
 			/**

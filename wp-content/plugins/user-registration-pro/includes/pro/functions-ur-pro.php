@@ -13,10 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_action( 'user_registration_validate_email_whitelist', 'user_registration_pro_validate_email', 10, 4 );
 add_action( 'user_registration_after_register_user_action', 'ur_send_form_data_to_custom_url', 10, 3 );
-add_action( 'user_registration_after_register_user_action', 'user_registration_pro_sync_external_field', 9, 3 );
 add_action( 'init', 'user_registration_force_logout' );
 
-if ( 'yes' === get_option( 'user_registration_pro_general_setting_prevent_active_login', 'no' ) && ! is_admin() ) {
+if ( ur_string_to_bool( get_option( 'user_registration_pro_general_setting_prevent_active_login', false ) ) ) {
 	// User can be authenticated with the provided password.
 	add_filter( 'wp_authenticate_user', 'ur_prevent_concurrent_logins', 10, 2 );
 }
@@ -61,15 +60,37 @@ if ( ! function_exists( ' user_registration_pro_sync_external_field' ) ) {
 							if ( $usermeta_table === $selected_db_table ) {
 								update_user_meta( $user_id, $mapping_row['external_field'], $valid_form_data[ $mapping_row['ur_field'] ]->value );
 							} elseif ( $is_valid_db_tables_and_columns && ! empty( $selected_user_id_db_column ) && ! empty( $selected_field_key_db_column ) && ! empty( $selected_field_value_db_column ) ) {
-								$value  = is_array( $valid_form_data[ $mapping_row['ur_field'] ]->value ) ? maybe_serialize( $valid_form_data[ $mapping_row['ur_field'] ]->value ) : $valid_form_data[ $mapping_row['ur_field'] ]->value;
-								$result = $wpdb->insert(
-									$selected_db_table,
-									array(
-										$selected_user_id_db_column     => $user_id,
-										$selected_field_key_db_column   => $mapping_row['external_field'],
-										$selected_field_value_db_column => $value,
-									)
+
+								$element_prepared = $wpdb->prepare(
+									"SELECT $selected_field_key_db_column FROM $selected_db_table WHERE $selected_user_id_db_column=%d AND $selected_field_key_db_column=%s",
+									array( $user_id, $mapping_row['external_field'] )
 								);
+								$field_key_db     = $wpdb->get_var( $element_prepared );
+
+								$value = is_array( $valid_form_data[ $mapping_row['ur_field'] ]->value ) ? maybe_serialize( $valid_form_data[ $mapping_row['ur_field'] ]->value ) : $valid_form_data[ $mapping_row['ur_field'] ]->value;
+
+								if ( $field_key_db === $mapping_row['external_field'] ) {
+
+									$result = $wpdb->update(
+										$selected_db_table,
+										array(
+											$selected_field_value_db_column => $value,
+										),
+										array(
+											$selected_user_id_db_column     => $user_id,
+											$selected_field_key_db_column   => $mapping_row['external_field'],
+										)
+									);
+								} else {
+									$result = $wpdb->insert(
+										$selected_db_table,
+										array(
+											$selected_user_id_db_column     => $user_id,
+											$selected_field_key_db_column   => $mapping_row['external_field'],
+											$selected_field_value_db_column => $value,
+										)
+									);
+								}
 
 								if ( is_wp_error( $result ) || ! $result ) {
 									// $error_string = $result->get_error_message(); //phpcs:ignore;
@@ -94,28 +115,28 @@ if ( ! function_exists( 'user_registration_pro_validate_email' ) ) {
 	 * @param string $filter_hook Filter for validation error message.
 	 */
 	function user_registration_pro_validate_email( $user_email, $filter_hook, $field, $form_id ) {
-		$enable_domain_settings = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_whitelist_domain', false );
-		$domain_settings = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_whitelist_domain', 'allowed' );
+		$enable_domain_settings   = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_whitelist_domain', false );
+		$domain_settings          = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_whitelist_domain', 'allowed' );
 		$whitelist_domain_entries = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_domain_restriction_settings', '' );
 
 		if ( ur_string_to_bool( $enable_domain_settings ) ) {
-			if ( ! empty( $whitelist_domain_entries) ) {
-				$whitelist = array_map( 'trim', explode( ',', $whitelist_domain_entries ) );
-				$email     = explode( '@', $user_email );
+			if ( ! empty( $whitelist_domain_entries ) ) {
+				$whitelist         = array_map( 'trim', explode( ',', $whitelist_domain_entries ) );
+				$email             = explode( '@', $user_email );
 				$blacklisted_email = '';
 
 				if ( 'allowed' === $domain_settings ) {
-					if( ! in_array( $email[1], $whitelist ) ) {
+					if ( ! in_array( $email[1], $whitelist ) ) {
 						$blacklisted_email = $email[1];
 					}
 				} else {
-					if( in_array( $email[1], $whitelist ) ) {
+					if ( in_array( $email[1], $whitelist ) ) {
 						$blacklisted_email = $email[1];
 					}
 				}
 
 				if ( ! empty( $blacklisted_email ) ) {
-					$message           = sprintf(
+					$message = sprintf(
 						/* translators: %s - Restricted domain. */
 						__( 'The email domain %s is restricted. Please try another email address.', 'user-registration' ),
 						$blacklisted_email
@@ -130,7 +151,7 @@ if ( ! function_exists( 'user_registration_pro_validate_email' ) ) {
 						);
 					} else {
 						// Check if ajax fom submission on edit profile is on.
-						if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+						if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 							wp_send_json_error(
 								array(
 									'message' => $message,
@@ -220,9 +241,9 @@ if ( ! function_exists( 'user_registration_form_honeypot_field_filter' ) ) {
 	 */
 	function user_registration_form_honeypot_field_filter( $form_data_array, $form_id ) {
 
-		$enable_spam_protection = ur_get_single_post_meta( $form_id, 'user_registration_pro_spam_protection_by_honeypot_enable' );
+		$enable_spam_protection = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_pro_spam_protection_by_honeypot_enable' ) );
 
-		if ( 'yes' === $enable_spam_protection || '1' === $enable_spam_protection ) {
+		if ( $enable_spam_protection ) {
 			$honeypot = (object) array(
 				'field_key'       => 'honeypot',
 				'general_setting' => (object) array(
@@ -433,22 +454,62 @@ if ( ! function_exists( 'ur_prevent_concurrent_logins' ) ) {
 	 */
 	function ur_prevent_concurrent_logins( $user ) {
 
+		$roles = array( 'administrator' );
+		if ( array_intersect( $roles, $user->roles ) ) {
+			return $user;
+		}
+
 		if ( is_wp_error( $user ) ) {
 			return $user;
 		}
 
-		$pass                = ! empty( $_POST['password'] ) ? $_POST['password'] : '';
+		// Check prevent active login.
+		$user = user_registration_prevent_active_login( $user );
+
+		return $user;
+	}
+}
+
+if ( ! function_exists( 'user_registration_prevent_active_login' ) ) {
+	/**
+	 * Validate if the maximum active logins limit reached.
+	 *
+	 * @param object $user User Object/WPError.
+	 *
+	 * @since  3.0.0
+	 *
+	 * @return object User object or error object.
+	 */
+	function user_registration_prevent_active_login( $user ) {
+
+		$pass                = isset( $_POST['password'] ) ? $_POST['password'] : '';
 		$ur_max_active_login = intval( get_option( 'user_registration_pro_general_setting_limited_login' ) );
 		$user_id             = $user->ID;
 
 		// Get current user's session.
 		$sessions = WP_Session_Tokens::get_instance( $user_id );
 
-		// Get all his active WordPress sessions
+		// Get all his active WordPress sessions.
 		$all_sessions = $sessions->get_all();
 		$count        = count( $all_sessions );
 
-		if ( $count >= $ur_max_active_login && wp_check_password( $pass, $user->user_pass, $user->ID ) ) {
+		if ( ! empty( $pass ) ) {
+			if ($count >= $ur_max_active_login && wp_check_password( $pass, $user->user_pass, $user->ID )){
+				$user_id    = $user->ID;
+				$user_email = $user->user_email;
+
+				// Error message.
+				$error_message = sprintf(
+					'<strong>' .
+								/* translators: %s Logout link */
+					__( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Maximum no. of active logins found for this account. Please logout from another device to continue. %s', 'user-registration' ),
+					"<a href='javascript:void(0)' class='user-registartion-force-logout' data-user-id='" . $user_id . "' data-email='" . $user_email . "'>" . __( 'Force Logout?', 'user-registration' ) . '</a>'
+				);
+
+				return new WP_Error( 'user_registration_error_message', $error_message );
+			}
+			return $user;
+		} elseif ( $count >= $ur_max_active_login ) {
 			$user_id    = $user->ID;
 			$user_email = $user->user_email;
 
@@ -459,8 +520,7 @@ if ( ! function_exists( 'ur_prevent_concurrent_logins' ) ) {
 				__( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Maximum no. of active logins found for this account. Please logout from another device to continue. %s', 'user-registration' ),
 				"<a href='javascript:void(0)' class='user-registartion-force-logout' data-user-id='" . $user_id . "' data-email='" . $user_email . "'>" . __( 'Force Logout?', 'user-registration' ) . '</a>'
 			);
-
-			return new WP_Error( 'user_registration_error_message', $error_message );
+			throw new Exception( $error_message );
 		}
 
 		return $user;
@@ -483,47 +543,6 @@ if ( ! function_exists( 'user_registration_force_logout' ) ) {
 			wp_redirect( ur_get_page_permalink( 'myaccount' ) );
 			exit;
 		}
-	}
-}
-
-if ( ! function_exists( 'ur_get_license_plan' ) ) {
-
-	/**
-	 * Get a PRO license plan.
-	 *
-	 * @since  3.0.1
-	 * @return bool|string Plan on success, false on failure.
-	 */
-	function ur_get_license_plan() {
-		$license_key = get_option( 'user-registration_license_key' );
-
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			include_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		if ( $license_key && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-			delete_transient( 'ur_pro_license_plan' );
-			$license_data = get_transient( 'ur_pro_license_plan' );
-
-			if ( false === $license_data ) {
-				$license_data = json_decode(
-					UR_Updater_Key_API::check(
-						array(
-							'license' => $license_key,
-						)
-					)
-				);
-
-				if ( ! empty( $license_data->item_name ) ) {
-					$license_data->item_plan = strtolower( str_replace( 'LifeTime', '', str_replace( 'User Registration', '', $license_data->item_name ) ) );
-					set_transient( 'ur_pro_license_plan', $license_data, WEEK_IN_SECONDS );
-				}
-			}
-
-			return isset( $license_data->item_plan ) ? $license_data->item_plan : false;
-		}
-
-		return false;
 	}
 }
 
@@ -592,8 +611,8 @@ if ( ! function_exists( 'ur_pro_get_form_fields' ) ) {
 								$field_key         = isset( $field->field_key ) ? ( $field->field_key ) : '';
 								$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 								$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
-								$required          = 'yes' == $required ? true : false;
-								$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && ( '1' === $field->advance_setting->enable_conditional_logic || 'on' === $field->advance_setting->enable_conditional_logic ) ? true : false;
+								$required          = ur_string_to_bool( $required );
+								$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $field->advance_setting->enable_conditional_logic );
 								$cl_map            = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
 								$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 								$default           = '';
@@ -643,7 +662,7 @@ if ( ! function_exists( 'ur_pro_get_form_fields' ) ) {
 											$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
 											$extra_params['custom_attributes']['data-date-format'] = $date_format;
 
-											if ( isset( $field->advance_setting->enable_min_max ) && 'true' === $field->advance_setting->enable_min_max ) {
+											if ( isset( $field->advance_setting->enable_min_max ) && ur_string_to_bool( $field->advance_setting->enable_min_max ) ) {
 												$extra_params['custom_attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $date_format, strtotime( $min_date ) ) : '';
 												$extra_params['custom_attributes']['data-max-date'] = '' !== $max_date ? date_i18n( $date_format, strtotime( $max_date ) ) : '';
 											}
@@ -767,7 +786,7 @@ if ( ! function_exists( 'user_registration_pro_auto_populate_supported_fields' )
 			'user_email',
 			'user_login',
 			'user_url',
-			'invite_code'
+			'invite_code',
 		);
 
 		return apply_filters(
@@ -777,6 +796,37 @@ if ( ! function_exists( 'user_registration_pro_auto_populate_supported_fields' )
 	}
 }
 
+if ( ! function_exists( 'user_registration_pro_pattern_validation_fields' ) ) {
+	/**
+	 * Get fields for which pattern validation is supported
+	 *
+	 * @return array
+	 */
+	function user_registration_pro_pattern_validation_fields() {
+
+		$fields = array(
+			'phone',
+			'display_name',
+			'date',
+			'email',
+			'first_name',
+			'last_name',
+			'nickname',
+			'number',
+			'password',
+			'text',
+			'user_login',
+			'user_pass',
+			'user_url',
+			'custom_url',
+		);
+
+		return apply_filters(
+			'user_registration_pattern_validation_fields',
+			$fields
+		);
+	}
+}
 
 if ( ! function_exists( 'user_registration_pro_profile_details_form_fields' ) ) {
 
@@ -824,16 +874,15 @@ if ( ! function_exists( 'user_registration_pro_profile_details_form_field_datas'
 	 * @param int   $form_id Id of the form through which user was registered.
 	 * @param array $user_data All the datas of the user.
 	 * @param array $form_field_data_array All the fields to be included in profile details page.
-	 * @param array $field_keys_to_include Field keys to include.
+	 * @param array $field_to_include Field to include.
 	 * @return array
 	 */
-	function user_registration_pro_profile_details_form_field_datas( $form_id, $user_data, $form_field_data_array, $field_keys_to_include = array() ) {
+	function user_registration_pro_profile_details_form_field_datas( $form_id, $user_data, $form_field_data_array, $field_to_include = array() ) {
 
 		$user_data_to_show = array();
-
 		foreach ( $user_data as $key => $value ) {
 
-			if ( ! empty( $field_keys_to_include ) && ! in_array( $key, $field_keys_to_include ) ) {
+			if ( ! empty( $field_to_include ) && ! in_array( $key, $field_to_include ) ) {
 				continue;
 			}
 
@@ -867,10 +916,16 @@ if ( ! function_exists( 'user_registration_pro_profile_details_form_field_datas'
 					$user_data_to_show[ $key ]['value'] = $value;
 				}
 
+				// For Country Field.
 				if ( 'country' === $user_data_to_show[ $key ]['field_key'] && '' !== $user_data_to_show[ $key ]['value'] ) {
 					$country_class                      = ur_load_form_field_class( $user_data_to_show[ $key ]['field_key'] );
 					$countries                          = $country_class::get_instance()->get_country();
 					$user_data_to_show[ $key ]['value'] = isset( $countries[ $value ] ) ? $countries[ $value ] : $value;
+				}
+
+				// For checkbox and multiselect field.
+				if ( ( 'checkbox' === $user_data_to_show[ $key ]['field_key'] || 'multi_select2' === $user_data_to_show[ $key ]['field_key'] ) && '' !== $user_data_to_show[ $key ]['value'] ) {
+					$user_data_to_show[ $key ]['value'] = is_array( $user_data_to_show[ $key ]['value'] ) ? implode( ',', $user_data_to_show[ $key ]['value'] ) : $user_data_to_show[ $key ]['value'];
 				}
 
 				if ( in_array( $key, $fields_to_exclude ) ) {
@@ -896,7 +951,7 @@ if ( ! function_exists( 'user_registration_pro_profile_details_form_keys_to_incl
 		$fields_keys_to_include = array();
 
 		foreach ( $form_field_data_array as $field_id => $field_data ) {
-			if ( in_array( $field_data['field_key'], $fields_to_include ) ) {
+			if ( in_array( $field_data['field_key'], $fields_to_include ) || in_array( $field_id, $fields_to_include ) ) {
 				array_push( $fields_keys_to_include, $field_id );
 			}
 		}
@@ -939,7 +994,7 @@ if ( ! function_exists( 'ur_validate_unique_field' ) ) {
 			} elseif ( 'display_name' === $args['field_name'] ) {
 				$query[] = $wpdb->prepare( 'AND display_name = %s', $args['search'] );
 			} else {
-				$query[] = $wpdb->prepare( 'AND meta_value = %s', $args['search'] );
+				$query[] = $wpdb->prepare( 'AND meta_key = %s AND meta_value = %s', $args['field_name'], $args['search'] );
 			}
 		}
 
@@ -959,7 +1014,7 @@ if ( ! function_exists( 'ur_pro_add_bulk_options' ) ) {
 	 * @return array
 	 */
 	function ur_pro_add_bulk_options( $general_setting, $id ) {
-		$fields = array( 'user_registration_checkbox','user_registration_select','user_registration_radio' );
+		$fields = array( 'user_registration_checkbox', 'user_registration_select', 'user_registration_radio' );
 
 		if ( in_array( $id, $fields, true ) ) {
 			$general_setting['options'] = array_merge( $general_setting['options'], array( 'add_bulk_options' => sprintf( '<a href="#" class="ur-toggle-bulk-options after-label-description" data-bulk-options-label="%s" data-bulk-options-tip="%s" data-bulk-options-button="%s">%s</a>', esc_attr__( 'Add Bulk Options', 'user-registration' ), esc_attr__( 'To add multiple options at once, press enter key after each option.', 'user-registration' ), esc_attr__( 'Add New Options', 'user-registration' ), esc_html__( 'Bulk Add', 'user-registration' ) ) ) );
@@ -970,3 +1025,565 @@ if ( ! function_exists( 'ur_pro_add_bulk_options' ) ) {
 }
 
 add_filter( 'user_registration_field_options_general_settings', 'ur_pro_add_bulk_options', 10, 2 );
+
+if ( ! function_exists( 'ur_get_all_form_fields' ) ) {
+
+	/**
+	 * Get all the form Fields.
+	 *
+	 * @param array $strip_fields Stripe Fields.
+	 * @return array $form_field_lists Form Field List .
+	 */
+	function ur_get_all_form_fields( $strip_fields ) {
+		$all_forms        = ur_get_all_user_registration_form();
+		$form_field_lists = array();
+
+		foreach ( $all_forms as $form_id => $form_label ) {
+			$post                                   = get_post( $form_id );
+			$post_content                           = isset( $post->post_content ) ? $post->post_content : '';
+			$post_content_array                     = isset( $post_content ) ? json_decode( $post_content ) : array();
+			$specific_form_field_list               = array();
+			$specific_form_field_list['form_label'] = $form_label;
+			if ( is_array( $post_content_array ) || is_object( $post_content_array ) ) {
+				foreach ( $post_content_array as $post_content_row ) {
+					foreach ( $post_content_row as $post_content_grid ) {
+						foreach ( $post_content_grid as $field ) {
+							if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
+								if ( in_array( $field->field_key, $strip_fields, true ) ) {
+									continue;
+								}
+								$specific_form_field_list['field_list'][ $field->general_setting->field_name ] = $field->general_setting->label;
+								$specific_form_field_list['field_key'][ $field->general_setting->field_name ]  = $field->field_key;
+							}
+						}
+					}
+				}
+			}
+			array_push( $form_field_lists, $specific_form_field_list );
+		}
+
+		return $form_field_lists;
+	}
+}
+
+add_action( 'user_registration_after_account_privacy', 'user_registration_after_account_privacy', 10, 2 );
+
+if ( ! function_exists( 'user_registration_after_account_privacy' ) ) {
+	/**
+	 * Download and erase personal data in privacy tab.
+	 *
+	 * @param string $enable_download_personal_data download personal data.
+	 * @param string $enable_erase_personal_data erase personal data.
+	 */
+	function user_registration_after_account_privacy( $enable_download_personal_data, $enable_erase_personal_data ) {
+		global $wpdb;
+		$user_id = get_current_user_id();
+		if ( ur_string_to_bool( $enable_download_personal_data ) ) :
+			?>
+
+	<div class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide ur-about-your-data">
+		<div class="ur-privacy-field-label">
+			<label>
+				<?php esc_html_e( 'About your Data', 'user-registration' ); ?>
+				<span class='ur-portal-tooltip tooltipstered' data-tip="
+				<?php
+				esc_html_e(
+					'Download or erase all of your personal data from the site by requesting to the site\'s admin.',
+					'user-registration'
+				)
+				?>
+				"></span>
+			</label>
+		</div>
+		<div class="ur-about-your-data-input">
+			<div class="ur-field ur-field-export_data">
+				<?php
+				$hide_download_input = '';
+				$completed           = $wpdb->get_row(
+					$wpdb->prepare(
+						"SELECT ID
+				FROM $wpdb->posts
+				WHERE post_author = %d AND
+					post_type = 'user_request' AND
+					post_name = 'export_personal_data' AND
+					post_status = 'request-completed'
+				ORDER BY ID DESC
+				LIMIT 1",
+						$user_id
+					),
+					ARRAY_A
+				);
+
+				$pending = $wpdb->get_row(
+					$wpdb->prepare(
+						"SELECT ID, post_status
+				FROM $wpdb->posts
+				WHERE post_author = %d AND
+					post_type = 'user_request' AND
+					post_name = 'export_personal_data' AND
+					post_status != 'request-completed'
+				ORDER BY ID DESC
+				LIMIT 1",
+						$user_id
+					),
+					ARRAY_A
+				);
+
+				if ( ! empty( $completed ) && empty( $pending ) ) {
+					$hide_download_input = 'none';
+					$exports_url         = wp_privacy_exports_url();
+					echo "<div class='ur-download-personal-data'>";
+					echo '<h3>' . esc_html__( 'Download your Data', 'user-registration' ) . '</h3>';
+					echo '<p>' . esc_html__( 'You could download your previous data as your download request is approved', 'user-registration' ) . '</p>';
+					echo '<div class="ur-privacy-action-btn">';
+					echo '<a class="ur-button" href="' . esc_attr( $exports_url . get_post_meta( $completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'user-registraton' ) . '</a>';
+					echo '<a  id ="ur-new-download-request" javascript:void(0) href="#">' . esc_html__( 'New Download Request', 'user-registration' ) . '</a>';
+					echo '</div>';
+					echo '</div>';
+				}
+
+				if ( ! empty( $pending ) && 'request-confirmed' === $pending['post_status'] ) {
+					echo '<div class="ur-download-personal-data-request-confirmed">';
+					echo '<h3>' . esc_html__( 'Download your Data', 'user-registration' ) . '</h3>';
+					echo '<p>' . esc_html__( 'The administrator has not yet approved downloading the data. Pleas wait for approval.', 'user-registration' ) . '</p>';
+					echo '</div>';
+				} else {
+					?>
+					<div id="ur-download-personal-data-request-input" class="ur-download-personal-data-request-input" style="display:<?php echo esc_attr( $hide_download_input ); ?>">
+						<label name="ur-export-data">
+						<?php esc_html_e( 'Enter your current password to download your data.', 'user-registration' ); ?>
+						</label>
+						<div class="ur-field-area">
+							<input id="ur-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'user-registration' ); ?>">
+							<div class="ur-field-error ur-export-data" style="display:none">
+								<span class="ur-field-arrow"><i class="ur-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'user-registration' ); ?>
+							</div>
+							<div class="ur-field-area-response ur-export-data"></div>
+						</div>
+
+						<button type="button" class="ur-request-button ur-export-data-button" data-action="ur-export-data">
+							<?php esc_html_e( 'Send Download Request', 'user-registration' ); ?>
+						</button>
+					</div>
+				<?php } ?>
+
+			</div>
+			<?php
+		endif;
+		if ( ur_string_to_bool( $enable_erase_personal_data ) ) :
+			?>
+			<div class="ur-field ur-field-export_data">
+					<?php
+					$hide_erase_input = '';
+					$completed        = $wpdb->get_row(
+						$wpdb->prepare(
+							"SELECT ID
+					FROM $wpdb->posts
+					WHERE post_author = %d AND
+						post_type = 'user_request' AND
+						post_name = 'remove_personal_data' AND
+						post_status = 'request-completed'
+					ORDER BY ID DESC
+					LIMIT 1",
+							$user_id
+						),
+						ARRAY_A
+					);
+
+					$pending = $wpdb->get_row(
+						$wpdb->prepare(
+							"SELECT ID, post_status
+				FROM $wpdb->posts
+				WHERE post_author = %d AND
+					post_type = 'user_request' AND
+					post_name = 'remove_personal_data' AND
+					post_status != 'request-completed'
+				ORDER BY ID DESC
+				LIMIT 1",
+							$user_id
+						),
+						ARRAY_A
+					);
+					if ( ! empty( $completed ) && empty( $pending ) ) {
+						$hide_erase_input = 'none';
+						echo "<div class='ur-erase-personal-data'>";
+						echo '<h3>' . esc_html__( 'Erase of your Data', 'user-registration' ) . '</h3>';
+						echo '<p>' . esc_html__( 'Your personal data has been deleted as per your request.', 'user-registration' ) . '</p>';
+						echo '<div class="ur-privacy-action-btn">';
+						echo '<a  id ="ur-new-erase-request" javascript:void(0) href="#">' . esc_html__( 'New Erase Request', 'user-registration' ) . '</a>';
+						echo '</div>';
+						echo '</div>';
+					}
+
+					if ( ! empty( $pending ) && 'request-confirmed' === $pending['post_status'] ) {
+						echo '<div class="ur-erase-personal-data-request-confirmed">';
+						echo '<h3>' . esc_html__( 'Erase of your Data', 'user-registration' ) . '</h3>';
+						echo '<p>' . esc_html__( 'The administrator has not yet approved deleting your data. Pleas wait for approval.', 'user-registration' ) . '</p>';
+						echo '</div>';
+					} else {
+						?>
+						<div id="ur-erase-personal-data-request-input" class="ur-download-personal-data-request-input" style="display:<?php echo esc_attr( $hide_erase_input ); ?>">
+							<label name="ur-erase-data">
+							<?php esc_html_e( 'Enter your current password to erasure your personal data.', 'user-registration' ); ?>
+							</label>
+
+							<div class="ur-field-area">
+								<input id="ur-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'user-registration' ); ?>">
+								<div class="ur-field-error ur-erase-data" style="display:none">
+									<span class="ur-field-arrow"><i class="ur-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'user-registrationon' ); ?>
+								</div>
+								<div class="ur-field-area-response ur-erase-data"></div>
+							</div>
+
+							<button class="ur-request-button ur-erase-data-button" data-action="ur-erase-data">
+							<?php esc_html_e( 'Send Erase Request', 'user-registration' ); ?>
+							</button>
+						</div>
+						<?php } ?>
+			</div>
+		</div>
+	</div>
+			<?php
+		endif;
+	}
+}
+
+add_action( 'wp_head', 'ur_profile_dynamic_meta_desc', 20 );
+
+if ( ! function_exists( 'ur_profile_dynamic_meta_desc' ) ) {
+	/**
+	 * Adding non indexing tag in user page.
+	 */
+	function ur_profile_dynamic_meta_desc() {
+		$privacy_tab_enable      = get_option( 'user_registration_enable_privacy_tab', false );
+		$enable_profile_indexing = get_option( 'user_registration_enable_profile_indexing', true );
+
+		if ( ur_string_to_bool( $privacy_tab_enable ) && ur_string_to_bool( $enable_profile_indexing ) ) {
+
+			if ( isset( $_GET['user_id'] ) && isset( $_GET['list_id'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+				$user_id  = sanitize_key( wp_unslash( $_GET['user_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification
+				$nonindex = ur_string_to_bool( get_user_meta( $user_id, 'ur_profile_noindex', true ) );
+
+				if ( $nonindex ) {
+					echo '<meta name="robots" content="noindex, nofollow" />';
+				}
+			}
+		}
+	}
+}
+
+if ( ! function_exists( 'user_registration_pro_passwordless_login_process' ) ) {
+	/**
+	 * Passwordless login process.
+	 *
+	 * @param array        $post_data Login data.
+	 * @param string|email $username Username or Email.
+	 * @param string       $nonce Nonce value.
+	 * @param array        $error_messages Custom error messages.
+	 *
+	 * @throws Exception Login errors.
+	 */
+	function user_registration_pro_passwordless_login_process( $post_data, $username, $nonce, $error_messages ) {
+		if ( ur_is_passwordless_login_enabled() && isset( $_GET['pl'] ) && 'true' === $_GET['pl'] && ! isset( $post_data['password'] ) ) {
+
+			$valid_email = user_registration_pro_validate_user_login( $username, $error_messages );
+
+			if ( is_wp_error( $valid_email ) ) {
+				throw new Exception( $valid_email->get_error_message() );
+			}
+
+			$user         = get_user_by( 'email', $valid_email );
+			$redirect_url = get_home_url();
+
+			if ( in_array( 'administrator', $user->roles, true ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
+				$redirect_url = admin_url();
+			} else {
+				if ( ! empty( $post_data['redirect'] ) ) {
+					$redirect_url = esc_url_raw( wp_unslash( $post_data['redirect'] ) );
+				} elseif ( wp_get_raw_referer() ) {
+					$redirect_url = wp_get_raw_referer();
+				}
+			}
+
+			$status = user_registration_pro_send_magic_login_link_email( $valid_email, $nonce, $redirect_url );
+
+			if ( $status ) {
+				unset( $_POST['username'] ); // phpcs:ignore WordPress.Security.NonceVerification
+				$success_message = apply_filters( 'user_registration_passwordless_login_success', __( 'A secure login link has been sent to your email address, it will expire in 1 hour.', 'user-registration-pro' ) );
+
+				throw new Exception( $success_message, 200 );
+			}
+
+			$error_message = apply_filters( 'user_registration_passwordless_login_failed', __( 'There was a problem sending your email. Please try again or contact an administrator.', 'user-registration-pro' ) );
+
+			throw new Exception( $error_message );
+		}
+	}
+}
+add_action( 'user_registration_login_process_before_username_validation', 'user_registration_pro_passwordless_login_process', 10, 4 );
+
+if ( ! function_exists( 'user_registration_pro_validate_user_login' ) ) {
+	/**
+	 * Checks whether the username or email is valid or not.
+	 *
+	 * @param email|string $user_login Username or Email.
+	 * @param array        $error_messages Custom error messages.
+	 * @return email|WP_Error
+	 */
+	function user_registration_pro_validate_user_login( $user_login, $error_messages ) {
+
+		if ( empty( $user_login ) ) {
+			return new WP_Error( 'empty_username', ! empty( $error_messages['empty_username'] ) ? $error_messages['empty_username'] : __( 'The username or email field is empty.', 'user-registration-pro' ) );
+		}
+
+		// Check if the entered value is a valid email address.
+		$user = null;
+		if ( is_email( $user_login ) ) {
+			$user = get_user_by( 'email', $user_login );
+		} else {
+			$user = get_user_by( 'login', $user_login );
+		}
+
+		// Check the prevent active login.
+		if ( ur_string_to_bool( get_option( 'user_registration_pro_general_setting_prevent_active_login', false ) ) ) {
+			 user_registration_prevent_active_login( $user );
+		}
+
+		if ( ! $user ) {
+			return new WP_Error( 'unknown_email', ! empty( $error_messages['unknown_email'] ) ? $error_messages['unknown_email'] : __( 'The username or email you provided do not exist.', 'user-registration-pro' ) );
+		}
+
+		if ( class_exists( 'UR_User_Approval' ) ) {
+			$user_approval = new UR_User_Approval();
+
+			$user = $user_approval->check_status_on_login( $user, '' );
+
+			if ( is_wp_error( $user ) ) {
+				$error_messages = $user->get_error_messages();
+				if ( isset( $error_messages[0] ) ) {
+					return new WP_Error( 'pending_approval', $error_messages[0] );
+				}
+			}
+
+			// when user status is approved.
+			if ( is_email( $user_login ) && email_exists( $user_login ) ) {
+				return $user_login;
+			}
+
+			if ( ! is_email( $user_login ) && username_exists( $user_login ) ) {
+				$user = get_user_by( 'login', $user_login );
+				if ( $user ) {
+					return $user->get( 'user_email' );
+				}
+			}
+		}
+
+		return new WP_Error( 'unknown_email', ! empty( $error_messages['unknown_email'] ) ? $error_messages['unknown_email'] : __( 'The username or email you provided do not exist.', 'user-registration-pro' ) );
+	}
+}
+
+if ( ! function_exists( 'user_registration_pro_generate_magic_login_link' ) ) {
+	/**
+	 * Generates a one-time use magic link for passwordless login and returns the link URL.
+	 *
+	 * @param string $email The email address of the user.
+	 *
+	 * @param string $nonce The nonce for the link.
+	 * @param string $redirect_url The redirect URL.
+	 *
+	 * @return string The URL for the one-time use magic link.
+	 */
+	function user_registration_pro_generate_magic_login_link( $email, $nonce, $redirect_url ) {
+		$user  = get_user_by( 'email', $email );
+		$token = ur_generate_onetime_token( $user->ID, 'ur_passwordless_login', 32, 60 );
+
+		update_user_meta( $user->ID, 'ur_passwordless_login_redirect_url' . $user->ID, $redirect_url );
+
+		$arr_params = array( 'action', 'uid', 'token', 'nonce' );
+		$url        = remove_query_arg( $arr_params, ur_get_my_account_url() );
+
+		$url_params = array(
+			'uid'   => $user->ID,
+			'token' => $token,
+			'nonce' => $nonce,
+		);
+
+		$url = add_query_arg( $url_params, $url );
+
+		return $url;
+	}
+}
+
+if ( ! function_exists( 'user_registration_pro_send_magic_login_link_email' ) ) {
+	/**
+	 * Sends a magic login link email to the user.
+	 * Generates a magic link URL and sends an email to the user with the link to log in without a password.
+	 *
+	 * @param string $email The email address of the user.
+	 * @param string $nonce The nonce string to verify the request.
+	 * @param string $redirect_url The redirect URL.
+	 * @return bool True if the email was sent successfully, false otherwise.
+	 */
+	function user_registration_pro_send_magic_login_link_email( $email, $nonce, $redirect_url ) {
+		$blog_name = esc_attr( get_bloginfo( 'name' ) );
+		$user      = get_user_by( 'email', $email );
+
+		$magic_link_url = user_registration_pro_generate_magic_login_link( $email, $nonce, $redirect_url );
+
+		$subject = apply_filters( 'ur_password_less_login_email_subject', sprintf( __( 'Login at %s', 'user-registration-pro' ), $blog_name ), $email, $magic_link_url );
+		$message = apply_filters( 'ur_magic_login_link_email_message', sprintf( __( 'Hello %1$s,<br><br>You have requested to log in to your account without a password.<br>Click the following link to log in: <a href="%2$s">%3$s</a><br><br>If you did not request this login, please ignore this email.<br><br>Thank you,<br>%4$s', 'user-registration-pro' ), esc_html( $user->data->display_name ), esc_url( $magic_link_url ), esc_html( $magic_link_url ), esc_html( get_bloginfo( 'name' ) ) ), $email, $magic_link_url );
+		$headers = apply_filters( 'ur_password_less_login_email_headers', array( 'Content-Type: text/html; charset=UTF-8' ), $magic_link_url, $email );
+
+		$sent_status = wp_mail( $email, $subject, $message, $headers );
+
+		if ( $sent_status ) {
+			return true;
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'user_registration_pro_login_via_magic_link_url' ) ) {
+	/**
+	 * Handles the login process via a magic link.
+	 *
+	 * @return void
+	 */
+	function user_registration_pro_login_via_magic_link_url() {
+
+		if ( ! isset( $_GET['token'] ) || ! isset( $_GET['uid'] ) || ! isset( $_GET['nonce'] ) ) {
+			return;
+		}
+
+		$uid              = isset( $_GET['uid'] ) ? absint( $_GET['uid'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification
+		$confirm_token    = isset( $_GET['token'] ) ? sanitize_key( $_GET['token'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+		$nonce            = isset( $_GET['nonce'] ) ? sanitize_key( $_GET['nonce'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+		$arr_params       = array( 'uid', 'token', 'nonce' );
+		$current_page_url = remove_query_arg( $arr_params, ur_get_current_page_url() );
+
+		if ( ! $uid || ! $confirm_token || ! $nonce ) {
+			wp_safe_redirect( $current_page_url );
+			exit;
+		}
+
+		$stored_key   = get_user_meta( $uid, 'ur_passwordless_login_token' . $uid, true );
+		$expiration   = get_user_meta( $uid, 'ur_passwordless_login_token_expiration' . $uid, true );
+		$redirect_url = get_user_meta( $uid, 'ur_passwordless_login_redirect_url' . $uid, true );
+
+		if ( ! $stored_key || ! $expiration ) {
+			wp_safe_redirect( $current_page_url );
+			exit;
+		}
+
+		if ( time() > $expiration || $confirm_token !== $stored_key || ! ( wp_verify_nonce( $nonce, 'ur_login_form_save_nonce' ) || wp_verify_nonce( $nonce, 'user-registration-login' ) ) ) {
+			wp_safe_redirect( $current_page_url );
+			exit;
+		}
+
+		wp_set_auth_cookie( $uid );
+
+		delete_user_meta( $uid, 'ur_passwordless_login_token' . $uid );
+		delete_user_meta( $uid, 'ur_passwordless_login_token_expiration' . $uid );
+		delete_user_meta( $uid, 'ur_passwordless_login_redirect_url' . $uid );
+
+		do_action( 'user_registration_passwordless_login_success', $uid );
+
+		wp_redirect( apply_filters( 'user_registration_after_passwordless_login_redirect', $redirect_url ) );
+		exit;
+
+	}
+}
+add_action( 'template_redirect', 'user_registration_pro_login_via_magic_link_url' );
+
+if ( ! function_exists( 'ur_integration_settings_template' ) ) {
+	/**
+	 * Return Template for Email Marketing Integration.
+	 *
+	 * @param object $integration Integration.
+	 */
+	function ur_integration_settings_template( $integration ) {
+		$settings  = '<div class="ur-export-users-page">';
+		$settings .= '<div class="nav-tab-content">';
+		$settings .= '<div class="nav-tab-inside">';
+		$settings .= '<div class="' . $integration->id . '-wrapper">';
+		$settings .= '<div id="' . $integration->id . '_div" class="postbox">';
+		$settings .= '<h3 class="hndle"> ' . esc_html__( 'Accounts Settings', 'user-registration' ) . '</h3>';
+		$settings .= '<div class="inside">';
+		$settings .= '<div class="ur-form-row">';
+
+		if ( 'activecampaign' === $integration->id ) {
+			$settings .= '<div class="ur-form-group">';
+			$settings .= '<label class="ur-label">' . esc_html__( 'ActiveCampaign URL', 'user-registration' ) . '</label>';
+			$settings .= '<input type="text" name="ur_activecampaign_url" id="ur_activecampaign_url" placeholder="' . esc_attr__( 'Enter the ActiveCampaign URL', 'user-registration' ) . '" class="ur-input forms-list"/>';
+			$settings .= '</div>';
+		}
+		$settings .= '<div class="ur-form-group">';
+		$settings .= '<label class="ur-label"> ' . esc_html__( 'API Key', 'user-registration' ) . '</label>';
+		$settings .= '<input type="text" name="ur_' . $integration->id . '_api_key" id="ur_' . $integration->id . '_api_key" placeholder=" ' . esc_attr__( 'Enter the API Key', 'user-registration' ) . '" class="ur-input forms-list"/>';
+		$settings .= '</div>';
+		$settings .= '<div class="ur-form-group">';
+		$settings .= '<label class="ur-label">' . esc_html__( 'Account Name', 'user-registration' ) . '</label>';
+		$settings .= '<input type="text" name="ur_' . $integration->id . '_account_name" id="ur_' . $integration->id . '_account_name" placeholder=" ' . esc_attr__( 'Enter a Account Name', 'user-registration' ) . '" class="ur-input forms-list"/>';
+		$settings .= '</div>';
+		$settings .= '</div>';
+
+		$settings                  .= '<div class="publishing-action">';
+		$settings                  .= '<button type="button" class="button button-primary ur_' . $integration->id . '_account_action_button" name="user_registration_' . $integration->id . '_account"> ' . esc_attr__( 'Connect', 'user-registration' ) . '</button>';
+		$settings                  .= '</div>';
+		$settings                  .= '</div>';
+		$settings                  .= '</div>';
+				$connected_accounts = get_option( 'ur_' . $integration->id . '_accounts', array() );
+
+		if ( ! empty( $connected_accounts ) ) {
+			$settings .= '<div id="' . $integration->id . '_accounts" class="postbox">';
+			$settings .= '<ul class="ur-integration-connected-accounts">';
+
+			foreach ( $connected_accounts as $key => $list ) {
+
+					$settings .= '<li>';
+					$settings .= '<div class="ur-integration-connected-accounts--label"><strong> ' . sanitize_text_field( $list['label'] ) . '</strong></div>';
+					$settings .= '<div class="ur-integration-connected-accounts--date">Connected on ' . $list['date'] . '</div>';
+					$settings .= '<div class="ur-integration-connected-accounts--disconnect">';
+					$settings .= "<a href='#' class='disconnect ur-" . $integration->id . "-disconnect-account' data-key='" . $list['api_key'] . "' > " . esc_html__( 'Disconnect', 'user-regisration' ) . '</a>';
+					$settings .= '</div>';
+					$settings .= '</li>';
+
+			}
+
+				$settings .= '</ul>';
+				$settings .= '</div>';
+
+		}
+
+				$settings .= '</div>';
+				$settings .= '</div>';
+				$settings .= '</div>';
+				$settings .= '</div>';
+
+		return $settings;
+	}
+}
+
+// -------------------  MIGRATION SCRIPTS  ------------------- //
+
+
+/**
+ * Migration for Role Based Redirection Settings.
+ */
+function ur_pro_update_40_option_migrate() {
+
+	$selected_roles_pages = get_option( 'ur_pro_settings_redirection_after_registration', array() );
+
+	// Get all posts with user_registration post type.
+	$posts = get_posts( 'post_type=user_registration' );
+
+	foreach ( $posts as $post ) {
+		if ( ! empty( $selected_roles_pages ) ) {
+			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'role-based-redirection' );
+		};
+	}
+}
+
+
+// -------------------  END MIGRATION SCRIPTS  ------------------- //
