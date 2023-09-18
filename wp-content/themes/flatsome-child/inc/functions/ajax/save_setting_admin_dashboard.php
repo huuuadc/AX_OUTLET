@@ -37,6 +37,10 @@ function save_admin_dashboard_setting()
         update_option('admin_dashboard_member_card_guest',$post->member_card_guest , 'no');
     }
 
+    if(!add_option('admin_dashboard_is_check_stock',$post->is_check_stock , '','no')){
+        update_option('admin_dashboard_is_check_stock',$post->is_check_stock , 'no');
+    }
+
     echo json_encode(array(
         'status' => '200',
         'messenger' => 'Save success',

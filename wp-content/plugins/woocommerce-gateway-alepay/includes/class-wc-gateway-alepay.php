@@ -280,6 +280,8 @@ class WC_Gateway_Alepay extends WC_Payment_Gateway {
     public function process_payment($order_id) {
         global $wpdb;
 
+        $_POST['payment_alepay'] = $_POST['payment_alepay'] ?? 0;
+
         $log_content = 'Step 2 -----------';
         $log_content .= PHP_EOL.'- Order id: '.$order_id;
         $log_content .= PHP_EOL.'- Phuong thuc thanh toan: ';
@@ -291,8 +293,6 @@ class WC_Gateway_Alepay extends WC_Payment_Gateway {
         $order_items = $order->get_items();
 
         $order_oms = new \OMS_ORDER($order_id);
-
-        $_POST['payment_alepay'] = $_POST['payment_alepay'] ?? 0;
 
         // Process alepay
         $alepay = $this->alepay;

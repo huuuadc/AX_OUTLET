@@ -50,17 +50,23 @@ function post_invoice_ls_retail(){
     //create order from order id
     //
     //
-    $order = new OMS_ORDER($order_id);
-
+    global $wpdb;
+    $order          = new OMS_ORDER($order_id);
+    $ls_api         = new LS_API();
     //get old status
-    $old_status = $order->get_status('value');
+    $old_status     = $order->get_status('value');
 
 
-//    if ($old_status != 'request'){
-//        $order->set_log('danger',$payload_action,$commit_note);
-//        echo response(false,'Trạng thái không cho thực hiện thao tác',[]);
-//        exit();
-//    }
+    if ($old_status != 'request'){
+        $order->set_log('danger',$payload_action,$commit_note);
+        echo response(false,'Trạng thái không cho thực hiện thao tác',[]);
+        exit();
+    }
+    //Check stock với ls
+    if (!$order->check_stock_ls()){
+        echo response(false,'Không còn tồn trên ls retail',[]);
+        exit;
+    }
 
     //
     //
@@ -69,9 +75,6 @@ function post_invoice_ls_retail(){
     //
 
     if ($_POST['payload_action'] === 'post_invoice_ls_retail'){
-        global $wpdb;
-
-        $ls_api = new LS_API();
 
         //===========================================================
         //===========================================================
