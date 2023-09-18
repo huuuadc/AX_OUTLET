@@ -1785,6 +1785,11 @@ html *::-webkit-scrollbar-thumb{
             }
         }
     }
+    .quantity .plus_disable {
+        padding-left: .5em;
+        padding-right: .5em;
+        border-left: none;
+    }
 }
 .product-lightbox {
     .product {
