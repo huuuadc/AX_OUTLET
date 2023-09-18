@@ -1584,6 +1584,11 @@ html *::-webkit-scrollbar-thumb {
     transform: none !important;
   }
 }
+.single-product .quantity .plus_disable {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-left: none;
+}
 .product-lightbox .product .product-gallery .badge-container {
   display: none;
 }
