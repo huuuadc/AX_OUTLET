@@ -1,15 +1,11 @@
 <?php
-update_option( 'user-registration_license_active', 'valid' );
-update_option( 'user-registration_license_key', 'lh3MY3GFJbI7DhYO8AH5dt88h3WJQ0dB' );
-delete_option( 'user-registration_errors');
 /**
  * Plugin Name: User Registration ( Pro )
- * Plugin URI: https://wpeverest.com/plugins/user-registration-pro
+ * Plugin URI: https://wpuserregistration.com/
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 3.2.1
+ * Version: 4.0.4.1
  * Author: WPEverest
  * Author URI: https://wpeverest.com
- * Secret Key: 83a5bb0e2ad5164690bc7a42ae592cf5
  * Text Domain: user-registration
  * Domain Path: /languages/
  *
@@ -19,6 +15,10 @@ delete_option( 'user-registration_errors');
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
+
+ update_option( 'user-registration_license_active',  'valid' );
+    update_option( 'user-registration_errors',  [] );
+    update_option( 'user-registration_license_key', '123' );
 
 if ( ! class_exists( 'UserRegistration' ) ) :
 
@@ -35,7 +35,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.2.1';
+		public $version = '4.0.4.1';
 
 		/**
 		 * Session instance.
@@ -119,8 +119,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 * Define FT Constants.
 		 */
 		private function define_constants() {
-			$upload_dir = wp_upload_dir();
+			$upload_dir = apply_filters( 'user_registration_upload_dir', wp_upload_dir() );
 			$this->define( 'UR_LOG_DIR', $upload_dir['basedir'] . '/ur-logs/' );
+			$this->define( 'UR_UPLOAD_PATH', $upload_dir['basedir'] . '/user_registration_uploads/' );
+			$this->define( 'UR_UPLOAD_URL', $upload_dir['baseurl'] . '/user_registration_uploads/' );
 			$this->define( 'UR_DS', DIRECTORY_SEPARATOR );
 			$this->define( 'UR_PLUGIN_FILE', __FILE__ );
 			$this->define( 'UR_ABSPATH', dirname( __FILE__ ) . UR_DS );
@@ -129,6 +131,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
+			$this->define( 'UR_PRO_ACTIVE', true );
 		}
 
 		/**
@@ -193,6 +196,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-install.php';
 			include_once UR_ABSPATH . 'includes/class-ur-post-types.php'; // Registers post types
 			include_once UR_ABSPATH . 'includes/class-ur-user-approval.php'; // User Approval class
+			include_once UR_ABSPATH . 'includes/class-ur-smart-tags.php'; // User Approval class.
 			include_once UR_ABSPATH . 'includes/class-ur-emailer.php';
 			include_once UR_ABSPATH . 'includes/class-ur-ajax.php';
 			include_once UR_ABSPATH . 'includes/class-ur-query.php';
@@ -201,6 +205,11 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-privacy.php';
 			include_once UR_ABSPATH . 'includes/class-ur-form-block.php';
 			include_once UR_ABSPATH . 'includes/class-ur-cache-helper.php';
+
+			// Validation classes.
+			include_once UR_ABSPATH . 'includes/validation/class-ur-validation.php';
+			include_once UR_ABSPATH . 'includes/validation/class-ur-form-validation.php';
+			include_once UR_ABSPATH . 'includes/validation/class-ur-setting-validation.php';
 
 			include_once UR_ABSPATH . 'includes/RestApi/class-ur-rest-api.php';
 
@@ -360,8 +369,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		public static function plugin_row_meta( $plugin_meta, $plugin_file ) {
 			if ( UR_PLUGIN_BASENAME === $plugin_file ) {
 				$new_plugin_meta = array(
-					'docs'    => '<a href="' . esc_url( apply_filters( 'user_registration_docs_url', 'https://docs.wpeverest.com/user-registration/' ) ) . '" area-label="' . esc_attr__( 'View User Registration documentation', 'user-registration' ) . '">' . esc_html__( 'Docs', 'user-registration' ) . '</a>',
-					'support' => '<a href="' . esc_url( apply_filters( 'user_registration_support_url', 'https://wpeverest.com/support-forum/' ) ) . '" area-label="' . esc_attr__( 'Visit free customer support', 'user-registration' ) . '">' . __( 'Free support', 'user-registration' ) . '</a>',
+					'docs'    => '<a href="' . esc_url( apply_filters( 'user_registration_docs_url', 'https://docs.wpuserregistration.com' ) ) . '" area-label="' . esc_attr__( 'View User Registration documentation', 'user-registration' ) . '">' . esc_html__( 'Docs', 'user-registration' ) . '</a>',
+					'support' => '<a href="' . esc_url( apply_filters( 'user_registration_support_url', 'https://wpuserregistration.com/support/' ) ) . '" area-label="' . esc_attr__( 'Visit free customer support', 'user-registration' ) . '">' . __( 'Free support', 'user-registration' ) . '</a>',
 				);
 
 				return array_merge( $plugin_meta, $new_plugin_meta );
@@ -408,7 +417,7 @@ if ( ! function_exists( 'is_user_registration_pro_compatible' ) ) {
 	function is_user_registration_pro_compatible() {
 
 		if ( get_transient( 'user_registration_pro_not_compatible' ) ) {
-			$message           = __( 'Please update your <code>user-registration</code> plugin (to at least 2.1.0 version) to use <code>user-registration-pro</code> addon.', 'user-registration' );
+			$message = __( 'Please update your <code>user-registration</code> plugin (to at least 2.1.0 version) to use <code>user-registration-pro</code> addon.', 'user-registration' );
 			echo '<div class="notice-warning notice is-dismissible"><p>' . sprintf( $message ) . '</p></div>';
 
 			// Dectivate Pro and re-install free version when core version is less than 2.1.0;
@@ -534,8 +543,8 @@ if ( ! function_exists( 'user_registration_migrate_extras_to_pro' ) ) {
 			if ( ! empty( $options ) ) {
 
 				foreach ( $options as $option ) {
-					$option_name = $option->option_name;
-					$option_value = $option->option_value;
+					$option_name     = $option->option_name;
+					$option_value    = $option->option_value;
 					$new_option_name = str_replace( 'user_registration_extras_', 'user_registration_pro_', $option_name );
 					update_option( $new_option_name, $option_value, $option->autoload );
 				}
@@ -602,5 +611,3 @@ if ( ! function_exists( 'user_registration_pro_need_to_deactivate_extras' ) ) {
 if ( get_transient( 'user_registration_pro_need_to_deactivate_extras' ) ) {
 	add_action( 'admin_notices', 'user_registration_pro_need_to_deactivate_extras' );
 }
-/* Anti-Leecher Indentifier */
-/* Credited By BABIATO-FORUM */

@@ -399,7 +399,6 @@ class User_Registration_Pro_Popup_Table_List extends UR_List_Table {
 				<?php esc_html_e( 'User Registration Popups', 'user-registration' ); ?>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=misc&section=add-new-popup' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
 			</h3>
-			<hr class="wp-header-end">
 			<br class="clear">
 			<?php
 

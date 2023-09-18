@@ -34,12 +34,12 @@ if ( ! class_exists( 'User_Registration_Pro_Settings' ) ) :
 			add_filter( 'show_user_registration_setting_message', array( $this, 'filter_notice' ) );
 			add_filter( 'user-registration-setting-save-label', array( $this, 'filter_label' ) );
 			add_filter( 'user_registration_admin_field_role_redirect_settings', array( $this, 'ur_role_based_redirection_mapping_table' ), 10, 2 );
+
 			$this->redirect_type['User_Registration_Settings_Redirection_After_Login'] = include 'redirect/class-ur-settings-redirection-after-login.php';
-			$this->redirect_type['User_Registration_Settings_Redirection_After_Registration'] = include 'redirect/class-ur-settings-redirection-after-registeration.php';
 			$this->redirect_type['User_Registration_Settings_Redirection_After_Logout'] = include 'redirect/class-ur-settings-redirection-after-logout.php';
+
 			add_filter( 'ur_pro_settings_redirection_after_login', array( $this, 'save_custom_options' ), 10, 2 );
 			add_filter( 'ur_pro_settings_redirection_after_logout', array( $this, 'save_custom_options' ), 10, 2 );
-			add_filter( 'ur_pro_settings_redirection_after_registration', array( $this, 'save_custom_options' ), 10, 2 );
 
 			// Hooks to return data to ur core.
 			add_filter( 'user_registration_get_sections_misc', array( $this, 'add_misc_sections' ), 10, 1 );
@@ -51,7 +51,7 @@ if ( ! class_exists( 'User_Registration_Pro_Settings' ) ) :
 		 * Add Popups and Role Based Redirection tabs to Misc Option
 		 */
 		public function add_misc_sections( $sections ) {
-			$sections['popups'] = __( 'Popups', 'user-registration' );
+			$sections['popups']                 = __( 'Popups', 'user-registration' );
 			$sections['role-based-redirection'] = __( 'Role based Redirection', 'user-registration' );
 
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
@@ -116,17 +116,12 @@ if ( ! class_exists( 'User_Registration_Pro_Settings' ) ) :
 
 				case 'ur_settings_redirection_after_login':
 					$redirection_settings = new User_Registration_Settings_Redirection_After_Login();
-					$settings = $redirection_settings->get_settings();
-					break;
-
-				case 'ur_settings_redirection_after_registration':
-					$redirection_settings = new User_Registration_Settings_Redirection_After_Registration();
-					$settings = $redirection_settings->get_settings();
+					$settings             = $redirection_settings->get_settings();
 					break;
 
 				case 'ur_settings_redirection_after_logout':
 					$redirection_settings = new User_Registration_Settings_Redirection_After_Logout();
-					$settings = $redirection_settings->get_settings();
+					$settings             = $redirection_settings->get_settings();
 					break;
 			}
 
@@ -140,16 +135,16 @@ if ( ! class_exists( 'User_Registration_Pro_Settings' ) ) :
 			global $current_section;
 
 			$is_custom_option = false;
-			$option_name = '';
-			$option_value = array();
-			$redirect_type = $this->get_redirect_type();
+			$option_name      = '';
+			$option_value     = array();
+			$redirect_type    = $this->get_redirect_type();
 
 			foreach ( $redirect_type as $type ) {
 
 				if ( $current_section === 'ur_settings_' . $type->id ) {
 					$is_custom_option = true;
-					$option_name = 'ur_pro_settings_' . $type->id;
-					$option_value = apply_filters( $option_name, $type->id, $option_value );
+					$option_name      = 'ur_pro_settings_' . $type->id;
+					$option_value     = apply_filters( $option_name, $type->id, $option_value );
 				}
 			}
 
@@ -227,10 +222,8 @@ if ( ! class_exists( 'User_Registration_Pro_Settings' ) ) :
 			$settings = apply_filters(
 				'user_registration_get_add_new_popup_settings',
 				array(
-					'title'          => esc_html( $header_title ),
-					'back_link'      => esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=misc&section=popups' ) ),
-					'back_link_text' => __( 'Back to all Popups', 'user-registration' ),
-					'sections'       => array(
+					'title'    => esc_html( $header_title ),
+					'sections' => array(
 						'edit_popup_display_settings' => array(
 							'title'    => __( 'Display Popup', 'user-registration' ),
 							'type'     => 'card',
@@ -240,10 +233,10 @@ if ( ! class_exists( 'User_Registration_Pro_Settings' ) ) :
 									'title'    => __( 'Enable this popup', 'user-registration' ),
 									'desc'     => __( 'Enable', 'user-registration' ),
 									'id'       => 'user_registration_pro_enable_popup',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => __( 'Check to enable popup.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
-									'default'  => isset( $popup_content ) && 1 == $popup_content->popup_status ? 'yes' : 'no',
+									'default'  => isset( $popup_content ) && ur_string_to_bool( $popup_content->popup_status ) ? true : false,
 								),
 								array(
 									'title'    => __( 'Select popup type', 'user-registration' ),
@@ -344,24 +337,24 @@ if ( ! class_exists( 'User_Registration_Pro_Settings' ) ) :
 			$settings = apply_filters(
 				'user_registration_role_based_redirection_settings',
 				array(
-					'title' => __( 'Role Based Redirection', 'user-registration' ),
+					'title'    => __( 'Role Based Redirection', 'user-registration' ),
 					'sections' => array(
-						'role_based_redirection_settings'       => array(
+						'role_based_redirection_settings' => array(
 							'title'    => __( 'Configure Role based Redirection', 'user-registration' ),
 							'type'     => 'card',
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'title'    => __( 'Enable Role based Redirection', 'user-registration' ),
-									'desc'     => __( 'Handles role based redirection to a specific page after login or registration.', 'user-registration' ),
-									'id'       => 'user_registration_pro_role_based_redirection',
-									'type'     => 'checkbox',
-									'css'      => 'min-width: 350px;',
-									'default'  => 'no',
+									'title'   => __( 'Enable Role based Redirection', 'user-registration' ),
+									'desc'    => __( 'Handles role based redirection to a specific page after login or registration.', 'user-registration' ),
+									'id'      => 'user_registration_pro_role_based_redirection',
+									'type'    => 'toggle',
+									'css'     => 'min-width: 350px;',
+									'default' => 'false',
 								),
 								array(
 									'type' => 'role_redirect_settings',
-									'id' => 'user_registration_pro_role_based_redirection_settings',
+									'id'   => 'user_registration_pro_role_based_redirection_settings',
 								),
 							),
 						),
@@ -380,7 +373,7 @@ if ( ! class_exists( 'User_Registration_Pro_Settings' ) ) :
 		public function ur_role_based_redirection_mapping_table( $settings, $option ) {
 			$settings .= '<tr valign="top">';
 			$settings .= '<td class="ur_emails_wrapper" colspan="2">';
-			$settings .= '<table class="ur_emails widefat" cellspacing="0">';
+			$settings .= '<table class="ur_emails widefat" cellspacing="0" style="display:none;">';
 			$settings .= '<thead>';
 			$settings .= '<tr>';
 
@@ -394,9 +387,9 @@ if ( ! class_exists( 'User_Registration_Pro_Settings' ) ) :
 			foreach ( $columns as $key => $column ) {
 				$settings .= '<th style="padding-left:15px" class="ur-email-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
 			}
-			$settings .= '</tr>';
-			$settings .= '</thead>';
-			$settings .= '<tbody>';
+			$settings     .= '</tr>';
+			$settings     .= '</thead>';
+			$settings     .= '<tbody>';
 			$redirect_type = $this->get_redirect_type();
 			foreach ( $redirect_type as $type ) {
 				$settings .= '<tr><td class="ur-email-settings-table">';
@@ -466,7 +459,6 @@ if ( ! class_exists( 'User_Registration_Pro_Settings' ) ) :
 			switch ( $section_id ) {
 				case 'redirection_after_login':
 				case 'redirection_after_logout':
-				case 'redirection_after_registration':
 					foreach ( ur_get_default_admin_roles() as $key => $value ) {
 						$option_value[ $key ] = isset( $_POST[ $key ] ) ? wp_unslash( absint( $_POST[ $key ] ) ) : '';
 					}

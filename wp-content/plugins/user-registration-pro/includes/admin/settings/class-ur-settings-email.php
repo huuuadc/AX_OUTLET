@@ -26,6 +26,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		public $emails = array();
 
 		/**
+		 * Setting Id.
+		 *
+		 * @var string
+		 */
+		public $id = 'email';
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
@@ -79,7 +86,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'desc'     => __( 'Disable all emails sent after registration.', 'user-registration' ),
 									'id'       => 'user_registration_email_setting_disable_email',
 									'default'  => 'no',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 								array(
@@ -186,6 +193,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				array(
 					'name'    => __( 'Email', 'user-registration' ),
 					'status'  => __( 'Status', 'user-registration' ),
+					'preview' => __( 'Preview', 'user-registration' ),
 					'actions' => __( 'Configure', 'user-registration' ),
 				)
 			);
@@ -199,17 +207,28 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 			$emails = $this->get_emails();
 			foreach ( $emails as $email ) {
-				$status    = ! ur_string_to_bool( get_option( 'user_registration_email_setting_disable_email', false ) ) ? ur_string_to_bool( get_option( 'user_registration_enable_' . $email->id, true ) ) : false;
+				$status = ! ur_string_to_bool( get_option( 'user_registration_email_setting_disable_email', false ) ) ? ur_string_to_bool( get_option( 'user_registration_enable_' . $email->id, true ) ) : false;
+
 				$settings .= '<tr><td class="ur-email-settings-table">';
 				$settings .= '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) .
 												'">' . esc_html( $email->title ) . '</a>';
 				$settings .= ur_help_tip( $email->description );
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
-				$label     = $status ? __( 'Active', 'user-registration' ) : __( 'Inactive', 'user-registration' );
+				$label     = 'email_confirmation' === $email->id ? esc_html__( 'Always Active', 'user-registration' ) : '<div class="ur-toggle-section"><span class="user-registration-toggle-form user-registration-email-status-toggle" ><input type="checkbox" name="email_status" id="' . esc_attr( $email->id ) . '"' . ( $status ? "checked='checked'" : '' ) . '"/><span class="slider round"></span></span></div>';
 				$settings .= '<label style="' . ( $status ? 'color:green;font-weight:500;' : 'color:red;font-weight:500;' ) . '">';
-				$settings .= esc_html( $label );
+				$settings .= $label;
 				$settings .= '</label>';
+				$settings .= '</td>';
+				$settings .= '<td class="ur-email-settings-table">';
+				$settings .= '<a class="button tips user-registration-email-preview " target="__blank" data-tip="' . esc_attr__( 'Preview', 'user-registration' ) . '" href="' . esc_url(
+					add_query_arg(
+						array(
+							'ur_email_preview' => $email->id,
+						),
+						home_url()
+					)
+				) . '"><span class="dashicons dashicons-visibility"></span></a>';
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
 				$settings .= '<a class="button tips" data-tip="' . esc_attr__( 'Configure', 'user-registration' ) . '" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>';
@@ -265,7 +284,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			if ( ! empty( $current_section ) ) {
 				?>
 				<div id ="smart-tags">
-					<a href="https://docs.wpeverest.com/docs/user-registration/email-settings/smart-tags/"><?php echo esc_html__( 'Smart Tags Used', 'user-registration' ); ?></a>
+				<a href="https://docs.wpuserregistration.com/docs/smart-tags/" target="_blank"><?php echo esc_html__( 'Smart Tags Used', 'user-registration' ); ?></a>
 				</div>
 				<?php
 			}

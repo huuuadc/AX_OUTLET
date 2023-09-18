@@ -28,19 +28,37 @@
 	});
 
 	// When user clicks on the menu item open the popup.
-	$(document).on("click", ".user-registration-modal-link", function (e) {
-		e.preventDefault();
-		var classes = $.map($(this)[0].classList, function (cls, i) {
-			if (cls.indexOf("user-registration-modal-link-") === 0) {
-				var popup_id = cls.replace("user-registration-modal-link-", "");
+	$(".user-registration-modal-link").each(function () {
+		$(this).on("click", function (e) {
+			e.preventDefault();
+			var $this = $(this);
+			var classes = $.map($(this)[0].classList, function (cls, i) {
+				if (cls.indexOf("user-registration-modal-link-") === 0) {
+					var popup_id = cls.replace(
+						"user-registration-modal-link-",
+						""
+					);
 
-				$(".user-registration-modal-" + popup_id).each(function () {
-					$(this).show();
-				});
+					var lastItemIndex =
+						$(".user-registration-modal-" + popup_id).length - 1;
+					$(".user-registration-modal-" + popup_id).each(function (
+						index
+					) {
+						var isLastElement = index == lastItemIndex;
 
-				// Add user-registration-modal-open class to body when popup is rendered on menu click.
-				$(document.body).addClass("user-registration-modal-open");
-			}
+						if (isLastElement) {
+							$(this).show();
+							return false;
+						} else {
+							$(this).remove();
+							return true;
+						}
+					});
+
+					// Add user-registration-modal-open class to body when popup is rendered on menu click.
+					$(document.body).addClass("user-registration-modal-open");
+				}
+			});
 		});
 	});
 
@@ -454,10 +472,7 @@
 	// Keyboard Friendly Form
 	function enable_keyboard_friendly_form() {
 		if (
-			"yes" ===
-				user_registration_pro_frontend_data.keyboard_friendly_form_enabled ||
-			"1" ===
-				user_registration_pro_frontend_data.keyboard_friendly_form_enabled
+			user_registration_pro_frontend_data.keyboard_friendly_form_enabled
 		) {
 			var ur_form = $("form.register");
 			var ur_fields = ur_form.find(".ur-frontend-field");
@@ -532,4 +547,72 @@
 			});
 		}
 	}
+	$(document).on("click", ".ur-request-button", function (e) {
+		e.preventDefault();
+		var request_action = $(this).data("action"),
+			$this = $(this);
+		var password = $("#" + request_action).val();
+		$(".ur-field-area-response." + request_action).hide();
+
+		if ($("#" + request_action).length && password === "") {
+			$(".ur-field-error." + request_action).show();
+		} else {
+			$(".ur-field-error." + request_action).hide();
+			var request = {
+				action: "user_registration_pro_request_user_data",
+				request_action: request_action,
+				security: user_registration_pro_frontend_data.user_data_nonce,
+			};
+
+			if ($("#" + request_action).length) {
+				request.password = password;
+			}
+			var target_tag = e.target;
+			var button_text = $this.text();
+			$.ajax({
+				url: user_registration_pro_frontend_data.ajax_url,
+				type: "POST",
+				data: request,
+				beforeSend: function () {
+					$this.text(
+						user_registration_pro_frontend_data.privacy_sending_text
+					);
+				},
+				success: function (response) {
+					if (response.data.success === 1) {
+						if (request_action === "ur-export-data") {
+							$(document)
+								.find('label[name="ur-export-data"]')
+								.hide();
+							$(document).find("#ur-export-data").hide();
+							$(document).find(".ur-export-data-button").hide();
+						}
+						if (request_action === "ur-erase-data") {
+							$(document)
+								.find('label[name="ur-erase-data"]')
+								.hide();
+							$(document).find("#ur-erase-data").hide();
+							$(document).find(".ur-erase-data-button").hide();
+						}
+					}
+					$(document)
+						.find(".ur-field-area-response." + request_action)
+						.html(response.data.answer)
+						.show();
+					$this.text(button_text);
+				},
+				error: function (data) {},
+			});
+		}
+	});
+	$(document).on("click", "#ur-new-erase-request", function (e) {
+		e.preventDefault();
+		$("#ur-erase-personal-data-request-input").show();
+		$(document).find(".ur-erase-personal-data").hide();
+	});
+	$(document).on("click", "#ur-new-download-request", function (e) {
+		e.preventDefault();
+		$("#ur-download-personal-data-request-input").show();
+		$(document).find(".ur-download-personal-data").hide();
+	});
 })(jQuery);
