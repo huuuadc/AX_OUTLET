@@ -14,6 +14,47 @@ jQuery(function ($) {
 			this.init_all_tooltips();
 			this.manage_tooltip_fields();
 			this.init_export_custom_fields();
+			this.init_render_dynamic_form_fields();
+			this.init_accordion_settings();
+			this.init_integration_settings();
+			this.init_hide_show_redirection_settings();
+			this.init_hide_show_role_based_redirection_settings();
+		},
+		/**
+		 * Initialize integration_setting elements.
+		 */
+		init_integration_settings: function () {
+			$(".ur-integration-connected-accounts").each(function () {
+				$(this)
+					.closest(".user-registration-card")
+					.find(".integration-status")
+					.addClass("ur-integration-account-connected");
+			});
+		},
+		/**
+		 * Initialize accordion_settings elements.
+		 */
+		init_accordion_settings: function () {
+			var acc = document.getElementsByClassName("accordion");
+			var i;
+			for (i = 0; i < acc.length; i++) {
+				var panel = acc[i].nextElementSibling;
+				panel.style.display = "none";
+
+				acc[i].addEventListener("click", function () {
+					/* Toggle between adding and removing the "active" class,
+				to highlight the button that controls the panel */
+					this.classList.toggle("active");
+
+					/* Toggle between hiding and showing the active panel */
+					var panel = this.nextElementSibling;
+					if (panel.style.display === "block") {
+						panel.style.display = "none";
+					} else {
+						panel.style.display = "block";
+					}
+				});
+			}
 		},
 		/**
 		 * Initialize all tooltip elements.
@@ -139,6 +180,15 @@ jQuery(function ($) {
 					$(".ur-spinner").remove();
 					UR_PRO.retrive_db_table_columns($table);
 				});
+
+				$(document).on(
+					"click",
+					".ur-license-expiry-notice .notice-dismiss",
+					function () {
+						var $this = $(this);
+						UR_PRO.get_license_expiry_count($this);
+					}
+				);
 			});
 		},
 		/**
@@ -242,6 +292,13 @@ jQuery(function ($) {
 			/**
 			 * Replace input field according to selected field in list field such as country, select etc.
 			 */
+			$(document).on(
+				"focus",
+				".ur-conditional-wrapper .ur_conditional_field",
+				function () {
+					UR_PRO.replaceFormFields($(this));
+				}
+			);
 			$(document).on(
 				"change",
 				".ur-conditional-wrapper .ur_conditional_field",
@@ -419,11 +476,11 @@ jQuery(function ($) {
 				data_type == "shipping_country" ||
 				data_type == "select2" ||
 				data_type == "multi_select2" ||
-				data_type == "multi_choice"
+				data_type == "multi_choice" ||
+				data_type == "multiple_choice"
 			) {
 				if (
 					data_type == "select" ||
-					data_type == "radio" ||
 					data_type == "select2" ||
 					data_type == "multi_select2"
 				) {
@@ -627,6 +684,22 @@ jQuery(function ($) {
 			});
 		},
 		/**
+		 * Get the license expiry count
+		 */
+		get_license_expiry_count: function ($this) {
+			var data = {
+				action: "user_registration_pro_get_license_expiry_count",
+				security:
+					user_registration_pro_admin_script_data.ur_pro_get_license_expiry_count,
+			};
+
+			$.ajax({
+				url: user_registration_pro_admin_script_data.ajax_url,
+				data: data,
+				type: "POST",
+			});
+		},
+		/**
 		 * save external mapping settings from form builder
 		 */
 		save_external_mapping_settings: function () {
@@ -718,6 +791,21 @@ jQuery(function ($) {
 										.removeClass("status-install-now")
 										.addClass("status-inactive")
 										.text("Inactive");
+								} else if (response.deActivateUrl) {
+									this_node.text("Deactivate");
+									this_node
+										.removeClass("install-now")
+										.addClass(
+											"deactivate-now button-danger"
+										)
+										.attr("href", response.deActivateUrl);
+
+									this_node
+										.closest(".ur-plugin-card-bottom")
+										.find(".status-label")
+										.removeClass("status-install-now")
+										.addClass("status-inactive")
+										.text("Inactive");
 								}
 							} else {
 								this_node
@@ -738,8 +826,8 @@ jQuery(function ($) {
 		 * Initialize Tooltip Enanbled Fields
 		 */
 		manage_tooltip_fields: function () {
-			$('select[data-field="tooltip"]').each(function () {
-				if ($(this).val() === "yes") {
+			$('input[data-field="tooltip"]').each(function () {
+				if ($(this).is(":checked")) {
 					$(this)
 						.closest(".ur-selected-item")
 						.find(".ur-label")
@@ -807,12 +895,8 @@ jQuery(function ($) {
 					.val();
 			wrapper
 				.find(".ur-general-setting-block")
-				.find(
-					'select[data-field="' +
-						$label.attr("data-field") +
-						'"] option'
-				)
-				.removeAttr("selected");
+				.find('input[data-field="' + $label.attr("data-field") + '"]')
+				.prop("checked", $label.is(":checked"));
 
 			if (selector_field_name === active_field_name) {
 				if (
@@ -825,7 +909,7 @@ jQuery(function ($) {
 						.remove();
 				}
 
-				if ("yes" === $label.val()) {
+				if ($label.is(":checked")) {
 					wrapper
 						.find(".ur-label")
 						.find("label")
@@ -836,16 +920,6 @@ jQuery(function ($) {
 						.closest(".ur-toggle-content")
 						.find(".ur-general-setting-tooltip-message")
 						.show(500);
-
-					wrapper
-						.find(".ur-general-setting-block")
-						.find(
-							'select[data-field="' +
-								$label.attr("data-field") +
-								'"]'
-						)
-						.find('option[value="' + $label.val() + '"]')
-						.attr("selected", true);
 				} else {
 					wrapper
 						.find(".ur-label")
@@ -887,70 +961,288 @@ jQuery(function ($) {
 				var ur_spinner = $('<span class="ur-spinner"></span>');
 				$(".ur-export-custom-fields > p").append(ur_spinner);
 				var form_id = $(this).val();
-				$.ajax({
-					url: user_registration_pro_admin_script_data.ajax_url,
-					data: {
-						action: "user_registration_pro_get_form_fields_list_by_form_id",
-						form_id: form_id,
-						security:
-							user_registration_pro_admin_script_data.ur_pro_get_form_fields_by_form_id,
-					},
-					type: "post",
-					success: function (response) {
-						// Remove all fields except First Checkbox.
-						$(".ur-form-fields-container")
-							.contents()
-							.slice(4)
-							.remove();
+				if (form_id != "") {
+					$.ajax({
+						url: user_registration_pro_admin_script_data.ajax_url,
+						data: {
+							action: "user_registration_pro_get_form_fields_list_by_form_id",
+							form_id: form_id,
+							security:
+								user_registration_pro_admin_script_data.ur_pro_get_form_fields_by_form_id,
+						},
+						type: "post",
+						success: function (response) {
+							$(".ur-export-custom-fields").show();
+							// Remove all fields in the select box
+							$(".ur-custom-fields-input").html("");
 
-						var fields_dict = JSON.parse(
-							response.data.form_field_list
-						);
-
-						$.each(fields_dict, function (key, value) {
-							var el = $(
-								'<input type="checkbox" name="csv-export-custom-fields[]" class="ur-custom-fields-input" checked>'
+							var fields_dict = JSON.parse(
+								response.data.form_field_list
 							);
-
-							el.val(key);
-
-							$(".ur-form-fields-container").append(el);
-							$(".ur-form-fields-container").append(
-								"&nbsp;" + value + "<br />"
+							option = "";
+							$.each(fields_dict, function (key, value) {
+								option +=
+									'<option class="ur-field-option" value="' +
+									key +
+									'">' +
+									value +
+									"</option>";
+							});
+							$(".ur-custom-fields-input").html(option);
+							$(".ur_export_csv_additional_fields_dict").val(
+								response.data.form_field_list
 							);
-						});
-						$("input.ur-all-fields-option").prop("checked", true);
-						$(".ur_export_csv_fields_dict").val(
-							response.data.form_field_list
-						);
-						ur_spinner.remove();
+							ur_spinner.remove();
+						},
+					});
+				} else {
+					$(".ur-export-custom-fields").hide();
+					ur_spinner.remove();
+				}
+			});
+
+			$(".ur-export-custom-fields").hide();
+			$(function () {
+				flatpickr("#date_range", {
+					mode: "range",
+					dateFormat: "Y-m-d",
+					maxDate: "today",
+					onChange: function (dates) {
+						if (dates.length == 2) {
+							var start = dates[0];
+							var format_start =
+								start.toLocaleString("default", {
+									year: "numeric",
+								}) +
+								"-" +
+								start.toLocaleString("default", {
+									month: "2-digit",
+								}) +
+								"-" +
+								start.toLocaleString("default", {
+									day: "2-digit",
+								});
+							var end = dates[1];
+							var format_end =
+								end.toLocaleString("default", {
+									year: "numeric",
+								}) +
+								"-" +
+								end.toLocaleString("default", {
+									month: "2-digit",
+								}) +
+								"-" +
+								end.toLocaleString("default", {
+									day: "2-digit",
+								});
+							$("#from_date").val(format_start);
+							$("#to_date").val(format_end);
+						}
 					},
 				});
 			});
+		},
 
-			// Check all fields when All Fields input is checked or vice versa.
-			$("input.ur-all-fields-option").on("change", function () {
-				if (true === $(this).prop("checked")) {
-					$(".ur-custom-fields-input").each(function () {
-						$(this).prop("checked", true);
-					});
-				} else {
-					$(".ur-custom-fields-input").each(function () {
-						$(this).prop("checked", false);
-					});
+		// Render form field dynamically on drag and drop.
+		init_render_dynamic_form_fields: function () {
+			$(document).on(
+				"focus",
+				".ur_pro_fields_wrapper .column-form-fields select",
+				function () {
+					UR_PRO.replaceFormFields($(this));
 				}
+			);
+		},
+
+		replaceFormFields: function ($targetField) {
+			var form_fields = {};
+			$(".ur-grid-lists .ur-selected-item .ur-admin-template").each(
+				function () {
+					var field_label = $(this)
+						.closest(".ur-selected-item")
+						.find(" .ur-admin-template .ur-label label")
+						.text();
+					var field_key = $(this)
+						.closest(".ur-selected-item")
+						.find(" .ur-admin-template .ur-field")
+						.data("field-key");
+					var field_name = $(this)
+						.parent()
+						.find(".ur-general-setting-block")
+						.find("input[data-field='field_name'")
+						.val();
+					var key = field_name + "." + field_key;
+
+					//strip certain fields
+					if (
+						"section_title" == field_key ||
+						"html" == field_key ||
+						"wysiwyg" == field_key ||
+						"billing_address_title" == field_key ||
+						"shipping_address_title" == field_key ||
+						"stripe_gateway" == field_key ||
+						"profile_picture" == field_key ||
+						"file" == field_key
+					) {
+						return;
+					}
+
+					if (typeof field_key !== "undefined") {
+						form_fields[key] = field_label;
+					}
+				}
+			);
+
+			var selected_value = $targetField.val();
+			$targetField.empty();
+			$targetField.html("<option value>Ignore this field</option>");
+			$.each(form_fields, function (key, value) {
+				var field_name = key.substring(0, key.indexOf("."));
+				var field_key = key.slice(key.indexOf(".") + 1);
+				$targetField.append(
+					$(
+						"<option data-type='" +
+							field_key +
+							"' data-lable='" +
+							value +
+							"'></option>"
+					)
+						.attr("value", field_name)
+						.text(value)
+				);
 			});
+			$targetField
+				.find("option[value='" + selected_value + "']")
+				.attr("selected", "selected");
+			$targetField.on("change", function () {
+				selectedOption = $(this).val();
+				UR_PRO.replaceFormFields($(this));
+			});
+			return form_fields;
+		},
+		init_hide_show_redirection_settings: function () {
+			this.hide_show_redirection_options();
+			$("#user_registration_form_setting_redirect_after_registration").on(
+				"change",
+				this.hide_show_redirection_options
+			);
 
-			// Check or uncheck the value of All Fields input based on other fields.
-			$(document).on("change", ".ur-custom-fields-input", function () {
-				if ($(".ur-custom-fields-input:not(:checked)").length === 0) {
-					$("input.ur-all-fields-option").prop("checked", true);
-				} else {
-					$("input.ur-all-fields-option").prop("checked", false);
+			this.hide_show_redirection_messages();
+			$(
+				'#user_registration_form_setting_redirect_after_registration, select[data-id="user_registration_form_setting_login_options"], input[data-id="user_registration_enable_paypal_standard"], input[data-id="user_registration_form_setting_enable_conditional_redirection"]'
+			).on("change", this.hide_show_redirection_messages);
+		},
+
+		/**
+		 * Hide or Show Redirection settings.
+		 */
+		hide_show_redirection_options: function () {
+			var redirect_after_registration = $(
+				"#user_registration_form_setting_redirect_after_registration"
+			);
+			var selected_redirection_option =
+				redirect_after_registration.find(":selected");
+			var role_based_redirection = $(
+				"#user_registration_form_setting_role_based_redirection_field"
+			).slideUp(800);
+
+			if (redirect_after_registration.length) {
+				if (
+					"role-based-redirection" ===
+					selected_redirection_option.val()
+				) {
+					role_based_redirection.slideDown(800);
 				}
+			}
+		},
+
+		hide_show_redirection_messages: function () {
+			var redirect_after_registration = $(
+				"#user_registration_form_setting_redirect_after_registration"
+			);
+			var login_option = $(
+				'select[data-id="user_registration_form_setting_login_options"]'
+			);
+			var paypal_enabled = $(
+				'input[data-id="user_registration_enable_paypal_standard"]'
+			).is(":checked");
+			var conditional_redirection = $(
+				'input[data-id="user_registration_form_setting_enable_conditional_redirection"]'
+			);
+
+			var conditional_redirection_enabled = false;
+			if (conditional_redirection.length) {
+				conditional_redirection_enabled =
+					conditional_redirection.is(":checked");
+			}
+
+			if (
+				("no-redirection" !== redirect_after_registration.val() ||
+					conditional_redirection_enabled) &&
+				(paypal_enabled)
+			) {
+				if (
+					!redirect_after_registration
+						.parent()
+						.find("#user-registration-redirection-message").length
+				) {
+					var message = $(
+						'<div class="user-registration-form-setting-info" id="user-registration-redirection-message">Warning: Redirection options will not work with Paypal payment enabled.</div>'
+					);
+					redirect_after_registration.before(message);
+				}
+			} else {
+				var existing_message = redirect_after_registration
+					.parent()
+					.find("#user-registration-redirection-message");
+				if (existing_message.length) {
+					existing_message.remove();
+				}
+			}
+		},
+
+		/**
+		 * Hide and show role based redirection settings.
+		 */
+		init_hide_show_role_based_redirection_settings:function() {
+			var redirection_setting_table = $("#user_registration_pro_role_based_redirection").closest(".user-registration-global-settings").next();
+			if($("#user_registration_pro_role_based_redirection").prop("checked") === true) {
+				$(redirection_setting_table).show();
+			}
+
+			$("#user_registration_pro_role_based_redirection").on("change", function() {
+				$(redirection_setting_table).toggle();
 			});
 		},
 	};
 
+	if (!$("#user_registration_enable_privacy_tab").is(":checked")) {
+		$(".privacy-tab-settings")
+			.closest(".user-registration-global-settings")
+			.hide();
+	}
+
+	$("#user_registration_enable_privacy_tab").on("change", function () {
+		$(".privacy-tab-settings")
+			.closest(".user-registration-global-settings")
+			.toggle();
+	});
+
+	if($("#user_registration_auto_logout_inactivity_time").val() == ''){
+		$('#user_registration_timeout_countdown_inactive_period').parent().parent().hide();
+		$('#user_registration_role_based_inactivity').parent().parent().hide();
+	}
+
+	//Real-time changes in autlogout inactivity time.
+	$(document).on('change', '#user_registration_auto_logout_inactivity_time',function () {
+		$('#user_registration_timeout_countdown_inactive_period').parent().parent().show();
+		$('#user_registration_role_based_inactivity').parent().parent().show();
+
+		if($(this).val() == ''){
+			$('#user_registration_timeout_countdown_inactive_period').parent().parent().hide();
+			$('#user_registration_role_based_inactivity').parent().parent().hide();
+
+		}
+	});
 	UR_PRO.init();
 });

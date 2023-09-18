@@ -2,7 +2,7 @@
 /**
  * Configure Email
  *
- * @class    User_Registration_Settings_Delete_Account_Admin_Email
+ * @class    UR_Settings_Delete_Account_Admin_Email
  * @extends  User_Registration_Settings_Email
  * @category Class
  * @author   WPEverest
@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'User_Registration_Settings_Delete_Account_Admin_Email', false ) ) :
+if ( ! class_exists( 'UR_Settings_Delete_Account_Admin_Email', false ) ) :
 
 	/**
-	 * User_Registration_Settings_Delete_Account_Admin_Email Class.
+	 * UR_Settings_Delete_Account_Admin_Email Class.
 	 */
-	class User_Registration_Settings_Delete_Account_Admin_Email {
+	class UR_Settings_Delete_Account_Admin_Email {
 
 		public function __construct() {
 			$this->id          = 'delete_account_admin_email';
@@ -35,20 +35,24 @@ if ( ! class_exists( 'User_Registration_Settings_Delete_Account_Admin_Email', fa
 			$settings = apply_filters(
 				'user_registration_delete_account_admin_email',
 				array(
-					'title' => __( 'Emails', 'user-registration' ),
-					'sections' => array (
+					'title'    => __( 'Emails', 'user-registration' ),
+					'sections' => array(
 						'delete_account_admin_email' => array(
-							'title' => __( 'Delete Account Admin Email', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
-							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
-							'settings' => array(
+							'title'        => __( 'Delete Account Admin Email', 'user-registration' ),
+							'type'         => 'card',
+							'desc'         => '',
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'preview_link' => ur_email_preview_link(
+								__( 'Preview', 'user-registration' ),
+								$this->id
+							),
+							'settings'     => array(
 								array(
 									'title'    => __( 'Enable this email', 'user-registration' ),
 									'desc'     => __( 'Enable this email sent to the admin after user deletes thier own account', 'user-registration' ),
 									'id'       => 'user_registration_enable_delete_account_admin_email',
 									'default'  => 'yes',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 
@@ -109,4 +113,4 @@ if ( ! class_exists( 'User_Registration_Settings_Delete_Account_Admin_Email', fa
 	}
 endif;
 
-return new User_Registration_Settings_Delete_Account_Admin_Email();
+return new UR_Settings_Delete_Account_Admin_Email();

@@ -58,9 +58,10 @@ div.reset-btn {
 
 .tooltipster-base {
 	.tooltipster-box {
-		background-color: #4c5477 !important;
-		padding: 4px 8px;
-		border-radius: 2px;
+		background: $grey-400;
+		padding: $spacing_4px $spacing_8px;
+		border-radius: $border_radius_4;
+		border-color: $grey-400;
 		text-align: center;
 		font-size: 13px;
     	line-height: 1.4em;
@@ -73,13 +74,16 @@ div.reset-btn {
 	.tooltipster-arrow {
 		.tooltipster-arrow-uncropped {
 			.tooltipster-arrow-border {
-				border-bottom-color: #4c5477 !important;
-				border-top-color: #4c5477 !important;
+				border-bottom-color: $grey-400;
+				border-top-color: $grey-400;
+			}
+
+			.tooltipster-arrow-background {
+				border-bottom-color: $grey-400;
 			}
 		}
 	}
  }
-
 // User Registration Detail
 
 .ur-user-details-container {
@@ -158,4 +162,45 @@ div.reset-btn {
 			}
 		}
 	}
+}
+
+// Passwordless Login Link placement in Login Form
+#user-registration {
+	.ur-frontend-form {
+		.user-registration-form-login {
+			.ur-form-row {
+				.ur-form-grid {
+					> div:not(#ur-recaptcha-node) {
+						float: right;
+						display: flex;
+						align-items: center;
+						gap: 20px;
+
+						.user-registration-passwordless-login {
+							margin-bottom: 0;
+						}
+
+						.user-registration-Button {
+							float: none;
+						}
+					}
+
+					.user-registration-form__label {
+						display: inline-flex;
+						align-items: center;
+						cursor: pointer;
+
+						.user-registration-form__input-checkbox {
+							cursor: pointer;
+							margin-right: 8px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.inline {
+	display: inline;
 }

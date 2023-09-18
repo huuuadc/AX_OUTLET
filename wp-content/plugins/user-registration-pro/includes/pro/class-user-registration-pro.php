@@ -90,7 +90,9 @@ if ( ! class_exists( 'User_Registration_Pro' ) ) :
 			require_once 'functions-ur-pro.php';
 			include_once 'class-ur-pro-shortcodes.php';
 			include_once 'class-ur-pro-ajax.php';
-			require_once 'stats/class-ur-pro-admin-stats.php';
+			if ( ur_option_checked( 'user_registration_allow_usage_tracking', false ) ) {
+				require_once 'stats/class-ur-pro-admin-stats.php';
+			}
 			/**
 			 * Elementor classes.
 			 */
@@ -110,8 +112,25 @@ if ( ! class_exists( 'User_Registration_Pro' ) ) :
 				require_once 'class-ur-pro-frontend.php';
 				$this->frontend = new User_Registration_Pro_Frontend();
 			}
+
+			add_filter( 'user_registration_email_classes', array( $this, 'get_emails' ), 10, 1 );
+
 		}
 
+		/**
+		 * Get all emails triggered.
+		 *
+		 * @return array $emails List of all emails.
+		 */
+		public function get_emails( $emails ) {
+			$emails['UR_Settings_Auto_Generated_Password_Email']  = include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-generated-password-email.php';
+			$emails['UR_Settings_Delete_Account_Email']           = include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-delete-account-email.php';
+			$emails['UR_Settings_Delete_Account_Admin_Email']     = include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-delete-account-admin-email.php';
+			$emails['UR_Settings_Prevent_Concurrent_Login_Email'] = include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-prevent-concurrent-login-email.php';
+			$emails['UR_Settings_Email_Verified_Admin_Email']     = include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-email-verified-admin-email.php';
+
+			return $emails;
+		}
 			/**
 			 * Check if is admin or not and load the correct class
 			 *
@@ -154,6 +173,7 @@ if ( ! class_exists( 'User_Registration_Pro' ) ) :
 		public function add_user_registration_pro_setting( $settings ) {
 			if ( class_exists( 'UR_Settings_Page' ) ) {
 				$settings[] = include_once dirname( __FILE__ ) . '/admin/settings/class-ur-pro-settings.php';
+				$settings[] = include_once dirname( __FILE__ ) . '/admin/settings/class-ur-pro-settings-integration.php';
 			}
 
 			return $settings;

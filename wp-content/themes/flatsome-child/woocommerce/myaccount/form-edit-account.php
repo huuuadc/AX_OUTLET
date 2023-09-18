@@ -32,15 +32,19 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
         <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="account_last_name" id="account_last_name" autocomplete="family-name" value="<?php echo esc_attr( $user->last_name ); ?>" />
     </p>
     <div class="clear"></div>
-    <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+    <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-first">
         <label for="account_display_name"><?php esc_html_e( 'Display name', 'woocommerce' ); ?>&nbsp;<span class="required">*</span></label>
         <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="account_display_name" id="account_display_name" value="<?php echo esc_attr( $user->display_name ); ?>" /> <span><em><?php esc_html_e( 'This will be how your name will be displayed in the account section and in reviews', 'woocommerce' ); ?></em></span>
+    </p>
+    <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-last">
+        <label for="user_registration_user_birthday"><?php esc_html_e( 'Ngày sinh', 'woocommerce' ); ?></label>
+        <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" placeholder="ngày/tháng/năm" name="user_registration_user_birthday" id="user_registration_user_birthday" value="<?php echo get_user_meta($user->ID, 'user_registration_user_birthday', true); ?>" />
     </p>
     <div class="clear"></div>
 
     <p class="woocommerce-form-row woocommerce-form-row--last form-row form-row-first">
         <label for=""><?php esc_html_e( 'Phone', 'woocommerce' ); ?>&nbsp</label>
-        <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="" id="account_phone" autocomplete="family-name" value="<?php echo esc_attr( $user->billing_phone ); ?>" disabled="disabled" />
+        <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="" id="account_phone" autocomplete="family-name" value="<?php echo esc_attr( $user->nickname ); ?>" disabled="disabled" />
     </p>
     <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-last">
         <label for=""><?php esc_html_e( 'Email address', 'woocommerce' ); ?>&nbsp</label>

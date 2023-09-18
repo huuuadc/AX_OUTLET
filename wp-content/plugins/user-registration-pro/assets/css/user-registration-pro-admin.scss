@@ -195,6 +195,7 @@
 				&[for=ur-type-checkbox],
 				&[for=ur-type-select] {
 					margin-bottom: 18px;
+					justify-content: space-between;
 
 					.ur-toggle-bulk-options {
 						float: right;
@@ -202,6 +203,8 @@
 						color: #2271b1;
 						transition-duration: .05s;
 						transition-timing-function: ease-in-out;
+						flex: 0 0 80%;
+						text-align: end;
 
 						&:focus {
 							box-shadow: none;
@@ -249,6 +252,23 @@
 					padding: 0;
 				}
 			}
-		}				
-	}		
+		}
+	}
 }
+
+.user-registration-global-settings--field {
+	#select-smart-tags {
+		color: #2271B1;
+		border-color: #2271B1;
+		height: 30px;
+		text-align: center;
+		line-height: 18px;
+		width: 30%;
+	}
+}
+
+.user-registration-form-setting-info {
+	margin: 8px 0;
+	padding: 4px 12px;
+	border-left: 4px solid #475bb2;
+ }

@@ -40,17 +40,17 @@ class UR_Shortcode_Login {
 
 		if ( ! is_user_logged_in() ) {
 			// After password reset, add confirmation message.
-			if ( ! empty( $_GET['password-reset'] ) ) {
+			$is_password_resetted = get_transient( 'ur_password_resetted_flag' );
+			if ( ! empty( $is_password_resetted ) ) {
 				ur_add_notice( __( 'Your password has been reset successfully.', 'user-registration' ) );
+				delete_transient( 'ur_password_resetted_flag' );
 			}
 			if ( isset( $wp->query_vars['ur-lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
-				$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-
-				if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
-					wp_enqueue_script( 'user-registration' );
-				}
+				$recaptcha_enabled = ur_option_checked( 'user_registration_login_options_enable_recaptcha', false );
+				wp_enqueue_script( 'ur-common' );
+				wp_enqueue_script( 'user-registration' );
 				$recaptcha_node = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 
 				ur_get_template(

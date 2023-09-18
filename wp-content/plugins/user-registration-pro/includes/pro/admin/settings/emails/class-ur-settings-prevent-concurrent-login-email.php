@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'User_Registration_Settings_Prevent_Concurrent_Login_Email', false ) ) :
+if ( ! class_exists( 'UR_Settings_Prevent_Concurrent_Login_Email', false ) ) :
 
 	/**
 	 * User_Registration_Settings_Prevent_Concurrent_Email Class.
 	 */
-	class User_Registration_Settings_Prevent_Concurrent_Login_Email {
+	class UR_Settings_Prevent_Concurrent_Login_Email {
 
 		public function __construct() {
 			$this->id          = 'prevent_concurrent_login_email';
@@ -35,20 +35,24 @@ if ( ! class_exists( 'User_Registration_Settings_Prevent_Concurrent_Login_Email'
 			$settings = apply_filters(
 				'user_registration_prevent_concurrent_login_email',
 				array(
-					'title' => __( 'Emails', 'user-registration' ),
-					'sections' => array (
+					'title'    => __( 'Emails', 'user-registration' ),
+					'sections' => array(
 						'prevent_concurrent_email' => array(
-							'title' => __( 'Prevent Concurrent Login Email', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
-							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
-							'settings' => array(
+							'title'        => __( 'Prevent Concurrent Login Email', 'user-registration' ),
+							'type'         => 'card',
+							'desc'         => '',
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'preview_link' => ur_email_preview_link(
+								__( 'Preview', 'user-registration' ),
+								$this->id
+							),
+							'settings'     => array(
 								array(
 									'title'    => __( 'Enable this email', 'user-registration' ),
 									'desc'     => __( 'Enable this email sent to the user after succesfully email sent', 'user-registration' ),
 									'id'       => 'user_registration_enable_prevent_concurrent_login_email',
 									'default'  => 'yes',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 								array(
@@ -103,4 +107,4 @@ Thank You!',
 	}
 endif;
 
-return new User_Registration_Settings_Prevent_Concurrent_Login_Email();
+return new UR_Settings_Prevent_Concurrent_Login_Email();

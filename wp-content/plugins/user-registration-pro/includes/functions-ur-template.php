@@ -13,8 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_action( 'template_redirect', 'ur_template_redirect' );
-add_action( 'template_redirect', 'ur_login_template_redirect' );
-add_action( 'template_redirect', 'ur_registration_template_redirect' );
+
 
 /**
  * Redirect after logout.
@@ -26,6 +25,7 @@ function ur_template_redirect() {
 	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
+		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
@@ -36,94 +36,66 @@ function ur_template_redirect() {
 	}
 }
 
-/**
- * Check for login shortcode in the page and redirect to the url passed with login shortcode parameter redirect_url
- * Handle redirects before content is output - hooked into template_redirect so is_page works.
- */
-function ur_login_template_redirect() {
-	global $post;
+if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
+	/**
+	 * Returns redirect url setup in form settings.
+	 *
+	 * @param integer $form_id Form Id.
+	 * @param string  $redirect_url Fallback Url.
+	 * @param boolean $maybe_translate Whether to translate url.
+	 * @return string
+	 */
+	function ur_get_form_redirect_url( $form_id = 0, $redirect_url = '', $maybe_translate = true ) {
 
-	$post_content = isset( $post->post_content ) ? $post->post_content : '';
+		$login_option      = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_login_options' );
+		$paypal_is_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard', false ) );
 
-	if ( ( has_shortcode( $post_content, 'user_registration_login' ) || has_shortcode( $post_content, 'user_registration_my_account' ) ) && is_user_logged_in() ) {
-		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
+		if ( ! $paypal_is_enabled ) {
 
-		// Remove all html tags.
-		$escaped_atts_string = preg_replace( '/<[\/]{0,1}[^<>]*>/', '', $matches[3] );
+			if ( empty( $redirect_url ) ) {
+				// Getting redirect options from global settings for backward compatibility.
+				$redirect_url = get_option( 'user_registration_general_setting_redirect_options', $redirect_url );
+			}
 
-		$attributes   = shortcode_parse_atts( $escaped_atts_string );
-		$redirect_url = isset( $attributes['redirect_url'] ) ? $attributes['redirect_url'] : '';
-		$redirect_url = trim( $redirect_url, ']' );
-		$redirect_url = trim( $redirect_url, '"' );
-		$redirect_url = trim( $redirect_url, "'" );
+			if ( ! empty( $form_id ) ) {
 
-		$redirect_url = apply_filters( 'user_registration_redirect_url_after_login', $redirect_url );
+				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
 
-		if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
-			wp_redirect( $redirect_url ); //PHPCS:ignore;
-			exit();
-		}
-	}
-}
+				switch ( $redirect_option ) {
+					case 'no-redirection':
+						$redirect_url = '';
+						break;
 
-/**
- * Redirects the logged in user to the option set in form settings if registration page is selected.
- * Donot redirect for admins.
- *
- * @return void
- * @since  1.5.1
- */
-function ur_registration_template_redirect() {
+					case 'internal-page':
+						$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' );
 
-	// Return if the user is not logged in.
-	if ( is_user_logged_in() === false ) {
-		return;
-	}
+						if ( ! empty( $selected_page ) ) {
+							$page_url     = get_permalink( $selected_page );
+							$redirect_url = $page_url;
+						}
 
-	$current_user    = wp_get_current_user();
-	$current_user_id = $current_user->ID;
-	$form_id         = 0;
+						break;
 
-	// Donot redirect for admins.
-	if ( in_array( 'administrator', wp_get_current_user()->roles ) ) {
-		return;
-	} else {
+					case 'external-url':
+						$external_url = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
+						$redirect_url = $external_url;
 
-		global $post;
+						break;
 
-		$post_content = isset( $post->post_content ) ? $post->post_content : '';
+					default:
+				}
 
-		$shortcodes = parse_blocks( $post_content );
-		$matched    = false;
-		foreach ( $shortcodes as $shortcode ) {
-			if ( ! empty( $shortcode['blockName'] ) ) {
-				if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['formId'] ) ) {
-					$matched = true;
-					$form_id = $shortcode['attrs']['formId'];
-
+				if ( empty( $redirect_url ) && 'auto_login' === $login_option ) {
+					$redirect_url = ur_get_my_account_url();
 				}
 			}
-		}
 
-		if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
-
-			$attributes = ur_get_shortcode_attr( $post_content );
-			$form_id    = isset( $attributes[0]['id'] ) ? $attributes[0]['id'] : 0;
-			$matched    = true;
-		}
-
-		if ( $matched ) {
-			preg_match_all( '!\d+!', $form_id, $form_id );
-
-			$redirect_url = ur_get_single_post_meta( $form_id[0][0], 'user_registration_form_setting_redirect_options', '' );
-			$redirect_url = apply_filters( 'user_registration_redirect_from_registration_page', $redirect_url, $current_user );
-			$redirect_url = ur_string_translation( $form_id[0][0], 'user_registration_form_setting_redirect_options', $redirect_url );
-
-			if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
-				wp_redirect( $redirect_url ); //PHPCS:ignore;
-				exit();
+			if ( $maybe_translate ) {
+				$redirect_url = ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
 			}
 		}
+
+		return apply_filters( 'user_registration_form_redirect_url', $redirect_url, $form_id );
 	}
 }
 
@@ -209,15 +181,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
 
-		if ( true === $args['required'] ) {
+		if ( true === ur_string_to_bool( $args['required'] ) ) {
 			$args['class'][] = 'validate-required';
 			$required        = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
 		} else {
 			$args['required'] = '';
 		}
 
-		if ( is_null( $value ) || empty( $value ) ) {
-			$value = $args['default'];
+		if ( ( is_null( $value ) || empty( $value ) ) && ! is_numeric( $value ) ) {
+				$value = $args['default'];
 		}
 
 		// Custom attribute handling.
@@ -262,7 +234,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		$tooltip_html = '';
 
-		if ( isset( $args['tooltip'] ) && 'yes' === $args['tooltip'] ) {
+		if ( isset( $args['tooltip'] ) && ur_string_to_bool( $args['tooltip'] ) ) {
 			$tooltip_html = ur_help_tip( $args['tooltip_message'], false, 'ur-portal-tooltip' );
 		} elseif ( isset( $args['tip'] ) ) {
 			$tooltip_html = ur_help_tip( $args['tip'], false, 'user-registration-help-tip tooltipstered' );
@@ -272,7 +244,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		if ( isset( $args['enable_conditional_logic'] ) && true === $args['enable_conditional_logic'] ) {
 			$cl_map  = isset( $args['cl_map'] ) ? $args['cl_map'] : '';
-			$cl_html = sprintf( 'data-conditional-logic-enabled="yes" data-conditional-logic-map="%s"', esc_attr( $cl_map ) );
+			$cl_html = sprintf( 'data-conditional-logic-enabled="1" data-conditional-logic-map="%s"', esc_attr( $cl_map ) );
 		}
 
 		$field           = '';
@@ -300,7 +272,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field_key         = isset( $args['field_key'] ) ? $args['field_key'] : '';
 				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
 				$default           = ! empty( $value ) ? $value : $default_value;
-				$select_all        = isset( $args['select_all'] ) ? $args['select_all'] : '';
+				$select_all        = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
 				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
 				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
 				$choice_limit_attr = '';
@@ -311,7 +283,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( isset( $options ) && array_filter( $options ) ) {
 
 					if ( ! empty( $default ) ) {
-						$default = ( is_serialized( $default ) ) ? unserialize( $default ) : $default;
+						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
 					}
 
 					$choices = isset( $options ) ? $options : array();
@@ -323,7 +295,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$field .= '<ul ' . $choice_limit_attr . '>';
 
-					if ( 'yes' === $select_all ) {
+					if ( $select_all ) {
 						$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="ur-input-checkbox"  data-check="' . esc_attr( $key ) . '"/>';
 						$field .= '<label class="ur-checkbox-label">  ' . esc_html__( 'Select All', 'user-registration' ) . '</label></li>';
 					}
@@ -351,7 +323,64 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						. $args['label'] . $required . $tooltip_html . '</label>';
 				}
 				break;
+			case 'toggle':
+				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
+				$value             = ! empty( $value ) ? $value : $default_value;
+				$select_all        = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
+				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
+				$choice_limit_attr = '';
 
+				$field  = '<div class="ur-toggle-section ur-form-builder-toggle">';
+				$field .= '<span class="user-registration-toggle-form">';
+				$field .= '<input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . ur_string_to_bool( $value ) . '" type="checkbox" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( ur_string_to_bool( $value ), 1, false ) . ' />';
+				$field .= '<span class="slider round"></span>';
+				$field .= '</span>';
+				$field .= '<label class="ur-label checkbox" for="' . esc_attr( $key ) . '">' . $args['label'] . wp_kses_post( $tooltip_html ) . '</label>';
+				$field .= '</div>';
+				break;
+			case 'radio-group':
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
+				$default       = ! empty( $value ) ? $value : $default_value;
+				$select_all    = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
+				$options       = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$choice_limit  = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
+
+				if ( ! empty( $args['options'] ) ) {
+
+					$field .= '<ul class="ur-radio-group-list">';
+					foreach ( $args['options'] as $option_index => $option_text ) {
+						$class = str_replace( ' ', '-', strtolower( $option_text ) );
+
+						$field .= '<li class="ur-radio-group-list--item  ' . $class . ( trim( $option_index ) === $value ? ' active' : '' ) . '">';
+
+						$checked = '';
+
+						if ( '' !== $value ) {
+							$checked = checked( $value, trim( $option_index ), false );
+						}
+
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
+
+						$field .= wp_kses(
+							trim( $option_text ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						);
+
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+						$field .= '</label>';
+
+						$field .= '</li>';
+					}
+					$field .= '</ul>';
+				}
+				break;
 			case 'password':
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
@@ -360,7 +389,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field_container = '<div class="form-row %1$s hide_show_password" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
 					$field          .= '<span class="password-input-group input-form-field-icons">';
 					$field          .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
-					if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
+					if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
 						$field .= '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title=" Show password "></a>';
 					}
 					$field .= '</span>';
@@ -414,18 +443,51 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 
 				$field .= ' <span class="input-wrapper"> ';
-				if ( isset( $args['autocomplete_address'] ) && 'yes' == $args['autocomplete_address'] ) {
-					$attr .= 'data-autocomplete-address="' . $args['autocomplete_address'] . '"';
+				if ( isset( $args['autocomplete_address'] ) && ur_string_to_bool( $args['autocomplete_address'] ) ) {
+					$attr .= 'data-autocomplete-address="' . ur_string_to_bool( $args['autocomplete_address'] ) . '"';
 					$attr .= 'data-address-style="' . $args['address_style'] . '"';
-					$attr .= 'data-current-location="' . get_option( 'user_registration_google_map_current_location', '' ) . '"';
+					$attr .= 'data-current-location="' . ur_option_checked( 'user_registration_google_map_current_location', false ) . '"';
 					if ( 'map' == $args['address_style'] ) {
 						$field .= '<div id="ur-geolocation-map" class="ur-geolocation-map"></div>';
 					}
 				}
+
 				if ( empty( $extra_params ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 				} else {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
+				}
+
+				if ( isset( $args['field_key'] ) && 'user_email' === $args['field_key'] ) {
+					$user_id       = get_current_user_id();
+					$pending_email = get_user_meta( $user_id, 'user_registration_pending_email', true );
+					$expiration    = get_user_meta( $user_id, 'user_registration_pending_email_expiration', true );
+					$cancel_url    = esc_url(
+						add_query_arg(
+							array(
+								'cancel_email_change' => $user_id,
+								'_wpnonce'            => wp_create_nonce( 'cancel_email_change_nonce' ),
+							),
+							ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' )
+						)
+					);
+
+					if ( ! empty( $pending_email ) && time() <= $expiration ) {
+						$field .= sprintf(
+							/* translators: %s - Email Change Pending Message. */
+							'<div class="email-updated inline"><p>%s</p></div>',
+							sprintf(
+								/* translators: 1: Pending email message 2: Cancel Link */
+								__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
+								$pending_email,
+								$cancel_url
+							)
+						);
+
+					} else {
+						// Remove the confirmation key, pending email and expiry date.
+						UR_Form_Handler::delete_pending_email_change( $user_id );
+					}
 				}
 
 				if ( ! is_admin() ) {
@@ -442,7 +504,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( isset( $args['custom_attributes']['data-date-format'] ) ) {
 					$date_format  = $args['custom_attributes']['data-date-format'];
 					$default_date = isset( $args['custom_attributes']['data-default-date'] ) ? $args['custom_attributes']['data-default-date'] : '';
-					if ( empty( $value ) && 'today' === $default_date ) {
+					if ( empty( $value ) && ur_string_to_bool( $default_date ) ) {
 						$value        = date_i18n( $date_format );
 						$actual_value = date_i18n( $date_format );
 					} else {
@@ -509,7 +571,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$options = $field .= '';
 
 				if ( is_serialized( $value ) ) {
-					$default_value = unserialize( $value );
+					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore allowed_classes parameters does not support below php v7.1.
 				} else {
 					$default_value = $value;
 				}
@@ -571,8 +633,20 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '</ul>';
 				}
 				break;
-		} // End switch().
 
+			case 'html':
+				$content = isset( $args['html_content'] ) ? $args['html_content'] : '';
+
+				$field .= $content;
+				break;
+
+			case 'hidden':
+				$hidden_value = isset( $args['hidden_value'] ) ? $args['hidden_value'] : '';
+				$custom_class = isset( $args['custom_class'] ) ? $args['custom_class'] : '';
+				$field       .= '<input type="hidden" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-hidden ur-frontend-field ' . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '"value="' . esc_attr( $hidden_value ) . '"/>';
+				break;
+		}
+		// End switch().
 		if ( $args['description'] ) {
 			$field .= '<span class="description">' . $args['description'] . '</span>';
 		}
@@ -580,7 +654,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		if ( ! empty( $field ) ) {
 
 			$field_html = '';
-			if ( $args['label'] && 'checkbox' != $args['type'] ) {
+			if ( $args['label'] && 'checkbox' != $args['type'] && 'toggle' != $args['type'] && 'hidden' !== $args['type'] ) {
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '" class="ur-label">' . wp_kses(
 					$args['label'],
 					array(
@@ -644,12 +718,13 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_key              = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type             = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required               = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
-					$required               = 'yes' == $required ? true : false;
-					$enable_cl              = isset( $field->advance_setting->enable_conditional_logic ) && ( '1' === $field->advance_setting->enable_conditional_logic || 'on' === $field->advance_setting->enable_conditional_logic ) ? true : false;
+					$required               = ur_string_to_bool( $required );
+					$enable_cl              = isset( $field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $field->advance_setting->enable_conditional_logic );
 					$cl_map                 = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
 					$custom_attributes      = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;
 					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value need to be unique.', 'user-registration' );
+					$enable_payment_slider  = isset( $field->advance_setting->enable_payment_slider ) ? $field->advance_setting->enable_payment_slider : false;
 
 					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field_name );
@@ -686,12 +761,12 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
 								$min_date          = isset( $field->advance_setting->min_date ) ? str_replace( '/', '-', $field->advance_setting->min_date ) : '';
 								$max_date          = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
-								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
-								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? ur_string_to_bool( $field->advance_setting->set_current_date ) : '';
+								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? ur_string_to_bool( $field->advance_setting->enable_date_range ) : '';
 								$date_localization = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : '';
 								$extra_params['custom_attributes']['data-date-format'] = $date_format;
 
-								if ( isset( $field->advance_setting->enable_min_max ) && 'true' === $field->advance_setting->enable_min_max ) {
+								if ( isset( $field->advance_setting->enable_min_max ) && ur_string_to_bool( $field->advance_setting->enable_min_max ) ) {
 									$extra_params['custom_attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $date_format, strtotime( $min_date ) ) : '';
 									$extra_params['custom_attributes']['data-max-date'] = '' !== $max_date ? date_i18n( $date_format, strtotime( $max_date ) ) : '';
 								}
@@ -751,6 +826,10 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						if ( isset( $field->advance_setting->validate_unique ) ) {
 							$fields[ 'user_registration_' . $field_name ]['validate_unique']  = $enable_validate_unique;
 							$fields[ 'user_registration_' . $field_name ]['validate_message'] = $validate_message;
+						}
+
+						if ( isset( $field->advance_setting->enable_payment_slider ) ) {
+							$fields[ 'user_registration_' . $field_name ]['enable_payment_slider'] = $enable_payment_slider;
 						}
 
 						if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {

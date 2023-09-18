@@ -126,6 +126,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_user-registration-addons',
 		$ur_screen_id . '_page_user-registration-export-users',
 		$ur_screen_id . '_page_user-registration-email-templates',
+		$ur_screen_id . '_page_user-registration-content-restriction',
 		'profile',
 		'user-edit',
 	);
@@ -195,7 +196,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 			if ( array_key_exists( $strip_prefix, $form_data ) ) {
 
 				if ( is_serialized( $meta->meta_value ) ) {
-					$meta->meta_value = maybe_unserialize( $meta->meta_value );
+					$meta->meta_value = ur_maybe_unserialize( $meta->meta_value );
 					$meta->meta_value = implode( ',', $meta->meta_value );
 				}
 
@@ -456,7 +457,7 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 		}
 	}
 
-	$setting_fields = apply_filters( 'user_registration_form_settings_save', ur_admin_form_settings_fields( $form_id ), $form_id );
+	$setting_fields = apply_filters( 'user_registration_form_settings_save', ur_admin_form_settings_fields( $form_id ), $form_id, $setting_data );
 
 	foreach ( $setting_fields as $field_data ) {
 		if ( isset( $field_data['id'] ) && isset( $remap_setting_data[ $field_data['id'] ] ) ) {
@@ -535,9 +536,9 @@ function ur_format_setting_data( $setting_data ) {
 function ur_check_activation_date( $days ) {
 
 	// Plugin Activation Time.
-	$activation_date = get_option( 'user_registration_activated' );
-	$days_to_validate      = strtotime( 'now' ) - $days * DAY_IN_SECONDS;
-	$days_to_validate      = date_i18n( 'Y-m-d', $days_to_validate );
+	$activation_date  = get_option( 'user_registration_activated' );
+	$days_to_validate = strtotime( 'now' ) - $days * DAY_IN_SECONDS;
+	$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
 
 	if ( ! empty( $activation_date ) ) {
 		if ( $activation_date < $days_to_validate ) {
@@ -546,4 +547,180 @@ function ur_check_activation_date( $days ) {
 	}
 
 	return false;
+}
+
+/**
+ * Check for plugin updation date.
+ *
+ * True if user registration has been updated ago according to the days supplied in the parameter.
+ *
+ * @param int $days Number of days to check for activation.
+ *
+ * @since 2.3.2
+ *
+ * @return bool
+ */
+function ur_check_updation_date( $days ) {
+
+	// Plugin Updation Time.
+	$updated_date     = get_option( 'user_registration_updated_at' );
+	$days_to_validate = strtotime( 'now' ) - $days * DAY_IN_SECONDS;
+	$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
+
+	if ( ! empty( $updated_date ) ) {
+		if ( $updated_date < $days_to_validate ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Show Notice COntent according to notice type.
+ *
+ * @param string $notice_type Type.
+ */
+function promotional_notice_content( $notice_type ) {
+	switch ( $notice_type ) {
+		case 'review':
+			review_notice_content();
+			break;
+		case 'survey':
+			survey_notice_content();
+			break;
+		case 'allow_usage':
+			allow_usage_content();
+			break;
+
+		default:
+			break;
+	}
+}
+
+/**
+ * Links for Promotional Notices.
+ *
+ * @param string $notice_type Notice Type.
+ * @param string $notice_target_link Notice target link.
+ */
+function promotional_notice_links( $notice_type, $notice_target_link = '#' ) {
+	if ( 'allow_usage' === $notice_type ) {
+		?>
+		<ul class="user-registration-notice-ul">
+			<li><a class="button button-primary ur-allow-usage" href="#"><span class="dashicons dashicons-smiley"></span><?php esc_html_e( 'Allow', 'user-registration' ); ?></a></li>
+			<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-permanently ur-deny-usage"><span  class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'No, Thanks', 'user-registration' ); ?></a></li>
+		</ul>
+		<?php
+	} else {
+		?>
+		<ul class="user-registration-notice-ul">
+			<li><a class="button button-primary" href="<?php echo esc_url( $notice_target_link ); ?>" target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
+			<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-permanently"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
+			<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-temporarily"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Maybe later', 'user-registration' ); ?></a></li>
+			<li><a href="https://wpeverest.com/support-ticket/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
+		</ul>
+		<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
+		<?php
+	}
+}
+
+if ( ! function_exists( 'review_notice_content' ) ) {
+
+	/**
+	 * Review Content.
+	 */
+	function review_notice_content() {
+
+		$form_users         = get_users(
+			array(
+				'meta_key' => 'ur_form_id',
+			)
+		);
+		$total_registration = count( $form_users );
+
+		if ( 20 <= $total_registration ) {
+			echo wp_kses_post(
+				sprintf(
+					"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
+					__( "Congratulations! 👏 You've registered 20 users using our User Registration plugin, way to go! 🎉", 'user-registration' ),
+					__( 'Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. ', 'user-registration' ),
+					__(
+						'Once again, thank you for choosing us! ❤️ <br>',
+						'user-registration'
+					)
+				)
+			);
+		} else {
+			echo wp_kses_post(
+				sprintf(
+					"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
+					__( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ),
+					__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
+					__(
+						'<strong>What benefit would you have?</strong> <br>
+					Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+						'user-registration'
+					)
+				)
+			);
+		}
+	}
+}
+
+if ( ! function_exists( 'survey_notice_content' ) ) {
+	/**
+	 * Survey Content
+	 */
+	function survey_notice_content() {
+		echo wp_kses_post(
+			sprintf(
+				"<p>%s</p><p class='extra-pad'>%s</p>",
+				__(
+					'<strong>Hey there!</strong> <br>
+			We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
+					'user-registration'
+				),
+				__(
+					'<strong>What benefit would you have?</strong> <br>
+			We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+					'user-registration'
+				)
+			)
+		);
+
+	}
+}
+
+if ( ! function_exists( 'allow_usage_content' ) ) {
+
+	/**
+	 * Allow Usage Content.
+	 */
+	function allow_usage_content() {
+		// Return if license key not found.
+		$license_key = trim( get_option( 'user-registration_license_key' ) );
+
+		if ( $license_key ) {
+			echo wp_kses_post(
+				sprintf(
+					'<br/><p>%s</p>',
+					__(
+						'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+						'user-registration'
+					)
+				)
+			);
+		} else {
+			echo wp_kses_post(
+				sprintf(
+					'<br/><p>%s</p>',
+					__(
+						'Help us improve the plugin\'s features and receive an instant discount coupon with occasional email updates by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+						'user-registration'
+					)
+				)
+			);
+		}
+	}
 }
