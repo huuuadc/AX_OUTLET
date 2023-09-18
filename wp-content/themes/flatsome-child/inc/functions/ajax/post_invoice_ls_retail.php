@@ -107,7 +107,7 @@ function post_invoice_ls_retail(){
         }
 
         $order_number = $order->get_id();
-        $order_no = get_option('web_company_code') ? get_option('web_company_code').$order_number : 'OL'.$order_number;
+        $order_no = get_option('web_company_code') != '' ? get_option('web_company_code').$order_number : 'OL'.$order_number;
 
         $ls_method_type = $order->get_method_type_ls();
 
