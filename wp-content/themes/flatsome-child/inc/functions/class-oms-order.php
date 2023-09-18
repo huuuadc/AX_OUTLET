@@ -432,6 +432,7 @@ class OMS_ORDER extends WC_Order
             if($item['BarcodeNo'] == ''){
                 foreach ($response->data as $value){
                     if($value->ItemNo == $item['ItemNo'])
+                        $item['Inventory'] = $value->Inventory ?? 0;
                         $arg_data[$key]['Inventory'] = $value->Inventory ?? 0;
                 }
             }
@@ -446,6 +447,7 @@ class OMS_ORDER extends WC_Order
             }
 
             if($item['Inventory'] < $item['Qty']){
+                write_log('không còn tồn '. $item['ItemNo']);
                 $this->set_log('danger','check_stock',$item['ItemNo'] . ' không còn tồn' . ' : '. json_encode( $arg_data[$key]));
                 $safe_stock = false;
             }

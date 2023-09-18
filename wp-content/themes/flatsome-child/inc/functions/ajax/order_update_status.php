@@ -94,7 +94,10 @@ function order_update_status(){
     if ($_POST['payload_action'] == 'order_status_confirm' && ('processing' == $old_status || 'reject' == $old_status)){
 
         //Check stock với ls
-        if (!$order->check_stock_ls()){
+
+        $is_check_stock = get_option('admin_dashboard_is_check_stock') ?? '';
+
+        if ($is_check_stock =='checked' && !$order->check_stock_ls()){
             echo response(false,'Không còn tồn trên ls retail',[]);
             exit;
         }
