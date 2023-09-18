@@ -14,7 +14,7 @@ class LS_API
     private string $user_name = '';
     private string $user_pass = '';
     private string $api_token = '';
-    private array $location_code = [];
+    public array $location_code = [];
     private string $encrypt_key = 'daf_ls_api';
     private string $baseURL = '';
     private array $URI = array(
@@ -30,8 +30,9 @@ class LS_API
 
         'get_product_master_file' => '/api/product/GetMasterFile',
         'get_product_inventory' => '/api/product/GetInventory',
-        'get_product_check_stock2' => '/api/product/CheckStockV2',
-        'post_product_check_stock' => '/api/product/CheckStock',
+        'get_product_check_stock2' => '/api/products/CheckStockV2',
+        'post_product_check_stock' => '/api/products/CheckStock',
+        'post_product_check_stock_v3' => '/api/products/CheckStockV3',
         'post_product_check_price' => '/api/product/CheckPrice',
 
         'get_promotion' => '/api/promotion/GetPromotion',
@@ -46,7 +47,7 @@ class LS_API
      *
      * @throws \Exception
      */
-    public function __construct()
+    public function __construct($opts = [])
     {
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Credentials: true");
@@ -65,26 +66,23 @@ class LS_API
             throw new \Exception('LS needs the JSON PHP extension.');
         }
 
-        if (get_option('wc_settings_tab_ls_api_username')) {
-            $this->user_name = get_option('wc_settings_tab_ls_api_username');
+        $this->user_name        = get_option('wc_settings_tab_ls_api_username');
+        $this->user_pass        = get_option('wc_settings_tab_ls_api_password');
+        $this->location_code    = explode(',',get_option('wc_settings_tab_ls_location_code'));
+        $this->baseURL          = get_option('wc_settings_tab_ls_api_url');
+
+        //Nếu có truyền tham số thì lấy tham số
+        if (isset($opts) && !empty($opts["user_name"])) {
+            $this->user_name    = $opts['user_name'];
         }
-
-        if (get_option('wc_settings_tab_ls_api_password')) {
-            $this->user_pass = get_option('wc_settings_tab_ls_api_password');
+        if (isset($opts) && !empty($opts["user_pass"])) {
+            $this->user_pass    = $opts['user_pass'];
         }
-
-        $this->location_code = explode(',',get_option('wc_settings_tab_ls_location_code'));
-
-        $this->baseURL = get_option('wc_settings_tab_ls_api_url');
-
         if (isset($opts) && !empty($opts["base_url"])) {
-            $this->baseURL = $opts["base_url"];
+            $this->baseURL  = $opts["base_url"];
         }
 
-        if ($this->api_token == ''){
-            $this->api_token = $this->getLsToken();
-        }
-
+        $this->api_token    = $this->getLsToken();
     }
 
     function notification_ls(){
@@ -239,7 +237,7 @@ class LS_API
             $ls_token = substr($response->token, 7, strlen($response->token));
         } else {
             $ls_token = '';
-            write_log('Login'. json_encode($response));
+            write_log('LS Login'. json_encode($response));
         }
 
         if (version_compare(phpversion(),'8.0.0') >= 0) {
@@ -392,6 +390,11 @@ class LS_API
 
     }
 
+    public function post_product_check_stock_v3(array $data = []) {
+        $url = $this->baseURL . $this->URI['post_product_check_stock_v3'];
+        return $this->sendRequestToLS($url,$data,'POST');
+    }
+
 
 }
 
@@ -424,50 +427,59 @@ function ls_user_request() {
 function ls_transactions_request() {
     return array(
 
-            "Location_Code" => "DA0053",
-            "Receipt_No_" => "",
-            "Transaction_No_" => "",
-            "LineNo" => "",
-            "Item_No_" => "",
-            "SerialNo" => "",
-            "Variant_Code" => "",
-            "Trans_Date" => "",
-            "Quantity" => 0,
-            "UnitPrice" => 0,
-            "TotalPrice" => 0,
-            "DiscountRate" => 0,
-            "DiscountAmount" => 0,
-            "Disc" => 0,
-            "TotalAmt" => 0,
-            "Member_Card_No_" => "",
-            "Offer_Online_ID" => "",
-            "CouponCode" => "",
-            "CouponNo" => "",
-            "Value_Type" => 0,
-            "Category_Online_ID" => []
+            'Location_Code' => 'DA0053',
+            'Receipt_No_' => '',
+            'Transaction_No_' => '',
+            'LineNo' => '',
+            'Item_No_' => '',
+            'SerialNo' => '',
+            'Variant_Code' => '',
+            'Trans_Date' => '',
+            'Quantity' => 0,
+            'UnitPrice' => 0,
+            'TotalPrice' => 0,
+            'DiscountRate' => 0,
+            'DiscountAmount' => 0,
+            'Disc' => 0,
+            'TotalAmt' => 0,
+            'Member_Card_No_' => '',
+            'Offer_Online_ID' => '',
+            'CouponCode' => '',
+            'CouponNo' => '',
+            'Value_Type' => 0,
+            'Category_Online_ID' => []
     );
 }
 
 function ls_payment_request(){
     return array(
-      "Location_Code"=> "",
-      "Transaction_No_"=> "",
-      "LineNo"=> "",
-      "Receipt_No_"=> "",
-      "Tender_Type"=> 0,
-      "Amount_Tendered"=> 0,
-      "Amount_in_Currency"=> 0,
-      "Date"=> "",
-      "Time"=> "",
-      "Quantity"=> 0,
-      "VAT_Buyer_Name"=> "",
-      "VAT_Company_Name"=> "",
-      "VAT_Tax_Code"=> "",
-      "VAT_Address"=> "",
-      "VAT_Payment_Method"=> "",
-      "VAT_Bank_Account"=> "",
-      "Member_Phone"=> "",
-      "THENH"=> "",
-      "Cash"=> ""
+      'Location_Code'=> '',
+      'Transaction_No_'=> '',
+      'LineNo'=> '',
+      'Receipt_No_'=> '',
+      'Tender_Type'=> 0,
+      'Amount_Tendered'=> 0,
+      'Amount_in_Currency'=> 0,
+      'Date'=> '',
+      'Time'=> '',
+      'Quantity'=> 0,
+      'VAT_Buyer_Name'=> '',
+      'VAT_Company_Name'=> '',
+      'VAT_Tax_Code'=> '',
+      'VAT_Address'=> '',
+      'VAT_Payment_Method'=> '',
+      'VAT_Bank_Account'=> '',
+      'Member_Phone'=> '',
+      'THENH'=> '',
+      'Cash'=> ''
+    );
+}
+
+function ls_request_check_stock_v3(){
+    return array(
+        'LocationCode'              =>              '',
+        'ItemNo'                    =>              '',
+        'VariantCode'               =>              '',
+        'BarcodeNo'                 =>              ''
     );
 }
