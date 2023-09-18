@@ -52,7 +52,7 @@ function save_meta_box_channel_type($post_id){
     return true;
 }
 
-function check_stock_ls($items = []): bool {
+function check_stock_ls($items = []): array {
 
     $ls_api = new \OMS\LS_API();
 
@@ -62,6 +62,7 @@ function check_stock_ls($items = []): bool {
     $data->Inventory = 0;
 
     $arg_data = [];
+    $data_check = [];
     foreach ($items as $item) {
 
         $product = wc_get_product($item['product_id']);
@@ -70,9 +71,11 @@ function check_stock_ls($items = []): bool {
 //            $data->ItemNo = '1117342';
         if ($item['variation_id'] > 0) {
             $product_variant = wc_get_product($item['variation_id']);
+            $data->ItemName = $product_variant->get_name();
             $data->BarcodeNo = $product_variant->get_sku();
 //                $data->BarcodeNo = '1117342000';
         } else {
+            $data->ItemName = $product->get_name();
             $data->BarcodeNo = '';
         }
 
@@ -83,7 +86,6 @@ function check_stock_ls($items = []): bool {
 
     $response = $ls_api->post_product_check_stock_v3($arg_data);
 
-    $safe_stock = true;
     foreach ($arg_data as $key => $item){
 
         if($item['BarcodeNo'] == ''){
@@ -104,11 +106,10 @@ function check_stock_ls($items = []): bool {
         }
 
         if($item['Inventory'] < $item['Qty']){
-            write_log('LS Check Stock: Không còn stock'. json_encode($response->data));
-            $safe_stock = false;
+            $data_check[] = $item['ItemName'];
         }
 
     }
 
-    return $safe_stock;
+    return $data_check;
 }

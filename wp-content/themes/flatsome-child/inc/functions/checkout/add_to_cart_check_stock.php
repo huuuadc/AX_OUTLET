@@ -15,7 +15,7 @@ function add_to_cart_check_stock_ls($check, $product_id, $quantity, $variation_i
     $product = wc_get_product($product_id);
 
     $is_check_stock = get_option('admin_dashboard_is_check_stock') ?? '';
-    if ($is_check_stock == 'checked' && !check_stock_ls($arg_data)) {
+    if ($is_check_stock == 'checked' && count(check_stock_ls($arg_data)) > 0) {
         wc_add_notice('Sản phẩm ' . $product->get_name() . ' không đủ tồn kho trên hệ thống!.', 'error');
         return false;
     }

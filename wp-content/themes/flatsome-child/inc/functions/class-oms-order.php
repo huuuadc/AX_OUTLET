@@ -425,7 +425,6 @@ class OMS_ORDER extends WC_Order
         }
 
         $response = $ls_api->post_product_check_stock_v3($arg_data);
-//        write_log($response);
         $safe_stock = true;
         foreach ($arg_data as $key => $item){
 
