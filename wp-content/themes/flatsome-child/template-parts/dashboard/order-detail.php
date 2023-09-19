@@ -204,7 +204,7 @@ else:
                             <?php if(current_user_can('admin_dashboard_order_completed') && $order_ax->get_order_type() != 'website') {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'completed')" type="button" class="btn btn-success float-right">
                                 <i class="far fa-calendar-check"></i> Giao sàn</button><?php }?>
-                            <?php if(!current_user_can('admin_dashboard_order_post_ls') && $order_ax->get_order_type() == 'website') {?>
+                            <?php if(current_user_can('admin_dashboard_order_post_ls') && $order_ax->get_order_type() == 'website') {?>
                             <button onclick="post_invoice_ls_retail(<?php echo $order_id?>)" type="button" class="btn btn-default float-right mr-1">
                                 <i class="far fa-calendar-check"></i> Post LS</button><?php }?>
                             <?php if(current_user_can('admin_dashboard_order_payment')) {?>
