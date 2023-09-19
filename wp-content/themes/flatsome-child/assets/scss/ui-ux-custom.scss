@@ -1785,6 +1785,11 @@ html *::-webkit-scrollbar-thumb{
             }
         }
     }
+    .quantity .plus_disable {
+        padding-left: .5em;
+        padding-right: .5em;
+        border-left: none;
+    }
 }
 .product-lightbox {
     .product {
@@ -2824,7 +2829,8 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
     position: fixed;
     top: 100px;
     right: 0;
-    z-index: 2000;
+    bottom: auto !important;
+    z-index: 2100 !important;
     margin: 0 !important;
     opacity: 0;
     //pointer-events: none;

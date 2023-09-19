@@ -235,12 +235,13 @@ jQuery(function ($) {
 		showHideActiveLogin: function ($node) {
 			if ($node.prop("checked")) {
 				$("#user_registration_pro_general_setting_limited_login")
-					.parents("tr")
-					.removeClass("userregistration-forms-hidden");
+					.closest(".user-registration-global-settings")
+					.show();
 			} else {
 				$("#user_registration_pro_general_setting_limited_login")
-					.parents("tr")
-					.addClass("userregistration-forms-hidden");
+					.closest(".user-registration-global-settings")
+					.addClass("userregistration-forms-hidden")
+					.hide();
 			}
 		},
 	};

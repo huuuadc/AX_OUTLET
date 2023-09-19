@@ -39,7 +39,7 @@ if ( ! class_exists( 'UR_Settings_Extra' ) ) :
 		 */
 		public function get_sections() {
 			$sections = array(
-				''    => __( 'Advanced', 'user-registration' ),
+				'' => __( 'Advanced', 'user-registration' ),
 			);
 
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
@@ -65,7 +65,7 @@ if ( ! class_exists( 'UR_Settings_Extra' ) ) :
 									'title'    => __( 'Uninstall User Registration', 'user-registration' ),
 									'desc'     => __( '<strong>Heads Up!</strong> Check this if you would like to remove ALL User Registration data upon plugin deletion.', 'user-registration' ),
 									'id'       => 'user_registration_advanced_uninstall_option',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => 'All user registration forms, pages and users collected custom data will be deleted upon plugin uninstallation.',
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
@@ -86,7 +86,7 @@ if ( ! class_exists( 'UR_Settings_Extra' ) ) :
 			global $current_section;
 			$settings = $this->get_settings();
 			$settings = apply_filters( 'user_registration_get_output_settings_' . $this->id, $settings );
-			$settings = isset( $settings) ? $settings : $this->get_settings();
+			$settings = isset( $settings ) ? $settings : $this->get_settings();
 
 			UR_Admin_Settings::output_fields( $settings );
 		}

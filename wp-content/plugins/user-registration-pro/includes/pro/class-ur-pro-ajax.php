@@ -39,6 +39,9 @@ class User_Registration_Pro_Ajax {
 			'extension_install'               => true,
 			'get_db_columns_by_table'         => true,
 			'get_form_fields_list_by_form_id' => true,
+			'request_user_data'               => false,
+			'get_license_expiry_count'        => false,
+			'inactive_logout'                 => true,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 
@@ -55,6 +58,19 @@ class User_Registration_Pro_Ajax {
 				);
 			}
 		}
+	}
+
+
+	/**
+	 * Get License expiry count
+	 */
+
+	public static function get_license_expiry_count() {
+		check_ajax_referer( 'ur_pro_get_license_expiry_count_nonce', 'security' );
+		$last_notice_count = get_option( 'user_registration_license_expiry_notice_last_notice_count', 0 );
+		update_option( 'user_registration_license_expiry_notice_last_dismissed_time', date_i18n( 'Y-m-d H:i:s' ) );
+		update_option( 'user_registration_license_expiry_notice_last_notice_count', $last_notice_count + 1 );
+		wp_die();
 	}
 
 	/**
@@ -79,10 +95,10 @@ class User_Registration_Pro_Ajax {
 	 */
 	public static function get_form_fields_list_by_form_id() {
 		check_ajax_referer( 'ur_pro_get_form_fields_by_form_id_nonce', 'security' );
-		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : '';
+		$form_id    = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : '';
 		$field_list = array();
 		if ( ! empty( $form_id ) ) {
-			$fields    = ur_pro_get_form_fields( $form_id );
+			$fields = ur_pro_get_form_fields( $form_id );
 			foreach ( $fields as $post_key => $post_data ) {
 
 				$pos = strpos( $post_key, 'user_registration_' );
@@ -113,14 +129,14 @@ class User_Registration_Pro_Ajax {
 		if ( 'disable' === $delete_account_option ) {
 			return;
 		}
-		$user         = new stdClass();
-		$user->ID     = (int) get_current_user_id();
+		$user     = new stdClass();
+		$user->ID = (int) get_current_user_id();
 
-		$form_id = ur_get_form_id_by_userid( $user->ID );
+		$form_id   = ur_get_form_id_by_userid( $user->ID );
 		$form_data = user_registration_form_data( $user->ID, $form_id );
 
-		$user_extra_fields     = ur_get_user_extra_fields( $user->ID );
-		$user_data             = array_merge( (array) get_userdata( $user->ID )->data, $user_extra_fields );
+		$user_extra_fields = ur_get_user_extra_fields( $user->ID );
+		$user_data         = array_merge( (array) get_userdata( $user->ID )->data, $user_extra_fields );
 
 		// Get form data as per need by the {{all_fields}} smart tag.
 		$valid_form_data = array();
@@ -129,12 +145,12 @@ class User_Registration_Pro_Ajax {
 
 			if ( isset( $user_data[ $new_key ] ) ) {
 				$valid_form_data[ $new_key ] = (object) array(
-					'field_type' => $value['type'],
-					'label' => $value['label'],
-					'field_name' => $value['field_key'],
-					'value' => $user_data[ $new_key ],
+					'field_type'   => $value['type'],
+					'label'        => $value['label'],
+					'field_name'   => $value['field_key'],
+					'value'        => $user_data[ $new_key ],
 					'extra_params' => array(
-						'label' => $value['label'],
+						'label'     => $value['label'],
 						'field_key' => $value['field_key'],
 					),
 				);
@@ -211,18 +227,18 @@ class User_Registration_Pro_Ajax {
 
 		$email   = sanitize_email( isset( $_POST['user_email'] ) ? $_POST['user_email'] : '' );
 		$user_id = intval( $_POST['user_id'] );
-		$header   = "Reply-To: {{email}} \r\n";
-		$header  .= 'Content-Type: text/html; charset=UTF-8';
+		$header  = "Reply-To: {{email}} \r\n";
+		$header .= 'Content-Type: text/html; charset=UTF-8';
 
-		$subject = get_option( 'user_registration_prevent_concurrent_login_email_subject', 'Force logout' );
-		$values = array(
-			'email'    => $email,
-			'user_id'  => $user_id,
+		$subject                   = get_option( 'user_registration_prevent_concurrent_login_email_subject', 'Force logout' );
+		$values                    = array(
+			'email'   => $email,
+			'user_id' => $user_id,
 		);
-		$settings = new User_Registration_Settings_Prevent_Concurrent_Login_Email();
-		$message = $settings->user_registration_get_prevent_concurrent_login_email();
-		$message = get_option( 'user_registration_prevent_concurrent_login_email_content', $message );
-		$form_id  = ur_get_form_id_by_userid( $user_id );
+		$settings                  = new UR_Settings_Prevent_Concurrent_Login_Email();
+		$message                   = $settings->user_registration_get_prevent_concurrent_login_email();
+		$message                   = get_option( 'user_registration_prevent_concurrent_login_email_content', $message );
+		$form_id                   = ur_get_form_id_by_userid( $user_id );
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 
 		$message = UR_Emailer::parse_smart_tags( $message, $values );
@@ -231,9 +247,8 @@ class User_Registration_Pro_Ajax {
 		// Get selected email template id for specific form.
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
-		if ( 'yes' === get_option( 'user_registration_enable_prevent_concurrent_login_email', 'yes' ) ) {
+		if ( ur_option_checked( 'user_registration_enable_prevent_concurrent_login_email', true ) ) {
 				UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $header, '', $template_id );
-
 		}
 
 	}
@@ -247,7 +262,7 @@ class User_Registration_Pro_Ajax {
 		$selected_date = isset( $_POST['selected_date'] ) ? $_POST['selected_date'] : 'Week';
 
 		$user_registration_pro_dashboard = new User_Registration_Pro_Dashboard_Analytics();
-		$message                            = $user_registration_pro_dashboard->output( $form_id, $selected_date );
+		$message                         = $user_registration_pro_dashboard->output( $form_id, $selected_date );
 
 		wp_send_json_success(
 			$message
@@ -279,14 +294,14 @@ class User_Registration_Pro_Ajax {
 
 		include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-delete-account-email.php';
 
-		$user         = get_user_by( 'ID', $user_id );
-		$username     = $user->data->user_login;
-		$email        = $user->data->user_email;
+		$user     = get_user_by( 'ID', $user_id );
+		$username = $user->data->user_login;
+		$email    = $user->data->user_email;
 
 		list( $name_value, $data_html ) = ur_parse_name_values_for_smart_tags( $user_id, $form_id, $form_data );
-		$values       = array(
-			'username'    => $username,
-			'email'       => $email,
+		$values                         = array(
+			'username'   => $username,
+			'email'      => $email,
 			'all_fields' => $data_html,
 		);
 
@@ -296,7 +311,7 @@ class User_Registration_Pro_Ajax {
 
 		$subject = get_option( 'user_registration_pro_delete_account_email_subject', 'Your account has been deleted' );
 
-		$settings                  = new User_Registration_Settings_Delete_Account_Email();
+		$settings                  = new UR_Settings_Delete_Account_Email();
 		$message                   = $settings->user_registration_get_delete_account_email();
 		$message                   = get_option( 'user_registration_pro_delete_account_email_content', $message );
 		$form_id                   = ur_get_form_id_by_userid( $user_id );
@@ -308,7 +323,7 @@ class User_Registration_Pro_Ajax {
 		// Get selected email template id for specific form.
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
-		if ( 'yes' === get_option( 'user_registration_pro_enable_delete_account_email', 'yes' ) ) {
+		if ( ur_option_checked( 'user_registration_pro_enable_delete_account_email', true ) ) {
 			UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $header, '', $template_id );
 		}
 	}
@@ -336,22 +351,22 @@ class User_Registration_Pro_Ajax {
 		$admin_email = explode( ',', $admin_email );
 		$admin_email = array_map( 'trim', $admin_email );
 
-		$subject = get_option( 'user_registration_pro_email_verified_admin_email_subject', __( 'A User Confirmed Email Address', 'user-registration' ) );
-		$settings = new User_Registration_Settings_Email_Verified_Admin_Email();
-		$message = $settings->ur_get_email_verified_admin_email();
-		$message = get_option( 'user_registration_pro_email_verified_admin_email', $message );
+		$subject  = get_option( 'user_registration_pro_email_verified_admin_email_subject', __( 'A User Confirmed Email Address', 'user-registration' ) );
+		$settings = new UR_Settings_Email_Verified_Admin_Email();
+		$message  = $settings->ur_get_email_verified_admin_email();
+		$message  = get_option( 'user_registration_pro_email_verified_admin_email', $message );
 
-		$values  = array(
+		$values                    = array(
 			'username'   => $username,
 			'email'      => $user_email,
 			'all_fields' => $data_html,
 		);
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
-		$message = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
-		$subject = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
-		$header  = UR_Emailer::parse_smart_tags( $header, $values, $name_value );
+		$message                   = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+		$subject                   = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
+		$header                    = UR_Emailer::parse_smart_tags( $header, $values, $name_value );
 
-		if ( 'yes' === get_option( 'user_registration_enable_email_verified_admin_email', 'yes' ) ) {
+		if ( ur_option_checked( 'user_registration_enable_email_verified_admin_email', true ) ) {
 			foreach ( $admin_email as $email ) {
 				UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
 			}
@@ -369,15 +384,15 @@ class User_Registration_Pro_Ajax {
 
 		include dirname( __FILE__ ) . '/admin/settings/emails/class-ur-settings-delete-account-admin-email.php';
 
-		$user         = get_user_by( 'ID', $user_id );
-		$username     = $user->data->user_login;
-		$email        = $user->data->user_email;
+		$user     = get_user_by( 'ID', $user_id );
+		$username = $user->data->user_login;
+		$email    = $user->data->user_email;
 
 		list( $name_value, $data_html ) = ur_parse_name_values_for_smart_tags( $user_id, $form_id, $form_data );
-		$values       = array(
-			'username'    => $username,
-			'email'       => $email,
-			'all_fields'    => $data_html,
+		$values                         = array(
+			'username'   => $username,
+			'email'      => $email,
+			'all_fields' => $data_html,
 		);
 
 		$header  = "Reply-To: {{admin_email}} \r\n";
@@ -389,7 +404,7 @@ class User_Registration_Pro_Ajax {
 
 		$subject = get_option( 'user_registration_pro_delete_account_admin_email_subject', '{{blog_info}} Account deleted.' );
 
-		$settings                  = new User_Registration_Settings_Delete_Account_Admin_Email();
+		$settings                  = new UR_Settings_Delete_Account_Admin_Email();
 		$message                   = $settings->user_registration_get_delete_account_admin_email();
 		$message                   = get_option( 'user_registration_pro_delete_account_admin_email_content', $message );
 		$form_id                   = ur_get_form_id_by_userid( $user_id );
@@ -401,11 +416,106 @@ class User_Registration_Pro_Ajax {
 		// Get selected email template id for specific form.
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
-		if ( 'yes' === get_option( 'user_registration_pro_enable_delete_account_admin_email', 'yes' ) ) {
+		if ( ur_option_checked( 'user_registration_pro_enable_delete_account_admin_email', true ) ) {
 			foreach ( $admin_email as $email ) {
 				UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $header, '', $template_id );
 			}
 		}
+	}
+	/**
+	 * Privacy request.
+	 */
+	public static function request_user_data() {
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+		if ( '' === $security || ! wp_verify_nonce( $security, 'user_data_nonce' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+			return;
+		}
+		if ( ! isset( $_POST['request_action'] ) ) {
+			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
+		}
+
+		$user_id        = get_current_user_id();
+		$password       = ! empty( $_POST['password'] ) ? sanitize_text_field( wp_unslash( $_POST['password'] ) ) : '';
+		$user           = get_userdata( $user_id );
+		$hash           = $user->data->user_pass;
+		$request_action = sanitize_key( $_POST['request_action'] );
+
+		if ( ! wp_check_password( $password, $hash ) ) {
+			$answer = sprintf( '<div class="ur-field-error ur-erase-data"><span class="ur-privacy-password-error"><i class="ur-faicon-caret-up"></i>%s</span></div>', esc_html__( 'The password you entered is incorrect.', 'user-registration' ) );
+			wp_send_json_success(
+				array(
+					'success' => 0,
+					'answer'  => $answer,
+				)
+			);
+		}
+
+		if ( 'ur-export-data' === $request_action ) {
+			$request_id   = wp_create_user_request( $user->data->user_email, 'export_personal_data', array(), 'confirmed' );
+			$request_name = __( 'Export Personal Data', 'user-registration' );
+		} elseif ( 'ur-erase-data' === $request_action ) {
+			$request_id   = wp_create_user_request( $user->data->user_email, 'remove_personal_data', array(), 'confirmed' );
+			$request_name = __( 'Export Erase Data', 'user-registration' );
+		}
+
+		if ( ! isset( $request_id ) || empty( $request_id ) ) {
+			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
+		}
+
+		if ( is_wp_error( $request_id ) ) {
+			$answer = esc_html( $request_id->get_error_message() );
+		} else {
+			if ( 'ur-export-data' === $request_action ) {
+				$visit_url = admin_url() . 'export-personal-data.php';
+				$answer    = sprintf( '<h3>%s</h3> %s', __( 'Download your Data', 'user-registration' ), esc_html__( 'The administrator has not yet approved downloading the data. Pleas wait for approval.', 'user-registration' ) );
+			} elseif ( 'ur-erase-data' === $request_action ) {
+				$visit_url = admin_url() . 'erase-personal-data.php';
+				$answer    = sprintf( '<h3>%s</h3> %s', __( 'Erase of your Data', 'user-registration' ), esc_html__( 'The administrator has not yet approved deleting your data. Pleas wait for approval.', 'user-registration' ) );
+			}
+			$subject    = sprintf( '%s %s', __( 'Approval Action:', 'user-registration' ), $request_name );
+			$request    = wp_get_user_request( $request_id );
+			$user_email = $request->email;
+			$headers    = array(
+				'From: ' . get_bloginfo( 'name' ) . ' <' . get_bloginfo( 'admin_email' ) . '>',
+				'Reply-To: ' . $user_email,
+			);
+			$message    = sprintf(
+				'%s  %s %s %s %s %s',
+				__( 'Hi,', 'user-registration' ),
+				__(
+					'A user data privacy request has been confirmed:',
+					'user-registration'
+				),
+				__( 'user:', 'user-registration' ),
+				$user_email,
+				__( 'You can view and manage these data privacy requests here:', 'user-registration' ),
+				$visit_url
+			);
+			wp_mail( get_bloginfo( 'admin_email' ), $subject, $message, $headers );
+		}
+
+		wp_send_json_success(
+			array(
+				'success' => 1,
+				'answer'  => $answer,
+			)
+		);
+	}
+
+	/**
+	 * Auto logout if the certain inactive time is over.
+	 */
+	public static function inactive_logout() {
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+		if ( '' === $security || ! wp_verify_nonce( $security, 'inactive_logout_nonce' ) ) {
+			wp_send_json_error( __( 'Nonce verification failed', 'user-registration' ) );
+			return;
+		}
+		$user_id = get_current_user_id();
+		// logout the current login user.
+		wp_logout( $user_id );
+		wp_send_json_success( __( 'Logout successfully', 'user-registration' ) );
 	}
 
 }

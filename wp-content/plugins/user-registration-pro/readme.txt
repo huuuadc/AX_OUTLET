@@ -1,10 +1,10 @@
 === User Registration Pro - Custom Registration Form, Login Form And User Profile For WordPress ===
 Contributors: WPEverest
 Tags: user registration, user registration-pro, registration, user profile, registration form, login form,
-Requires at least: 4.0
-Requires PHP: 5.3
-Tested up to: 6.1.1
-Stable tag: 3.2.1
+Requires at least: 5.2
+Requires PHP: 7.2
+Tested up to: 6.3.1
+Stable tag: 4.0.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,20 +20,24 @@ Moreover, this free, lightweight, and 100% responsive plugin comes with a beauti
 
 The best thing is that there are unlimited customization options for each field and form. To add more extendibility to this, you get premium addons to include extra functionalities in your registration forms. So, you’ve got yourself a fantastic WordPress user registration and login plugin.
 
-[youtube https://www.youtube.com/watch?v=zNhNvj8jPhM]
+[youtube https://www.youtube.com/watch?v=BdZNmZecPoQ]
 
-[All features](https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) | [Demo](http://demo.wpeverest.com/user-registration/) | [Documentation](http://docs.wpeverest.com/docs/user-registration/)
+[All features](https://wpuserregistration.com/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) | [Demo](http://demo.wpeverest.com/user-registration/) | [Documentation](https://docs.wpuserregistration.com/)
 
-[Try User Registration Premium ](https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
+[Try User Registration Premium ](https://wpuserregistration.com/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
 
 ### Key Features of User Registration
 * **Easy Drag and Drop Builder:** Simply drag and drop the form fields into a blank slate and create a registration form in no time. No code, no fuss.
 
 * **Custom Form Fields Apart from Default User Fields:** User Registration removes the limitations posed by the default WordPress fields while registering users. Use custom form fields like Country, Privacy Policy, and Profile Picture to design any kind of form you need.
 
+* **Quick Form Preview:** Enables form functionality checking before publishing, improving UX.
+
 * **Email Notifications for Users:** Send customized email notifications to your users as soon as they complete the registration process. Additionally, you can send notifications regarding payments and changes made to profile details as well.
 
 * **Beautiful User Profile Account Page:** User Registration automatically creates a WordPress user profile account for all your registered users. Even better is the fact that you’re still in complete control of the customization of this page.
+
+* **Global Search Settings:** Admins can search in the Global Settings to quickly access the required settings.
 
 * **In-built Login Form:** No need to make a separate login form for users as you get an in-built login form with User Registration. Just redirect your users to this page from the registration page.
 
@@ -41,31 +45,71 @@ The best thing is that there are unlimited customization options for each field 
 
 * **Assign User Roles and Capabilities:** Assign default WordPress user roles like Editor, Author, Subscriber, and more while creating registration forms. This lets you control who has access to which sections of your website and what actions they can perform.
 
-* **[Premium] [Multi-Step Form:](https://wpeverest.com/wordpress-plugins/user-registration/multi-part/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Long and detailed forms can look dull and crammed. That’s why we’ve created multi-step forms that let you break long forms into multiple sections for a cleaner and engaging presentation.
+* **Smart Tags:** Personalizes email notifications with user-specific data.
 
-* **[Premium] Collect Payments via Credit Cards and PayPal:** User Registration works flawlessly with both [PayPal](https://wpeverest.com/wordpress-plugins/user-registration/payments/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Credit Cards(Stripe)](https://wpeverest.com/wordpress-plugins/user-registration/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). So, you’ll have no problem collecting payments from users during registration using these payment gateways.
+* **Ajax Form Submission:** Provides seamless and fast form submissions without page reloading.
 
-* **[Premium] [Create Easy Content Restriction Rules:](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Enable content restriction to posts, pages, and categories with the premium Content Restriction addon. You can also create advanced custom content access rules based on roles, capabilities, user state, and more.
+* **Gutenberg Support:** User Registration fully supports the Block Editor. So, you can add login and registration forms to any page using the User Registration Block.
 
-* **[Premium] [Register Users Using Social Profile Account:](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, your users can directly register and log in using their existing social accounts on Facebook, Twitter, LinkedIn, and Google. The data from the social account used in registration is then imported to the corresponding user profile.
+* **Form Templates:** Kickstart your registration process with our pre-designed form templates. Use as-it-is or modify according to your needs.
 
-* **[Premium] [WooCommerce Integration:](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrate WooCommerce with our plugin and add WooCommerce Shipping/Billing Address fields to your user registration forms.
+* **[Premium] [Multi-Step Form:](https://wpuserregistration.com/features/multi-step/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Long and detailed forms can look dull and crammed. That’s why we’ve created multi-step forms that let you break long forms into multiple sections for a cleaner and engaging presentation.
 
-* **[Premium] [Collect Geolocation Data for Users:](https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** This premium addon enables you to collect and save the geolocation data of users who register on your website. And it’s pretty easy when you have fields like Country, City, and Postcode.
+* **[Premium] Collect Payments via Credit Cards and PayPal:** User Registration works flawlessly with both [PayPal](https://wpuserregistration.com/features/paypal/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Credit Cards and Ideal Payments(Stripe)](https://wpuserregistration.com/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). So, you’ll have no problem collecting payments from users during registration using these payment gateways.
 
-* **[Premium] [LearnDash Integration:](https://wpeverest.com/wordpress-plugins/user-registration/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrating LearnDash with User Registration allows you to add a LearnDash course field in your registration form. This automatically enrolls the users into their specified LearnDash course.
+* **[Premium] [Create Easy Content Restriction Rules:](https://wpuserregistration.com/features/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Enable content restriction to posts, pages, and categories with the premium Content Restriction addon. You can also create advanced custom content access rules based on roles, capabilities, user state, and more.
 
-* **[Premium] [Set Fields Visibility:](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Hide specific user registration fields in the published forms and user profile page. You can decide whether the field is visible in the registration form or profile details, or both.
+* **[Premium] [Register Users Using Social Profile Account:](https://wpuserregistration.com/features/social-connect/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, your users can directly register and log in using their existing social accounts on Facebook, Twitter, LinkedIn, and Google. The data from the social account used in registration is then imported to the corresponding user profile.
 
-* **[Premium] [Import Users:](https://wpeverest.com/wordpress-plugins/user-registration/import-users/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** User Registration plugin lets you import users to any registration form on your WordPress website. Just upload the CSV file with user information and map it with the registration form of your choice.
+* **[Premium] [WooCommerce Integration:](https://wpuserregistration.com/features/woocommerce/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrate WooCommerce with our plugin and add WooCommerce Shipping/Billing Address fields to your user registration forms.
 
-* **[Premium] [Connect Registration Forms with 1000+ Services via Zapier:](https://wpeverest.com/wordpress-plugins/user-registration/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Zapier passes information to all the applications your registration forms are connected with. This helps you save time by automating tasks like collecting form responses, sending texts and reminders.
+* **[Premium] [Collect Geolocation Data for Users:](https://wpuserregistration.com/features/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** This premium addon enables you to collect and save the geolocation data of users who register on your website. And it’s pretty easy when you have fields like Country, City, and Postcode.
 
-* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [MailerLite](https://wpeverest.com/wordpress-plugins/user-registration/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
+* **[Premium] [LearnDash Integration:](https://wpuserregistration.com/features/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrating LearnDash with User Registration allows you to add a LearnDash course field in your registration form. This automatically enrolls the users into their specified LearnDash course.
 
-* **[Premium] [Drag and Drop Multi File Upload:](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for when you need to collect more than one document or image file. You only have to set the maximum file upload limit from the field options.
+* **[Premium] [Set Fields Visibility:](https://wpuserregistration.com/features/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Hide specific user registration fields in the published forms and user profile page. You can decide whether the field is visible in the registration form or profile details, or both.
 
-* **[Premium] [Smart Conditional Logic:](https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, you can personalize registration forms for users and make them more interactive with conditional logic. Show different users specific fields based on their previous input.
+* **[Premium] [Import Users:](https://wpuserregistration.com/features/import-users/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** User Registration plugin lets you import users to any registration form on your WordPress website. Just upload the CSV file with user information and map it with the registration form of your choice.
+
+* **[Premium] [Connect Registration Forms with 1000+ Services via Zapier:](https://wpuserregistration.com/features/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Zapier passes information to all the applications your registration forms are connected with. This helps you save time by automating tasks like collecting form responses, sending texts and reminders.
+
+* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Active Campaign](https://wpuserregistration.com/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
+
+* **[Premium] [Drag and Drop Multi File Upload:](https://wpuserregistration.com/features/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for when you need to collect more than one document or image file. You only have to set the maximum file upload limit from the field options.
+
+* **[Premium] [Smart Conditional Logic:](https://wpuserregistration.com/features/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, you can personalize registration forms for users and make them more interactive with conditional logic. Show different users specific fields based on their previous input.
+
+* **[Premium] Passwordless Login:** Enables user authentication through a secure email link, eliminating the need for passwords.
+
+* **[Premium] [Profile Privacy:](https://docs.wpuserregistration.com/docs/user-registration-pro/#20-toc-title)** Gives users control over their profile visibility, search engine indexing, erasure and downloading of their personal data ensuring privacy.
+
+* **[Premium] [Conditional Redirection:](https://wpuserregistration.com/features/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Redirect users after registration based on user-submitted data for a personalized experience.
+
+* **[Premium] [Unique Field Validation:](https://docs.wpuserregistration.com/docs/user-registration-pro/#22-toc-title)** Maintains data integrity by ensuring uniqueness in selected fields.
+
+* **[Premium] [Form Field Mapping:](https://docs.wpuserregistration.com/docs/how-to-map-the-user-registration-form-fields-value-to-external-plugin-field-metas/)** Enhances integration by mapping form fields with other plugins.
+
+* **[Premium] [Prevent Concurrent Login:](https://docs.wpuserregistration.com/docs/how-to-map-the-user-registration-form-fields-value-to-external-plugin-field-metas/)** Enhances security by allowing site owners to setup number of times a user can login into different browsers or devices at the same time.
+
+* **[Premium] [Redirect to Previous Page:]** Smoothens user experience by redirecting users back to their previous page after login.
+
+* **[Premium] [Role-Based Redirection:](https://wpuserregistration.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Smoothens user experience by redirecting users back to their previous page after login.
+
+* **[Premium] [External URL Data Transfer:](https://docs.wpuserregistration.com/docs/user-registration-pro/#post-submission-send-data-to-custom-url)** Facilitates connection with third-party services by sending form data to an external URL post-submission.
+
+* **[Premium] [Elementor Support:]** Utilize the User Registration widget in your Elementor editor to quickly add registration forms to any page and customize their design.
+
+* **[Premium] [Keyboard-Friendly Forms:](https://docs.wpuserregistration.com/docs/keyboard-shortcut-in-form-builder/#1-toc-title)** Instantly direct a user to the registration form on a page without any distractions and let them fill the form using their keyboard only.
+
+* **[Premium] [Auto-Populate Form via Query String:](https://docs.wpuserregistration.com/docs/user-registration-pro/#how-to-allow-fields-to-be-populate-dynamically)** Enhance user experience with auto-populated forms, reducing the time it takes for users to fill out your forms and increasing conversion rates.
+
+* **[Premium] [Post Submissions:](https://wpuserregistration.com/features/post-submission/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Allow users to submit posts directly from the frontend while registering without giving access to the WordPress dashboard.
+
+* **[Premium] [Profile Completeness:](https://wpuserregistration.com/features/profile-completeness/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Display a visual progress bar indicating profile completeness to encourage users to complete their profile information.
+
+* **[Premium] [Save and Continue:](https://wpuserregistration.com/features/save-and-continue/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Users can save their progress on a registration form and come back to it later to submit the form.
+
+* **[Premium] [Klaviyo:](https://wpuserregistration.com/features/klaviyo/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Sync your user registration forms with Klaviyo to automatically collect user data for personalized marketing campaigns.
 
 
 ### User Registration Has Every Form Field You’ll Ever Need:
@@ -103,6 +147,9 @@ The best thing is that there are unlimited customization options for each field 
 * Select2
 * Multi Select
 * Profile Picture
+* Range
+* Hidden field
+* Custom URL Field
 * Single Item
 * Stripe Gateway
 
@@ -111,15 +158,17 @@ Here’s a brief look at the features that make User Registration one of the bes
 
 * **[Premium] User Registration Data in Graphs and Charts:** Receive accurate stats on every user registration form through graphs and charts. You can view the total, approved, denied, and pending registrations your website receives in a day, week, month, or a specific period.
 
-* **[Premium] [Live Form Designer Tool:](https://wpeverest.com/wordpress-plugins/user-registration/style-customizer/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** You might find the default form template a bit boring. So, User Registration offers a live form designer for you to customize form elements like Field Styles, Form Wrapper, and Button Styles without writing any code.
+* **[Premium] [Live Form Designer Tool:](https://wpuserregistration.com/features/style-customizer/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** You might find the default form template a bit boring. So, User Registration offers a live form designer for you to customize form elements like Field Styles, Form Wrapper, and Button Styles without writing any code.
 
-* **[Premium] [Invite Codes for Registration:](https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** User Registration allows access to the registration page to only users with an invitation code. You can either create a code on your own or generate random codes
+* **[Premium] [Invite Codes for Registration:](https://wpuserregistration.com/features/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** User Registration allows access to the registration page to only users with an invitation code. You can either create a code on your own or generate random codes
 
 * **Easily Import Export Forms:** If you own multiple websites, you don’t have to create registration forms from scratch every single time. You can save time by exporting and importing forms as JSON files which include form settings as well.
 
-* **[Premium] [Front-end Listing:](https://wpeverest.com/wordpress-plugins/user-registration/frontend-listing/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** If you want to display all your registered users on your website, the Front-end Listing addon is your answer. Users and guests alike can view individual profiles of your users from this front-end list.
+* **[Premium] [Front-end Listing:](https://wpuserregistration.com/features/frontend-listing/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** If you want to display all your registered users on your website, the Front-end Listing addon is your answer. Users and guests alike can view individual profiles of your users from this front-end list.
 
-* **[Premium] [Customize My Account:](https://wpeverest.com/wordpress-plugins/user-registration/customize-my-account/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Manage the in-built My Account page by adding custom tabs as well as editing and deleting default tabs. User Registration also allows you to edit design elements of the page such as Color, Buttons, Navigation, and more.
+* **[Premium] [Customize My Account:](https://wpuserregistration.com/features/customize-my-account/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Manage the in-built My Account page by adding custom tabs as well as editing and deleting default tabs. User Registration also allows you to edit design elements of the page such as Color, Buttons, Navigation, and more.
+
+* **[Premium] [Two Factor Authentication:](https://wpuserregistration.com/features/two-factor-authentication/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** If you want to protect your website from lousy hackers and digital vulnerabilities, the Two Factor Authentication add-on, also known as 2FA, will provide OTP-based verification for the users for maintaining a secure site and preventing data breaching.
 
 ### Who is User Registration for?
 * Schools and Universities
@@ -181,7 +230,7 @@ Here’s a brief look at the features that make User Registration one of the bes
 * Hide/show password feature on entering password
 * Captcha for spam protection
     * reCaptcha v2
-    * reCaptcha v2 Invisible
+	* reCaptcha v2 Invisible
     * reCaptcha v3
 	* hCaptcha
 * Honeypot spam protection
@@ -227,6 +276,26 @@ Here’s a brief look at the features that make User Registration one of the bes
 * [How to Allow User Registration with Invitation Code?](https://wpeverest.com/blog/user-registration-invitation-code/)
 * [How to Create a Custom Registration Form for LearnDash?](https://wpeverest.com/blog/learndash-custom-registration-form/)
 
+== Get in Touch with us  ==
+
+👉 [Facebook Group](https://www.facebook.com/wpuserregistration)
+
+👉 [Twitter](https://twitter.com/user_register)
+
+👉 [Youtube](https://www.youtube.com/@UserRegistration)
+
+== Explore More Products from Our Team==
+Love User Registration? If you do, then you should check out more WordPress themes and plugins from us.
+
+* [Everest Forms](https://wpeverest.com/wordpress-plugins/everest-forms/) - Best WordPress Form Plugin.
+
+* [Masteriyo](https://masteriyo.com/) - A Powerful and Easy WordPress LMS Plugin. 
+
+* [Gutenberg Blocks by BlockArt](https://wordpress.org/plugins/blockart-blocks/) - Free Gutenberg Custom Blocks Plugin.
+
+* [Zakra](https://wordpress.org/themes/zakra/) - Best WordPress Multipurpose Theme Powering 60K+ Websites.
+
+* [ThemeGrill](https://themegrill.com/wordpress-themes/free/) - Beautiful Responsive WordPress Themes & Templates.
 
 == Installation ==
 
@@ -250,11 +319,23 @@ All the users registered via the registration forms and their data can be access
 
 = Can a user edit their profile informaton after registration?
 
-Yes, a registered user can access their profile details via the account page. One can create an [account profile page](https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-account-profile/) for their user using the shortcode available.
+Yes, a registered user can access their profile details via the account page. One can create an [account profile page](https://docs.wpuserregistration.com/registration-form-and-login-form/how-to-show-account-profile/) for their user using the shortcode available.
 
 = Does the plugin come with a login form as well?
 
 Yes, the plugin has a shortcode for the login form.
+
+= Can I add custom fields to my registration forms?
+
+Yes, our form builder allows you to effortlessly add and arrange custom fields in your forms.
+
+= Is the User Registration plugin compatible with my version of WordPress?
+
+User Registration is updated regularly to ensure compatibility with the latest versions of WordPress. Please check the `Requires at least` and `Tested up to` fields in our `readme.txt` file to see if it's compatible with your version.
+
+= What should I do if User Registration is having problems?
+
+We are ready to assist you! You can contact us through the WordPress.org help forums or by visiting our [help page](https://wpuserregistration.com/support/).
 
 == Screenshots ==
 
@@ -276,6 +357,185 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 4.0.4.1  - 05/09/2023
+* Fix      - User field value not being saved while registering or updating the profile.
+
+= 4.0.4    - 04/09/2023
+* Feature  - Pattern validation for input fields.
+* Feature  - Cloudflare turnstile captcha integration.
+* Enhance  - Login forms menu to show the login form shortcode.
+* Enhance  - Custom hold time before redirection after registration.
+* Dev      - Modified function that parses my account page id.
+* Dev      - Compatibility for pattern validation for input fields.
+* Dev      - Compatibility for enabling/disabling taking picture from the webcam.
+* Fix      - Error while adding popup in menu.
+* Fix      - Incorrect filtering of pending users.
+* Fix      - Reset Password link throws invalid key.
+* Fix      - Invalid Myaccount link for it's endpoints.
+* Fix      - Remove other plugins notice in settings area.
+* Fix      - Conditionally hidden fields value being submitted.
+* Fix      - Copied tooltip not being shown when shortcode is copied.
+
+= 4.0.3    - 11/08/2023
+* Feature  - Email Preview.
+* Feature  - User registered language with smart tag.
+* Feature  - Auto logout after certain time inactivity.
+* Enhance  - Wrap emails in default template while previewing or sending.
+* Dev 	   - Check null for file_exits function.
+* Dev 	   - Change mail header format to array.
+* Dev 	   - Add Extra parameter in the filter hook user_registration_before_insert_user.
+* Tweak    - Added unique id smart tag.
+* Tweak    - Add filter to modify smart tag content.
+* Tweak    - Do not display hidden field value in user details listing area.
+* Tweak    - Input box highlighting according to error or validity of form field input.
+* Fix      - Conflict with TranslatePress.
+* Fix 	   - Error message on login with SMIO plugin.
+* Fix  	   - Typecasting issue in myaccount tag state.
+* Fix 	   - Grammatical error of passwordless login email.
+* Fix 	   - Make login shortcode compatible with all editors.
+* Fix      - Lost Password not working for translated myaccount page.
+* Fix 	   - Show the data of website field as a URL in user details listing area.
+* Fix 	   - Form created even if its canceled in form naming area after choosing a template.
+* Fix 	   - Form set redirection working while trying to visit page with registration or login form after login.
+
+= 4.0.2.1  - 04/07/2023
+* Fix      - Arbitrary file upload.
+
+= 4.0.2    - 29/06/2023
+* Enhance  - One time draggable field locked message.
+* Tweak    - Filter added for recaptcha url.
+* Tweak    - Password strength meter hint text updated.
+* Tweak    - Apply redirection settings when autologin is set.
+* Tweak    - Hide role based redirection setting when option is disabled.
+* Tweak    - Filter added for setting profile privacy visibility option default value.
+* Fix      - Inconsistencies in v3.0 design update.
+* Fix      - Form design conflict with themes using bootstrap.
+* Fix      - Security Vulnerability issue from arbitrary file upload.
+* Fix      - Validation error thrown when range is used as payment field.
+* Fix      - Default values for global settings options cannot be changed.
+* Fix      - Required validation thrown when entering 0 in the number field.
+* Fix      - Max upload size option accepting non-numeric, negative, and 0 as values.
+* Fix      - Same popup load conflict on same page results in incorrect field validations.
+* Fix      - Validate as a unique field validating for all fields instead of individual field.
+
+= 4.0.1    - 14/06/2023
+* Dev      - Update duplicate hook name.
+* Dev      - Compatibility for autologin redirection.
+* Tweak    - Add new addons to extensions page.
+* Tweak    - Field smart tag support in hidden field value.
+* Tweak    - Create global constant for upload dir path and url.
+* Tweak    - Profile pic showing max upload size in KB instead of MB.
+* Fix      - Free plugin file not being deleted when pro is activated.
+* Fix      - Password strength meter not working with Cyrillic letters.
+* Fix      - Profile pic cropping not available even enabled in edit profile.
+* Fix      - Password preview not working on login shortcode page when recaptcha disabled.
+
+= 4.0      - 31/05/2023
+* Refactor - Form Builder Design.
+* Refactor - Global Settings Design.
+* Refactor - Login process.
+* Refactor - Role base redirection settings for registration form.
+* Feature  - Privacy Tab.
+* Feature  - Password Less Login.
+* Feature  - Search global settings.
+* Enhance  - Redirection after registration.
+* Enhance  - Integration menu for email marketing.
+* Enhance  - Password strength check made more robust.
+* Enhance  - Changed checkbox and yes/no select option to toggle.
+* Enhance  - New smart tags added in email content and default value of fields.
+* Dev 	   - Compatibility for hidden field.
+* Dev      - Compatibility for Discounted Price.
+* Dev      - Compatibility for Profile Completeness addon.
+* Dev 	   - Compatibility for conditionally hide/show submit button.
+* Dev      - Compatibility for disable cropping in profile picture field.
+* Tweak    - Display info about form status.
+* Fix      - Remember me not working for ajax login.
+* Fix      - Validation error when conditionally hide fields.
+* Fix      - Email confirmation email not being sent when all emails were disabled.
+
+= 3.2.5    - 04/05/2023
+* Refactor - Make get_sanitize_value function static.
+* Tweak    - PHP deprecation notice for sites below PHP 7.2.
+* Fix      - Password not matched when apostrophes used.
+* Fix      - Form being saved when captcha is enabled but keys are missing.
+* Fix      - Settings being saved when captcha is enabled in login options but keys are missing.
+
+= 3.2.4    - 26/04/2023
+* Feature  - Smart tag selector in email content.
+* Feature  - Smart tag selector in default value of fields.
+* Enhance  - Export users.
+* Enhance  - Lock field if integration not setup.
+* Tweak    - Add hook to handle required fields.
+* Tweak    - Add filter hook before inserting user.
+* Tweak    - Add filter hook to remember autologin users.
+* Tweak    - Enable description message changed for reset password email.
+* Tweak    - Form field upgrade to premium notices according to license plan.
+* Fix      - Validation error when radio field empty.
+* Fix      - Polylang My Account Page Translation issue.
+* Fix      - Deprecated get_sanitize-value causing issues.
+* Fix      - Date field error when using dd/mm/yyyy format.
+* Fix      - Profile picture not recognized by media library.
+* Fix      - Advance Settings custom class not working on edit-profile.
+* Fix 	   - Token mismatch error and wrong password message appearing at same time.
+* Fix      - Incorrect default date displayed in date field while editing user in admin side.
+
+= 3.2.3.1  - 17/03/2023
+* Fix      - Email confirmation email not sent to user.
+
+= 3.2.3    - 16/03/2023
+* Refactor - Backend validation for form data.
+* Enhance  - Global settings input validation.
+* Enhance  - Confirm password and confirm email field validation.
+* Tweak    - Add Docs link in My Account select notice.
+* Tweak    - Add action hook added for email address change confirmation success.
+* Fix      - Required icon not displaying properly.
+* Fix      - Default value for country field not working.
+* Fix      - Strip Unwanted fields from conditional rules.
+* Fix      - Profile picture required issue in edit profile.
+* Fix      - Conditional rules field not mapped dynamically.
+* Fix      - Year not displayed on min max date field option.
+* Fix      - First item being selected by default in edit profile.
+* Fix      - Single item field error message displaying in wrong place.
+* Fix      - reCAPTCHA registration form template don't create reCAPTCHA.
+* Fix      - Role based redirect after logout not working for custom template.
+* Fix      - Email not send to user when login option set except email confirmation.
+* Fix      - Security issue send test email by non privileged user.
+* Fix      - Security issue PHP Object injection with unserialize PHP core function.
+
+= 3.2.2.1  - 23/02/2023
+* Fix 	   - Consent notice is now dismissable.
+* Fix      - License plan not being fetched properly.
+* Fix      - Form preview not working properly when astra theme activated.
+* Fix      - Error while submitting form with file upload field when OpenSSL extension disabled.
+
+= 3.2.2    - 20/02/2023
+* Feature  - Shortcode for 'Change Password' Page.
+* Feature  - Email confirmation for email change on the edit profile page.
+* Refactor - Profile Picture save after profile update.
+* Enhance  - Setup wizard options and design.
+* Enhance  - Bulk form import/export.
+* Enhance  - Add {{user_roles}} smart tag.
+* Enhance  - View form link after importing form.
+* Enhance  - Fetch Form templates from remote server.
+* Enhance  - Sync External fields when profile update.
+* Enhance  - Send success email after email confirmation done by user.
+* Enhance  - Add toggle to enable/disable email from email list in global settings.
+* Dev      - Common code for Select2.
+* Dev      - Compatibility with Frontend Listing.
+* Dev      - Common js for preview password icon.
+* Dev      - Added common code to dynamically render form fields.
+* Dev      - Return login url from ur_get_my_account_url function if My Account is not set.
+* Tweak    - Deactivation popup.
+* Tweak    - Add Private notes in extension page.
+* Tweak    - Field option made clickable when no any field is selected.
+* Fix      - TinyMce data not saving issue.
+* Fix      - Smart tag in email issue for file type.
+* Fix      - Field Visibility Setting value not saving in safari.
+* Fix      - MyAccount redirection issue on plain permalink structure.
+* Fix      - Reset and incorrect password message appears at same time.
+* Fix 	   - Preview password icon not working when reCAPTCHA is enabled.
+
 = 3.2.1    - 17/01/2023
 * Enhance  - Email domain allowlist and denylist.
 * Enhance  - Fetch Form templates from remote server.
@@ -312,14 +572,14 @@ Yes, the plugin has a shortcode for the login form.
 * Fix      - Show Password icon for Extra Password field.
 * Fix      - Form Id empty issue in getting started page.
 * Fix      - Smart tag for country field in email content.
-* Fix      – My Account endpoint translation issue in WPML.
+* Fix      - My Account endpoint translation issue in WPML.
 * Fix      - Gutenberg compatibility issue with my account.
 * Fix      - User export issue when form name has special characters.
 * Fix      - User export issue while checkbox or multi-select2 exists.
 * Fix      - Form not submitting issue while captcha keys are not set.
 * Fix      - Form submitting when error message exists for file upload.
 * Fix      - Notice message keep appearing on reload after popup created/updated.
-* Fix      – Special Character in Password Field caused invalid password while login.
+* Fix      - Special Character in Password Field caused invalid password while login.
 * Fix      - 'Special Character Validation in Username' and 'Unknown Email' messages not customized properly.
 
 = 3.1.6    - 01/12/2022
