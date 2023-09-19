@@ -33,17 +33,23 @@ jQuery(function ($){
             var current = parseInt($(this).val());
             if(current==max_item){
                 $(this).next('.button').removeClass('plus').addClass('plus_disable');
-
+/*
                 $(this).next('.plus_disable').click(function(e){
                     e.preventDefault();
                     alert('Chỉ còn lại ' + max_item + ' sản phẩm');
-                });
+                });*/
             }
             //console.log('max: '+max_item);
             //console.log('current: '+current);
         });
     }
     checkQty();
+
+    $('body').on('click','.plus_disable',function(e){
+        e.preventDefault();
+        var max_item = $(this).prev('input.qty').attr('max');
+        alert('Chỉ còn lại ' + max_item + ' sản phẩm');
+    });
 
     function checkShipping(){
         $('.shipping__table').each(function(){

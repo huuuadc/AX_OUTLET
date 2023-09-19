@@ -365,31 +365,33 @@ jQuery(function ($) {
 	URE_Dashboard.init();
 
 	// Toggles Registration form selection element based upon the popup type selected.
-	$(".user-registration-pro-select-popup-type").ready(function () {
-		var popup_type = $(
-			"#select2-user_registration_pro_popup_type-container"
-		).attr("title");
-
-		if ("Login" === popup_type) {
-			$(".single-registration-select").toggle();
+	hideShowRegistrationFormSelector(
+		$(".user-registration-pro-select-popup-type")
+	);
+	$("select[name='user_registration_pro_popup_type']").on(
+		"change",
+		function () {
+			hideShowRegistrationFormSelector($(this));
 		}
-	});
+	);
 
-	$(".user-registration-pro-select-popup-type").on("change", function () {
-		var popup_type = $(
-			"#select2-user_registration_pro_popup_type-container"
-		).attr("title");
+	function hideShowRegistrationFormSelector(node) {
+		var popup_type = node.val();
 
-		if ("Login" === popup_type) {
-			$(this)
-				.closest("#mainform")
-				.find(".single-registration-select")
-				.toggle();
+		if ("login" === popup_type) {
+			node.closest("#mainform")
+				.find(
+					"select[name='user_registration_pro_popup_registration_form']"
+				)
+				.closest(".user-registration-global-settings")
+				.hide();
 		} else {
-			$(this)
-				.closest("#mainform")
-				.find(".single-registration-select")
-				.toggle();
+			node.closest("#mainform")
+				.find(
+					"select[name='user_registration_pro_popup_registration_form']"
+				)
+				.closest(".user-registration-global-settings")
+				.show();
 		}
-	});
+	}
 });

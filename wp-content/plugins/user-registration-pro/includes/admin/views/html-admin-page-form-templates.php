@@ -18,8 +18,8 @@ $refresh_url  = add_query_arg(
 	),
 	admin_url( 'admin.php' )
 );
-$license_plan = ur_get_license_plan();
-
+$license_data = ur_get_license_plan();
+$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 ?>
 <div class ="wrap user-registration">
 	<div class="user-registration-loader-overlay" style="display:none">
@@ -83,19 +83,16 @@ $license_plan = ur_get_license_plan();
 						$license_plan_string = 'premium';
 						$upgrade_class       = 'upgrade-modal';
 					} elseif ( ! in_array( str_replace( '-lifetime', '', $license_plan ), $template->plan, true ) && ! in_array( 'free', $template->plan, true ) ) {
-						$upgrade_class = 'ur-template-select';
+						$upgrade_class       = 'ur-template-select';
+						$license_plan_string = 'premium';
 
 					}
-					$fallback_image = untrailingslashit(plugin_dir_url(UR_PLUGIN_FILE)) . '/assets/images/templates/placeholder.png';
-
 					/* translators: %s: Template title */
 					$template_name = sprintf( esc_attr_x( '%s template', 'Template name', 'user-registration' ), esc_attr( $template->title ) );
 					?>
 					<div class="user-registration-template-wrap ur-template"  id="user-registration-template-<?php echo esc_attr( $template->slug ); ?>" data-plan="<?php echo esc_attr( $license_plan_string ); ?>">
 						<figure class="user-registration-screenshot <?php echo esc_attr( $click_class ); ?>" data-template-name-raw="<?php echo esc_attr( $template->title ); ?>" data-template="<?php echo esc_attr( $template->slug ); ?>" data-template-name="<?php echo esc_attr( $template_name ); ?>">
-							<img src="<?php echo esc_url( $template->image ); ?>"
-								data-failover="<?php echo esc_url( $fallback_image ); ?>"
-							/>
+							<img src="<?php echo esc_url( $template->image ); ?>" alt="<?php echo esc_attr( $template->title ); ?>"/>
 							<?php echo wp_kses_post( $badge ); ?>
 							<?php if ( 'blank' !== $template->slug ) : ?>
 								<div class="form-action">
