@@ -39,6 +39,8 @@ function action_woocommerce_save_account_details( $user_id ) {
     }
 }
 add_action( 'woocommerce_save_account_details', 'action_woocommerce_save_account_details', 10, 1 );
+
+
 add_filter('woocommerce_default_address_fields','wc_change_field_default_address_fields', 10);
 function wc_change_field_default_address_fields($fields){
 
