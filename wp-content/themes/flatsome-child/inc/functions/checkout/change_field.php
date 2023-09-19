@@ -4,12 +4,7 @@ add_filter('woocommerce_checkout_fields', 'checkout_add_change_fields');
 
 function checkout_add_change_fields($fields){
 
-    foreach ($fields as $key => $value){
-        if (isset($fields[$key][$key.'_postcode'])) {
-            unset($fields[$key][$key.'_postcode']);
-        }
-    }
-
+    $fields['billing']['billing_postcode']['class'][] =  'hidden';
     $fields['billing']['billing_country']['class'][] =  'hidden';
 
     $fields['billing']['billing_phone']['priority'] = 30;
@@ -48,7 +43,7 @@ function checkout_add_change_fields($fields){
         'input_class'   => array(
             'district_select',
         ),
-        'priority'      => 75,
+        'priority'      => 40,
         'required'      => 1
     ) ;
 
@@ -62,7 +57,7 @@ function checkout_add_change_fields($fields){
         'input_class' => array(
             'ward_select',
         ),
-        'priority' => 80,
+        'priority' => 41,
         'required' => 1
     ) ;
 
