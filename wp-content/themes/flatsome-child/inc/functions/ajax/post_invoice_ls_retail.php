@@ -97,7 +97,7 @@ function post_invoice_ls_retail(){
         $rep_member = $ls_api->get_member_information($order->get_billing_phone());
 
         if((isset($rep_member->Responcode)) && $rep_member->Responcode == 200){
-            $member_card_guest = $rep_member->Model->accountNo;
+            $member_card_guest = $rep_member->Model->cardNo ?? get_option('admin_dashboard_member_card_guest') ;
         }else{
             $member_card_guest = get_option('admin_dashboard_member_card_guest');
         }
