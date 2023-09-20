@@ -12,6 +12,12 @@ add_action('rest_api_init', function () {
 
 function shipment_order_update_status( WP_REST_Request $request ) {
 
+    $secret_client = get_option('tiki_secret_client');
+
+    $x_signature = $request->get_header('x_signature');
+
+    if(!verify_signature($request->get_body(),$secret_client,$x_signature)) return false;
+
     write_log($request->get_body());
 
     $req = json_decode( $request->get_body());
