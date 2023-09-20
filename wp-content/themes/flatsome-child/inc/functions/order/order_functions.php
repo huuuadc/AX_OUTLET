@@ -113,3 +113,15 @@ function check_stock_ls($items = []): array {
 
     return $data_check;
 }
+
+function verify_signature($payload = '', $secret = '',$x_request = ''):bool
+{
+    if($x_request === '') return false;
+
+    $hash_mac = 'sha1='. hash_hmac('sha1',$payload,$secret);
+    if ($hash_mac === $x_request) {
+        return true;
+    }
+    write_log('Tiki TNSL Webhook fai: '.$hash_mac .' - '.$x_request);
+    return false;
+}
