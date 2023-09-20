@@ -67,7 +67,10 @@ class OMS_USER extends \WP_User {
      * @return string
      */
     public function get_full_address(){
-        return $this->address_1 .', '. $this->address->get_full_address_name_by_code($this->ward_code,$this->district_code,$this->city_code);
+        return $this->address_1 .', '. $this->address->get_full_address_name_by_code(
+            $this->ward_code,
+            $this->district_code,
+            $this->city_code);
     }
 
 }
