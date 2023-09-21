@@ -57,14 +57,14 @@ class WC_Brands {
 		add_filter( 'woocommerce_product_query_tax_query', array( $this, 'update_product_query_tax_query' ), 10, 2 );
 
 		// REST API.
-		add_action( 'rest_api_init', array( $this, 'rest_api_register_routes' ) );
-		add_action( 'woocommerce_rest_insert_product', array( $this, 'rest_api_maybe_set_brands' ), 10, 2 );
-		add_filter( 'woocommerce_rest_prepare_product', array( $this, 'rest_api_prepare_brands_to_product' ), 10, 2 ); // WC 2.6.x
-		add_filter( 'woocommerce_rest_prepare_product_object', array( $this, 'rest_api_prepare_brands_to_product' ), 10, 2 ); // WC 3.x
-		add_action( 'woocommerce_rest_insert_product', array( $this, 'rest_api_add_brands_to_product' ), 10, 3 ); // WC 2.6.x
-		add_action( 'woocommerce_rest_insert_product_object', array( $this, 'rest_api_add_brands_to_product' ), 10, 3 ); // WC 3.x
-		add_filter( 'woocommerce_rest_product_object_query', array( $this, 'rest_api_filter_products_by_brand' ), 10, 2 );
-		add_filter( 'rest_product_collection_params', array( $this, 'rest_api_product_collection_params' ), 10, 2 );
+		//add_action( 'rest_api_init', array( $this, 'rest_api_register_routes' ) );
+		//add_action( 'woocommerce_rest_insert_product', array( $this, 'rest_api_maybe_set_brands' ), 10, 2 );
+		//add_filter( 'woocommerce_rest_prepare_product', array( $this, 'rest_api_prepare_brands_to_product' ), 10, 2 ); // WC 2.6.x
+		//add_filter( 'woocommerce_rest_prepare_product_object', array( $this, 'rest_api_prepare_brands_to_product' ), 10, 2 ); // WC 3.x
+		//add_action( 'woocommerce_rest_insert_product', array( $this, 'rest_api_add_brands_to_product' ), 10, 3 ); // WC 2.6.x
+		//add_action( 'woocommerce_rest_insert_product_object', array( $this, 'rest_api_add_brands_to_product' ), 10, 3 ); // WC 3.x
+		//add_filter( 'woocommerce_rest_product_object_query', array( $this, 'rest_api_filter_products_by_brand' ), 10, 2 );
+		//add_filter( 'rest_product_collection_params', array( $this, 'rest_api_product_collection_params' ), 10, 2 );
 
 
 		require_once( 'class-wc-brands-coupons.php' );
