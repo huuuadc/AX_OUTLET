@@ -23,7 +23,7 @@ class WC_Brands_Admin {
 		add_filter( 'woocommerce_sortable_taxonomies', array( $this, 'sort_brands' ) );
 		add_filter( 'manage_edit-brand_columns', array( $this, 'columns' ) );
 		add_filter( 'manage_brand_custom_column', array( $this, 'column' ), 10, 3);
-		add_filter( 'manage_product_posts_columns', [ $this, 'product_columns' ], 20, 1 );
+		//add_filter( 'manage_product_posts_columns', [ $this, 'product_columns' ], 20, 1 );
 		add_filter(
 			'woocommerce_products_admin_list_table_filters',
 			function ( $args ) {
