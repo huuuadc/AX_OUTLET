@@ -2655,6 +2655,39 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
   line-height: 1.2;
   transition: all 0.3s linear;
 }
+.brand_slider .slick-dots {
+  display: block !important;
+  left: 0;
+  bottom: 0;
+  z-index: 20;
+  list-style: none;
+  position: relative;
+  margin-top: 15px;
+}
+.brand_slider .slick-dots li {
+  width: 15px;
+  height: 2px;
+  background-color: #ccc;
+  margin: 0 2px;
+}
+.brand_slider .slick-dots li button {
+  display: none;
+}
+.brand_slider .slick-dots li.slick-active {
+  background-color: #000;
+}
+@media (max-width: 767px) {
+  .brand_slider .slick-slide {
+    width: 60vw !important;
+  }
+  .brand_slider .slick-slide .item {
+    transform: none !important;
+    padding: 0 15px 0 0 !important;
+  }
+  .brand_slider .slick-slide .item .brand_name {
+    font-size: 16px !important;
+  }
+}
 .slick-arrow {
   position: absolute !important;
   top: 15px !important;
