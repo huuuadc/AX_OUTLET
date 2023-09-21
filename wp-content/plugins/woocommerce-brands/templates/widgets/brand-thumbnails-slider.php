@@ -50,8 +50,7 @@
                     breakpoint: 768,
                     settings: {
                         arrows: false,
-                        centerMode: true,
-                        centerPadding: '20px',
+                        centerMode: false,
                         slidesToShow: 3
                     }
                 },
@@ -59,9 +58,8 @@
                     breakpoint: 480,
                     settings: {
                         arrows: false,
-                        centerMode: true,
-                        centerPadding: '20px',
-                        slidesToShow: 1
+                        centerMode: false,
+                        slidesToShow: 2
                     }
                 }
             ]
