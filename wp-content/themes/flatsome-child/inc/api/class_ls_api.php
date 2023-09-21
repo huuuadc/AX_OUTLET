@@ -10,13 +10,14 @@ class LS_API
 {
 
     private string $LS_TOKEN = 'ls_token';
-
     private string $user_name = '';
     private string $user_pass = '';
     private string $api_token = '';
     public array $location_code = [];
     private string $encrypt_key = 'daf_ls_api';
     private string $baseURL = '';
+    private string $LS_SOURCE   =  'LS API';
+    private \WP_REST_API_Log_DB $log;
     private array $URI = array(
 
         'get_token' => '/api/user/loginInput',
@@ -82,6 +83,7 @@ class LS_API
             $this->baseURL  = $opts["base_url"];
         }
 
+        $this->log = new \WP_REST_API_Log_DB();
         $this->api_token    = $this->getLsToken();
     }
 
@@ -122,7 +124,6 @@ class LS_API
 
         try {
             $data_string = json_encode($data);
-            write_log('LS request: '. $data_string);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                     'Content-Type: application/json',
@@ -138,19 +139,43 @@ class LS_API
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer ' . $this->api_token));
             }
 
-            $result = curl_exec($ch);
-
+            $rep = curl_exec($ch);
+            $result = json_decode($rep );
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
+            //Begin Write log in to WP rect log;
+            $headers = [
+                'access-token'      =>  $this->api_token,
+                'method'            =>  $method,
+                'Content-Type'      =>  'application/json',
+                'Content-Length'    =>  strlen($data_string)
+            ];
+            $arg = [
+                'route'         =>  $url,
+                'source'        =>  $this->LS_SOURCE,
+                'method'        =>  $method,
+                'status'        =>  $http_status,
+                'request'       =>  [
+                    'headers'    =>  $headers,
+                    'query_params'    =>  [],
+                    'body_params'    =>  $data,
+                    'body'      =>  $data_string,
+                ],
+                'response'      =>  [
+                    'headers'    =>  [],
+                    'body'      =>  $result
+                ]
+
+            ];
+            $this->log->insert($arg);
+            //End write log in to WP rect log;
+
             if ($http_status != 200) {
-                write_log('LS response error: '. $result);
                 return (object)array(
                     'Responcode' => $http_status,
                     'messenger' => 'error http status code: ' . $http_status
                 );
             }
-
-            write_log('LS response success: ' . $result);
 
             return json_decode($result);
         } catch (\Throwable $th) {
