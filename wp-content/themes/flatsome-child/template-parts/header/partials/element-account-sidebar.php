@@ -30,7 +30,7 @@ if(is_woocommerce_activated()){ ?>
     }
   ?>
   <span class="header-account-title">
-    <?php _e('Login', 'woocommerce'); ?>
+    <?php _e('Tài khoản', 'woocommerce'); ?>
   </span>
 </a>
 <?php } ?>
