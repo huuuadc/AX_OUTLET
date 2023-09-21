@@ -12,7 +12,9 @@ class TIKI_API
     private string $baseURL;
     private string $baseURLTNSL;
     private object $company;
+    private string $TIKI_SOURCE = 'TIKI_API';
     private string $INVALID_TOKEN = 'INVALID_TOKEN';
+    private \WP_REST_API_Log_DB $log ;
     public array  $data_default = array(
         'external_order_id' => '',
         'service_code'  => 'hns_standard',
@@ -98,8 +100,7 @@ class TIKI_API
         $this->SECRET_CLIENT    = get_option('tiki_secret_client') ?? '';
         $this->ACCESS_TOKEN     = get_option('tiki_access_token') ?? '';
         $this->company          = new COMPANY();
-
-        //{"success":false,"errors":[{"message":"Forbidden","code":"INVALID_TOKEN"}],"metadata":{"request_id":"c2e612e212e1a70fdc33dca2a7bada81"}}
+        $this->log              = new \WP_REST_API_Log_DB();
 
     }
 
@@ -110,13 +111,12 @@ class TIKI_API
      * @return false|mixed|string[]
      */
 
-    public function sendRequestToTiki($url, $data = [], $method = 'GET')
+    public function sendRequestToTiki($url,array $data = [],string $method = 'GET')
     {
 
         try {
 
             $data_request = json_encode($data);
-            write_log('Tiki request: '.$data_request);
 
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -132,17 +132,41 @@ class TIKI_API
             if ($this->ACCESS_TOKEN) {
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer ' . $this->ACCESS_TOKEN));
             }
-
-            $result = json_decode( curl_exec($ch));
+            $rep = curl_exec($ch);
+            $result = json_decode($rep );
 
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
+            //Begin Write log in to WP rect log;
+            $headers = [
+                'access-token'             =>  $this->ACCESS_TOKEN,
+                'method'            =>  $method,
+                'Content-Type'      =>  'application/json',
+                'Content-Length'    =>  strlen($data_request)
+            ];
+            $arg = [
+                'route'         =>  $url,
+                'source'        =>  $this->TIKI_SOURCE,
+                'method'        =>  $method,
+                'status'        =>  $http_status,
+                'request'       =>  [
+                    'headers'    =>  $headers,
+                    'query_params'    =>  [],
+                    'body_params'    =>  $data,
+                    'body'      =>  $data_request,
+                ],
+                'response'      =>  [
+                    'headers'    =>  [],
+                    'body'      =>  $result
+                ]
+
+            ];
+            $this->log->insert($arg);
+            //End write log in to WP rect log;
+
             if ($http_status != 200) {
-                write_log('Tiki response error: '.json_encode($result));
                 return  $result;
             }
-
-            write_log('Tiki response success: '. json_encode($result));
 
             return $result;
         } catch (\Throwable $th) {
