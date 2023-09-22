@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('Asia/Ho_Chi_Minh');
+
 //check_permission admin dashboard order
 if (!current_user_can('admin_dashboard_order')):
     user_permission_failed_content();

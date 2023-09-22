@@ -437,7 +437,10 @@ function order_update_status(){
         exit;
     }
 
-    $order->set_log('danger',$payload_action,$commit_note);
+    $order->set_log('danger',
+        $payload_action,
+        $commit_note . '. Trạng thái đơn hàng không cho phép thao tác này');
+
     echo json_encode(array(
         'status' => false,
         'messenger' => "Trạng thái đơn hàng không cho phép thao tác này",
