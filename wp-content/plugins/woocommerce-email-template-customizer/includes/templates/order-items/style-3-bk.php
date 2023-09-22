@@ -50,6 +50,32 @@ foreach ( $items as $item_id => $item ) {
                 <!--[if mso | IE]>
                 <table width="100%" role="presentation" border="0" cellpadding="0" cellspacing="0">
                     <tr>
+                        <td class="" valign='middle' style="vertical-align:middle;width:<?php echo esc_attr($img_width)?>px;"><![endif]-->
+                <div class='viwec-responsive ' style='vertical-align:middle;display:inline-block;width: <?php echo esc_attr( $img_width ) ?>px;'>
+                    <table align="left" width="100%" border='0' cellpadding='0' cellspacing='0' style="border-collapse: collapse;font-size: 0;">
+                        <tr>
+                            <td valign="middle" style="font-size: 0;">
+                                <!--[if mso ]>
+                                <?php $image   = sprintf( "<img width='%s' src='%s' style='width: 100%%;max-width: 100%%;'>",esc_attr( $img_width ), esc_url( $img_url ) ); ?>
+                                <![endif]-->
+                                <a href="<?php echo esc_url( $p_url ) ?>" style="width: <?php echo esc_attr( $img_width ) ?>px;">
+									<?php
+									if ( function_exists( 'fpd_get_option' ) && fpd_get_option( 'fpd_order_product_thumbnail' ) ) {
+										ob_start();
+										do_action( 'woocommerce_order_item_meta_start', $item_id, $item, $order, false );
+										$img = ob_get_clean();
+										$img = str_replace( [ 'border: 1px solid #ccc; float: left; margin-right: 5px; margin-bottom: 5px; max-width: 30%;' ], '', trim( $img ) );
+										echo( $img );
+									} else {
+										echo apply_filters( 'viwec_order_item_thumbnail', $image, $item );
+									}
+									?>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <!--[if mso | IE]></td>
                 <td class="" valign='middle' style="vertical-align:middle;width: <?php echo esc_attr($name_width)?>px;">
                 <![endif]-->
                 <div class='viwec-responsive'
