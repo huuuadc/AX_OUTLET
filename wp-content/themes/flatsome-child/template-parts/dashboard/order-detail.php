@@ -123,6 +123,10 @@ else:
                                     <b id="order_payment_status_<?php echo $order_id?>">
                                     <span class="badge <?php echo $order_ax->get_payment_class_name() ?>"><?php echo $order_ax->get_payment_title()?>
                                     </span>
+                                    </b><br>
+                                    <b id="order_ls_status_<?php echo $order_id?>">
+                                    <span class="badge <?php echo $order_ax->get_ls_class_name() ?>"><?php echo $order_ax->get_ls_title()?>
+                                    </span>
                                     </b>
                                 </div>
                                 <div id="card_order_type" class="col-sm-4 invoice-col no-print">

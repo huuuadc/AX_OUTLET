@@ -87,6 +87,17 @@ class OMS_ORDER extends WC_Order
         ]
     ];
 
+    public array $LS_STATUS = [
+        'yes' => [
+            'title' => 'Đã chuyển qua ls retail',
+            'class_name' => 'badge-success'
+        ],
+        'no' => [
+            'title' => 'Chưa chuyển qua ls retail',
+            'class_name' => 'badge-danger'
+        ]
+    ];
+
 
     function __construct($order = 0)
     {
@@ -329,6 +340,33 @@ class OMS_ORDER extends WC_Order
     public function get_payment_class_name(): string
     {
         return $this->PAYMENT_STATUS[$this->get_payment_status()]['class_name'];
+    }
+
+
+    public function set_ls_status(string $ls_status = 'yes'): bool
+    {
+        update_post_meta($this->get_id(), 'ls_status', $ls_status);
+        return true;
+    }
+
+    public function get_ls_status(): string
+    {
+        $ls_status = $this->get_meta('ls_status', true, 'value');
+        if (!isset($this->LS_STATUS[$ls_status])) {
+            $ls_status = 'no';
+        }
+
+        return $ls_status;
+    }
+
+    public function get_ls_title(): string
+    {
+        return $this->LS_STATUS[$this->get_ls_status()]['title'];
+    }
+
+    public function get_ls_class_name(): string
+    {
+        return $this->LS_STATUS[$this->get_ls_status()]['class_name'];
     }
 
     public function get_status_title()
