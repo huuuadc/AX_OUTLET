@@ -56,9 +56,10 @@ function post_invoice_ls_retail(){
     //get old status
     $old_status     = $order->get_status('value');
 
-
     if ($old_status != 'request'){
-        $order->set_log('danger',$payload_action,$commit_note);
+        $order->set_log('danger',
+            $payload_action,
+            $commit_note . '. Trạng thái không cho thực hiện thao tác');
         echo response(false,'Trạng thái không cho thực hiện thao tác',[]);
         exit();
     }
@@ -74,7 +75,7 @@ function post_invoice_ls_retail(){
     //
     //
 
-    if ($_POST['payload_action'] === 'post_invoice_ls_retail'){
+    if ($_POST['payload_action'] === 'post_invoice_ls_retail' && $order->get_ls_status() == 'no'){
 
         //===========================================================
         //===========================================================
@@ -368,20 +369,17 @@ function post_invoice_ls_retail(){
         $flag_transaction = false;
 
         $response_ls_payment = $ls_api->post_payment_outlet((array)$data_request_payment);
-//        write_log($data_request_payment);
-//        $response_ls_payment = '';
 
         if( isset($response_ls_payment->Responcode) && $response_ls_payment->Responcode == 200) $flag_payment = true;
 
         $response_ls_transaction = $ls_api->post_transaction_outlet($data_request_transaction);
-//        write_log($data_request_transaction);
-//        $response_ls_transaction = '';
 
         if( isset($response_ls_transaction->Responcode) && $response_ls_transaction->Responcode == 200) $flag_transaction = true;
 
         if ($flag_payment && $flag_transaction){
             $order->set_log('success','post_ls','Thành công');
-            echo response(true,'Đã post ls retail',[]);
+            $order->set_ls_status();
+            echo response(true,'Đã chuyển qua ls retail',['status'=>'Đã chuyển qua ls retail', 'class_status'=>'success']);
         }else{
             if (!$flag_payment && !$flag_transaction) $order->set_log(
                 'danger',
@@ -395,7 +393,8 @@ function post_invoice_ls_retail(){
                 'danger',
                 'post_ls',
                 'Post header thành công, detail post lỗi. Detail response: ' . json_encode($response_ls_transaction));
-            echo response(false,'Post LS không thành công xin kiểm tra lại dữ liệu đơn hàng',[]);
+            $order->set_ls_status('no');
+            echo response(false,'Chuyển qua LS Retail không thành công xin kiểm tra lại dữ liệu đơn hàng',[]);
         }
 
         exit;

@@ -625,8 +625,7 @@ function post_invoice_ls_retail( orderId = ''){
             if (isJsonString(data)){
                 const rep = JSON.parse(data);
                 if (rep.status){
-
-                    // if (rep.data.order_status)  $(`#order_status_${id}`).html(`<span class="badge badge-${class_status}">${rep.data.order_status}</span> `);
+                    if (rep.data.status)  $(`#order_ls_status_${orderId}`).html(`<span class="badge badge-${rep.data.class_status}">${rep.data.status}</span> `);
                     $(document).Toasts('create', {
                         class: 'bg-success',
                         title: 'Success',
