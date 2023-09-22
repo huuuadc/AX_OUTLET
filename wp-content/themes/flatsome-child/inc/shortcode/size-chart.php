@@ -28,8 +28,8 @@ function add_size_chart_with_brand($atts){
     $brands = wp_get_post_terms( $product_id, 'brand' );
     $genders = wp_get_post_terms( $product_id, 'gender' );
 
-    $brand_id = $brands[0]->term_id;
-    $gender_id = $genders[0]->term_id;
+    $brand_id = $brands[0]->term_id ?? '';
+    $gender_id = $genders[0]->term_id ?? '';
 
     $categories = get_the_terms( $product_id, 'product_cat' );
     $categories_ids = array();
