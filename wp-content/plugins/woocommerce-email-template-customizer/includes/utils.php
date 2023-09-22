@@ -484,11 +484,12 @@ class Utils {
 					$user = $object->get_user();
 
 					$shortcodes['{user_login}'] = $user->user_login ?? '';
+					$login = $user->user_login ?? '';
 
                     $gender = '';
-                    if($user->user_login){
-                        $user_email = $object->user_email;
-                        $gender = get_user_meta($user_email, 'user_registration_user_gender', true);
+                    if($login!==''){
+                        $user_id = $object->user_id;
+                        $gender = get_user_meta($user_id, 'user_registration_user_gender', true);
                     }
 
 					$shortcodes['{order_id}']                   = $object->get_id();
