@@ -55,7 +55,8 @@ function order_update_payment_status(){
 
 
     if ($old_status == 'cancelled'){
-        $order->set_log('danger',$payload_action,$commit_note);
+        $order->set_log('danger',$payload_action
+            ,$commit_note. '. Đơn hàng đã bị hủy không cho cập nhật lại trạng thái thanh toán');
         echo response(false,'Đơn hàng đã bị hủy không cho cập nhật lại trạng thái thanh toán',[]);
         exit();
     }
