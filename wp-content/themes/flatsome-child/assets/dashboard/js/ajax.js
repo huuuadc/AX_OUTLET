@@ -165,7 +165,6 @@ function send_update_status(id = '', status = ''){
 
         },
         success: function (data){
-            console.log(data)
             if (isJsonString(data)){
                 const rep = JSON.parse(data);
                 if (rep.status){
@@ -245,7 +244,6 @@ function send_update_payment(id = ''){
 
         },
         success: function (data){
-            console.log(data)
             if (isJsonString(data)){
                 const rep = JSON.parse(data);
                 if (rep.status){
@@ -272,7 +270,6 @@ function send_update_payment(id = ''){
                     })
                 }
             }else {
-                console.log(data)
                 $(document).Toasts('create', {
                     class: 'bg-danger',
                     title: 'Error',
@@ -621,7 +618,6 @@ function post_invoice_ls_retail( orderId = ''){
 
         },
         success: function (data){
-            console.log(data)
             if (isJsonString(data)){
                 const rep = JSON.parse(data);
                 if (rep.status){
@@ -645,7 +641,6 @@ function post_invoice_ls_retail( orderId = ''){
                     })
                 }
             }else {
-                console.log(data)
                 $(document).Toasts('create', {
                     class: 'bg-danger',
                     title: 'Error',
