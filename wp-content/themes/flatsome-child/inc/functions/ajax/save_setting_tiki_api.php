@@ -42,6 +42,32 @@ function save_setting_tiki_api()
         update_option('tiki_access_token',$post->tiki_access_token, '','no');
     }
 
+    $log = new WP_REST_API_Log_DB();
+
+    $arg = [
+        'route'         =>  '/admin-dashboard?save_setting_tiki_api',
+        'source'        =>  'admin_dashboard',
+        'method'        =>  'POST',
+        'status'        =>  '200',
+        'request'       =>  [
+            'headers'    =>  [],
+            'query_params'    =>  [],
+            'body_params'    =>  $post,
+            'body'      =>  json_encode($_POST),
+        ],
+        'response'      =>  [
+            'headers'    =>  [],
+            'body'      =>  array(
+                'status' => '200',
+                'messenger' => 'Save success',
+                'data' => []
+            )
+        ]
+
+    ];
+
+    $log->insert($arg);
+
     echo json_encode(array(
         'status' => '200',
         'messenger' => 'Save success',
