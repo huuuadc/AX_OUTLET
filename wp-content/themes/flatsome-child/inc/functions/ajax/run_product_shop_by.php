@@ -18,6 +18,32 @@ function run_product_shop_by()
 
     $post = json_decode(json_encode ($_POST));
 
+    $log = new WP_REST_API_Log_DB();
+
+    $arg = [
+        'route'         =>  '/admin-dashboard?run_product_shop_by',
+        'source'        =>  'admin_dashboard',
+        'method'        =>  'POST',
+        'status'        =>  '200',
+        'request'       =>  [
+            'headers'    =>  [],
+            'query_params'    =>  [],
+            'body_params'    =>  $post,
+            'body'      =>  json_encode($_POST),
+        ],
+        'response'      =>  [
+            'headers'    =>  [],
+            'body'      =>  array(
+                'status' => '200',
+                'messenger' => 'Save success',
+                'data' => []
+            )
+        ]
+
+    ];
+
+    $log->insert($arg);
+
     if ($post->action_payload == 'action_last_piece') {
 
         $last_piece_qty = (int) $post->last_piece_qty ?? 1;
