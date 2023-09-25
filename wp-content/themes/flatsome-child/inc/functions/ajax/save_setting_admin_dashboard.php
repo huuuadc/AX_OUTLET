@@ -41,6 +41,32 @@ function save_admin_dashboard_setting()
         update_option('admin_dashboard_is_check_stock',$post->is_check_stock , 'no');
     }
 
+    $log = new WP_REST_API_Log_DB();
+
+    $arg = [
+        'route'         =>  '/admin-dashboard?save_setting_admin_dashboard',
+        'source'        =>  'admin_dashboard',
+        'method'        =>  'POST',
+        'status'        =>  '200',
+        'request'       =>  [
+            'headers'    =>  [],
+            'query_params'    =>  [],
+            'body_params'    =>  $post,
+            'body'      =>  json_encode($_POST),
+        ],
+        'response'      =>  [
+            'headers'    =>  [],
+            'body'      =>  array(
+                'status' => '200',
+                'messenger' => 'Save success',
+                'data' => []
+            )
+        ]
+
+    ];
+
+    $log->insert($arg);
+
     echo json_encode(array(
         'status' => '200',
         'messenger' => 'Save success',
