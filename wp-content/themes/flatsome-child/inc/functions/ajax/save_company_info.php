@@ -53,6 +53,32 @@ function save_company_info()
         update_option('web_company_address',$post->web_company_address, 'no');
     }
 
+    $log = new WP_REST_API_Log_DB();
+
+    $arg = [
+        'route'         =>  '/admin-dashboard?save_company_info',
+        'source'        =>  'admin_dashboard',
+        'method'        =>  'POST',
+        'status'        =>  '200',
+        'request'       =>  [
+            'headers'    =>  [],
+            'query_params'    =>  [],
+            'body_params'    =>  $post,
+            'body'      =>  json_encode($_POST),
+        ],
+        'response'      =>  [
+            'headers'    =>  [],
+            'body'      =>  array(
+                'status' => '200',
+                'messenger' => 'Save success',
+                'data' => []
+            )
+        ]
+
+    ];
+
+    $log->insert($arg);
+
     echo json_encode(array(
         'status' => '200',
         'messenger' => 'Save success',
