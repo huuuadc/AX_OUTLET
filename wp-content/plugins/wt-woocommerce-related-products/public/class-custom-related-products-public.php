@@ -278,8 +278,10 @@ class Custom_Related_Products_Public {
             $mobile_view = isset($crp_view_port[2]) && !empty($crp_view_port[2]) ?  $crp_view_port[2] : 1;
             ?>
             <style>
-                .woocommerce-page .products.wt-related-products .owl-item .col {
-                    width: 60vw !important;
+                @media screen and (max-width: 767px){
+                    .woocommerce-page .products.wt-related-products .owl-item .col {
+                        width: 60vw !important;
+                    }
                 }
             </style>
                 <script>
