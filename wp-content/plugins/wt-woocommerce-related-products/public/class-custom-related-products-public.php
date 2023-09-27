@@ -277,6 +277,11 @@ class Custom_Related_Products_Public {
             $tab_view = isset($crp_view_port[1]) && !empty($crp_view_port[1]) ?  $crp_view_port[1] : 2;
             $mobile_view = isset($crp_view_port[2]) && !empty($crp_view_port[2]) ?  $crp_view_port[2] : 1;
             ?>
+            <style>
+                .woocommerce-page .products.wt-related-products .owl-item .col {
+                    width: 60vw !important;
+                }
+            </style>
                 <script>
                     jQuery(document).ready(function($) {
                             $('.owl-carousel').owlCarousel({
@@ -295,12 +300,16 @@ class Custom_Related_Products_Public {
                                     margin: 15,
                                     nav: false,
                                     dots: true,
+                                    autoWidth: true,
+                                    loop: true,
                                 },
                                 600: {
                                   items: <?php echo $tab_view; ?>,
                                     margin: 15,
                                     nav: false,
                                     dots: true,
+                                    autoWidth: true,
+                                    loop: true,
                                 },
                                 1000: {
                                   items: <?php echo $desktop_view; ?>
