@@ -272,10 +272,10 @@ class WC_Checkout {
 
 		if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) {
 			$this->fields['account']['account_username'] = array(
-				'type'         => 'text',
-				'label'        => __( 'Account username', 'woocommerce' ),
+				'type'         => 'hidden',
+				//'label'        => __( 'Account username', 'woocommerce' ),
 				'required'     => true,
-				'placeholder'  => esc_attr__( 'Username', 'woocommerce' ),
+				//'placeholder'  => esc_attr__( 'Username', 'woocommerce' ),
 				'autocomplete' => 'username',
 			);
 		}
