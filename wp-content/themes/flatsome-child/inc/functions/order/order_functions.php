@@ -130,8 +130,6 @@ function verify_signature($payload = '', $secret = '',$x_request = ''):bool
 add_filter('wc_order_types','transfer_order_add');
 function transfer_order_add($order_types)
 {
-    write_log($_SERVER);
-    write_log($_POST);
     if (isset($_SERVER['REQUEST_URI'])
         && str_contains( $_SERVER['REQUEST_URI'] ,'/admin-dashboard'))
         $order_types['']  = 'transfer_order';

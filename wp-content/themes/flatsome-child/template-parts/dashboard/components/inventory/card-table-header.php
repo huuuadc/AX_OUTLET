@@ -16,6 +16,7 @@ $transfer_ids = $args['ids'];
     <div class="card-header">
         Phiếu điều chuyển hàng
         <div class="card-tools">
+            <a type="button" class="btn btn-primary" onclick="transfer_order_add_new()" href="javascript:void(0)">Thêm phiếu</a>
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
             </button>
@@ -40,9 +41,9 @@ $transfer_ids = $args['ids'];
                     <td>#<?php echo $transfer_order->get_id() ?></td>
                     <td><?php echo $transfer_order->get_title() ?></td>
                     <td><?php echo $transfer_order->get_date_created() ?></td>
-                    <td><?php echo $transfer_order->get_user() ?></td>
+                    <td><?php echo $transfer_order->get_customer_id() ?></td>
                     <td><?php echo $transfer_order->get_status() ?></td>
-                    <td><a href="javasrcipt:void(0)"><span class="badge badge-danger">Xóa phiếu</span></a></td>
+                    <td><a href="javasrcipt:void(0)"><span class="badge badge-danger">Hủy phiếu</span></a></td>
                 </tr>
             <?php endforeach;?>
             </tbody>
