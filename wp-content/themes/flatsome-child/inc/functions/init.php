@@ -49,3 +49,5 @@ require (__DIR__.'/ajax/post_invoice_ls_retail.php');
 require (__DIR__.'/checkout/add_to_cart_check_stock.php');
 require (__DIR__.'/checkout/checkout_check_stock.php');
 require (__DIR__.'/class-user.php');
+require (__DIR__.'/class-oms-to.php');
+require (__DIR__.'/ajax/change_transfer_order.php');

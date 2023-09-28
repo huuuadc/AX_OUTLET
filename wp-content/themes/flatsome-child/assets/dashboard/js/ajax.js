@@ -12,7 +12,7 @@ function generate_database_address(){
             action: 'generate_database_address'
         },
         beforeSend: function (){
-            $('#card_create_table').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+            $('#card_create_table').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
 
         },
         success: function (data){
@@ -74,7 +74,7 @@ function save_setting_tiki_api(){
             tiki_access_token,
         },
         beforeSend: function (){
-            $('#card_setting_tiki_api').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+            $('#card_setting_tiki_api').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
         },
         success: function (data){
             const rep = JSON.parse(data);
@@ -113,7 +113,7 @@ function get_access_token_tiki(){
                     action  :   'get_access_token_tiki'
         },
         beforeSend  :   function (){
-            $('#card_setting_tiki_api').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+            $('#card_setting_tiki_api').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
         },
         success     :   function (data){
             const rep = JSON.parse(data);
@@ -161,7 +161,7 @@ function send_update_status(id = '', status = ''){
 
         },
         beforeSend: function (){
-            $('#card_orders').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+            $('#card_orders').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
 
         },
         success: function (data){
@@ -240,7 +240,7 @@ function send_update_payment(id = ''){
 
         },
         beforeSend: function (){
-            $('#card_orders').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+            $('#card_orders').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
 
         },
         success: function (data){
@@ -330,7 +330,7 @@ function save_company_info(){
             web_company_address,
         },
         beforeSend: function (){
-            $('#card_information_company').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+            $('#card_information_company').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
         },
         success :   function (data){
             const rep = JSON.parse(data);
@@ -448,7 +448,7 @@ function save_admin_dashboard_setting(){
             is_check_stock
         },
         beforeSend: function (){
-            $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+            $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
         },
         success :   function (data){
             const rep = JSON.parse(data);
@@ -497,7 +497,7 @@ function post_create_shipment(){
             order_id
         },
         beforeSend: function (){
-            $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+            $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
         },
         success :   function (data){
             const rep = JSON.parse(data);
@@ -560,7 +560,7 @@ function run_product_shop_by(action){
             checkbox_remove
         },
         beforeSend: function (){
-            $('#card_task_scheduler').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+            $('#card_task_scheduler').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
         },
         success :   function (data){
             const rep = JSON.parse(data);
@@ -614,7 +614,7 @@ function post_invoice_ls_retail( orderId = ''){
 
         },
         beforeSend: function (){
-            $('#card_orders').append('<div class="overlay"><i class="fas fa-2x fa-sync-alt"></i></div>')
+            $('#card_orders').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
 
         },
         success: function (data){
@@ -658,6 +658,33 @@ function post_invoice_ls_retail( orderId = ''){
 
             console.log("ERROR",errorThrown)
 
+        }
+    })
+}
+
+
+function change_transfer_order(transfer_id = ''){
+
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        data:{
+            action: 'change_transfer_order',
+            payload_action: 'change_transfer_order',
+            transfer_id
+        },
+        beforeSend: function (){
+
+            $('#card_table_line').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+
+        },
+        success: function (data){
+            $(`#inventory_card_line`).html(`${data}`);
+        },
+        complete: function (){
+        },
+        error: function(errorThrown){
+            console.log("ERROR",errorThrown)
         }
     })
 }

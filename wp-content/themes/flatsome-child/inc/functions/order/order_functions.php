@@ -125,3 +125,17 @@ function verify_signature($payload = '', $secret = '',$x_request = ''):bool
     write_log('Tiki TNSL Webhook fai: '.$hash_mac .' - '.$x_request);
     return false;
 }
+
+//Add type for order check post type
+add_filter('wc_order_types','transfer_order_add');
+function transfer_order_add($order_types)
+{
+    write_log($_SERVER);
+    write_log($_POST);
+    if (isset($_SERVER['REQUEST_URI'])
+        && str_contains( $_SERVER['REQUEST_URI'] ,'/admin-dashboard'))
+        $order_types['']  = 'transfer_order';
+    if (isset($_POST['payload_action'])) $order_types['']  = 'transfer_order';
+
+    return $order_types;
+}
