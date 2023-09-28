@@ -59,7 +59,6 @@ defined( 'ABSPATH' ) || exit;
 		<?php do_action( 'woocommerce_before_checkout_registration_form', $checkout ); ?>
 
 		<?php if ( $checkout->get_checkout_fields( 'account' ) ) : ?>
-
 			<div class="create-account">
 				<?php foreach ( $checkout->get_checkout_fields( 'account' ) as $key => $field ) : ?>
 					<?php woocommerce_form_field( $key, $field, $checkout->get_value( $key ) ); ?>
@@ -67,8 +66,36 @@ defined( 'ABSPATH' ) || exit;
 				<div class="clear"></div>
 			</div>
 
+            <?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ): ?>
+            <script>
+                jQuery(document).ready(function($){
+                    var billing_phone = $('input#billing_phone');
+                    var account_username = $('input#account_username');
+                    $(window).load(function(){
+                        if(billing_phone.val()!==''){
+                            account_username.val(billing_phone.val());
+                        }
+                    });
+                    $('body').on('change',billing_phone,function(){
+                        var get_billing_phone = billing_phone.val();
+                        account_username.val(get_billing_phone);
+                    });
+                    $('form.checkout').on('submit',function(){
+                        if(billing_phone.val()!==''){
+                            account_username.val(billing_phone.val());
+                        }
+                    });
+                });
+            </script>
+            <?php endif; ?>
 		<?php endif; ?>
 
 		<?php do_action( 'woocommerce_after_checkout_registration_form', $checkout ); ?>
 	</div>
 <?php endif; ?>
+<style>
+    .woocommerce-message.message-wrapper, .woocommerce-error.message-wrapper{
+        bottom:auto !important;
+        z-index:3000;
+    }
+</style>
