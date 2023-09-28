@@ -682,6 +682,18 @@ function change_transfer_order(transfer_id = ''){
             $(`#inventory_card_line`).html(`${data}`);
         },
         complete: function (){
+            // $('.table_simple_non_btn').DataTable({
+            //     "paging": true,
+            //     "lengthChange": false,
+            //     "searching": true,
+            //     "ordering": false,
+            //     "info": false,
+            //     "autoWidth": true,
+            //     "responsive": true,
+            //     "language": {
+            //         "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+            //     },
+            // });
         },
         error: function(errorThrown){
             console.log("ERROR",errorThrown)
