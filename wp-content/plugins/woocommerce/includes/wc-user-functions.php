@@ -54,7 +54,7 @@ if ( ! function_exists( 'wc_create_new_customer' ) ) {
 		}
 
 		if ( email_exists( $email ) ) {
-			return new WP_Error( 'registration-error-email-exists', apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. <a href="#" class="showlogin">Please log in.</a>', 'woocommerce' ), $email ) );
+			return new WP_Error( 'registration-error-email-exists', apply_filters( 'woocommerce_registration_error_email_exists', __( 'Đã có tài khoản đăng ký với email này. Vui lòng đăng nhập hoặc sử dụng email khác để đăng ký.', 'woocommerce' ), $email ) );
 		}
 
 		if ( 'yes' === get_option( 'woocommerce_registration_generate_username', 'yes' ) && empty( $username ) ) {
@@ -68,7 +68,7 @@ if ( ! function_exists( 'wc_create_new_customer' ) ) {
 		}
 
 		if ( username_exists( $username ) ) {
-			return new WP_Error( 'registration-error-username-exists', __( 'An account is already registered with that username. Please choose another.', 'woocommerce' ) );
+			return new WP_Error( 'registration-error-username-exists', __( 'Đã có tài khoản đăng ký với số điện thoại này. Vui lòng đăng nhập hoặc sử dụng số điện thoại khác để đăng ký.', 'woocommerce' ) );
 		}
 
 		// Handle password creation.
