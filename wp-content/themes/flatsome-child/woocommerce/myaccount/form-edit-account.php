@@ -39,8 +39,8 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
     <div class="clear"></div>
 
     <p class="woocommerce-form-row woocommerce-form-row--last form-row form-row-first">
-        <label for=""><?php esc_html_e( 'Phone', 'woocommerce' ); ?>&nbsp</label>
-        <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="" id="account_phone" autocomplete="family-name" value="<?php echo esc_attr( $user->billing_phone ); ?>" disabled="disabled" />
+        <label for=""><?php esc_html_e( 'Số điện thoại đăng nhập', 'woocommerce' ); ?>&nbsp</label>
+        <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="" id="account_phone" autocomplete="family-name" value="<?php echo esc_attr( $user->user_login ); ?>" disabled="disabled" />
     </p>
     <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-last">
         <label for=""><?php esc_html_e( 'Email address', 'woocommerce' ); ?>&nbsp</label>
