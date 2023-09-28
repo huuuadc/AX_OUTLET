@@ -39,7 +39,7 @@ global $woocommerce, $wp, $post;
 				 *
 				 * @return string
 				 */
-				echo esc_html( apply_filters( 'yith_wcmap_user_name_in_menu', $current_user->display_name, $current_user ) );
+				echo esc_html( apply_filters( 'yith_wcmap_user_name_in_menu', $current_user->first_name, $current_user ) ) .' '.esc_html( apply_filters( 'yith_wcmap_user_name_in_menu', $current_user->last_name, $current_user ) );
 				?>
 			</span>
 			<span class="user-email"><?php echo esc_html( $current_user->user_email ); ?></span>
