@@ -4,7 +4,7 @@ use \OMS\OMS_TO;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! $args || !$args['ids'] ) {
+if ( ! $args ) {
     return;
 }
 
