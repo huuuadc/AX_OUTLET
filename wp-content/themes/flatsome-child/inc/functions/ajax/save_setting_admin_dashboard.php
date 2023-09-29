@@ -7,11 +7,7 @@ function save_admin_dashboard_setting()
 {
 
     if(!isset($_POST['action']) && $_POST['action'] !== 'save_admin_dashboard_setting') {
-        echo json_encode(array(
-            'status' => '500',
-            'messenger' => 'No action map',
-            'data' => []
-        ));;
+        echo response(false,'No action map',[]);
         exit;
     }
 
@@ -67,11 +63,7 @@ function save_admin_dashboard_setting()
 
     $log->insert($arg);
 
-    echo json_encode(array(
-        'status' => '200',
-        'messenger' => 'Save success',
-        'data' => []
-    ));;
+    echo response(true,'Save success',[]);
 
     exit;
 

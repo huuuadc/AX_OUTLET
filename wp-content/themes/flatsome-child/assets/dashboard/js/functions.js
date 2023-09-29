@@ -185,6 +185,8 @@ $(function () {
 
     $.widget.bridge('uibutton', $.ui.button)
 
+    bsCustomFileInput.init();
+
 
 })
 
