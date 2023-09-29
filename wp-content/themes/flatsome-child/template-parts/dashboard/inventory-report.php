@@ -55,4 +55,10 @@ if (isset($_GET['delete']) && file_exists($export->BASEDIR.$export->INVENTORY_DI
     </div>
 </div>
 
+    <div class="row">
+        <div class="col-12">
+                    <?php wc_get_template('template-parts/dashboard/components/card-table-product_price.php'); ?>
+        </div>
+    </div>
+
 <?php endif;
