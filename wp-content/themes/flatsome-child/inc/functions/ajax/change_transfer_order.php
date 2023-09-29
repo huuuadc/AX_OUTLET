@@ -25,56 +25,59 @@ function change_transfer_order()
 
     $transfer_order = new OMS_TO($transfer_id);
 
-//    $transfer_order->set_customer_id(get_current_user_id());
-//
-//    $product = wc_get_product('29461');
-//
-//    $transfer_order->add_product($product,-100);
-
-//      wc_reduce_stock_levels($transfer_order);
-
-//      $product_id = wc_get_product_id_by_sku('1138040003');
-//      write_log($product_id);
-//    $product = wc_get_product($product_id);
-//        $transfer_order->add_product($product,3);
-////
-////      write_log($product);
-//    $product_id = wc_get_product_id_by_sku('1119704');
-//    write_log($product_id);
-//    $product = wc_get_product($product_id);
-//    $transfer_order->add_product($product,4);
-//
-//      write_log($product);
-//      $product = wc_get_product_id_by_sku('123');
-//
-//      write_log($product);
-
-//    $transfer_order->get_order_number();
-
-//    foreach ($transfer_order->get_items() as $item_id => $item) {
-//        // Get an instance of corresponding the WC_Product object
-//        $product = $item->get_product();
-//        $qty = $item->get_quantity(); // Get the item quantity
-//        wc_update_product_stock($product, $qty, 'increase');
-//    }
-
-//    $transfer_order->update_status('wc-pending');
-//    $transfer_order->save();
-
-//    foreach ($transfer_order->get_items() as $item){
-//        wc_delete_order_item($item->get_id());
-//    }
-
     //
     //
-    // Action payment order
+    // Action load line when header change
     //
     //
 
     if ($_POST['payload_action'] === 'change_transfer_order'){
         wc_get_template('template-parts/dashboard/components/inventory/card-table-line.php',['id'=>$transfer_id]);
         exit;
+    }
+
+    //
+    //
+    // Action change status to cancelled
+    //
+    //
+
+    if ($_POST['payload_action'] === 'change_transfer_order_cancelled' && $transfer_order->get_status() == 'pending'){
+        $transfer_order->update_status('wc-cancelled');
+        wc_get_template('template-parts/dashboard/components/inventory/card-table-line.php',['id'=>$transfer_id]);
+        exit;
 
     }
+
+    //
+    //
+    // Action change status to completed
+    //
+    //
+
+    if ($_POST['payload_action'] === 'change_transfer_order_completed' && $transfer_order->get_status() == 'pending'){
+
+        foreach ($transfer_order->get_items() as $item_id => $item) {
+            // Get an instance of corresponding the WC_Product object
+            $product = $item->get_product();
+            $qty = $item->get_quantity(); // Get the item quantity
+            wc_update_product_stock($product, $qty, 'increase');
+        }
+
+        $transfer_order->update_status('wc-completed');
+        wc_get_template('template-parts/dashboard/components/inventory/card-table-line.php',['id'=>$transfer_id]);
+        exit;
+
+    }
+
+    if($payload_action === 'change_transfer_order_line_delete'){
+        //$transfer_id is item id of line
+        wc_delete_order_item($transfer_id);
+        wc_get_template('template-parts/dashboard/components/inventory/card-table-line.php',['id'=>$transfer_id]);
+        exit;
+    }
+
+    echo "Không thực hiện được thao tác này";
+    exit;
 
 }

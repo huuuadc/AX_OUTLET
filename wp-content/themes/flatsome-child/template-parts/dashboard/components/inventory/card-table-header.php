@@ -8,15 +8,17 @@ if ( ! $args || !$args['ids'] ) {
     return;
 }
 
-$transfer_ids = $args['ids'];
+$transfer_ids   = $args['ids'];
+$new_id         = $args['new_id'] ?? '0';
+$count          =   0;
 
 ?>
 
-<div class="card">
+<div id="card_table_header" class="card">
     <div class="card-header">
         Phiếu điều chuyển hàng
         <div class="card-tools">
-            <a type="button" class="btn btn-primary" onclick="transfer_order_add_new()" href="javascript:void(0)">Thêm phiếu</a>
+            <a type="button" class="btn btn-primary" onclick="transfer_order_add_new()" href="javascript:void(0)">Thêm phiếu mới</a>
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
             </button>
@@ -26,6 +28,7 @@ $transfer_ids = $args['ids'];
         <table class="table table-bordered table-striped dataTable dtr-inline table_simple_non_btn">
             <thead>
             <tr>
+                <th>STT</th>
                 <th>Mã phiếu</th>
                 <th>Tên phiếu</th>
                 <th>Ngày tạo</th>
@@ -37,13 +40,17 @@ $transfer_ids = $args['ids'];
             <tbody>
             <?php foreach ($transfer_ids as $id) :?>
             <?php $transfer_order = new OMS_TO($id) ?>
-                <tr id="transfer_order_<?php echo $id?>"  onclick="change_transfer_order('<?php echo $id ?>')" >
-                    <td>#<?php echo $transfer_order->get_id() ?></td>
+                <tr <?php if($id == $new_id) echo 'class="bg-info bg-gradient"' ?> id="transfer_order_<?php echo $id?>"  onclick="change_transfer_order('<?php echo $id ?>','change_transfer_order')" >
+                    <td><?php echo ++$count ?></td>
+                    <td>#<?php echo $transfer_order->get_id(); ?></td>
                     <td><?php echo $transfer_order->get_title() ?></td>
-                    <td><?php echo $transfer_order->get_date_created() ?></td>
-                    <td><?php echo $transfer_order->get_customer_id() ?></td>
-                    <td><?php echo $transfer_order->get_status() ?></td>
-                    <td><a href="javasrcipt:void(0)"><span class="badge badge-danger">Hủy phiếu</span></a></td>
+                    <td><?php echo wp_date( get_date_format(), strtotime($transfer_order->get_date_created())) ?></td>
+                    <td><?php echo $transfer_order->get_billing_first_name() ?></td>
+                    <td><span class="badge <?php echo $transfer_order->get_status_class_name()?>"><?php echo $transfer_order->get_status_title() ?></span></td>
+                    <td>
+                        <a type="button" class="btn btn-danger" href="javascript:void(0)" onclick="change_transfer_order('<?php echo $id ?>', 'change_transfer_order_cancelled')">Hủy phiếu</a>
+                        <a type="button" class="btn btn-success" href="javascript:void(0)" onclick="change_transfer_order('<?php echo $id ?>','change_transfer_order_completed')">Nhập tồn</a>
+                    </td>
                 </tr>
             <?php endforeach;?>
             </tbody>

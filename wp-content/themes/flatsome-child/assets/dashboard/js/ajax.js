@@ -334,7 +334,7 @@ function save_company_info(){
         },
         success :   function (data){
             const rep = JSON.parse(data);
-            if (rep.status === '200') {
+            if (rep.status) {
                 $(document).Toasts('create', {
                     class: 'bg-success',
                     title: 'Success',
@@ -452,7 +452,7 @@ function save_admin_dashboard_setting(){
         },
         success :   function (data){
             const rep = JSON.parse(data);
-            if (rep.status === '200') {
+            if (rep.status) {
                 $(document).Toasts('create', {
                     class: 'bg-success',
                     title: 'Success',
@@ -501,7 +501,7 @@ function post_create_shipment(){
         },
         success :   function (data){
             const rep = JSON.parse(data);
-            if (rep.success = '200') {
+            if (rep.status === '200') {
                 $(document).Toasts('create', {
                     class: 'bg-success',
                     title: 'Success',
@@ -564,7 +564,7 @@ function run_product_shop_by(action){
         },
         success :   function (data){
             const rep = JSON.parse(data);
-            if (rep.success = '200') {
+            if (rep.status) {
                 $(document).Toasts('create', {
                     class: 'bg-success',
                     title: 'Success',
@@ -679,9 +679,10 @@ function change_transfer_order(transfer_id = '', payload_action = ''){
 
         },
         success: function (data){
-            $(`#inventory_card_line`).html(`${data}`);
+                $(`#inventory_card_line`).html(`${data}`);
         },
         complete: function (){
+            $('#card_table_line>.overlay').remove()
             // $('.table_simple_non_btn').DataTable({
             //     "paging": true,
             //     "lengthChange": false,
@@ -736,4 +737,57 @@ function transfer_order_add_new(){
             console.log("ERROR",errorThrown)
         }
     })
+}
+
+function transfer_order_import_product(transfer_order_id = ''){
+    let file_input = document.getElementById('importProduct')
+    if (!file_input)           return  alert("Không thấy được tập tinh!")
+    if (!file_input.files)     return  alert("File bạn chọn không đúng định dạng");
+    if (!file_input.files[0])  return  alert("Vui lòng chọn file excel để import");
+    if (!transfer_order_id)    return  alert("Không có số phiếu");
+
+    let file_import = file_input.files[0]
+    let reader = new FileReader();
+    reader.onload = function (e){
+        let data = e.target.result;
+        let workbook = XLSX.read(data,{
+            type: 'binary'
+        });
+
+        workbook.SheetNames.forEach(function(sheetName) {
+
+            let XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+            let json_object = JSON.stringify(XL_row_object);
+            let data_products = JSON.parse(json_object)
+            $.ajax({
+                type: 'POST',
+                url: '/wp-admin/admin-ajax.php',
+                data:{
+                    action: 'transfer_order_import_product',
+                    payload_action: 'transfer_order_import_product',
+                    transfer_id: transfer_order_id,
+                    data: data_products
+                },
+                beforeSend: function (){
+                    $('#card_table_line').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+                },
+                success: function (data){
+                    $(`#inventory_card_line`).html(`${data}`);
+                },
+                complete: function (){
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                },
+                error: function(errorThrown){
+                    console.log("ERROR",errorThrown)
+                }
+            })
+        })
+    }
+
+    reader.onerror = function(ex) {
+        console.log(ex);
+    };
+    reader.readAsBinaryString(file_import);
+
 }

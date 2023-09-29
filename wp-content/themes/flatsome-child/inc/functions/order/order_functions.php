@@ -131,7 +131,7 @@ add_filter('wc_order_types','transfer_order_add');
 function transfer_order_add($order_types)
 {
     if (isset($_SERVER['REQUEST_URI'])
-        && str_contains( $_SERVER['REQUEST_URI'] ,'/admin-dashboard'))
+        && str_contains( $_SERVER['REQUEST_URI'] ,'/inventory-adjustment'))
         $order_types['']  = 'transfer_order';
     if (isset($_POST['payload_action'])) $order_types['']  = 'transfer_order';
 
