@@ -31,6 +31,9 @@
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/jszip/jszip.min.js'?>"></script>
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/datatables-buttons/js/buttons.html5.min.js'?>"></script>
     <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/datatables-buttons/js/buttons.print.min.js'?>"></script>
+    <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri().'/assets/dashboard/bs-custom-file-input/bs-custom-file-input.min.js'?>"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
 
 
 

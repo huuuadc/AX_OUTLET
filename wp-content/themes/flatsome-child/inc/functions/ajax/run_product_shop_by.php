@@ -8,11 +8,7 @@ function run_product_shop_by()
     global $wpdb;
 
     if(!isset($_POST['action']) && $_POST['action'] !== 'run_product_shop_by') {
-        echo json_encode(array(
-            'status' => '500',
-            'messenger' => 'No action map',
-            'data' => []
-        ));;
+        echo response(false,'No action map',[]);
         exit;
     }
 
@@ -75,20 +71,12 @@ function run_product_shop_by()
             update_sales_special($p->ID, $present_discount,$checkbox_remove);
         }
 
-        echo json_encode(array(
-            'status' => '200',
-            'messenger' => 'Đã cập nhật thành công',
-            'data' => []
-        ));
+        echo response(true,'Đã cập nhật thành công',[]);
         exit;
 
     }
 
-    echo json_encode(array(
-        'status' => '500',
-        'messenger' => 'Không thực hiện được thao tác',
-        'data' => []
-    ));
+    echo response(false,'Không thực hiện được thao tác',[]);
 
     exit;
 
