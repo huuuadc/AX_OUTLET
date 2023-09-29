@@ -334,7 +334,7 @@ function save_company_info(){
         },
         success :   function (data){
             const rep = JSON.parse(data);
-            if (rep.success = '200') {
+            if (rep.status === '200') {
                 $(document).Toasts('create', {
                     class: 'bg-success',
                     title: 'Success',
@@ -452,7 +452,7 @@ function save_admin_dashboard_setting(){
         },
         success :   function (data){
             const rep = JSON.parse(data);
-            if (rep.success = '200') {
+            if (rep.status === '200') {
                 $(document).Toasts('create', {
                     class: 'bg-success',
                     title: 'Success',
@@ -663,14 +663,14 @@ function post_invoice_ls_retail( orderId = ''){
 }
 
 
-function change_transfer_order(transfer_id = ''){
+function change_transfer_order(transfer_id = '', payload_action = ''){
 
     $.ajax({
         type: 'POST',
         url: '/wp-admin/admin-ajax.php',
         data:{
             action: 'change_transfer_order',
-            payload_action: 'change_transfer_order',
+            payload_action: payload_action,
             transfer_id
         },
         beforeSend: function (){
@@ -694,6 +694,43 @@ function change_transfer_order(transfer_id = ''){
             //         "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
             //     },
             // });
+        },
+        error: function(errorThrown){
+            console.log("ERROR",errorThrown)
+        }
+    })
+}
+
+
+
+function transfer_order_add_new(){
+
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        data:{
+            action: 'transfer_order_add_new',
+            payload_action: 'transfer_order_add_new',
+        },
+        beforeSend: function (){
+            $('#card_table_header').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+        },
+        success: function (data){
+            $(`#inventory_adjustment`).html(`${data}`);
+        },
+        complete: function (){
+            $('.table_simple_non_btn').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": false,
+                "info": false,
+                "autoWidth": true,
+                "responsive": true,
+                "language": {
+                    "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+                },
+            });
         },
         error: function(errorThrown){
             console.log("ERROR",errorThrown)
