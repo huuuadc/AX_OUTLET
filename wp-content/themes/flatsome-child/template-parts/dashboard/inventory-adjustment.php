@@ -2,7 +2,6 @@
 
 $transfer_ids = wc_get_orders(['post_type'=>'transfer_order','return'=>'ids','numberposts' => -1]);
 
-if (count($transfer_ids) <= 0) return;
 ?>
 
 <div id="inventory_adjustment">
