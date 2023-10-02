@@ -7,11 +7,7 @@ function save_company_info()
 {
 
     if(!isset($_POST['action']) && $_POST['action'] !== 'save_company_info') {
-        echo json_encode(array(
-            'status' => '500',
-            'messenger' => 'No action map',
-            'data' => []
-        ));;
+        echo response(false,'No action map',[]);
         exit;
     }
 
@@ -79,11 +75,7 @@ function save_company_info()
 
     $log->insert($arg);
 
-    echo json_encode(array(
-        'status' => '200',
-        'messenger' => 'Save success',
-        'data' => []
-    ));;
+    echo response(true,'Save success',[]);
 
     exit;
 

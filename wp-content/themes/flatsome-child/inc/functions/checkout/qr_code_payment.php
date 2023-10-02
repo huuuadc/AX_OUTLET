@@ -34,7 +34,7 @@ function get_viet_qr_code($amount,$description){
     $bankName = '';
 
     if(count($gateway->account_details) > 0) {
-        $accountNo = $gateway->account_details[0]['account_name'] ?? '';
+        $accountNo = $gateway->account_details[0]['account_number'] ?? '';
         $bankName = $gateway->account_details[0]['bank_name'] ?? '';
     }
 
