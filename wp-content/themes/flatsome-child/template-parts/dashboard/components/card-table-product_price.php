@@ -33,6 +33,7 @@ $products = wc_get_products( $args );
             <tr>
                 <th>Mã sp</th>
                 <th>Offline Id</th>
+                <th>Loại sp </th>
                 <th>Tên sp</th>
                 <th class="text-right">Giá gốc</th>
                 <th class="text-right">Giá giảm</th>
@@ -57,6 +58,7 @@ $products = wc_get_products( $args );
             <tr>
                 <td><?php echo $product->get_id() ?></td>
                 <td><?php echo $product->get_meta('offline_id') ?></td>
+                <td><?php echo $product->get_type() ?></td>
                 <td><?php echo $product->get_name() ?></td>
                 <td class="text-right"><?php echo $full_price ?></td>
                 <td class="text-right"><?php echo $mark_down_price ?></td>
