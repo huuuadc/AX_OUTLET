@@ -36,6 +36,18 @@ global $wpdb;
         <div class="form-group">
             <button type="submit" onclick="run_product_shop_by('sales_special')" class="btn btn-primary">Sales độc quyền</button>
         </div>
+        <hr>
+        <div class="form-group">
+            <button type="submit" onclick="run_product_shop_by('update_sale_price')" class="btn btn-primary">Cập nhật giảm giá</button>
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="product_skus">Danh sách các sku ( Cách nhau bằng dấu ",")</label>
+            <input class="form-control" type="text" name="product_skus"/>
+        </div>
+        <div class="form-group">
+            <button type="submit" onclick="run_product_shop_by('update_check_stock_manager')" class="btn btn-primary">Cập nhật check manager stock</button>
+        </div>
     </div>
     <!-- /.card-body -->
 </div>

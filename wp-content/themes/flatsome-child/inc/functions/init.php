@@ -53,3 +53,4 @@ require (__DIR__.'/class-oms-to.php');
 require (__DIR__.'/ajax/change_transfer_order.php');
 require (__DIR__.'/ajax/transfer_order_add_new.php');
 require (__DIR__.'/ajax/transfer_order_import_product.php');
+require (__DIR__.'/product/product-listing-sort.php');

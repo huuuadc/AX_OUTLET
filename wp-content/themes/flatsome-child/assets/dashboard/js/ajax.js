@@ -538,12 +538,25 @@ function run_product_shop_by(action){
     let last_piece_qty = parseInt($('input[name="last_piece_qty"]').val())
     let present_discount = parseInt($('input[name="present_discount"]').val())
     let checkbox_remove = $('input[name="checkbox_remove"]').is(":checked")
+    let product_skus_str = ($('input[name="product_skus"]').val()).replace(/\s+/g, '')
+    let product_skus = product_skus_str ?
+        product_skus_str.split(",") : []
 
     if (action === 'sales_special' && ( !present_discount || present_discount <= 0 || present_discount > 99))
         return $(document).Toasts('create', {
-            class: 'bg-danger',
-            title: 'Danger',
+            class: 'bg-info',
+            title: 'Lỗi',
             body: 'Giá trị phần trăm giảm giá chưa đúng. Giá trị từ 1 đến 99',
+            icon: 'fas fa-info-circle',
+            autohide: true,
+            delay: 10000
+        })
+
+    if (action === 'update_check_stock_manager' && product_skus.length <= 0 )
+        return $(document).Toasts('create', {
+            class: 'bg-info',
+            title: 'Lỗi',
+            body: 'Bạn phải để mã sku hoặc danh sách sku vào!',
             icon: 'fas fa-info-circle',
             autohide: true,
             delay: 10000
@@ -557,7 +570,8 @@ function run_product_shop_by(action){
             action_payload,
             last_piece_qty,
             present_discount,
-            checkbox_remove
+            checkbox_remove,
+            product_skus
         },
         beforeSend: function (){
             $('#card_task_scheduler').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')

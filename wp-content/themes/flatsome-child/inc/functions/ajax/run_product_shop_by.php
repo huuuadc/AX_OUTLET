@@ -48,8 +48,8 @@ function run_product_shop_by()
             update_option('admin_dashboard_last_piece_qty',$last_piece_qty , 'no');
         }
 
-        $ps = $wpdb->get_results("SELECT `ID` FROM {$wpdb->prefix}posts WHERE `post_status` = 'publish' AND `post_type` = 'product'");
-        foreach ($ps as $p) {
+        $products = $wpdb->get_results("SELECT `ID` FROM {$wpdb->prefix}posts WHERE `post_status` = 'publish' AND `post_type` = 'product'");
+        foreach ($products as $p) {
             update_lastpiece_task($p->ID, $last_piece_qty);
         }
 
@@ -66,14 +66,60 @@ function run_product_shop_by()
 
         $checkbox_remove = $post->checkbox_remove == 'true';
         $present_discount = (int) $post->present_discount;
-        $ps = $wpdb->get_results("SELECT `ID` FROM {$wpdb->prefix}posts WHERE `post_status` = 'publish' AND `post_type` = 'product'");
-        foreach ($ps as $p) {
+        $products = $wpdb->get_results("SELECT `ID` FROM {$wpdb->prefix}posts WHERE `post_status` = 'publish' AND `post_type` = 'product'");
+
+        foreach ($products as $p) {
             update_sales_special($p->ID, $present_discount,$checkbox_remove);
         }
 
         echo response(true,'Đã cập nhật thành công',[]);
         exit;
 
+    }
+
+    if ($post->action_payload == 'action_update_sale_price') {
+
+        $products = $wpdb->get_results("SELECT `ID` FROM {$wpdb->prefix}posts WHERE `post_status` = 'publish' AND `post_type` = 'product'");
+        foreach ($products as $product_id) {
+
+            $product = wc_get_product($product_id);
+
+            $discounted_price = apply_filters('advanced_woo_discount_rules_get_product_discount_price_from_custom_price', false, $product, 1, 0, 'all', true);
+
+            if ($discounted_price['discounted_price']){
+                $price = (int) $discounted_price['discounted_price'];
+            } else {
+                $price = (int) $product->get_price();
+            }
+
+            if (get_post_meta($product->get_id(),'pricesale',false)){
+                update_post_meta($product->get_id(),"pricesale",$price);
+            }else{
+                add_post_meta($product->get_id(),"pricesale",$price);
+            }
+        }
+
+        echo response(true,'Đã cập nhật thành công',[]);
+        exit;
+
+    }
+
+
+    if  ($post->action_payload == 'action_update_check_stock_manager'){
+
+        $product_skus = $post->product_skus;
+        foreach ($product_skus as $product_sku){
+            $product_id = wc_get_product_id_by_sku($product_sku);
+            if($product_id && strlen($product_skus) < 9){
+                $product = wc_get_product($product_id);
+                $product->set_manage_stock(false);
+                $product->save();
+            }
+        }
+
+        echo response(true,'Đã chạy hoàn tất',[]);
+
+        exit;
     }
 
     echo response(false,'Không thực hiện được thao tác',[]);
