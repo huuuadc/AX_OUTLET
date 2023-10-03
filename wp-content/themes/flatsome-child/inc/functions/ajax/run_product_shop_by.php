@@ -92,9 +92,6 @@ function run_product_shop_by()
                 $price = (int) $product->get_price();
             }
 
-            write_log($product->get_sku());
-            write_log($price);
-
             if (get_post_meta($product->get_id(),'pricesale',false)){
                 update_post_meta($product->get_id(),"pricesale",$price);
             }else{
