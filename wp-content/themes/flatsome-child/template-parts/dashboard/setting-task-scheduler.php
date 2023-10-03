@@ -36,6 +36,10 @@ global $wpdb;
         <div class="form-group">
             <button type="submit" onclick="run_product_shop_by('sales_special')" class="btn btn-primary">Sales độc quyền</button>
         </div>
+        <hr>
+        <div class="form-group">
+            <button type="submit" onclick="run_product_shop_by('update_sale_price')" class="btn btn-primary">Cập nhật giảm giá</button>
+        </div>
     </div>
     <!-- /.card-body -->
 </div>
