@@ -41,7 +41,7 @@ if ( ! function_exists( 'flatsome_wishlist_account_item' ) ) {
 		$wishlist_page = yith_wcwl_object_id( $page_id );
 		?>
 		<li class="wishlist-account-element <?php if ( is_page( $wishlist_page ) ) echo 'active'; ?>">
-			<a href="<?php echo YITH_WCWL()->get_wishlist_url(); ?>"><?php echo get_the_title( $wishlist_page ); ?></a>
+			<a href="<?php echo YITH_WCWL()->get_wishlist_url(); ?>"><?php echo __( 'Sản phẩm yêu thích', 'woocommerce' ); ?></a>
 		</li>
 		<?php
 	}
