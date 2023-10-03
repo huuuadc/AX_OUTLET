@@ -110,7 +110,7 @@ function run_product_shop_by()
         $product_skus = $post->product_skus;
         foreach ($product_skus as $product_sku){
             $product_id = wc_get_product_id_by_sku($product_sku);
-            if($product_id && strlen($product_skus) < 9){
+            if($product_id && strlen($product_id) < 9){
                 $product = wc_get_product($product_id);
                 $product->set_manage_stock(false);
                 $product->save();
