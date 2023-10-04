@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - WooCommerce - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-09-13 09:35+0000\n"
+"PO-Revision-Date: 2023-10-04 06:31+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23656,7 +23656,7 @@ msgstr ""
 #: packages/woocommerce-blocks/assets/js/blocks/products/edit.js:31
 #: packages/woocommerce-blocks/build/all-products.js:25
 msgid "Order Products By"
-msgstr ""
+msgstr "Sắp xếp theo"
 
 #: packages/woocommerce-blocks/assets/js/blocks/products/edit.js:11
 #: packages/woocommerce-blocks/build/all-products.js:25
@@ -25766,7 +25766,7 @@ msgstr "Danh sách sản phẩm theo đặc điểm."
 #: packages/woocommerce-blocks/build/product-tag.js:8
 #: packages/woocommerce-blocks/build/products-by-attribute.js:11
 msgid "Order By"
-msgstr ""
+msgstr "Sắp xếp theo"
 
 #: packages/woocommerce-blocks/build/products-by-attribute.js:11
 msgid "Filter by Product Attribute"
@@ -26140,7 +26140,7 @@ msgstr ""
 #: packages/woocommerce-blocks/build/product-tag.js:3
 #: packages/woocommerce-blocks/build/products-by-attribute.js:3
 msgid "Order products by"
-msgstr ""
+msgstr "Sắp xếp theo"
 
 #: packages/woocommerce-blocks/build/product-tag.js:8
 msgid "All selected tags"
