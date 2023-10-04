@@ -50,7 +50,24 @@ if ( ! defined( 'YITH_WCAN' ) ) {
 				<?php endif; ?>
 				<?php foreach ( $options['values'] as $value ) : ?>
 					<span class="active-filter-label" data-filters="<?php echo esc_attr( wp_json_encode( $value['query_vars'] ) ); ?>">
-						<?php echo wp_kses_post( $value['label'] ); ?>
+                        <?php
+                            $lb_trans = wp_kses_post( $value['label'] );
+                            $lb_trans = str_replace('beige','Xám tro',$lb_trans);
+                            $lb_trans = str_replace('Black','Đen',$lb_trans);
+                            $lb_trans = str_replace('black','Đen',$lb_trans);
+                            $lb_trans = str_replace('blue','Xanh dương',$lb_trans);
+                            $lb_trans = str_replace('gold','Hoàn kim',$lb_trans);
+                            $lb_trans = str_replace('green','Xanh lá',$lb_trans);
+                            $lb_trans = str_replace('grey','Xám',$lb_trans);
+                            $lb_trans = str_replace('orange','Cam',$lb_trans);
+                            $lb_trans = str_replace('pink','Hồng',$lb_trans);
+                            $lb_trans = str_replace('purple','Tím',$lb_trans);
+                            $lb_trans = str_replace('red','Đỏ',$lb_trans);
+                            $lb_trans = str_replace('silver','Bạc',$lb_trans);
+                            $lb_trans = str_replace('white','Trắng',$lb_trans);
+                            $lb_trans = str_replace('yellow','Vàng',$lb_trans);
+                        ?>
+						<?php echo $lb_trans; ?>
 					</span>
 				<?php endforeach; ?>
 			</div>
