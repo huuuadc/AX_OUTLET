@@ -140,8 +140,8 @@ class LS_API
             }
 
             $rep = curl_exec($ch);
-            $result = json_decode($rep );
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $result = json_decode($rep );
 
             //Begin Write log in to WP rect log;
             $headers = [
@@ -177,7 +177,7 @@ class LS_API
                 );
             }
 
-            return json_decode($result);
+            return $result;
         } catch (\Throwable $th) {
 
             write_log($th->getMessage());
