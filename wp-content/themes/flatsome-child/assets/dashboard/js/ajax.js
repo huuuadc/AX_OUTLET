@@ -677,7 +677,7 @@ function post_invoice_ls_retail( orderId = ''){
 }
 
 
-function change_transfer_order(transfer_id = '', payload_action = ''){
+function change_transfer_order(transfer_id = '', payload_action = '',item_id = ''){
 
     $.ajax({
         type: 'POST',
@@ -685,7 +685,8 @@ function change_transfer_order(transfer_id = '', payload_action = ''){
         data:{
             action: 'change_transfer_order',
             payload_action: payload_action,
-            transfer_id
+            transfer_id,
+            item_id
         },
         beforeSend: function (){
 
@@ -697,18 +698,18 @@ function change_transfer_order(transfer_id = '', payload_action = ''){
         },
         complete: function (){
             $('#card_table_line>.overlay').remove()
-            // $('.table_simple_non_btn').DataTable({
-            //     "paging": true,
-            //     "lengthChange": false,
-            //     "searching": true,
-            //     "ordering": false,
-            //     "info": false,
-            //     "autoWidth": true,
-            //     "responsive": true,
-            //     "language": {
-            //         "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
-            //     },
-            // });
+            $('.table_simple_non_line').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": false,
+                "info": false,
+                "autoWidth": true,
+                "responsive": true,
+                "language": {
+                    "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+                },
+            });
         },
         error: function(errorThrown){
             console.log("ERROR",errorThrown)
@@ -791,6 +792,18 @@ function transfer_order_import_product(transfer_order_id = ''){
                 complete: function (){
                     $('body').removeClass('modal-open');
                     $('.modal-backdrop').remove();
+                    $('.table_simple_non_line').DataTable({
+                        "paging": true,
+                        "lengthChange": false,
+                        "searching": true,
+                        "ordering": false,
+                        "info": false,
+                        "autoWidth": true,
+                        "responsive": true,
+                        "language": {
+                            "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+                        },
+                    });
                 },
                 error: function(errorThrown){
                     console.log("ERROR",errorThrown)

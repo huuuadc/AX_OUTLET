@@ -29,7 +29,7 @@ $transfer_order_items = $transfer_order->get_items();
         </div>
     </div>
     <div class="card-body">
-        <table class="table table-bordered table-striped dataTable dtr-inline table_simple_non_btn">
+        <table class="table table-bordered table-striped dataTable dtr-inline table_simple_non_btn table_simple_non_line">
             <thead>
             <tr>
                 <th>Mã sản phẩm</th>
@@ -50,9 +50,12 @@ $transfer_order_items = $transfer_order->get_items();
                     <td><?php echo $item->get_name() ?></td>
                     <td><?php echo $item->get_quantity() ?></td>
                     <td>
-                        <?php if($transfer_order->get_status() !== 'completed') :?>
+                        <?php if(!($transfer_order->get_status() == 'confirm'
+                            || $transfer_order->get_status() == 'reject'
+                            || $transfer_order->get_status() == 'confirm-goods'
+                        )) :?>
                         <a type="button" class="btn btn-danger" href="javascript:void(0)"
-                           onclick="change_transfer_order('<?php echo $item->get_id()?>','change_transfer_order_line_delete')" >
+                           onclick="change_transfer_order('<?php echo $transfer_order->get_id()?>','change_transfer_order_line_delete','<?php echo $item->get_id()?>' )" >
                             Xóa
                         </a>
                         <?php else:?>

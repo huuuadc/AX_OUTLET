@@ -7,8 +7,8 @@ class OMS_TO extends \WC_Order
 
     public array $ORDER_STATUS_LABEL = array(
         'reject' => [
-            'title' => 'Từ chối',
-            'class_name' => 'badge-secondary'
+            'title' => 'Đã hủy',
+            'class_name' => 'badge-danger'
         ],
         'trash' => [
             'title' => 'Xóa',
@@ -20,7 +20,7 @@ class OMS_TO extends \WC_Order
         ],
         'pending' => [
             'title' => 'Tạo mới',
-            'class_name' => 'badge-danger'
+            'class_name' => 'badge-primary'
         ],
         'processing' => [
             'title' => 'Đang xử lý',
@@ -59,7 +59,7 @@ class OMS_TO extends \WC_Order
             'class_name' => 'badge-secondary'
         ],
         'confirm-goods' => [
-            'title' => 'Đã hoàn hàng',
+            'title' => 'Đã trả lại tồn kho',
             'class_name' => 'badge-warning'
         ],
         'draft' => [
