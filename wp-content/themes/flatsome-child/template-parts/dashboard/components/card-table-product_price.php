@@ -42,6 +42,7 @@ $products = wc_get_products( $args );
             <tbody>
             <?php foreach ($products as $product) :
 
+                if($product->get_stock_status() !== 'instock') continue;
                 $manage_dis = new Controllers\ManageDiscount();
                 $product_detail_discount = $manage_dis->calculateInitialAndDiscountedPrice($product,1);
                 $full_price = $product->get_price();
