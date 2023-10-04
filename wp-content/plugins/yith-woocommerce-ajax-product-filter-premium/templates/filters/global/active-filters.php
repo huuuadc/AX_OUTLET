@@ -46,9 +46,7 @@ if ( ! defined( 'YITH_WCAN' ) ) {
                     $label = str_replace('Color','Màu sắc',$label);
                     $label = str_replace('Size','Kích thước',$label);
                     $label = str_replace('Order by','Sắp xếp',$label);
-                    $label = str_replace('Sort by popularity','Mức độ phổ biến',$label);
-                    $label = str_replace('Sort by latest','Mới nhất',$label);
-                    $label = str_replace('Price:','Giá',$label);
+                    $label = str_replace('Price','Giá',$label);
                     ?>
 					<b><?php echo $label; ?>:</b>
 				<?php endif; ?>
@@ -70,6 +68,8 @@ if ( ! defined( 'YITH_WCAN' ) ) {
                             $lb_trans = str_replace('silver','Bạc',$lb_trans);
                             $lb_trans = str_replace('white','Trắng',$lb_trans);
                             $lb_trans = str_replace('yellow','Vàng',$lb_trans);
+                            $lb_trans = str_replace('Sort by popularity','Mức độ phổ biến',$lb_trans);
+                            $lb_trans = str_replace('Sort by latest','Mới nhất',$lb_trans);
                         ?>
 						<?php echo $lb_trans; ?>
 					</span>
