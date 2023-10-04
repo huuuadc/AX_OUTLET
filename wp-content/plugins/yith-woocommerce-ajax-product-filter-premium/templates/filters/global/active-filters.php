@@ -45,6 +45,10 @@ if ( ! defined( 'YITH_WCAN' ) ) {
                     $label = str_replace('Sản phẩm','',$label);
                     $label = str_replace('Color','Màu sắc',$label);
                     $label = str_replace('Size','Kích thước',$label);
+                    $label = str_replace('Order by','Sắp xếp',$label);
+                    $label = str_replace('Sort by popularity','Mức độ phổ biến',$label);
+                    $label = str_replace('Sort by latest','Mới nhất',$label);
+                    $label = str_replace('Price:','Giá',$label);
                     ?>
 					<b><?php echo $label; ?>:</b>
 				<?php endif; ?>
