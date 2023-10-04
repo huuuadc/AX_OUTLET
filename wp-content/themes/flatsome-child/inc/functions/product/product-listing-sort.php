@@ -7,7 +7,7 @@ function add_postmeta_ordering_args( $args_sort) {
         apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
 
     switch( $cw_orderby_value ) {
-        case 'pricesale-desc':
+        case 'pricesale_desc':
             $args_sort['orderby'] = 'meta_value_num';
             $args_sort['order'] = 'DESC';
             $args_sort['meta_key'] = 'pricesale';
@@ -27,7 +27,7 @@ add_filter( 'woocommerce_get_catalog_ordering_args', 'add_postmeta_ordering_args
 function add_sort_view_orderby( $sort_by ) {
     unset($sort_by['price']);
     unset($sort_by['price-desc']);
-    $sort_by['pricesale-desc'] = __( 'Sort by price (desc)', 'woocommerce' );
+    $sort_by['pricesale_desc'] = __( 'Sort by price (desc)', 'woocommerce' );
     $sort_by['pricesale'] = __( 'Sort by price (asc)', 'woocommerce' );
     return $sort_by;
 }
