@@ -52,11 +52,23 @@ jQuery(function ($){
     });
 
     function checkShipping(){
+        $('.shipping__list_item input').each(function(){
+            var freeship_search = $(this).val();
+            var freeship_text = 'free_shipping';
+            if(freeship_search.indexOf(freeship_text)!=-1){
+                $('.shipping__table').addClass('freeship').removeClass('hidden');
+                $(this).parent('.shipping__list_item').addClass('freeship_item');
+            }
+        });
         $('.shipping__table').each(function(){
-            if($(this).find('.shipping__list_item .amount').length || $(this).find('.shipping__list_item input[value="wdr_free_shipping"]').length){
-                $(this).removeClass('hidden');
+            if($(this).find('.freeship_item').length){
+                $('.freeship_item input').prop("checked", true).trigger("click");
             }else{
-                $(this).addClass('hidden');
+                if($(this).find('.shipping__list_item .amount').length){
+                    $(this).removeClass('hidden');
+                }else{
+                    $(this).addClass('hidden');
+                }
             }
         });
     }
