@@ -53,7 +53,7 @@ jQuery(function ($){
 
     function checkShipping(){
         $('.shipping__table').each(function(){
-            if($(this).find('.shipping__list_item .amount').length){
+            if($(this).find('.shipping__list_item .amount').length || $(this).find('.shipping__list_item input[value="wdr_free_shipping"]').length){
                 $(this).removeClass('hidden');
             }else{
                 $(this).addClass('hidden');
