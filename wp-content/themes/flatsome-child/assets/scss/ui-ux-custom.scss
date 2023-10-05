@@ -2155,9 +2155,16 @@ html *::-webkit-scrollbar-thumb{
         }
     }
     .shipping__table {
-        margin-top: 10px;
+        margin-top: 0;
         th, td {
-            padding-bottom: 15px;
+            padding-bottom: 0;
+            padding-top: 0;
+        }
+        &.freeship {
+            th, td {
+                padding-top: 9px;
+                padding-bottom: 9px;
+            }
         }
     }
     .woocommerce-shipping-totals, .order-total {
@@ -2822,6 +2829,32 @@ html:not(.dgwt-wcas-overlay-mobile-on) .dgwt-wcas-search-wrapp.dgwt-wcas-layout-
         @media(min-width: 1200px){
             margin-left: 15px !important;
             margin-top: 76px;
+        }
+    }
+}
+.freeship {
+    td[data-title]{
+        padding: 0 !important;
+    }
+    .shipping__list {
+        position: relative;
+        &_item {
+            display: none;
+            &.freeship_item {
+                display: block;
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                border: none;
+                background: none;
+                padding: 0;
+                margin: 0;
+                height: auto;
+                min-height: unset;
+                input {
+                    display: none;
+                }
+            }
         }
     }
 }
