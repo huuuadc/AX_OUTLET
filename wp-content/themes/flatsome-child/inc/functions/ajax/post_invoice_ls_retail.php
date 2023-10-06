@@ -382,18 +382,21 @@ function post_invoice_ls_retail(){
             $order->set_log('success','post_ls','Thành công');
             $order->set_ls_status();
             echo response(true,'Đã chuyển qua ls retail',['status'=>'Đã chuyển qua ls retail', 'class_status'=>'success']);
+            exit;
         }
         elseif ($flag_payment && $order->get_ls_status() === 'detail')
         {
             $order->set_log('success','post_ls','Thành công');
             $order->set_ls_status();
             echo response(true,'Đã chuyển qua ls retail',['status'=>'Đã chuyển qua ls retail', 'class_status'=>'success']);
+            exit;
         }
         elseif ($flag_transaction && $order->get_ls_status() === 'header')
         {
             $order->set_log('success','post_ls','Thành công');
             $order->set_ls_status();
             echo response(true,'Đã chuyển qua ls retail',['status'=>'Đã chuyển qua ls retail', 'class_status'=>'success']);
+            exit;
         }
         else{
             if (!$flag_payment && !$flag_transaction) {
