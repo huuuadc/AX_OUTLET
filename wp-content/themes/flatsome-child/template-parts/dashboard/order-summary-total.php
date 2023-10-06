@@ -18,7 +18,13 @@ if ( ! $order ) {
             <th>Mã coupon:</th>
             <td class="text-right"><?php
                 foreach( $order->get_coupons() as $order_item_coupon ) {
-                    echo '<span class="badge badge-success"> ' . $order_item_coupon->get_code() . '<span><dr>';
+                    $current_coupon = new WC_Coupon($order_item_coupon->get_code());
+                    if ($current_coupon->get_description() == '') {
+                        $des = $current_coupon->get_code();
+                    }else{
+                        $des = $current_coupon->get_description();
+                    }
+                    echo '<span class="badge badge-success"> ' . $des . '<span><dr>';
                 }
                 ?></td>
         </tr>
