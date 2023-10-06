@@ -95,6 +95,14 @@ class OMS_ORDER extends WC_Order
         'no' => [
             'title' => 'Chưa chuyển qua ls retail',
             'class_name' => 'badge-danger'
+        ],
+         'header' => [
+            'title' => 'Header yes, detail no',
+            'class_name' => 'badge-danger'
+        ],
+         'detail' => [
+            'title' => 'Header no, detail yes',
+            'class_name' => 'badge-danger'
         ]
     ];
 
