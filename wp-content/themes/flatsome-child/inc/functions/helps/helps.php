@@ -106,10 +106,14 @@ function response(bool $status = false, string $messenger = '', array $data = []
     ));
 }
 
-function logo_login() { ?>
+function logo_login() {
+    $site_logo_id        = flatsome_option( 'site_logo' );
+    $site_logo           = wp_get_attachment_image_src( $site_logo_id, 'large' );
+    $src = $site_logo[0] ?? get_stylesheet_directory_uri() . '/assets/img/dashboard.png'
+    ?>
     <style type="text/css">
         #login h1 a, .login h1 a {
-            background-image: url(<?php echo get_stylesheet_directory_uri(); ?>/assets/img/dashboard.png);
+            background-image: url(<?php echo $src; ?>);
             background-repeat: no-repeat;
         }
     </style>
