@@ -277,31 +277,32 @@ function post_invoice_ls_retail(){
         if(fmod($ship_fee,$qty_simple) > $qty_simple/2){
             $qty_ship_fee = $qty_ship_fee + 1 ;
         }
-        $line_no++;
-        $data_request_transaction_item->Location_Code = $location_code;
-        $data_request_transaction_item->Receipt_No_ = $order_no;
-        $data_request_transaction_item->Transaction_No_ = $order_no;
-        $data_request_transaction_item->LineNo = $line_default + $line_no;
-        $data_request_transaction_item->Item_No_ = $item_no_ship;
-        $data_request_transaction_item->SerialNo = '';
-        $data_request_transaction_item->Variant_Code = '000';
-        $data_request_transaction_item->Trans_Date = date('Y-m-d') . ' ' . date('H:i:s.v');
-        $data_request_transaction_item->Quantity = -$qty_ship_fee;
-        $data_request_transaction_item->UnitPrice =  $qty_simple;
-        $data_request_transaction_item->TotalPrice = $qty_ship_fee* $qty_simple;
-        $data_request_transaction_item->DiscountRate = 0;
-        $data_request_transaction_item->DiscountAmount = 0;
-        $data_request_transaction_item->Disc = 0;
-        $data_request_transaction_item->TotalAmt = $qty_ship_fee* $qty_simple;
-        $data_request_transaction_item->Member_Card_No_ = $member_card_guest;
-        $data_request_transaction_item->Offer_Online_ID = '';
-        $data_request_transaction_item->CouponCode = '';
-        $data_request_transaction_item->CouponNo = '';
-        $data_request_transaction_item->Value_Type = '';
-        $data_request_transaction_item->Category_Online_ID = [];
+        if($qty_ship_fee === 0) {
+            $line_no++;
+            $data_request_transaction_item->Location_Code = $location_code;
+            $data_request_transaction_item->Receipt_No_ = $order_no;
+            $data_request_transaction_item->Transaction_No_ = $order_no;
+            $data_request_transaction_item->LineNo = $line_default + $line_no;
+            $data_request_transaction_item->Item_No_ = $item_no_ship;
+            $data_request_transaction_item->SerialNo = '';
+            $data_request_transaction_item->Variant_Code = '000';
+            $data_request_transaction_item->Trans_Date = date('Y-m-d') . ' ' . date('H:i:s.v');
+            $data_request_transaction_item->Quantity = -$qty_ship_fee;
+            $data_request_transaction_item->UnitPrice = $qty_simple;
+            $data_request_transaction_item->TotalPrice = $qty_ship_fee * $qty_simple;
+            $data_request_transaction_item->DiscountRate = 0;
+            $data_request_transaction_item->DiscountAmount = 0;
+            $data_request_transaction_item->Disc = 0;
+            $data_request_transaction_item->TotalAmt = $qty_ship_fee * $qty_simple;
+            $data_request_transaction_item->Member_Card_No_ = $member_card_guest;
+            $data_request_transaction_item->Offer_Online_ID = '';
+            $data_request_transaction_item->CouponCode = '';
+            $data_request_transaction_item->CouponNo = '';
+            $data_request_transaction_item->Value_Type = '';
+            $data_request_transaction_item->Category_Online_ID = [];
 
-        $data_request_transaction[]  = (array)$data_request_transaction_item;
-
+            $data_request_transaction[] = (array)$data_request_transaction_item;
+        }
         //add discout cart
         $order_discounts = $wpdb->get_row( $wpdb->prepare( "SELECT oid.*, r.id AS rule_id, r.discount_type AS rule_discount_type, r.cart_adjustments AS rule_cart_adjustments FROM ".$wpdb->prefix."wdr_order_item_discounts oid INNER JOIN ".$wpdb->prefix."wdr_rules r ON oid.rule_id = r.id WHERE oid.item_id = 0 AND oid.order_id = " . $order->get_id() ) );
         if($order_discounts && $order_discounts->rule_discount_type == 'wdr_cart_discount') {
@@ -376,25 +377,50 @@ function post_invoice_ls_retail(){
 
         if( isset($response_ls_transaction->Responcode) && $response_ls_transaction->Responcode == 200) $flag_transaction = true;
 
-        if ($flag_payment && $flag_transaction){
+        if ($flag_payment && $flag_transaction)
+        {
             $order->set_log('success','post_ls','Thành công');
             $order->set_ls_status();
             echo response(true,'Đã chuyển qua ls retail',['status'=>'Đã chuyển qua ls retail', 'class_status'=>'success']);
-        }else{
-            if (!$flag_payment && !$flag_transaction) $order->set_log(
-                'danger',
-                'post_ls',
-                'Không thể post header và detail. Header response:' . json_encode($response_ls_payment).' - Detail response: ' . json_encode($response_ls_transaction));
-            if (!$flag_payment && $flag_transaction) $order->set_log(
-                'danger',
-                'post_ls',
-                'Post detail thành công, header post lỗi. Header response:' . json_encode($response_ls_payment));
-            if ($flag_payment && !$flag_transaction) $order->set_log(
-                'danger',
-                'post_ls',
-                'Post header thành công, detail post lỗi. Detail response: ' . json_encode($response_ls_transaction));
-            $order->set_ls_status('no');
-            echo response(false,'Chuyển qua LS Retail không thành công xin kiểm tra lại dữ liệu đơn hàng',[]);
+        }
+        elseif ($flag_payment && $order->get_ls_status() === 'detail')
+        {
+            $order->set_log('success','post_ls','Thành công');
+            $order->set_ls_status();
+            echo response(true,'Đã chuyển qua ls retail',['status'=>'Đã chuyển qua ls retail', 'class_status'=>'success']);
+        }
+        elseif ($flag_transaction && $order->get_ls_status() === 'header')
+        {
+            $order->set_log('success','post_ls','Thành công');
+            $order->set_ls_status();
+            echo response(true,'Đã chuyển qua ls retail',['status'=>'Đã chuyển qua ls retail', 'class_status'=>'success']);
+        }
+        else{
+            if (!$flag_payment && !$flag_transaction) {
+                $order->set_log(
+                    'danger',
+                    'post_ls',
+                    'Không thể post header và detail. Header response:' .
+                    json_encode($response_ls_payment) . ' - Detail response: ' .
+                    json_encode($response_ls_transaction));
+            }
+            if (!$flag_payment && $flag_transaction)
+            {
+                $order->set_ls_status('detail');
+                $order->set_log(
+                    'danger',
+                    'post_ls',
+                    'Post detail thành công, header post lỗi. Header response:' . json_encode($response_ls_payment));
+            }
+            if ($flag_payment && !$flag_transaction) {
+                $order->set_ls_status('header');
+                $order->set_log(
+                    'danger',
+                    'post_ls',
+                    'Post header thành công, detail post lỗi. Detail response: ' . json_encode($response_ls_transaction));
+                $order->set_ls_status('no');
+                echo response(false, 'Chuyển qua LS Retail không thành công xin kiểm tra lại dữ liệu đơn hàng', []);
+            }
         }
 
         exit;
