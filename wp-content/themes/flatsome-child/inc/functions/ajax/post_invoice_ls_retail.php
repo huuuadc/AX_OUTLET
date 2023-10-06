@@ -277,7 +277,7 @@ function post_invoice_ls_retail(){
         if(fmod($ship_fee,$qty_simple) > $qty_simple/2){
             $qty_ship_fee = $qty_ship_fee + 1 ;
         }
-        if($qty_ship_fee === 0) {
+        if((int)$qty_ship_fee == 0) {
             $line_no++;
             $data_request_transaction_item->Location_Code = $location_code;
             $data_request_transaction_item->Receipt_No_ = $order_no;
