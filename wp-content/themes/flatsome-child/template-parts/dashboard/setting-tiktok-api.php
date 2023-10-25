@@ -8,7 +8,7 @@ if (!current_user_can('admin_dashboard_setting')):
     user_permission_failed_content();
 else:
     $tiktok_api = new Tiktok_Api();
-$tiktok_api->get_authorized_shop();
+
     $tiktok_client_secret   = $tiktok_api->get_client_secret();
 
     //Set code auth
@@ -18,14 +18,6 @@ $tiktok_api->get_authorized_shop();
             update_option('tiktok_code_auth',$_GET['code'] , 'no');
         }
     }
-
-//    $arg = [
-//        "shop_id"=>"7000714532876273410",
-//        "app_key"=>"29a39d",
-//        "timestamp"=>"1623812664",
-//    ];
-//    $b = $a->create_sign_tiktok('777','/api/orders',$arg);
-//    write_log($b);
 
     $tiktok_auth_url        = $tiktok_api->get_auth_url();
     $tiktok_token_url       = $tiktok_api->get_token_url();

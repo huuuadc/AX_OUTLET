@@ -973,3 +973,49 @@ function get_tiktok_authorized_shop(){
 
 }
 
+
+function sync_e_commerce_platform(action_payload = 'all'){
+
+    $.ajax({
+        type:   'POST',
+        url:    '/wp-admin/admin-ajax.php',
+        data:   {
+            action: 'sync_e_commerce_platform',
+            action_payload,
+        },
+        beforeSend: function (){
+            $('#card_task_scheduler').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+        },
+        success :   function (data){
+            const rep = JSON.parse(data);
+            if (rep.status) {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `Update success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            } else {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Danger',
+                    body: data,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            }
+        },
+        complete :  function (){
+            $('#card_task_scheduler>.overlay').remove()
+        },
+        error   :   function (e){
+            console.log("ERROR",e)
+        }
+    })
+
+
+}
+

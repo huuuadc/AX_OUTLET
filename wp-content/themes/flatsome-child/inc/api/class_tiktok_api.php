@@ -280,4 +280,40 @@ Class Tiktok_Api
 
     }
 
+    public function get_order_list()
+    {
+        $url = $this->get_api_url().'/api/orders/search?'.$this->get_common_queries();
+        $url.= 'sign='.$this->get_sign($this->app_secret,'/api/orders/search',$this->queries);
+        $body = [
+            'page_size' => 100
+        ];
+        $response =  $this->sendRequestToTiktok($url,$body,'POST');
+
+        return $response->data;
+
+    }
+
+
+    public function get_order_detail()
+    {
+        $url = $this->get_api_url().'/api/orders/detail/query?'.$this->get_common_queries();
+        $url.= 'sign='.$this->get_sign($this->app_secret,'/api/orders/detail/query',$this->queries);
+
+        $order_list = $this->get_order_list();
+        $order_ids = [];
+
+        foreach ($order_list->order_list as $value)
+        {
+            $order_ids[] = $value->order_id;
+        }
+
+        $body = [
+            'order_id_list' => $order_ids,
+        ];
+        $response =  $this->sendRequestToTiktok($url,$body,'POST');
+
+        return $response->data;
+
+    }
+
 }
