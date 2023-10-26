@@ -16,7 +16,19 @@ Class Tiktok_Api
     private string $client_secret;
     private string $code_auth;
     private string $version;
+    private string $SOURCE = 'tiktok_source';
     private array $queries ;
+    public array $order_status = [
+        '100'     =>      'UNPAID',
+        '105'     =>      'ON_HOLD',
+        '111'     =>      'AWAITING_SHIPMENT',
+        '112'     =>      'AWAITING_COLLECTION',
+        '114'     =>      'PARTIALLY_SHIPPING',
+        '121'     =>      'IN_TRANSIT',
+        '122'     =>      'DELIVERED',
+        '130'     =>      'COMPLETED',
+        '140'     =>      'CANCELLED',
+    ];
     private \WP_REST_API_Log_DB $log ;
 
     public function __construct()
@@ -72,34 +84,32 @@ Class Tiktok_Api
             write_log($rep);
 
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            write_log($http_status);
 
-//            //Begin Write log in to WP rect log;
-//            $headers = [
-//                'access-token'             =>  $this->ACCESS_TOKEN,
-//                'method'            =>  $method,
-//                'Content-Type'      =>  'application/json',
-//                'Content-Length'    =>  strlen($data_request)
-//            ];
-//            $arg = [
-//                'route'         =>  $url,
-//                'source'        =>  $this->TIKI_SOURCE,
-//                'method'        =>  $method,
-//                'status'        =>  $http_status,
-//                'request'       =>  [
-//                    'headers'    =>  $headers,
-//                    'query_params'    =>  [],
-//                    'body_params'    =>  $data,
-//                    'body'      =>  $data_request,
-//                ],
-//                'response'      =>  [
-//                    'headers'    =>  [],
-//                    'body'      =>  $result
-//                ]
-//
-//            ];
-//            $this->log->insert($arg);
-//            //End write log in to WP rect log;
+            //Begin Write log in to WP rect log;
+            $headers = [
+                'method'            =>  $method,
+                'Content-Type'      =>  'application/json',
+                'Content-Length'    =>  strlen($data_request)
+            ];
+            $arg = [
+                'route'         =>  $url,
+                'source'        =>  $this->SOURCE,
+                'method'        =>  $method,
+                'status'        =>  $http_status,
+                'request'       =>  [
+                    'headers'    =>  $headers,
+                    'query_params'    =>  [],
+                    'body_params'    =>  $data,
+                    'body'      =>  $data_request,
+                ],
+                'response'      =>  [
+                    'headers'    =>  [],
+                    'body'      =>  $result
+                ]
+
+            ];
+            $this->log->insert($arg);
+            //End write log in to WP rect log;
 
             if ($http_status != 200) {
                 return  $result;
@@ -302,14 +312,20 @@ Class Tiktok_Api
         $order_list = $this->get_order_list();
         $order_ids = [];
 
+        $order_status = $this->order_status;
+        unset($order_status[140]);
+
         foreach ($order_list->order_list as $value)
         {
-            $order_ids[] = $value->order_id;
+            if (isset($order_status[$value->order_status]) && !wc_get_order_id_by_order_key($value->order_id) ){
+                $order_ids[] = $value->order_id;
+            }
         }
 
         $body = [
             'order_id_list' => $order_ids,
         ];
+
         $response =  $this->sendRequestToTiktok($url,$body,'POST');
 
         return $response->data;
