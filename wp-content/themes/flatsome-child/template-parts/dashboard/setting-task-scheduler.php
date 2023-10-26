@@ -10,6 +10,12 @@ global $wpdb;
     </div>
     <div class="card-body">
         <div class="form-group">
+            <button type="button" onclick="sync_e_commerce_platform('tiktok')" class="btn btn-primary">Đồng bộ sàn</button>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
             <table class="table no-border">
                 <tr>
                     <td class="w-50"><label>Số lượng cuối</label></td>
