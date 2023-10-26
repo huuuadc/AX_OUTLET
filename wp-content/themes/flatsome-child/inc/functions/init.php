@@ -55,3 +55,7 @@ require (__DIR__.'/ajax/transfer_order_add_new.php');
 require (__DIR__.'/ajax/transfer_order_import_product.php');
 require (__DIR__.'/product/product-listing-sort.php');
 require (__DIR__.'/checkout/coupon_detail.php');
+require (__DIR__.'/ajax/save_setting_tiktok_api.php');
+require (__DIR__.'/ajax/get_tiktok_token.php');
+require (__DIR__.'/ajax/get_tiktok_authorized_shop.php');
+require (__DIR__.'/ajax/sync_e_commerce_platform.php');

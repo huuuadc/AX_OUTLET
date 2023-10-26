@@ -11,3 +11,4 @@ require (__DIR__ . '/product/product-terms.php');
 require (__DIR__ . '/discount-rule.php');
 require (__DIR__ . '/class_tiki_api.php');
 require (__DIR__ . '/order/order_status.php');
+require (__DIR__ . '/class_tiktok_api.php');
