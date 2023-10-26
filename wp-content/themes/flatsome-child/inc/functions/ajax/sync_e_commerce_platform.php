@@ -62,7 +62,6 @@ function sync_e_commerce_platform()
             $new_order->set_customer_note('Tiktok Order');
 
             $new_order->set_order_key($order->order_id);
-            $new_order->set_order_type('tiktok');
 
             //Add product
             foreach ($order->item_list as $value)
@@ -93,6 +92,8 @@ function sync_e_commerce_platform()
             $new_order->set_status('processing');
 
             $new_order->save();
+
+            $new_order->set_order_type('tiktok');
 
         }
 
