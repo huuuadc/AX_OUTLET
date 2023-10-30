@@ -48,6 +48,11 @@ function sync_e_commerce_platform()
 
         $response = $tiktok_api->get_order_detail();
 
+        if (!isset($response->order_list)){
+            echo response(false, 'No list order', []);
+            exit;
+        }
+
         foreach ($response->order_list as $order)
         {
 

@@ -43,13 +43,14 @@ function get_tiktok_authorized_shop()
     $tiktok_api = new Tiktok_Api();
     $response = $tiktok_api->get_authorized_shop();
 
-    if ($response->code === 0)
+//    write_log($tiktok_api->get_order_detail_v_202309());
+    if (count($response) > 0)
     {
         echo response(true,
             'Save success',
             [
-                'tiktok_shop_id' => $response->data->shop_list[0]->shop_id ,
-                'tiktok_shop_cipher'=> $response->data->shop_list[0]->shop_cipher,
+                'tiktok_shop_id' => $response['id'] ,
+                'tiktok_shop_cipher'=> $response['cipher'],
             ]
         );
         exit;
