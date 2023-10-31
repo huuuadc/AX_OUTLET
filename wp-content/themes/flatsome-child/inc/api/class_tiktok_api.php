@@ -1,6 +1,7 @@
 <?php
 
 namespace OMS;
+use OMS_ORDER;
 
 Class Tiktok_Api
 {
@@ -393,7 +394,7 @@ Class Tiktok_Api
     {
         $this->queries['page_size'] = $page_size;
         $body = [
-            'page_size' => $page_size
+            'create_time_ge' => strtotime('-1 day')
         ];
 
         $url = $this->get_api_url().'/order/202309/orders/search?'.$this->get_common_queries();
@@ -430,25 +431,148 @@ Class Tiktok_Api
         $url.= 'sign='.$this->get_sign($this->app_secret,'/authorization/202309/shops',$this->queries);
         $response =  $this->sendRequestToTiktok($url,[],'GET');
 
-        if(!isset($response->code)) return [];
+        if(!isset($response->code) || $response->code !=0) return false;
 
-        if ($response->code === 0)
-        {
+        $id = $response->data->shops[0]->id ?? '';
+        $cipher = $response->data->shops[0]->cipher ?? '';
 
-            if(!add_option('tiktok_shop_id',$response->data->shops[0]->id , '','no')){
-                update_option('tiktok_shop_id',$response->data->shops[0]->id , 'no');
-            }
-
-            if(!add_option('tiktok_shop_cipher',$response->data->shops[0]->cipher , '','no')){
-                update_option('tiktok_shop_cipher',$response->data->shops[0]->cipher , 'no');
-            }
+        if(!add_option('tiktok_shop_id',$id,'','no')){
+            update_option('tiktok_shop_id',$id, 'no');
         }
 
-        return [
-            'id'=>$response->data->shops[0]->id,
-            'cipher'=> $response->data->shops[0]->cipher
-        ];
+        if(!add_option('tiktok_shop_cipher',$cipher , '','no')) {
+            update_option('tiktok_shop_cipher', $cipher, 'no');
+        }
 
+        return ['id'=>$id, 'cipher'=> $cipher];
+
+    }
+
+    /**
+     * @throws \WC_Data_Exception
+     */
+    public function sync_orders_v_202212(){
+        $response = $this->get_order_detail();
+
+        if (!isset($response->order_list)){
+            return false;
+        }
+
+        foreach ($response->order_list as $order)
+        {
+
+            $new_order = new OMS_ORDER();
+            $new_order->set_billing_last_name($order->recipient_address->name);
+            $new_order->set_billing_address_1($order->recipient_address->full_address);
+            $new_order->set_billing_city($order->recipient_address->city);
+            $new_order->set_billing_country('VN');
+            $new_order->set_billing_phone($order->recipient_address->phone);
+            $new_order->set_billing_postcode($order->recipient_address->zipcode);
+            $new_order->set_billing_state('VN');
+            $new_order->set_customer_note('Tiktok Order');
+
+            $new_order->set_order_key($order->order_id);
+
+            //Add product
+            foreach ($order->item_list as $value)
+            {
+                //Get product id by product sku
+                $product_id = wc_get_product_id_by_sku($value->seller_sku);
+
+                //Get product by id
+                $product    = wc_get_product($product_id);
+                if($product){
+                    //Add product item
+                    $new_order->add_product($product,$value->quantity);
+                }
+            }
+
+            //add shipping rate
+            $shipping_info = new \WC_Order_Item_Shipping();
+            $shipping_info->set_method_title('Tiktok shipping');
+            $shipping_info->set_total($order->payment_info->shipping_fee);
+            $new_order->add_item($shipping_info);
+
+            //add payment method
+            $new_order->set_payment_method('TIKTOK_'.$order->payment_method );
+            $new_order->set_payment_method_title($order->payment_method_name);
+
+            $new_order->calculate_totals();
+
+            $new_order->set_status('processing');
+
+            $new_order->save();
+
+            $new_order->set_order_type('tiktok');
+
+        }
+
+        return true;
+    }
+
+
+    /**
+     * @throws \WC_Data_Exception
+     */
+    public function sync_orders_v_202309(){
+        $response = $this->get_order_list_v_202309();
+        if (!$response || !isset($response->orders)) return false;
+
+        foreach ($response->orders as $order)
+        {
+            if(wc_get_order_id_by_order_key($order->id)) continue ;
+
+            $new_order = new OMS_ORDER();
+            $new_order->set_billing_last_name($this->SOURCE . ' '. $order->recipient_address->name);
+            $new_order->set_billing_address_1($order->recipient_address->full_address);
+            $new_order->set_billing_city($order->recipient_address->district_info[1]->address_name);
+            $new_order->set_billing_country($order->recipient_address->region_code);
+            $new_order->set_billing_phone($order->recipient_address->phone_number);
+            $new_order->set_billing_postcode($order->recipient_address->postal_code);
+            $new_order->set_billing_state($order->recipient_address->region_code);
+            $new_order->set_customer_note('Tiktok Order: '. $order->buyer_message);
+
+            $new_order->set_order_key($order->id);
+
+            //Add product
+            foreach ($order->line_items as $value)
+            {
+                //Get product id by product sku
+                $product_id = wc_get_product_id_by_sku($value->seller_sku);
+
+                //Get product by id
+                $product    = wc_get_product($product_id);
+
+                if($product){
+                    //Add product item
+                    $new_order->add_product($product,$value->quantity);
+                }
+            }
+
+            //add shipping rate
+            $shipping_info = new \WC_Order_Item_Shipping();
+            $shipping_info->set_method_title('Tiktok shipping');
+            $shipping_info->set_total($order->payment->shipping_fee);
+            $new_order->add_item($shipping_info);
+
+            //add payment method
+            $payment_method = $order->is_cod ? 'COD': 'ONLINE';
+            $new_order->set_payment_method('TIKTOK_'.$payment_method);
+            $new_order->set_payment_method_title($order->payment_method_name);
+
+            $new_order->calculate_totals();
+
+            $new_order->set_status('processing');
+
+            $new_order->save();
+
+            $new_order->set_order_type('tiktok');
+            $new_order->update_billing_district($order->recipient_address->district_info[2]->address_name);
+            $new_order->update_billing_ward($order->recipient_address->district_info[3]->address_name);
+
+        }
+
+        return true;
     }
 
 }
