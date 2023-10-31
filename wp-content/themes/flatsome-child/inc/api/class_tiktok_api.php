@@ -247,6 +247,25 @@ Class Tiktok_Api
         return $input;
     }
 
+    private function get_common_queries_non_shop()
+    {
+        $queries = $this->queries;
+        $queries['app_key'] = $this->app_key;
+        $queries['app_secret'] = $this->app_secret;
+        $queries['version'] = $this->version;
+        $queries['access_token'] = $this->access_token;
+        $queries['timestamp'] = $this->get_timestamp();
+
+        $this->queries =  $queries;
+
+        $input ='';
+        foreach ($queries as $key => $value) {
+            $input .= $key .'='. $value . '&';
+        }
+
+        return $input;
+    }
+
     private function get_timestamp()
     {
         return strtotime('now');
@@ -288,7 +307,7 @@ Class Tiktok_Api
     public function get_authorized_shop()
     {
 
-        $url = $this->get_api_url().'/api/shop/get_authorized_shop?'.$this->get_common_queries();
+        $url = $this->get_api_url().'/api/shop/get_authorized_shop?'.$this->get_common_queries_non_shop();
         $url.= 'sign='.$this->get_sign($this->app_secret,'/api/shop/get_authorized_shop',$this->queries);
         $response =  $this->sendRequestToTiktok($url,[],'GET');
 
@@ -370,11 +389,11 @@ Class Tiktok_Api
     }
 
 
-    public function get_order_list_v_202309()
+    public function get_order_list_v_202309($page_size = 100)
     {
-        $this->queries['page_size'] = 100;
+        $this->queries['page_size'] = $page_size;
         $body = [
-            'page_size' => 100
+            'page_size' => $page_size
         ];
 
         $url = $this->get_api_url().'/order/202309/orders/search?'.$this->get_common_queries();
@@ -382,34 +401,23 @@ Class Tiktok_Api
 
         $response =  $this->sendRequestToTiktok($url,$body,'POST');
 
+        if(!isset($response->data) || $response->code != 0) return false;
+
         return $response->data;
 
     }
 
 
-    public function get_order_detail_v_202309()
+    public function get_order_detail_v_202309($ids = '')
     {
-        $this->queries['ids'] = 'ids=1234565,123555';
-
-//        $order_list = $this->get_order_list();
-//        $order_ids = [];
-
-        $order_status = $this->order_status;
-        unset($order_status[140]);
-
-//        if (!isset($order_list->order_list)) return false;
-//
-//        foreach ($order_list->order_list as $value)
-//        {
-//            if (isset($order_status[$value->order_status]) && !wc_get_order_id_by_order_key($value->order_id) ){
-//                $order_ids[] = $value->order_id;
-//            }
-//        }
+        if($ids != '') $this->queries['ids'] = $ids;
 
         $url = $this->get_api_url().'/order/202309/orders?'.$this->get_common_queries();
         $url.= 'sign='.$this->get_sign_v_202309($this->app_secret,'/order/202309/orders',$this->queries);
 
         $response =  $this->sendRequestToTiktok($url,[],'GET');
+
+        if(!isset($response->data) || $response->code != 0) return false;
 
         return $response->data;
 
@@ -418,7 +426,7 @@ Class Tiktok_Api
     public function get_authorized_shop_v_202309()
     {
 
-        $url = $this->get_api_url().'/authorization/202309/shops?'.$this->get_common_queries();
+        $url = $this->get_api_url().'/authorization/202309/shops?'.$this->get_common_queries_non_shop();
         $url.= 'sign='.$this->get_sign($this->app_secret,'/authorization/202309/shops',$this->queries);
         $response =  $this->sendRequestToTiktok($url,[],'GET');
 

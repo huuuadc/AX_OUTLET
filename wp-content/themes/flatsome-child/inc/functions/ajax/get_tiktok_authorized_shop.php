@@ -41,10 +41,9 @@ function get_tiktok_authorized_shop()
     $log->insert($arg);
 
     $tiktok_api = new Tiktok_Api();
-    $response = $tiktok_api->get_authorized_shop();
+    $response = $tiktok_api->get_authorized_shop_v_202309();
 
-//    write_log($tiktok_api->get_order_detail_v_202309());
-    if (count($response) > 0)
+    if($response)
     {
         echo response(true,
             'Save success',
