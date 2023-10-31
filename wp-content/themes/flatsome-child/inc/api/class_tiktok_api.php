@@ -84,8 +84,6 @@ Class Tiktok_Api
             $rep = curl_exec($ch);
             $result = json_decode($rep );
 
-            write_log($rep);
-
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             //Begin Write log in to WP rect log;
@@ -521,6 +519,8 @@ Class Tiktok_Api
         foreach ($response->orders as $order)
         {
             if(wc_get_order_id_by_order_key($order->id)) continue ;
+
+            write_log('Order: '. $order->id);
 
             $new_order = new OMS_ORDER();
             $new_order->set_billing_last_name($this->SOURCE . ' '. $order->recipient_address->name);
