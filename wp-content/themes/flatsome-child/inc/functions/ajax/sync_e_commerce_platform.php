@@ -55,6 +55,21 @@ function sync_e_commerce_platform()
         }
     }
 
+    if($_POST['action_payload'] === 'order_platform_ids') {
+
+        if (!$post->order_platform_ids){
+            echo response(false,'No order ids',[]);
+            exit;
+        }
+
+        if($tiktok_api->sync_order_by_ids_v_202309($post->order_platform_ids)) {
+            echo response(true, 'Save success', []);
+        } else {
+            echo response(false,'Non order load',[]);
+        }
+        exit;
+    }
+
     echo response(false,'No action match',[]);
     exit;
 

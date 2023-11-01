@@ -449,7 +449,8 @@ Class Tiktok_Api
     /**
      * @throws \WC_Data_Exception
      */
-    public function sync_orders_v_202212(){
+    public function sync_orders_v_202212()
+    {
         $response = $this->get_order_detail();
 
         if (!isset($response->order_list)){
@@ -512,7 +513,8 @@ Class Tiktok_Api
     /**
      * @throws \WC_Data_Exception
      */
-    public function sync_orders_v_202309(){
+    public function sync_orders_v_202309()
+    {
         $response = $this->get_order_list_v_202309();
         if (!$response || !isset($response->orders)) return false;
 
@@ -569,6 +571,47 @@ Class Tiktok_Api
             $new_order->set_order_type('tiktok');
             $new_order->update_billing_district($order->recipient_address->district_info[2]->address_name);
             $new_order->update_billing_ward($order->recipient_address->district_info[3]->address_name);
+
+        }
+
+        return true;
+    }
+
+    public function sync_order_by_ids_v_202309($ids = '') : bool
+    {
+        $response = $this->get_order_detail_v_202309($ids);
+
+        if(!$response) return false;
+
+        $oms_order_keys = explode(',',$ids);
+
+        foreach ($oms_order_keys as $oms_order_key)
+        {
+            $oms_order_id = wc_get_order_id_by_order_key($oms_order_key);
+            if (!$oms_order_id) continue;
+            $order = wc_get_order($oms_order_id);
+
+            //Add product
+            foreach ($response->orders as $order_value)
+            {
+                //Check id key
+                if($order_value->id != $oms_order_key) continue;
+
+                foreach ($order_value->line_items as $item)
+                {
+                    //Get product id by product sku
+                    $product_id = wc_get_product_id_by_sku($item->sku_id);
+                    //Get product by id
+                    $product    = wc_get_product($product_id);
+                    if($product){
+                        //Add product item
+                        $order->add_product($product,$item->quantity ?? 1);
+                    }
+                }
+            }
+
+            $order->calculate_totals();
+            $order->save();
 
         }
 

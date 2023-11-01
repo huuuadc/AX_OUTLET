@@ -976,12 +976,15 @@ function get_tiktok_authorized_shop(){
 
 function sync_e_commerce_platform(action_payload = 'all'){
 
+    let order_platform_ids = $('input[name="order_platform_id"]').val()
+
     $.ajax({
         type:   'POST',
         url:    '/wp-admin/admin-ajax.php',
         data:   {
             action: 'sync_e_commerce_platform',
             action_payload,
+            order_platform_ids,
         },
         beforeSend: function (){
             $('#card_task_scheduler').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
