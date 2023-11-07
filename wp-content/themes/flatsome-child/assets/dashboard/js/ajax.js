@@ -1022,3 +1022,48 @@ function sync_e_commerce_platform(action_payload = 'all'){
 
 }
 
+
+/**
+ *
+ */
+
+function save_setting_viettel_vinvoice(){
+
+    let viettel_base_url = $("input[name='viettel_base_url']").val();
+    let viettel_username = $("input[name='viettel_username']").val();
+    let viettel_password = $("input[name='viettel_password']").val();
+
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        data:{
+            action: 'save_setting_viettel_vinvoice',
+            viettel_base_url,
+            viettel_username,
+            viettel_password,
+        },
+        beforeSend: function (){
+            $('#card_setting_viettel_vinvoice').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+        },
+        success: function (data){
+            const rep = JSON.parse(data);
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                title: 'Success',
+                body: `update setting viettel invoice success`,
+                icon: 'fas fa-info-circle',
+                autohide: true,
+                delay: 10000
+            })
+        },
+        complete: function (){
+            $('#card_setting_viettel_vinvoice>.overlay').remove()
+        },
+        error: function(e){
+
+            console.log("ERROR",e)
+
+        }
+    })
+}
+

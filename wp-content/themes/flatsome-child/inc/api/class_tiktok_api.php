@@ -113,7 +113,10 @@ Class Tiktok_Api
             //End write log in to WP rect log;
 
             if ($http_status != 200) {
-                return  $result;
+                return (object)array(
+                    'Responcode' => $http_status,
+                    'messenger' => 'error http status code: ' . $http_status
+                );
             }
 
             return $result;
