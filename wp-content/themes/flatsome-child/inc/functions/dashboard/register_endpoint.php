@@ -14,6 +14,7 @@ function dashboard_register_query_vars( $vars ) {
     $vars[] = 'setting';
     $vars[] = 'inventory-report';
     $vars[] = 'inventory-adjustment';
+    $vars[] = 'docs';
 
     return $vars;
 }
@@ -32,6 +33,7 @@ function dashboard_register_page_endpoint(): void
     add_rewrite_endpoint('setting', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('inventory-report', EP_ROOT | EP_PAGES );
     add_rewrite_endpoint('inventory-adjustment', EP_ROOT | EP_PAGES );
+    add_rewrite_endpoint('docs', EP_ROOT | EP_PAGES );
 
 }
 
@@ -68,6 +70,9 @@ function dashboard_register_template($template){
     }
     if(get_query_var('pagename') == 'inventory-adjustment' || isset($wp->query_vars['inventory-adjustment'])) {
         return get_template_part('page','dashboard') ;
+    }
+    if(get_query_var('pagename') == 'docs' || isset($wp->query_vars['docs'])) {
+        return get_template_part('page-api','docs') ;
     }
     return $template;
 }

@@ -46,62 +46,31 @@ function sync_e_commerce_platform()
     $tiktok_api = new Tiktok_Api();
     if($_POST['action_payload'] === 'tiktok') {
 
-        $response = $tiktok_api->get_order_detail();
+        if ($tiktok_api->sync_orders_v_202309()) {
+            echo response(true, 'Save success', []);
+            exit;
+        } else {
+            echo response(false,'Non order list',[]);
+            exit;
+        }
+    }
 
-        foreach ($response->order_list as $order)
-        {
+    if($_POST['action_payload'] === 'order_platform_ids') {
 
-            $new_order = new OMS_ORDER();
-            $new_order->set_billing_last_name($order->recipient_address->name);
-            $new_order->set_billing_address_1($order->recipient_address->full_address);
-            $new_order->set_billing_city($order->recipient_address->city);
-            $new_order->set_billing_country('VN');
-            $new_order->set_billing_phone($order->recipient_address->phone);
-            $new_order->set_billing_postcode($order->recipient_address->zipcode);
-            $new_order->set_billing_state('VN');
-            $new_order->set_customer_note('Tiktok Order');
-
-            $new_order->set_order_key($order->order_id);
-
-            //Add product
-            foreach ($order->item_list as $value)
-            {
-                //Get product id by product sku
-                $product_id = wc_get_product_id_by_sku($value->seller_sku);
-
-                //Get product by id
-                $product    = wc_get_product($product_id);
-                if($product){
-                    //Add product item
-                    $new_order->add_product($product,$value->quantity);
-                }
-            }
-
-            //add shipping rate
-            $shipping_info = new WC_Order_Item_Shipping();
-            $shipping_info->set_method_title('Tiktok shipping');
-            $shipping_info->set_total($order->payment_info->shipping_fee);
-            $new_order->add_item($shipping_info);
-
-            //add payment method
-            $new_order->set_payment_method('TIKTOK_'.$order->payment_method );
-            $new_order->set_payment_method_title($order->payment_method_name);
-
-            $new_order->calculate_totals();
-
-            $new_order->set_status('processing');
-
-            $new_order->save();
-
-            $new_order->set_order_type('tiktok');
-
+        if (!$post->order_platform_ids){
+            echo response(false,'No order ids',[]);
+            exit;
         }
 
-        echo response(true, 'Save success', []);
+        if($tiktok_api->sync_order_by_ids_v_202309($post->order_platform_ids)) {
+            echo response(true, 'Save success', []);
+        } else {
+            echo response(false,'Non order load',[]);
+        }
         exit;
     }
 
-    echo response(false,'Error get order',[]);
+    echo response(false,'No action match',[]);
     exit;
 
 }
