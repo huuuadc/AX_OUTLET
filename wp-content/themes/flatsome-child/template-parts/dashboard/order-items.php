@@ -25,7 +25,9 @@ if ( ! $order ) {
         <?php $product =  $item['variation_id'] != 0 ? wc_get_product($item['variation_id']) : wc_get_product($item->get_product_id()) ?>
         <?php
         $full_price = $product->get_regular_price('value') ?? 1;
-        $total_full_price = (int)($product->get_regular_price('value')*$item->get_quantity())?>
+        $total_full_price = (int)($product->get_regular_price('value')*$item->get_quantity());
+        if(!$total_full_price) $total_full_price = 1;
+        ?>
         <tr>
             <td><?php echo $count?></td>
             <td><?php echo $item->get_name() ?></td>

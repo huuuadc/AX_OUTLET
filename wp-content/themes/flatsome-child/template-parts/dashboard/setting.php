@@ -29,7 +29,8 @@ else:
                 <a class="nav-link active" id="setting_task-scheduler" data-toggle="pill" href="#setting_task_scheduler" role="tab" aria-controls="setting_task_scheduler" aria-selected="true">Task scheduler</a>
                 <a class="nav-link" id="setting_company-tab" data-toggle="pill" href="#setting_company" role="tab" aria-controls="setting_company" aria-selected="true">Company info</a>
                 <a class="nav-link" id="setting_tiki-tab" data-toggle="pill" href="#setting_tiki" role="tab" aria-controls="setting_tiki" aria-selected="false">Tiki now</a>
-                <a class="nav-link" id="setting_tiktok-tab" data-toggle="pill" href="#setting_tiktok" role="tab" aria-controls="setting_tiktok" aria-selected="false">Tiktok Api</a>
+                <a class="nav-link" id="setting_tiktok-tab" data-toggle="pill" href="#setting_tiktok" role="tab" aria-controls="setting_tiktok" aria-selected="false">Tiktok shop</a>
+                <a class="nav-link" id="setting_viettel-vinvoice-tab" data-toggle="pill" href="#setting_viettel_vinvoice" role="tab" aria-controls="setting_viettel_vinvoice" aria-selected="false">Viettel vinvoice</a>
                 <a class="nav-link" id="setting_create_table-tab" data-toggle="pill" href="#setting_create_table" role="tab" aria-controls="setting_create_table" aria-selected="false">Create table</a>
                 <a class="nav-link" id="setting_admin-dashboard-tab" data-toggle="pill" href="#setting_admin_dashboard" role="tab" aria-controls="setting_admin_dashboard" aria-selected="false">Admin dashboard</a>
                 </div>
@@ -53,6 +54,9 @@ else:
                     </div>
                      <div class="tab-pane text-left fade" id="setting_tiktok" role="tabpanel" aria-labelledby="setting_tiktok-tab">
                         <?php get_template_part('template-parts/dashboard/setting-tiktok','api')?>
+                    </div>
+                     <div class="tab-pane text-left fade" id="setting_viettel_vinvoice" role="tabpanel" aria-labelledby="setting_viettel-vinvoice-tab">
+                        <?php get_template_part('template-parts/dashboard/setting-viettel','vinvoice')?>
                     </div>
                 </div>
             </div>

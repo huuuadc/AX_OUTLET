@@ -15,6 +15,17 @@ global $wpdb;
 
         <hr>
 
+        <label for="product_form">Đồng bộ lại đơn hàng từ sàn</label>
+        <div class="form-group">
+            <label for="order_platform_id">Danh sách đơn hàng (Cách nhau bằng dấu ",")</label>
+            <input class="form-control" type="text" name="order_platform_id"/>
+        </div>
+        <div class="form-group">
+            <button type="submit" onclick="sync_e_commerce_platform('order_platform_ids')" class="btn btn-primary">Đồng bộ</button>
+        </div>
+
+        <hr>
+
         <div class="form-group">
             <table class="table no-border">
                 <tr>
