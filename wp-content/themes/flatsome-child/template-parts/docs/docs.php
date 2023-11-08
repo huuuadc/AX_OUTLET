@@ -67,87 +67,62 @@ curl https://www.example.com/wp-json/wc/v3/orders \
         </div>
         <div class="overflow-hidden content-section" id="content-create-order">
             <h2>Tạo đơn hàng mới</h2>
-            <pre><code class="bash">
+            <pre>
+                <code class="bash">
 # Here is a curl example
-curl \
--X POST http://api.westeros.com/character/get \
--F 'secret_key=your_api_key' \
--F 'house=Stark,Bolton' \
--F 'offset=0' \
--F 'limit=50'
-                </code></pre>
+curl https://www.example.com/wp-json/v1/orders/create \
+-u consumer_key:consumer_secret
+                </code>
+            </pre>
             <p>
-                To get characters you need to make a POST call to the following url :<br>
-                <code class="higlighted break-word">http://api.westeros.com/character/get</code>
+                Method : <code class="higlighted break-word">POST</code><br>
+                Endpoint :<code class="higlighted break-word">/wp-json/v1/orders/create</code>
             </p>
             <br>
             <pre><code class="json">
-Result example :
+Request body example :
 
 {
-  query:{
-    offset: 0,
-    limit: 50,
-    house: [
-      "Stark",
-      "Bolton"
-    ],
-  }
-  result: [
-    {
-      id: 1,
-      first_name: "Jon",
-      last_name: "Snow",
-      alive: true,
-      house: "Stark",
-      gender: "m",
-      age: 14,
-      location: "Winterfell"
+    "order_key" : "24d7546fsdfaddsfcsa",
+    "order_type": "shopee",
+    "billing": {
+        "first_name": "Huu",
+        "last_name": "Tran",
+        "company":"",
+        "city":"Hồ Chí Minh",
+        "district":"Quận 3",
+        "ward":"Phường Võ Thị Sáu",
+        "ward_code" :"11111",
+        "address" :"72 74 nguyễn thị minh khai",
+        "full_address" : "72-74 nguyễn thị minh khai, Phường võ thị sáu, Quận 3, Hồ Chí Minh",
+        "email": "huuuadc@gmail.com"
     },
-    {
-      id: 2,
-      first_name: "Eddard",
-      last_name: "Stark",
-      alive: false,
-      house: "Stark",
-      gender: "m",
-      age: 35,
-      location: 'Winterfell'
+    "buyer_message": "Giao hàng giờ hành chính",
+    "shipping_method": "",
+    "tracking_id": "",
+    "payment_method": "shopee",
+    "payment": {
+        "subtotal": 55555555,
+        "shipping_fee" : 40000,
+        "total" : 55595555
     },
-    {
-      id: 3,
-      first_name: "Catelyn",
-      last_name: "Stark",
-      alive: false,
-      house: "Stark",
-      gender: "f",
-      age: 33,
-      location: "Winterfell"
-    },
-    {
-      id: 4,
-      first_name: "Roose",
-      last_name: "Bolton",
-      alive: false,
-      house: "Bolton",
-      gender: "m",
-      age: 40,
-      location: "Dreadfort"
-    },
-    {
-      id: 5,
-      first_name: "Ramsay",
-      last_name: "Snow",
-      alive: false,
-      house: "Bolton",
-      gender: "m",
-      age: 15,
-      location: "Dreadfort"
-    },
-  ]
+    "items": [
+        {
+            "sku": "1119735",
+            "barcode": "1119735",
+            "name": "Túi đựng",
+            "price": 22222222
+        },
+        {
+            "sku": "1112673000",
+            "barcode": "1112673000",
+            "name": "Quần dài nữ phom suông kẻ sọc - white, 0036",
+            "price": 33333333
+        }
+    ]
 }
                 </code></pre>
-            <h4>QUERY PARAMETERS</h4>
+            <h4>REQUEST BODY PARAMETERS</h4>
             <table class="central-overflow-x">
                 <thead>
                 <tr>
@@ -158,25 +133,30 @@ Result example :
                 </thead>
                 <tbody>
                 <tr>
-                    <td>secret_key</td>
+                    <td>order_key</td>
                     <td>String</td>
-                    <td>Your API key.</td>
+                    <td>(Bắt buộc) Mã đơn hàng liên kết</td>
                 </tr>
                 <tr>
-                    <td>search</td>
+                    <td>order_type</td>
                     <td>String</td>
-                    <td>(optional) A search word to find character by name.</td>
-                </tr>
-                <tr>
-                    <td>house</td>
-                    <td>String</td>
-                    <td>
-                        (optional) a string array of houses:
+                    <td>(Bắt buộc) Loại đơn hàng từ platform nào. Trong các loại sau:
+                        <code class="higlighted break-word">shopee</code>
+                        <code class="higlighted break-word">lazada</code>
+                        <code class="higlighted break-word">tiktok</code>
+                        <code class="higlighted break-word">website</code>
                     </td>
                 </tr>
                 <tr>
-                    <td>alive</td>
-                    <td>Boolean</td>
+                    <td>billing</td>
+                    <td>object</td>
+                    <td>
+                        (Bắt buộc) Thông tin hóa đơn và giao hàng.
+                    </td>
+                </tr>
+                <tr>
+                    <td>first_name</td>
+                    <td>string</td>
                     <td>
                         (optional) a boolean to filter alived characters
                     </td>
