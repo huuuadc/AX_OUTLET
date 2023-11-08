@@ -13,3 +13,4 @@ require (__DIR__.'/class_tiki_api.php');
 require (__DIR__.'/order/order_status.php');
 require (__DIR__.'/class_tiktok_api.php');
 require (__DIR__.'/class_viettel_vinvoice.php');
+require (__DIR__.'/partner/order/create.php');

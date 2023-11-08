@@ -257,3 +257,25 @@ function numberInVietnameseCurrency($num)
     $rs[0] = strtoupper($rs[0]);
     return $rs . ' đồng';
 }
+
+function response_api(
+        bool $success = false,
+        array $data = [],
+        string $message = '',
+        array $errors = []
+        ){
+
+    if(!$success){
+        return array(
+            'success' => $success,
+            'errors' => $errors,
+            'message' => $message
+        );
+    }
+
+    return array(
+        'success' => $success,
+        'data' => $data,
+        'message' => $message
+    );
+}
