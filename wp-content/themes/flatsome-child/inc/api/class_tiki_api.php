@@ -14,6 +14,7 @@ class TIKI_API
     private object $company;
     private string $TIKI_SOURCE = 'TIKI_API';
     private string $INVALID_TOKEN = 'INVALID_TOKEN';
+    private string $MISSING_TOKEN = 'MISSING_TOKEN';
     private \WP_REST_API_Log_DB $log ;
     public array  $data_default = array(
         'external_order_id' => '',
@@ -309,7 +310,7 @@ class TIKI_API
         $rep = $this->sendRequestToTiki($url,$data,'POST');
 
         //Refresh token when invalid token
-        if (!$rep->success && $rep->errors[0]->code == $this->INVALID_TOKEN){
+        if (!$rep->success && ($rep->errors[0]->code == $this->INVALID_TOKEN || $rep->errors[0]->code == $this->MISSING_TOKEN)){
             $token = $this->get_token();
             $this->ACCESS_TOKEN = $token;
             if(!add_option('tiki_access_token',$token,'','no')){

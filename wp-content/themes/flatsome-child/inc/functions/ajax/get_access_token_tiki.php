@@ -14,7 +14,7 @@ function get_access_token_tiki()
         exit;
     }
 
-    $tiki_api = new \TIKI\TIKI_API();
+    $tiki_api = new \OMS\TIKI_API();
 
     $access_token = $tiki_api->get_token();
 
