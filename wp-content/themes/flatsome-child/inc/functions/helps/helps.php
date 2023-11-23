@@ -279,3 +279,13 @@ function response_api(
         'message' => $message
     );
 }
+
+function round_fee_shipping(int $ship_fee)
+{
+    $qty_simple = 1000;
+    $qty_ship_fee = intdiv($ship_fee,$qty_simple) ?? 0;
+
+    if (fmod($ship_fee,1000) > 0) return $qty_ship_fee * $qty_simple + 1000;
+
+    return $qty_ship_fee * $qty_simple;
+}
