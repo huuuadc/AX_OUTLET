@@ -52,7 +52,7 @@ else:
                         <!-- title row -->
                         <div class="row">
                             <div class="col-12 text-center">
-                                <h1>Hóa Đơn Bán Lẻ</h1>
+                                <h1>Phiếu Thu Tiền</h1>
                             </div>
                             <div class="col-12 pt-3">
                                 <h4>
@@ -163,7 +163,7 @@ else:
                         <!-- title row -->
                         <div class="row">
                             <div class="col-12 text-center">
-                                <h1>Hóa Đơn Bán Lẻ</h1>
+                                <h1>Phiếu Thu Tiền</h1>
                             </div>
                             <div class="col-12 pt-3">
                                 <h4>

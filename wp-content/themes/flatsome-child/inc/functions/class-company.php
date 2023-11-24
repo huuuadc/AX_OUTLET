@@ -93,7 +93,8 @@ class COMPANY {
      * @return string
      */
     public function get_company_full_address_by_code(){
-        return $this->ax_address->get_full_address_name_by_code($this->ward_code,$this->district_code,$this->city_code);
+        return $this->address . ', '.
+            $this->ax_address->get_full_address_name_by_code($this->ward_code,$this->district_code,$this->city_code);
     }
 
 
