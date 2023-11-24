@@ -297,9 +297,9 @@ function post_invoice_ls_retail(){
             $data_request_transaction_item->TotalAmt = $qty_ship_fee * $qty_simple;
             $data_request_transaction_item->Member_Card_No_ = $member_card_guest;
             $data_request_transaction_item->Offer_Online_ID = '';
-            $data_request_transaction_item->CouponCode = $CouponCode;
-            $data_request_transaction_item->CouponNo = $CouponNo;
-            $data_request_transaction_item->Value_Type = $Value_Type;
+            $data_request_transaction_item->CouponCode = '';
+            $data_request_transaction_item->CouponNo = '';
+            $data_request_transaction_item->Value_Type = '';
             $data_request_transaction_item->Category_Online_ID = [];
 
             $data_request_transaction[] = (array)$data_request_transaction_item;
