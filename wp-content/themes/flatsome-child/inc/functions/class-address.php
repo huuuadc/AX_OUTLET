@@ -48,7 +48,9 @@ class ADDRESS {
     }
 
     public function get_full_address_name_by_code($ward_code,$district_code,$city_code){
-        return $this->get_ward_name_by_code($ward_code) . ', ' .$this->get_district_name_by_code($district_code) . ', '. $this->get_city_name_by_code($city_code);
+        return $this->get_ward_name_by_code($ward_code)
+            . ', '. $this->get_district_name_by_code($district_code)
+            . ', '. $this->get_city_name_by_code($city_code);
     }
 
     /**
