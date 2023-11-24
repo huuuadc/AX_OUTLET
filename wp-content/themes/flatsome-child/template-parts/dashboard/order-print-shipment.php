@@ -95,7 +95,7 @@ if ( ! empty( $site_logo_id ) && ! is_numeric( $site_logo_id ) ) {
                             <div class="p-2 w-100 border-left border-dark">
                                 <strong>ĐỊA CHỈ NHẬN HÀNG</strong><br>
                                 <strong>Người nhận: </strong><?php echo $order->get_billing_first_name() . ' ' . $order->get_billing_last_name()?><br>
-                                <strong>Địa chỉ: </strong><?php echo $order->get_billing_address_full()?><br>
+                                <strong>Địa chỉ: </strong><?php echo $order->get_billing_address_1() . ', ' . $order->get_billing_address_full()?><br>
                                 <strong>Số điện thoại: </strong><?php echo $order->get_billing_phone()?><br>
                             </div>
                         </div>
