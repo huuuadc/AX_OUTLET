@@ -120,7 +120,7 @@ function update_cost_shipping_tiki_tnsl($arg){
         $estimate = $apiTiki->estimate_shipping($data);
 
         if ($estimate->success){
-            $shipping_cost = $estimate->data->quotes[0]->fee->amount;
+            $shipping_cost = round_fee_shipping($estimate->data->quotes[0]->fee->amount);
         }
     }
 
@@ -166,7 +166,7 @@ function woocommerce_checkout_process_shipping_tiki_tnsl(WC_Order $order)
             $estimate = $apiTiki->estimate_shipping($data);
 
             if ($estimate->success){
-                $shipping_cost = $estimate->data->quotes[0]->fee->amount;
+                $shipping_cost = round_fee_shipping($estimate->data->quotes[0]->fee->amount);
             }
 
             $order->set_shipping_total((int)$shipping_cost);

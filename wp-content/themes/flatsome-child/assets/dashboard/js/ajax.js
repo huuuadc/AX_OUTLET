@@ -818,3 +818,252 @@ function transfer_order_import_product(transfer_order_id = ''){
     reader.readAsBinaryString(file_import);
 
 }
+
+
+function get_tiktok_token(action_payload = 'by_auth_code'){
+
+    $.ajax({
+        type:   'POST',
+        url:    '/wp-admin/admin-ajax.php',
+        data:   {
+            action: 'get_tiktok_token',
+            action_payload,
+        },
+        beforeSend: function (){
+            $('#card_tiktok_api').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+        },
+        success :   function (data){
+            const rep = JSON.parse(data);
+            if (rep.status) {
+                $('#tiktok_access_token').val(rep.data.access_token)
+                $('#tiktok_refresh_token').val(rep.data.refresh_token)
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `Update success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            } else {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Danger',
+                    body: data,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            }
+        },
+        complete :  function (){
+            $('#card_tiktok_api>.overlay').remove()
+        },
+        error   :   function (e){
+            console.log("ERROR",e)
+        }
+    })
+
+
+}
+
+function save_tiktok_api_setting(){
+
+    let tiktok_auth_url         = $('#tiktok_auth_url').val()
+    let tiktok_token_url        = $('#tiktok_token_url').val()
+    let tiktok_api_url          = $('#tiktok_api_url').val()
+    let tiktok_client_secret    = $('#tiktok_client_secret').val()
+    let tiktok_app_key          = $('#tiktok_app_key').val()
+    let tiktok_app_secret       = $('#tiktok_app_secret').val()
+    let tiktok_version          = $('#tiktok_version').val()
+
+    $.ajax({
+        type:   'POST',
+        url:    '/wp-admin/admin-ajax.php',
+        data:   {
+            action: 'save_tiktok_api_setting',
+            tiktok_auth_url,
+            tiktok_token_url,
+            tiktok_api_url,
+            tiktok_client_secret,
+            tiktok_app_key,
+            tiktok_app_secret,
+            tiktok_version,
+        },
+        beforeSend: function (){
+            $('#card_tiktok_api').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+        },
+        success :   function (data){
+            const rep = JSON.parse(data);
+            if (rep.status) {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `Update success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            } else {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Danger',
+                    body: data,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            }
+        },
+        complete :  function (){
+            $('#card_tiktok_api>.overlay').remove()
+        },
+        error   :   function (e){
+            console.log("ERROR",e)
+        }
+    })
+
+
+}
+
+
+function get_tiktok_authorized_shop(){
+
+    $.ajax({
+        type:   'POST',
+        url:    '/wp-admin/admin-ajax.php',
+        data:   {
+            action: 'get_tiktok_authorized_shop',
+        },
+        beforeSend: function (){
+            $('#card_tiktok_api').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+        },
+        success :   function (data){
+            const rep = JSON.parse(data);
+            if (rep.status) {
+                $('#tiktok_shop_id').val(rep.data.tiktok_shop_id)
+                $('#tiktok_shop_cipher').val(rep.data.tiktok_shop_cipher)
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `Update success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            } else {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Danger',
+                    body: data,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            }
+        },
+        complete :  function (){
+            $('#card_tiktok_api>.overlay').remove()
+        },
+        error   :   function (e){
+            console.log("ERROR",e)
+        }
+    })
+
+
+}
+
+
+function sync_e_commerce_platform(action_payload = 'all'){
+
+    let order_platform_ids = $('input[name="order_platform_id"]').val()
+
+    $.ajax({
+        type:   'POST',
+        url:    '/wp-admin/admin-ajax.php',
+        data:   {
+            action: 'sync_e_commerce_platform',
+            action_payload,
+            order_platform_ids,
+        },
+        beforeSend: function (){
+            $('#card_task_scheduler').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+        },
+        success :   function (data){
+            const rep = JSON.parse(data);
+            if (rep.status) {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `Update success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            } else {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Danger',
+                    body: data,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            }
+        },
+        complete :  function (){
+            $('#card_task_scheduler>.overlay').remove()
+        },
+        error   :   function (e){
+            console.log("ERROR",e)
+        }
+    })
+
+
+}
+
+
+/**
+ *
+ */
+
+function save_setting_viettel_vinvoice(){
+
+    let viettel_base_url = $("input[name='viettel_base_url']").val();
+    let viettel_username = $("input[name='viettel_username']").val();
+    let viettel_password = $("input[name='viettel_password']").val();
+
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        data:{
+            action: 'save_setting_viettel_vinvoice',
+            viettel_base_url,
+            viettel_username,
+            viettel_password,
+        },
+        beforeSend: function (){
+            $('#card_setting_viettel_vinvoice').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+        },
+        success: function (data){
+            const rep = JSON.parse(data);
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                title: 'Success',
+                body: `update setting viettel invoice success`,
+                icon: 'fas fa-info-circle',
+                autohide: true,
+                delay: 10000
+            })
+        },
+        complete: function (){
+            $('#card_setting_viettel_vinvoice>.overlay').remove()
+        },
+        error: function(e){
+
+            console.log("ERROR",e)
+
+        }
+    })
+}
+

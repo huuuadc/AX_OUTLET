@@ -487,8 +487,8 @@ class Utils {
 					$login = $user->user_login ?? '';
 
                     $gender = '';
-                    if($login!==''){
-                        $user_id = $object->user_id;
+                    if(!empty($object->object->ID)){
+                        $user_id = $object->object->ID;
                         $gender = get_user_meta($user_id, 'user_registration_user_gender', true);
                     }
 

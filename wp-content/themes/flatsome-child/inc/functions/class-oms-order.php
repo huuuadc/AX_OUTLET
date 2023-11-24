@@ -502,4 +502,14 @@ class OMS_ORDER extends WC_Order
         return $safe_stock;
     }
 
+    public function update_billing_ward($ward)
+    {
+        update_post_meta($this->get_id(),'_billing_ward',$ward);
+    }
+
+    public function update_billing_district($district)
+    {
+        update_post_meta($this->get_id(),'_billing_district',$district);
+    }
+
 }
