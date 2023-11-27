@@ -38,6 +38,9 @@ function shipment_order_update_status( WP_REST_Request $request ) {
         $shipment_log[] =   $request->get_body() ;
         update_post_meta($order_id,'order_shipment_log',implode('|',$shipment_log));
 
+        if($req->status == 'picked'){
+            $order->update_date_send_shipper($req->timestamp);
+        }
         if($req->status == 'delivering'){
             $order->update_status('wc-shipping');
         }
@@ -46,6 +49,8 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             if($order->get_status() !== 'delivered') {
                 $order->update_status('wc-delivered');
             }
+            $order->update_status('wc-delivered');
+            $order->update_date_send_shipper($req->timestamp);
 
             //===========================================
             //===========================================
@@ -101,8 +106,10 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             $data_request_payment->Time = date('Y-m-d') . ' ' . date('H:i:s.v');
             $data_request_payment->Quantity = 1;
             $data_request_payment->VAT_Buyer_Name = $order->get_formatted_billing_full_name();
-            $data_request_payment->VAT_Company_Name = $order->get_billing_company();
-            $data_request_payment->VAT_Tax_Code = '';
+            $data_request_payment->VAT_Company_Name = $order->get_vat_company_name();
+            $data_request_payment->VAT_Tax_Code = $order->get_vat_company_tax_code();
+            $data_request_payment->VAT_Company_Address = $order->get_vat_company_address();
+            $data_request_payment->VAT_Company_Email = $order->get_vat_company_email();
             $data_request_payment->VAT_Address = $order->get_billing_address_1() . ', ' . $order->get_billing_address_full();
             $data_request_payment->VAT_Payment_Method = $ls_method_type['vat_payment_method'];
             $data_request_payment->VAT_Bank_Account = '';
