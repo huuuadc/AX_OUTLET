@@ -4,11 +4,19 @@ add_filter('woocommerce_add_to_cart_validation', 'add_to_cart_check_stock_ls', 2
 function add_to_cart_check_stock_ls($check, $product_id, $quantity, $variation_id = 0, $variation_code = [])
 {
 
+    $remake_qty = get_qty_product_id_in_orders(
+        $product_id,
+        $variation_id,
+        [
+            'wc-processing',
+            'wc-completed'
+        ]);
+
     $arg_data = [
         [
             'product_id' => $product_id,
             'variation_id' => $variation_id,
-            'qty' => $quantity,
+            'qty' => $quantity + $remake_qty,
         ]
     ];
 
