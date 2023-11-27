@@ -56,12 +56,14 @@ function post_invoice_ls_retail(){
     //get old status
     $old_status     = $order->get_status('value');
 
-    if ($old_status != 'request'){
-        $order->set_log('danger',
-            $payload_action,
-            $commit_note . '. Trạng thái không cho thực hiện thao tác');
-        echo response(false,'Trạng thái không cho thực hiện thao tác',[]);
-        exit();
+    if (!current_user_can('post_ls_all_status')){
+        if ($old_status != 'request'){
+            $order->set_log('danger',
+                $payload_action,
+                $commit_note . '. Trạng thái không cho thực hiện thao tác');
+            echo response(false,'Trạng thái không cho thực hiện thao tác',[]);
+            exit();
+        }
     }
     //Check stock với ls
     if (!$order->check_stock_ls()){
@@ -297,9 +299,9 @@ function post_invoice_ls_retail(){
             $data_request_transaction_item->TotalAmt = $qty_ship_fee * $qty_simple;
             $data_request_transaction_item->Member_Card_No_ = $member_card_guest;
             $data_request_transaction_item->Offer_Online_ID = '';
-            $data_request_transaction_item->CouponCode = $CouponCode;
-            $data_request_transaction_item->CouponNo = $CouponNo;
-            $data_request_transaction_item->Value_Type = $Value_Type;
+            $data_request_transaction_item->CouponCode = '';
+            $data_request_transaction_item->CouponNo = '';
+            $data_request_transaction_item->Value_Type = '';
             $data_request_transaction_item->Category_Online_ID = [];
 
             $data_request_transaction[] = (array)$data_request_transaction_item;
