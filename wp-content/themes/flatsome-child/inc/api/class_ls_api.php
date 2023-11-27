@@ -490,6 +490,8 @@ function ls_payment_request(){
       'VAT_Address'=> '',
       'VAT_Payment_Method'=> '',
       'VAT_Bank_Account'=> '',
+      'VAT_Company_Email'=>'',
+      'VAT_Company_Address'=>'',
       'Member_Phone'=> '',
       'THENH'=> '',
       'Cash'=> ''
