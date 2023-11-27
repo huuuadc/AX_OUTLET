@@ -56,12 +56,14 @@ function post_invoice_ls_retail(){
     //get old status
     $old_status     = $order->get_status('value');
 
-    if ($old_status != 'request'){
-        $order->set_log('danger',
-            $payload_action,
-            $commit_note . '. Trạng thái không cho thực hiện thao tác');
-        echo response(false,'Trạng thái không cho thực hiện thao tác',[]);
-        exit();
+    if (!current_user_can('post_ls_all_status')){
+        if ($old_status != 'request'){
+            $order->set_log('danger',
+                $payload_action,
+                $commit_note . '. Trạng thái không cho thực hiện thao tác');
+            echo response(false,'Trạng thái không cho thực hiện thao tác',[]);
+            exit();
+        }
     }
     //Check stock với ls
     if (!$order->check_stock_ls()){

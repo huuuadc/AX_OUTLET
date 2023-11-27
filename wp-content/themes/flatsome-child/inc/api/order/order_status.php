@@ -1,6 +1,8 @@
 <?php
 
 use OMS\LS_API;
+use function OMS\ls_transactions_request;
+use function OMS\ls_payment_request;
 
 add_action('rest_api_init', function () {
     register_rest_route('shipment/v1', '/update_status', array(
@@ -32,11 +34,18 @@ function shipment_order_update_status( WP_REST_Request $request ) {
 
         update_post_meta($order_id,'shipment_status', $req->status);
 
+        $shipment_log = explode('|', $order->get_meta('order_shipment_log',true,'value') ?? '');
+        $shipment_log[] =   $request->get_body() ;
+        update_post_meta($order_id,'order_shipment_log',implode('|',$shipment_log));
+
         if($req->status == 'delivering'){
             $order->update_status('wc-shipping');
         }
         if($req->status == 'successful_delivery'){
-            $order->update_status('wc-delivered');
+            //If order status is "delivered". no update order status
+            if($order->get_status() !== 'delivered') {
+                $order->update_status('wc-delivered');
+            }
 
             //===========================================
             //===========================================
@@ -403,10 +412,6 @@ function shipment_order_update_status( WP_REST_Request $request ) {
         if($req->status == 'failed_shipment'){
             $order->update_status('wc-delivery-failed');
         }
-
-        $shipment_log = explode('|', $order->get_meta('order_shipment_log',true,'value') ?? '');
-        $shipment_log[] =   $request->get_body() ;
-        update_post_meta($order_id,'order_shipment_log',implode('|',$shipment_log));
 
     }
 
