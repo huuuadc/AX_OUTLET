@@ -544,4 +544,24 @@ class OMS_ORDER extends WC_Order
         return  $this->get_meta('vat_company_email', true, 'value') ?? '';
     }
 
+    public function update_date_send_shipper($date):void
+    {
+        update_post_meta($this->get_id(),'date_send_shipper',$date);
+    }
+
+    public function get_date_send_shipper()
+    {
+        return  $this->get_meta('date_send_shipper', true, 'value') ?? '';
+    }
+    public function update_date_success_delivered($date):void
+    {
+        update_post_meta($this->get_id(),'date_success_delivered',$date);
+    }
+
+    public function get_date_success_delivered()
+    {
+        return  $this->get_meta('date_success_delivered', true, 'value') ?? '';
+    }
+
+
 }
