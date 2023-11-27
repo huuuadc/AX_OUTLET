@@ -502,14 +502,46 @@ class OMS_ORDER extends WC_Order
         return $safe_stock;
     }
 
-    public function update_billing_ward($ward)
+    public function update_billing_ward($ward):void
     {
         update_post_meta($this->get_id(),'_billing_ward',$ward);
     }
 
-    public function update_billing_district($district)
+    public function update_billing_district($district):void
     {
         update_post_meta($this->get_id(),'_billing_district',$district);
+    }
+    public function update_vat_company_name($company_name):void
+    {
+        update_post_meta($this->get_id(),'vat_company_name',$company_name);
+    }
+    public function update_vat_company_tax_code($company_tax_code):void
+    {
+        update_post_meta($this->get_id(),'vat_company_tax_code',$company_tax_code);
+    }
+    public function update_vat_company_address($company_address):void
+    {
+        update_post_meta($this->get_id(),'vat_company_address',$company_address);
+    }
+    public function update_vat_company_email($company_email):void
+    {
+        update_post_meta($this->get_id(),'vat_company_email',$company_email);
+    }
+    public function get_vat_company_name()
+    {
+        return  $this->get_meta('vat_company_name', true, 'value') ?? '';
+    }
+    public function get_vat_company_tax_code()
+    {
+        return  $this->get_meta('vat_company_tax_code', true, 'value') ?? '';
+    }
+    public function get_vat_company_address()
+    {
+        return  $this->get_meta('vat_company_address', true, 'value') ?? '';
+    }
+    public function get_vat_company_email()
+    {
+        return  $this->get_meta('vat_company_email', true, 'value') ?? '';
     }
 
 }
