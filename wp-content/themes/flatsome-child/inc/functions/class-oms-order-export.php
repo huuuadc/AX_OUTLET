@@ -77,7 +77,7 @@ class OMS_EXPORT {
             'Đơn vị vận chuyển',
             'Mã vận đơn',
             'Trạng thái vận chuyển',
-            'Ngày giao DV CV',
+            'Ngày giao DV VC',
             'Ngày giao hàng Thành công'
         );
 
@@ -88,7 +88,10 @@ class OMS_EXPORT {
             if (!wc_get_order($item->ID)) continue;
             $order = new \OMS_ORDER($item->ID);
 
-            if ($order->get_status() == 'on-hold' || $order->get_status() == 'trash' || $order->get_status() == 'auto-draft'  ) continue;
+            if ($order->get_status() == 'on-hold' ||
+                $order->get_status() == 'trash' ||
+                $order->get_status() == 'auto-draft'||
+                $order->get_status() == 'cancelled') continue;
 
             $count++;
 
@@ -112,7 +115,8 @@ class OMS_EXPORT {
                 $order->get_shipping_method(),
                 $order->get_tracking_id(),
                 $order->get_shipment_status(),
-                $order->get_date_paid(),
+                $order->get_date_send_shipper(),
+                $order->get_date_success_delivered(),
             );
 
             $this->xlsxwriter->writeSheetRow($this->SHEET_NAME,$row);
@@ -143,7 +147,7 @@ class OMS_EXPORT {
             'Variant Code',
             'Tên SP',
             'Brand',
-            'DDVT',
+            'ĐVT',
             'Số lượng',
             'Đơn giá',
             'Thành tiền',
@@ -162,7 +166,10 @@ class OMS_EXPORT {
 
             if (!wc_get_order($item->ID)) continue;
             $order = new \OMS_ORDER($item->ID);
-            if ($order->get_status() == 'on-hold' || $order->get_status() == 'trash' || $order->get_status() == 'auto-draft'  ) continue;
+            if ($order->get_status() == 'on-hold' ||
+                $order->get_status() == 'trash' ||
+                $order->get_status() == 'auto-draft' ||
+                $order->get_status() == 'cancelled') continue;
 
             foreach ($order->get_items() as $value){
 
@@ -171,8 +178,8 @@ class OMS_EXPORT {
                 $product =  $value['variation_id'] != 0 ? wc_get_product($value['variation_id']) : wc_get_product($value->get_product_id());
 
                 $count++;
-
-                $brand = get_product_brand_name($product->get_id());
+                $product_id_parent = $product->get_parent_id() == 0 ? $product->get_id() : $product->get_parent_id();
+                $brand = get_product_brand_name($product_id_parent);
 
                 $full_price = (int)($product->get_regular_price());
 
