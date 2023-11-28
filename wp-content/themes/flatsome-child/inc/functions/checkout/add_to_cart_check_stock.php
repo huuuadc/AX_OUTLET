@@ -8,6 +8,12 @@ function add_to_cart_check_stock_ls($check, $product_id, $quantity, $variation_i
         $product_id,
         $variation_id,
         [
+            'wc-reject',
+            'wc-confirm',
+            'wc-request',
+            'wc-shipping',
+            'wc-delivery-failed',
+            'wc-confirm-goods',
             'wc-processing',
             'wc-completed'
         ]);
