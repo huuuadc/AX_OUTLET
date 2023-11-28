@@ -95,6 +95,10 @@ function shipment_order_update_status( WP_REST_Request $request ) {
 
             $data_request_payment = (object) ls_payment_request();
 
+            $vat_address = $order->get_vat_company_address() == '' ?
+                $order->get_billing_address_1() . ', ' . $order->get_billing_address_full() :
+                $order->get_vat_company_address();
+
             $data_request_payment->Location_Code = $location_code;
             $data_request_payment->Transaction_No_ = $order_no;
             $data_request_payment->LineNo = 30000;
@@ -110,7 +114,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             $data_request_payment->VAT_Tax_Code = $order->get_vat_company_tax_code();
             $data_request_payment->VAT_Company_Address = $order->get_vat_company_address();
             $data_request_payment->VAT_Company_Email = $order->get_vat_company_email();
-            $data_request_payment->VAT_Address = $order->get_billing_address_1() . ', ' . $order->get_billing_address_full();
+            $data_request_payment->VAT_Address = $vat_address;
             $data_request_payment->VAT_Payment_Method = $ls_method_type['vat_payment_method'];
             $data_request_payment->VAT_Bank_Account = '';
             $data_request_payment->Member_Phone = $order->get_billing_phone();
