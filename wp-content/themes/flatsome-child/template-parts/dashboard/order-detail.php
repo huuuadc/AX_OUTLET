@@ -165,21 +165,49 @@ else:
 
                     <div class="row">
                         <!-- accepted payments column -->
-                        <div class="col-3">
+                        <div class="col-2">
                             <p class="lead">Phương thức thanh toán:</p>
                             <span><?php echo $order_ax->get_payment_method() . ' - ' . $order_ax->get_payment_method_title()?></span>
                         </div>
                         <!-- /.col -->
                         <!-- accepted payments column -->
-                        <div class="col-3">
+                        <div class="col-2">
                             <div class="no-print">
                             <p class="lead">Thông tin giao hàng:</p>
-                            Đơn vị giao hàng: <span><?php echo $order_ax->get_shipping_method()?></span><br>
-                            Trạng thái giao hàng: <span class="badge badge-info"><?php echo $order_ax->get_meta('shipment_status',true)?></span><br>
+                            <strong>Đơn vị giao hàng:</strong> <span><?php echo $order_ax->get_shipping_method() ?? 'no' ?></span><br>
+                            <strong>Trạng thái giao hàng:</strong> <span class="badge badge-info">
+                                    <?php echo $order_ax->get_meta('shipment_status',true) == '' ?
+                                        'vendor_processing' :
+                                        $order_ax->get_meta('shipment_status',true) ?></span><br>
                             </div>
                         </div>
                         <!-- /.col -->
-                        <div class="col-6">
+                        <div class="col-4">
+                            <p class="lead">Thông tin xuất VAT</p>
+                            <?php if ($order_ax->get_vat_company_name() != '') :?>
+                            <table>
+                                <tr>
+                                    <td><strong>Tên công ty:</strong></td>
+                                    <td><?php echo $order_ax->get_vat_company_name() ?></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mã số thuế:</strong></td>
+                                    <td><?php echo $order_ax->get_vat_company_tax_code() ?></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email:</strong></td>
+                                    <td><?php echo $order_ax->get_vat_company_email() ?></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Địa chỉ:</strong></td>
+                                    <td><?php echo $order_ax->get_vat_company_address() ?></td>
+                                </tr>
+                            </table>
+                            <?php else :?>
+                                <span>Không có thông tin xuất hóa đơn</span>
+                            <?php endif;?>
+                        </div>
+                        <div class="col-4">
                             <?php
                                 wc_get_template(
                                     'template-parts/dashboard/order-summary-total.php',
@@ -197,10 +225,10 @@ else:
                     <div class="row no-print padding10">
                         <div class="col-12">
                             <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=invoice'?>" target="_blank"  rel="noopener noreferrer">
-                                <button rel="noopener" target="_blank" class="btn btn-default">
+                                <button rel="noopener" class="btn btn-default">
                                     <i class="fas fa-print"></i> In hóa đơn</button></a>
                             <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=shipment'?>" target="_blank"  rel="noopener noreferrer">
-                                <button rel="noopener" target="_blank" class="btn btn-default">
+                                <button rel="noopener" class="btn btn-default">
                                     <i class="fas fa-print"></i> In phiếu giao hàng</button></a>
                             <?php if(current_user_can('admin_dashboard_order_goods') && $order_ax->get_order_type() == 'website') {?>
                             <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
