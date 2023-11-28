@@ -137,3 +137,25 @@ function transfer_order_add($order_types)
 
     return $order_types;
 }
+
+
+function get_qty_product_id_in_orders($product_id = 0, $variant_id = 0, $statuses = ['wc-completed'])
+{
+    global $wpdb;
+
+    $query_status = '"'.implode('","',$statuses) . '"';
+
+    $qty = $wpdb->get_results("
+        SELECT sum(product_qty) qty 
+        FROM {$wpdb->prefix}wc_order_product_lookup 
+        WHERE product_id = '{$product_id}' 
+          and variation_id = {$variant_id} 
+          and order_id 
+                  in (
+                  select id from {$wpdb->prefix}posts where post_status in ({$query_status})
+                                            )
+    ");
+
+    return  $qty['0']->qty ?? 0;
+}
+
