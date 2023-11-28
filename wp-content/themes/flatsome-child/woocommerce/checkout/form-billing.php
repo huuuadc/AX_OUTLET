@@ -100,6 +100,7 @@ defined( 'ABSPATH' ) || exit;
     }
 </style>
 
+<?php if(get_option('admin_dashboard_is_issue_vat') === 'checked') :?>
 <p class="form-row form-row-wide create-account woocommerce-validated">
     <label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
         <input class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox"
@@ -212,3 +213,5 @@ defined( 'ABSPATH' ) || exit;
 
     })
 </script>
+
+<?php endif;
