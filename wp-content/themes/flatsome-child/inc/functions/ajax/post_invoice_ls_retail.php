@@ -127,9 +127,11 @@ function post_invoice_ls_retail(){
         $data_request_payment->Time = date('Y-m-d') . ' ' . date('H:i:s.v');
         $data_request_payment->Quantity = 1;
         $data_request_payment->VAT_Buyer_Name = $order->get_formatted_billing_full_name();
-        $data_request_payment->VAT_Company_Name = $order->get_billing_company();
-        $data_request_payment->VAT_Tax_Code = '';
+        $data_request_payment->VAT_Company_Name = $order->get_vat_company_name();
+        $data_request_payment->VAT_Tax_Code = $order->get_vat_company_tax_code();
+        $data_request_payment->VAT_Company_Email = $order->get_vat_company_email();
         $data_request_payment->VAT_Address = $order->get_billing_address_1() . ', ' . $order->get_billing_address_full();
+        $data_request_payment->VAT_Company_Address = $order->get_vat_company_address();
         $data_request_payment->VAT_Payment_Method = $ls_method_type['vat_payment_method'];
         $data_request_payment->VAT_Bank_Account = '';
         $data_request_payment->Member_Phone = $order->get_billing_phone();

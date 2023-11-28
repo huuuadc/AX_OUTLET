@@ -430,10 +430,13 @@ function save_admin_dashboard_setting(){
 
     let item_in_page = $('#item_in_page').val()
     let item_fee_ship = $('#item_fee_ship').val()
-    let footer_print_shipment = $('#footer_print_shipment').val()
-    let product_return_policy = $('#product_return_policy').val()
+    // let footer_print_shipment = $('#footer_print_shipment').val()
+    // let product_return_policy = $('#product_return_policy').val()
+    let footer_print_shipment = ''
+    let product_return_policy = ''
     let member_card_guest = $('#member_card_guest').val()
     let is_check_stock = $('input[name="is_check_stock"]').is(':checked') ? 'checked': 'nocheck'
+    let is_issue_vat = $('input[name="is_issue_vat"]').is(':checked') ? 'checked': 'nocheck'
 
     $.ajax({
         type:   'POST',
@@ -445,7 +448,8 @@ function save_admin_dashboard_setting(){
             product_return_policy,
             item_fee_ship,
             member_card_guest,
-            is_check_stock
+            is_check_stock,
+            is_issue_vat
         },
         beforeSend: function (){
             $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')

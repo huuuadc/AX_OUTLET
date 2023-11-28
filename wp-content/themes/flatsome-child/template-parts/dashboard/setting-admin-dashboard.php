@@ -11,6 +11,7 @@ $item_in_page = get_option('admin_dashboard_item_in_page') ?? '';
 $item_fee_ship = get_option('admin_dashboard_item_fee_ship') ?? '';
 $member_card_guest = get_option('admin_dashboard_member_card_guest') ?? '';
 $checked = get_option('admin_dashboard_is_check_stock') ?? '';
+$vat_checked = get_option('admin_dashboard_is_issue_vat') ?? '';
 
 $item_in_page_arg = [
         '10'    => 10,
@@ -29,6 +30,10 @@ $item_in_page_arg = [
         <h3>Admin dashboard setting</h3>
     </div>
     <div class="card-body">
+        <div class="form-group">
+            <label for="is_issue_vat">Bật VAT</label>
+            <input type="checkbox" class="ml-5" name="is_issue_vat" id="is_issue_vat" <?php echo $vat_checked?>/>
+        </div>
         <div class="form-group">
             <label for="is_check_stock">Có kiểm tra tồn kho với ls retail</label>
             <input type="checkbox" class="ml-5" name="is_check_stock" id="is_check_stock" <?php echo $checked?>/>
