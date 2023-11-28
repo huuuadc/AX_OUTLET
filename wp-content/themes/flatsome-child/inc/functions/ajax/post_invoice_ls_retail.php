@@ -175,6 +175,17 @@ function post_invoice_ls_retail(){
 
             $product_id = $item['product_id'];
             $variation_id = $item['variation_id'];
+
+            $item_No = get_post_meta($product_id, 'offline_id', true);
+            $variant_code = $item->get_meta('pa_size') ?? '';
+
+            //Get list serial_no
+            $list_serial_no = [];
+            $data_serial_no = $ls_api->get_product_check_stock_v1($location_code, $item_No,$variant_code);
+            if (isset($data_serial_no->data) && count($data_serial_no->data) > 0){
+                $list_serial_no = $data_serial_no->data;
+            }
+
             $provar_id = $variation_id ? $variation_id : $product_id;
             $product_cats_ids = wc_get_product_term_ids( $product_id, 'product_cat' );
             $active_price   = $product->get_price(); // The product active raw price
@@ -255,9 +266,9 @@ function post_invoice_ls_retail(){
                 'Transaction_No_'       =>          $order_no,
                 'LineNo'                =>          $line_default + $line_no,
                 'LineNo_Online'         =>          $item->get_id(),
-                'Item_No_'              =>          get_post_meta($product_id, 'offline_id', true),
-                'SerialNo'              =>          '',
-                'Variant_Code'          =>          $item->get_meta('pa_size'),
+                'Item_No_'              =>          $item_No,
+                'SerialNo'              =>          $list_serial_no[$i]->SerialNo ?? '',
+                'Variant_Code'          =>          $variant_code,
                 'Trans_Date'            =>          date('Y-m-d') . ' ' . date('H:i:s.v'),
                 'Quantity'              =>          -1,
                 'UnitPrice'             =>          $UnitPrice,
@@ -343,8 +354,7 @@ function post_invoice_ls_retail(){
                     $DiscountAmount = $order_discounts->rule_cart_adjustments->value;
                     $TotalAmt = $UnitPrice - $DiscountAmount;
                 }
-                elseif($order_discounts->rule_cart_adjustments->type == '000') {
-                }
+//                elseif($order_discounts->rule_cart_adjustments->type == '000') {}
             }
 
                 $line_no++;
