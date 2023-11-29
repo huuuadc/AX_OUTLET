@@ -117,7 +117,7 @@ function post_invoice_ls_retail(){
         $data_request_payment = (object) ls_payment_request();
 
         $vat_address = $order->get_vat_company_address() == '' ?
-            $order->get_billing_address_1() . ', ' . $order->get_billing_address_full() :
+            'Khách hàng không cung cấp' :
             $order->get_vat_company_address();
 
         $data_request_payment->Location_Code = $location_code;
@@ -130,7 +130,7 @@ function post_invoice_ls_retail(){
         $data_request_payment->Date = date('Y-m-d') . ' 00:00:00.000';
         $data_request_payment->Time = date('Y-m-d') . ' ' . date('H:i:s.v');
         $data_request_payment->Quantity = 1;
-        $data_request_payment->VAT_Buyer_Name = $order->get_vat_company_name() == '' ? 'Khách lẽ' : $order->get_formatted_billing_full_name();
+        $data_request_payment->VAT_Buyer_Name = $order->get_vat_company_name() == '' ? 'Khách lẻ' : $order->get_formatted_billing_full_name();
         $data_request_payment->VAT_Company_Name = $order->get_vat_company_name();
         $data_request_payment->VAT_Tax_Code = $order->get_vat_company_tax_code();
         $data_request_payment->VAT_Company_Email = $order->get_vat_company_email();
