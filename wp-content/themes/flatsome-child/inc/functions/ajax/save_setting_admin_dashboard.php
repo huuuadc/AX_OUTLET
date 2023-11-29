@@ -41,6 +41,10 @@ function save_admin_dashboard_setting()
         update_option('admin_dashboard_is_issue_vat',$post->is_issue_vat , 'no');
     }
 
+    if(!add_option('admin_dashboard_is_sync_platform',$post->is_sync_platform , '','no')){
+        update_option('admin_dashboard_is_sync_platform',$post->is_sync_platform , 'no');
+    }
+
     $log = new WP_REST_API_Log_DB();
 
     $arg = [
