@@ -117,7 +117,7 @@ function post_invoice_ls_retail(){
         $data_request_payment = (object) ls_payment_request();
 
         $vat_address = $order->get_vat_company_address() == '' ?
-            'Khách hàng không cung cấp' :
+            'Người mua không cung cấp' :
             $order->get_vat_company_address();
 
         $data_request_payment->Location_Code = $location_code;
