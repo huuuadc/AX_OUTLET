@@ -416,6 +416,19 @@ class LS_API
         return $this->sendRequestToLS($url,$data,'POST');
     }
 
+    public function get_product_check_stock_v1($location_code = '',$product_id = '', $variant_code = ''){
+
+        $url = $this->baseURL
+            . $this->URI['post_product_check_stock']
+            .   '?locationCode=' . $location_code
+            .   '&ItemNo=' . $product_id;
+        if ($variant_code != ''){
+            $url .= '&VariantCode='. $variant_code;
+        }
+
+        return $this->sendRequestToLS($url,[],'POST');
+    }
+
 
 }
 

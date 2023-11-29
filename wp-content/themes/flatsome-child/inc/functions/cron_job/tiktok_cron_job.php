@@ -16,15 +16,13 @@ function bf_add_custom_schedule( $schedules )
 
 function bf_schedule_custom_event()
 {
-    // the actual hook to register new custom schedule
-
-    add_filter( 'cron_schedules', 'bf_add_custom_schedule' );
-
-    // schedule custom event
-
-    if( !wp_next_scheduled( 'bf_your_custom_event' ) )
-    {
-        wp_schedule_event( time(), 'every_five_minutes', 'bf_your_custom_event' );
+    if (get_option('is_sync_platform') == 'checked') {
+        // the actual hook to register new custom schedule
+        add_filter('cron_schedules', 'bf_add_custom_schedule');
+        // schedule custom event
+        if (!wp_next_scheduled('bf_your_custom_event')) {
+            wp_schedule_event(time(), 'every_five_minutes', 'bf_your_custom_event');
+        }
     }
 }
 add_action( 'init', 'bf_schedule_custom_event' );

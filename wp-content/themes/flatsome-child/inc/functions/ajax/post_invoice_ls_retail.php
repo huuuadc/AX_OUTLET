@@ -116,6 +116,10 @@ function post_invoice_ls_retail(){
 
         $data_request_payment = (object) ls_payment_request();
 
+        $vat_address = $order->get_vat_company_address() == '' ?
+            'Người mua không cung cấp' :
+            $order->get_vat_company_address();
+
         $data_request_payment->Location_Code = $location_code;
         $data_request_payment->Transaction_No_ = $order_no;
         $data_request_payment->LineNo = 30000;
@@ -126,11 +130,11 @@ function post_invoice_ls_retail(){
         $data_request_payment->Date = date('Y-m-d') . ' 00:00:00.000';
         $data_request_payment->Time = date('Y-m-d') . ' ' . date('H:i:s.v');
         $data_request_payment->Quantity = 1;
-        $data_request_payment->VAT_Buyer_Name = $order->get_formatted_billing_full_name();
+        $data_request_payment->VAT_Buyer_Name = $order->get_vat_company_name() == '' ? 'Khách lẻ' : $order->get_formatted_billing_full_name();
         $data_request_payment->VAT_Company_Name = $order->get_vat_company_name();
         $data_request_payment->VAT_Tax_Code = $order->get_vat_company_tax_code();
         $data_request_payment->VAT_Company_Email = $order->get_vat_company_email();
-        $data_request_payment->VAT_Address = $order->get_billing_address_1() . ', ' . $order->get_billing_address_full();
+        $data_request_payment->VAT_Address = $vat_address;
         $data_request_payment->VAT_Company_Address = $order->get_vat_company_address();
         $data_request_payment->VAT_Payment_Method = $ls_method_type['vat_payment_method'];
         $data_request_payment->VAT_Bank_Account = '';
@@ -171,6 +175,17 @@ function post_invoice_ls_retail(){
 
             $product_id = $item['product_id'];
             $variation_id = $item['variation_id'];
+
+            $item_No = get_post_meta($product_id, 'offline_id', true);
+            $variant_code = $item->get_meta('pa_size') ?? '';
+
+            //Get list serial_no
+            $list_serial_no = [];
+            $data_serial_no = $ls_api->get_product_check_stock_v1($location_code, $item_No,$variant_code);
+            if (isset($data_serial_no->data) && count($data_serial_no->data) > 0){
+                $list_serial_no = $data_serial_no->data;
+            }
+
             $provar_id = $variation_id ? $variation_id : $product_id;
             $product_cats_ids = wc_get_product_term_ids( $product_id, 'product_cat' );
             $active_price   = $product->get_price(); // The product active raw price
@@ -251,9 +266,9 @@ function post_invoice_ls_retail(){
                 'Transaction_No_'       =>          $order_no,
                 'LineNo'                =>          $line_default + $line_no,
                 'LineNo_Online'         =>          $item->get_id(),
-                'Item_No_'              =>          get_post_meta($product_id, 'offline_id', true),
-                'SerialNo'              =>          '',
-                'Variant_Code'          =>          $item->get_meta('pa_size'),
+                'Item_No_'              =>          $item_No,
+                'SerialNo'              =>          $list_serial_no[$i]->SerialNo ?? '',
+                'Variant_Code'          =>          $variant_code,
                 'Trans_Date'            =>          date('Y-m-d') . ' ' . date('H:i:s.v'),
                 'Quantity'              =>          -1,
                 'UnitPrice'             =>          $UnitPrice,
@@ -274,15 +289,9 @@ function post_invoice_ls_retail(){
         }
 
         //add fee ship
-
         $ship_fee = $order->get_shipping_total();
-        $qty_simple = 1000;
-
-        $qty_ship_fee = intdiv($ship_fee,$qty_simple) ?? 0;
-        if(fmod($ship_fee,$qty_simple) > $qty_simple/2){
-            $qty_ship_fee = $qty_ship_fee + 1 ;
-        }
-        if($qty_ship_fee > 0) {
+        //send fee ship full price
+        if($ship_fee > 0) {
             $line_no++;
             $data_request_transaction_item->Location_Code = $location_code;
             $data_request_transaction_item->Receipt_No_ = $order_no;
@@ -292,13 +301,13 @@ function post_invoice_ls_retail(){
             $data_request_transaction_item->SerialNo = '';
             $data_request_transaction_item->Variant_Code = '000';
             $data_request_transaction_item->Trans_Date = date('Y-m-d') . ' ' . date('H:i:s.v');
-            $data_request_transaction_item->Quantity = -$qty_ship_fee;
-            $data_request_transaction_item->UnitPrice = $qty_simple;
-            $data_request_transaction_item->TotalPrice = $qty_ship_fee * $qty_simple;
+            $data_request_transaction_item->Quantity = -1;
+            $data_request_transaction_item->UnitPrice = $ship_fee;
+            $data_request_transaction_item->TotalPrice = $ship_fee;
             $data_request_transaction_item->DiscountRate = 0;
             $data_request_transaction_item->DiscountAmount = 0;
             $data_request_transaction_item->Disc = 0;
-            $data_request_transaction_item->TotalAmt = $qty_ship_fee * $qty_simple;
+            $data_request_transaction_item->TotalAmt = $ship_fee;
             $data_request_transaction_item->Member_Card_No_ = $member_card_guest;
             $data_request_transaction_item->Offer_Online_ID = '';
             $data_request_transaction_item->CouponCode = '';
@@ -308,6 +317,8 @@ function post_invoice_ls_retail(){
 
             $data_request_transaction[] = (array)$data_request_transaction_item;
         }
+
+
         //add discout cart
         $order_discounts = $wpdb->get_row( $wpdb->prepare( "SELECT oid.*, r.id AS rule_id, r.discount_type AS rule_discount_type, r.cart_adjustments AS rule_cart_adjustments FROM ".$wpdb->prefix."wdr_order_item_discounts oid INNER JOIN ".$wpdb->prefix."wdr_rules r ON oid.rule_id = r.id WHERE oid.item_id = 0 AND oid.order_id = " . $order->get_id() ) );
         if($order_discounts && $order_discounts->rule_discount_type == 'wdr_cart_discount') {
@@ -339,8 +350,7 @@ function post_invoice_ls_retail(){
                     $DiscountAmount = $order_discounts->rule_cart_adjustments->value;
                     $TotalAmt = $UnitPrice - $DiscountAmount;
                 }
-                elseif($order_discounts->rule_cart_adjustments->type == '000') {
-                }
+//                elseif($order_discounts->rule_cart_adjustments->type == '000') {}
             }
 
                 $line_no++;
