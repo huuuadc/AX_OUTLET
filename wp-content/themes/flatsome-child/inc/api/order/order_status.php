@@ -65,11 +65,13 @@ function shipment_order_update_status( WP_REST_Request $request ) {
 
             $location_code = get_option('wc_settings_tab_ls_location_code');
             if (!$location_code) {
-                exit;
+                write_log('No location code');
+                return false;
             }
             $item_no_ship = get_option('admin_dashboard_item_fee_ship');
             if (!$item_no_ship) {
-                exit;
+                write_log('No item fee ship');
+                return false;
             }
 
             //Get member user information
@@ -81,7 +83,8 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                 $member_card_guest = get_option('admin_dashboard_member_card_guest');
             }
             if (!$member_card_guest) {
-                exit;
+                write_log('No member card');
+                return false;
             }
 
             //===========================================================
@@ -267,41 +270,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             }
 
             //add fee ship
-
             $ship_fee = $order->get_shipping_total();
-//            $qty_simple = 1000;
-//
-//            $qty_ship_fee = intdiv($ship_fee,$qty_simple) ?? 0;
-//            if(fmod($ship_fee,$qty_simple) > $qty_simple/2){
-//                $qty_ship_fee = $qty_ship_fee + 1 ;
-//            }
-//            if($qty_ship_fee > 0) {
-//                $line_no++;
-//                $data_request_transaction_item->Location_Code = $location_code;
-//                $data_request_transaction_item->Receipt_No_ = $order_no;
-//                $data_request_transaction_item->Transaction_No_ = $order_no;
-//                $data_request_transaction_item->LineNo = $line_default + $line_no;
-//                $data_request_transaction_item->Item_No_ = $item_no_ship;
-//                $data_request_transaction_item->SerialNo = '';
-//                $data_request_transaction_item->Variant_Code = '000';
-//                $data_request_transaction_item->Trans_Date = date('Y-m-d') . ' ' . date('H:i:s.v');
-//                $data_request_transaction_item->Quantity = -$qty_ship_fee;
-//                $data_request_transaction_item->UnitPrice = $qty_simple;
-//                $data_request_transaction_item->TotalPrice = $qty_ship_fee * $qty_simple;
-//                $data_request_transaction_item->DiscountRate = 0;
-//                $data_request_transaction_item->DiscountAmount = 0;
-//                $data_request_transaction_item->Disc = 0;
-//                $data_request_transaction_item->TotalAmt = $qty_ship_fee * $qty_simple;
-//                $data_request_transaction_item->Member_Card_No_ = $member_card_guest;
-//                $data_request_transaction_item->Offer_Online_ID = '';
-//                $data_request_transaction_item->CouponCode = '';
-//                $data_request_transaction_item->CouponNo = '';
-//                $data_request_transaction_item->Value_Type = '';
-//                $data_request_transaction_item->Category_Online_ID = [];
-//
-//                $data_request_transaction[] = (array)$data_request_transaction_item;
-//            }
-
             //send fee ship full price
             if($ship_fee > 0) {
                 $line_no++;
@@ -430,7 +399,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                         'Không thể post header và detail. Header response:' .
                         json_encode($response_ls_payment) . ' - Detail response: ' .
                         json_encode($response_ls_transaction));
-                    exit;
+                    return false;
                 }
                 if (!$flag_payment && $flag_transaction)
                 {
@@ -439,7 +408,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                         'danger',
                         'post_ls',
                         'Post detail thành công, header post lỗi. Header response:' . json_encode($response_ls_payment));
-                    exit;
+                    return false;
                 }
                 if ($flag_payment && !$flag_transaction) {
                     $order->set_ls_status('header');
@@ -448,7 +417,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                         'post_ls',
                         'Post header thành công, detail post lỗi. Detail response: ' . json_encode($response_ls_transaction));
                     $order->set_ls_status('no');
-                    exit;
+                    return false;
                 }
             }
 
