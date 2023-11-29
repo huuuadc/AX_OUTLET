@@ -12,6 +12,7 @@ $item_fee_ship = get_option('admin_dashboard_item_fee_ship') ?? '';
 $member_card_guest = get_option('admin_dashboard_member_card_guest') ?? '';
 $checked = get_option('admin_dashboard_is_check_stock') ?? '';
 $vat_checked = get_option('admin_dashboard_is_issue_vat') ?? '';
+$sync_checked = get_option('admin_dashboard_is_sync_platform') ?? '';
 
 $item_in_page_arg = [
         '10'    => 10,
@@ -31,15 +32,19 @@ $item_in_page_arg = [
     </div>
     <div class="card-body">
         <div class="form-group">
-            <label for="is_issue_vat">Bật VAT</label>
+            <label for="is_sync_platform">Bật đồng bột đơn từ sàn: </label>
+            <input type="checkbox" class="ml-5" name="is_sync_platform" id="is_sync_platform" <?php echo $sync_checked?>/>
+        </div>
+         <div class="form-group">
+            <label for="is_issue_vat">Bật VAT </label>
             <input type="checkbox" class="ml-5" name="is_issue_vat" id="is_issue_vat" <?php echo $vat_checked?>/>
         </div>
         <div class="form-group">
-            <label for="is_check_stock">Có kiểm tra tồn kho với ls retail</label>
+            <label for="is_check_stock">Có kiểm tra tồn kho với ls retail </label>
             <input type="checkbox" class="ml-5" name="is_check_stock" id="is_check_stock" <?php echo $checked?>/>
         </div>
         <div class="form-group">
-            <label for="member_card_guest">Mã thẻ thành viên khách lẽ</label>
+            <label for="member_card_guest">Mã thẻ thành viên khách lẽ </label>
             <input type="text" name="member_card_guest" class="form-control" id="member_card_guest" placeholder="Nhập mã số thẻ khách lẽ" value="<?php echo $member_card_guest?>"/>
         </div>
         <div class="form-group">

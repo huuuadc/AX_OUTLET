@@ -437,6 +437,7 @@ function save_admin_dashboard_setting(){
     let member_card_guest = $('#member_card_guest').val()
     let is_check_stock = $('input[name="is_check_stock"]').is(':checked') ? 'checked': 'nocheck'
     let is_issue_vat = $('input[name="is_issue_vat"]').is(':checked') ? 'checked': 'nocheck'
+    let is_sync_platform = $('input[name="is_sync_platform"]').is(':checked') ? 'checked': 'nocheck'
 
     $.ajax({
         type:   'POST',
@@ -449,7 +450,8 @@ function save_admin_dashboard_setting(){
             item_fee_ship,
             member_card_guest,
             is_check_stock,
-            is_issue_vat
+            is_issue_vat,
+            is_sync_platform
         },
         beforeSend: function (){
             $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')

@@ -289,41 +289,7 @@ function post_invoice_ls_retail(){
         }
 
         //add fee ship
-
         $ship_fee = $order->get_shipping_total();
-//        $qty_simple = 1000;
-//
-//        $qty_ship_fee = intdiv($ship_fee,$qty_simple) ?? 0;
-//        if(fmod($ship_fee,$qty_simple) > $qty_simple/2){
-//            $qty_ship_fee = $qty_ship_fee + 1 ;
-//        }
-//        if($qty_ship_fee > 0) {
-//            $line_no++;
-//            $data_request_transaction_item->Location_Code = $location_code;
-//            $data_request_transaction_item->Receipt_No_ = $order_no;
-//            $data_request_transaction_item->Transaction_No_ = $order_no;
-//            $data_request_transaction_item->LineNo = $line_default + $line_no;
-//            $data_request_transaction_item->Item_No_ = $item_no_ship;
-//            $data_request_transaction_item->SerialNo = '';
-//            $data_request_transaction_item->Variant_Code = '000';
-//            $data_request_transaction_item->Trans_Date = date('Y-m-d') . ' ' . date('H:i:s.v');
-//            $data_request_transaction_item->Quantity = -$qty_ship_fee;
-//            $data_request_transaction_item->UnitPrice = $qty_simple;
-//            $data_request_transaction_item->TotalPrice = $qty_ship_fee * $qty_simple;
-//            $data_request_transaction_item->DiscountRate = 0;
-//            $data_request_transaction_item->DiscountAmount = 0;
-//            $data_request_transaction_item->Disc = 0;
-//            $data_request_transaction_item->TotalAmt = $qty_ship_fee * $qty_simple;
-//            $data_request_transaction_item->Member_Card_No_ = $member_card_guest;
-//            $data_request_transaction_item->Offer_Online_ID = '';
-//            $data_request_transaction_item->CouponCode = '';
-//            $data_request_transaction_item->CouponNo = '';
-//            $data_request_transaction_item->Value_Type = '';
-//            $data_request_transaction_item->Category_Online_ID = [];
-//
-//            $data_request_transaction[] = (array)$data_request_transaction_item;
-//        }
-
         //send fee ship full price
         if($ship_fee > 0) {
             $line_no++;
