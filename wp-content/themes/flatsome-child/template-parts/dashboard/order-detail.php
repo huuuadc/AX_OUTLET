@@ -136,7 +136,11 @@ else:
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12 pt-3">
+                                <div class="col-sm-4 pt-3">
+                                    Số TO:<br>
+                                    <b><?php echo $order_ax->get_to_no()?> </b>
+                                </div>
+                                <div class="col-sm-8 pt-3">
                                     Ghi chú của khách hàng:<br>
                                     <b><?php echo $order_ax->get_customer_note()?> </b>
                                 </div>

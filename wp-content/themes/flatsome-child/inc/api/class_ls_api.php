@@ -41,6 +41,8 @@ class LS_API
         'post_transaction' => '/api/transactions/Transaction_Outlet',
         'post_payment' => '/api/transactions/Payment_Outlet',
 
+        'post_create_transfer_order' => '/api/potos/CreateTransferOrder'
+
     );
 
 
@@ -429,6 +431,14 @@ class LS_API
         return $this->sendRequestToLS($url,[],'POST');
     }
 
+    public function create_transfer_order(array $data = []){
+
+        $url = $this->baseURL . $this->URI['post_create_transfer_order'];
+
+        return $this->sendRequestToLS($url,$data,'POST');
+
+    }
+
 
 }
 
@@ -517,5 +527,23 @@ function ls_request_check_stock_v3(){
         'ItemNo'                    =>              '',
         'VariantCode'               =>              '',
         'BarcodeNo'                 =>              ''
+    );
+}
+
+function ls_request_transfer_order(){
+    return array(
+        'Vietnamese_Description'    =>  '',
+        'Store_to'                  =>  '',
+        'Store_from'                =>  '',
+        'Order_Date'                =>  '',
+        'TOLines'                   =>  []
+    );
+}
+
+function ls_request_transfer_line(){
+    return array(
+        'ItemNo'    =>  '',
+        'VariantCode'                  =>  '',
+        'Quantity'                =>  ''
     );
 }
