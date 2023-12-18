@@ -75,6 +75,15 @@ function register_order_status($arg_status_wc): array
                                 /* translators: %s: number of orders */
                                 'label_count'               => _n_noop( 'Confirm goods <span class="count">(%s)</span>', 'Confirm goods <span class="count">(%s)</span>', 'woocommerce' ),
                             ),
+                             'wc-return'    => array(
+                                'label'                     => _x( 'Return', 'Order status', 'woocommerce' ),
+                                'public'                    => false,
+                                'exclude_from_search'       => false,
+                                'show_in_admin_all_list'    => true,
+                                'show_in_admin_status_list' => true,
+                                /* translators: %s: number of orders */
+                                'label_count'               => _n_noop( 'Return <span class="count">(%s)</span>', 'Return <span class="count">(%s)</span>', 'woocommerce' ),
+                            ),
         );
 
     return array_merge($arg_status_wc, $arg_register_status);
@@ -97,6 +106,7 @@ function register_order_statuses($order_statuses): array
         'wc-delivered'  => _x( 'Delivered', 'Order status', 'woocommerce' ),
         'wc-delivery-failed'   => _x( 'Delivery failed', 'Order status', 'woocommerce' ),
         'wc-confirm-goods'     => _x( 'Confirm goods', 'Order status', 'woocommerce' ),
+        'wc-return'     => _x( 'Return', 'Order status', 'woocommerce' ),
     );
     return array_merge($order_statuses,$register_order_statuses);
 }
