@@ -289,3 +289,12 @@ function round_fee_shipping(int $ship_fee)
 
     return $qty_ship_fee * $qty_simple;
 }
+
+
+function load_template_part($template_name, $part_name=null, $args = []) {
+    ob_start();
+    get_template_part($template_name, $part_name, $args);
+    $var = ob_get_contents();
+    ob_end_clean();
+    return $var;
+}

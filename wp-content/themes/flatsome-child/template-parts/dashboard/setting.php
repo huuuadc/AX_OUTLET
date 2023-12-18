@@ -31,6 +31,7 @@ else:
                 <a class="nav-link" id="setting_tiki-tab" data-toggle="pill" href="#setting_tiki" role="tab" aria-controls="setting_tiki" aria-selected="false">Tiki now</a>
                 <a class="nav-link" id="setting_tiktok-tab" data-toggle="pill" href="#setting_tiktok" role="tab" aria-controls="setting_tiktok" aria-selected="false">Tiktok shop</a>
                 <a class="nav-link" id="setting_viettel-vinvoice-tab" data-toggle="pill" href="#setting_viettel_vinvoice" role="tab" aria-controls="setting_viettel_vinvoice" aria-selected="false">Viettel vinvoice</a>
+                <a class="nav-link" id="setting_ls-api" data-toggle="pill" href="#setting_ls_api" role="tab" aria-controls="setting_ls_api" aria-selected="false">LS retail</a>
                 <a class="nav-link" id="setting_create_table-tab" data-toggle="pill" href="#setting_create_table" role="tab" aria-controls="setting_create_table" aria-selected="false">Create table</a>
                 <a class="nav-link" id="setting_admin-dashboard-tab" data-toggle="pill" href="#setting_admin_dashboard" role="tab" aria-controls="setting_admin_dashboard" aria-selected="false">Admin dashboard</a>
                 </div>
@@ -55,8 +56,11 @@ else:
                      <div class="tab-pane text-left fade" id="setting_tiktok" role="tabpanel" aria-labelledby="setting_tiktok-tab">
                         <?php get_template_part('template-parts/dashboard/setting-tiktok','api')?>
                     </div>
-                     <div class="tab-pane text-left fade" id="setting_viettel_vinvoice" role="tabpanel" aria-labelledby="setting_viettel-vinvoice-tab">
+                    <div class="tab-pane text-left fade" id="setting_viettel_vinvoice" role="tabpanel" aria-labelledby="setting_viettel-vinvoice-tab">
                         <?php get_template_part('template-parts/dashboard/setting-viettel','vinvoice')?>
+                    </div>
+                    <div class="tab-pane text-left fade" id="setting_ls_api" role="tabpanel" aria-labelledby="setting_ls-api">
+                        <?php get_template_part('template-parts/dashboard/setting-ls','api')?>
                     </div>
                 </div>
             </div>
