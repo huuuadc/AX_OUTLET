@@ -165,6 +165,7 @@ function send_update_status(id = '', status = ''){
 
         },
         success: function (data){
+            console.log(data)
             if (isJsonString(data)){
                 const rep = JSON.parse(data);
                 if (rep.status){
@@ -174,6 +175,7 @@ function send_update_status(id = '', status = ''){
                     if (rep.data.order_status)  $(`#order_status_${id}`).html(`<span class="badge badge-${class_status}">${rep.data.order_status}</span> `);
                     if (rep.data.tracking_id)   $(`#order_tracking_id_${id}`).html(`<a href="${rep.data.tracking_url}" >${rep.data.tracking_id}</a>`)
                     if (rep.data.shipment_status)   $(`#order_shipment_status_${id}`).html(`<span class="badge">${rep.data.shipment_status}</span>`)
+                    if (rep.data.data_status)   $(`#content_order_status`).html(`${rep.data.data_status}`)
                     $(document).Toasts('create', {
                         class: 'bg-success',
                         title: 'Success',
@@ -1064,6 +1066,69 @@ function save_setting_viettel_vinvoice(){
         },
         complete: function (){
             $('#card_setting_viettel_vinvoice>.overlay').remove()
+        },
+        error: function(e){
+
+            console.log("ERROR",e)
+
+        }
+    })
+}
+
+
+/**
+ *
+ */
+
+function save_setting_ls_retail(){
+
+    let wc_settings_tab_config_name         = $("input[name='wc_settings_tab_config_name']").val()
+    let wc_settings_tab_ls_api_url          = $("input[name='wc_settings_tab_ls_api_url']").val()
+    let wc_settings_tab_ls_api_username     = $("input[name='wc_settings_tab_ls_api_username']").val()
+    let wc_settings_tab_ls_api_password     = $("input[name='wc_settings_tab_ls_api_password']").val()
+    let wc_settings_tab_ls_location_code    = $("input[name='wc_settings_tab_ls_location_code']").val()
+    let wc_settings_tab_ls_location_code2   = $("input[name='wc_settings_tab_ls_location_code2']").val()
+    let wc_settings_tab_config_name_2       = $("input[name='wc_settings_tab_config_name_2']").val()
+    let wc_settings_tab_ls_api_url_2        = $("input[name='wc_settings_tab_ls_api_url_2']").val()
+    let wc_settings_tab_ls_api_username_2   = $("input[name='wc_settings_tab_ls_api_username_2']").val()
+    let wc_settings_tab_ls_api_password_2   = $("input[name='wc_settings_tab_ls_api_password_2']").val()
+    let wc_settings_tab_ls_location_code_2  = $("input[name='wc_settings_tab_ls_location_code_2']").val()
+    let wc_settings_tab_ls_location_code2_2 = $("input[name='wc_settings_tab_ls_location_code2_2']").val()
+
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        data:{
+            action: 'save_setting_ls_retail',
+            wc_settings_tab_config_name,
+            wc_settings_tab_ls_api_url,
+            wc_settings_tab_ls_api_username,
+            wc_settings_tab_ls_api_password,
+            wc_settings_tab_ls_location_code,
+            wc_settings_tab_ls_location_code2,
+            wc_settings_tab_config_name_2,
+            wc_settings_tab_ls_api_url_2,
+            wc_settings_tab_ls_api_username_2,
+            wc_settings_tab_ls_api_password_2,
+            wc_settings_tab_ls_location_code_2,
+            wc_settings_tab_ls_location_code2_2
+        },
+        beforeSend: function (){
+            $('#save_setting_ls_retail').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
+        },
+        success: function (data){
+            const rep = JSON.parse(data);
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                title: 'Success',
+                body: `update setting viettel invoice success`,
+                icon: 'fas fa-info-circle',
+                autohide: true,
+                delay: 10000
+            })
+        },
+        complete: function (){
+            $('#save_setting_ls_retail>.overlay').remove()
         },
         error: function(e){
 

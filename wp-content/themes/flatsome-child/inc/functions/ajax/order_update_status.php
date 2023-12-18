@@ -63,13 +63,23 @@ function order_update_status(){
     if ($_POST['payload_action'] === 'order_status_reject' && 'order_status_processing' == 'order_status_'.$old_status){
 
             if ($order->update_status('wc-reject')){
+
+                $data_status = load_template_part(
+                    'template-parts/dashboard/components/order','detail-btn',
+                    array(
+                        'order_id' => $order_id,
+                        'order' => $order
+                    )
+                );
+
                 $order->set_log('success',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => true,
                     'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang reject",
                     'data' => array(
                         'order_status' => $order->get_status_title(),
-                        'class' => 'secondary'
+                        'class' => 'secondary',
+                        'data_status' => $data_status
                     )
                 ));
             }else{
@@ -103,13 +113,23 @@ function order_update_status(){
         }
 
         if ($order->update_status('wc-confirm')){
+
+            $data_status = load_template_part(
+                'template-parts/dashboard/components/order','detail-btn',
+                array(
+                    'order_id' => $order_id,
+                    'order' => $order
+                )
+            );
+
                 $order->set_log('success',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => true,
                     'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang confirm",
                     'data' => array(
                         'order_status' => $order->get_status_title(),
-                        'class' => 'primary'
+                        'class' => 'primary',
+                        'data_status' => $data_status
                     )
                 ));
             }else{
@@ -180,8 +200,6 @@ function order_update_status(){
 
             $rep = $tiki_connect->post_create_shipping_to_tiki($data);
 
-            write_log($rep);
-
             if (!$rep->success){
                 $order->set_log('danger',$payload_action,$commit_note);
                 echo json_encode(array(
@@ -201,6 +219,15 @@ function order_update_status(){
 
 
             if ($order->update_status('wc-request')){
+
+                $data_status = load_template_part(
+                    'template-parts/dashboard/components/order','detail-btn',
+                    array(
+                        'order_id' => $order_id,
+                        'order' => $order
+                    )
+                );
+
                 $order->set_log('success',$payload_action,$commit_note);
                 echo json_encode(array(
                     'status' => true,
@@ -210,7 +237,8 @@ function order_update_status(){
                         'class' => 'info',
                         'tracking_id' =>$rep->data->tracking_id,
                         'tracking_url' =>$rep->data->tracking_url,
-                        'shipment_status' => $rep->data->status
+                        'shipment_status' => $rep->data->status,
+                        'data_status' => $data_status
                     )
                 ));
             }else{
@@ -269,13 +297,23 @@ function order_update_status(){
     if ($_POST['payload_action'] == 'order_status_delivered' && 'order_status_shipping' == 'order_status_'.$old_status){
 
         if ($order->update_status('wc-delivered')){
+
+            $data_status = load_template_part(
+                'template-parts/dashboard/components/order','detail-btn',
+                array(
+                    'order_id' => $order_id,
+                    'order' => $order
+                )
+            );
+
             $order->set_log('success',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang delivered",
                 'data' => array(
                     'order_status' => $order->get_status_title(),
-                    'class' => 'info'
+                    'class' => 'info',
+                    'data_status' => $data_status
                 )
             ));
         }else{
@@ -366,13 +404,23 @@ function order_update_status(){
     if ($_POST['payload_action'] == 'order_status_confirm-goods' && 'order_status_delivery-failed' == 'order_status_'.$old_status){
 
         if ($order->update_status('wc-confirm-goods')){
+
+            $data_status = load_template_part(
+                'template-parts/dashboard/components/order','detail-btn',
+                array(
+                    'order_id' => $order_id,
+                    'order' => $order
+                )
+            );
+
             $order->set_log('success',$payload_action,$commit_note);
             echo json_encode(array(
                 'status' => true,
                 'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang confirm goods",
                 'data' => array(
                     'order_status' => $order->get_status_title(),
-                    'class' => 'warning'
+                    'class' => 'warning',
+                    'data_status' => $data_status
                 )
             ));
         }else{
@@ -423,6 +471,51 @@ function order_update_status(){
                 'data' => array(
                     'order_status' => $order->get_status_title(),
                     'class' => 'danger'
+                )
+            ));
+        } else {
+            $order->set_log('danger',$payload_action,$commit_note);
+            echo json_encode(array(
+                'status' => false,
+                'messenger' => "Cập nhật trạng thái không thành công. Trạng thái hiện tại là {$old_status}",
+                'data' => []
+            ));
+        };
+
+        exit;
+    }
+
+
+    //
+    //
+    // Action admin update return order
+    //
+    //
+    if ($_POST['payload_action'] == 'order_status_return'
+        && 'order_status_delivered' == 'order_status_'.$old_status
+    ) {
+
+        if ($order->update_status('wc-return')) {
+
+            $data_status = load_template_part(
+                'template-parts/dashboard/components/order','detail-btn',
+                array(
+                    'order_id' => $order_id,
+                    'order' => $order
+                )
+            );
+
+            //restore stock
+            wc_maybe_increase_stock_levels($order_id);
+
+            $order->set_log('success',$payload_action,$commit_note);
+            echo json_encode(array(
+                'status' => true,
+                'messenger' => "Đã cập nhật trạng thái từ {$old_status} sang return",
+                'data' => array(
+                    'order_status' => $order->get_status_title(),
+                    'class' => 'danger',
+                    'data_status' => $data_status
                 )
             ));
         } else {

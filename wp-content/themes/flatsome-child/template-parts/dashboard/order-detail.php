@@ -136,7 +136,11 @@ else:
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12 pt-3">
+                                <div class="col-sm-4 pt-3">
+                                    Số TO:<br>
+                                    <b><?php echo $order_ax->get_to_no()?> </b>
+                                </div>
+                                <div class="col-sm-8 pt-3">
                                     Ghi chú của khách hàng:<br>
                                     <b><?php echo $order_ax->get_customer_note()?> </b>
                                 </div>
@@ -223,37 +227,16 @@ else:
 
                     <!-- this row will not appear when printing -->
                     <div class="row no-print padding10">
-                        <div class="col-12">
-                            <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=invoice'?>" target="_blank"  rel="noopener noreferrer">
-                                <button rel="noopener" class="btn btn-default">
-                                    <i class="fas fa-print"></i> In hóa đơn</button></a>
-                            <a href="<?php echo '/admin-dashboard/order-list?order_id='.$order_ax->get_id().'&print=shipment'?>" target="_blank"  rel="noopener noreferrer">
-                                <button rel="noopener" class="btn btn-default">
-                                    <i class="fas fa-print"></i> In phiếu giao hàng</button></a>
-                            <?php if(current_user_can('admin_dashboard_order_goods') && $order_ax->get_order_type() == 'website') {?>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'confirm-goods')" type="button" class="btn btn-success float-right">
-                                <i class="far fa-calendar-check"></i> Xác nhận hoàn hàng</button><?php }?>
-                            <?php if(current_user_can('admin_dashboard_order_completed') && $order_ax->get_order_type() != 'website') {?>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'completed')" type="button" class="btn btn-success float-right">
-                                <i class="far fa-calendar-check"></i> Giao sàn</button><?php }?>
-                            <?php if(current_user_can('admin_dashboard_order_post_ls') && $order_ax->get_order_type() == 'website') {?>
-                            <button onclick="post_invoice_ls_retail(<?php echo $order_id?>)" type="button" class="btn btn-default float-right mr-1">
-                                <i class="far fa-calendar-check"></i> Post LS</button><?php }?>
-                            <?php if(current_user_can('admin_dashboard_order_payment')) {?>
-                            <button onclick="send_update_payment(<?php echo $order_id?>)" type="button" class="btn btn-success float-right mr-1">
-                                <i class="far fa-calendar-check"></i>Thanh toán</button><?php }?>
-                            <?php if(current_user_can('admin_dashboard_order_request') && $order_ax->get_order_type() == 'website') {?>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'request')" type="button" class="btn btn-info float-right mr-1">
-                                <i class="fas fa-people-carry"> </i> Gọi giao hàng</button><?php }?>
-                            <?php if(current_user_can('admin_dashboard_order_confirm')) {?>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'confirm')" type="button" class="btn btn-primary float-right mr-1" >
-                                <i class="fa fa-check"></i> Xác nhận</button><?php }?>
-                            <?php if(current_user_can('admin_dashboard_order_reject')) {?>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'reject')" type="button" class="btn btn-secondary float-right mr-1" >
-                                <i class="fas fa-ban"></i> Từ chối</button><?php }?>
-                            <?php if(current_user_can('admin_dashboard_order_cancel')) {?>
-                            <button onclick="send_update_status(<?php echo $order_id?>,'cancelled')" type="button" class="btn btn-danger float-right mr-1" >
-                                <i class="fas fa-times"></i> Hủy đơn</button><?php }?>
+                        <div id="content_order_status" class="col-12">
+                            <?php
+                            wc_get_template(
+                                'template-parts/dashboard/components/order-detail-btn.php',
+                                array(
+                                    'order_id' => $order_id,
+                                    'order' => $order_ax
+                                )
+                            );
+                            ?>
                         </div>
                     </div>
 
