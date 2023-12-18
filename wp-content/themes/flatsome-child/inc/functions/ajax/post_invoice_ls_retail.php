@@ -2,11 +2,15 @@
 
 use OMS\ADDRESS;
 use OMS\LS_API;
+use function OMS\ls_request_transfer_line;
 use function OMS\ls_transactions_request;
 use function OMS\ls_payment_request;
 
 add_action( 'wp_ajax_post_invoice_ls_retail', 'post_invoice_ls_retail' );
 add_action( 'wp_ajax_nopriv_post_invoice_ls_retail', 'post_invoice_ls_retail' );
+/**
+ * @throws Exception
+ */
 function post_invoice_ls_retail(){
 
     //Check have action and payload_action
@@ -52,7 +56,16 @@ function post_invoice_ls_retail(){
     //
     global $wpdb;
     $order          = new OMS_ORDER($order_id);
-    $ls_api         = new LS_API();
+    //ls_api_2 post SO to Dafc
+    $ls_api_2         = new LS_API();
+
+    $base_url_2                 =   get_option('wc_settings_tab_ls_api_url_2') ?? '';
+    $username_2                 =   get_option('wc_settings_tab_ls_api_username_2') ?? '';
+    $password_2                 =   get_option('wc_settings_tab_ls_api_password_2') ?? '';
+
+    //ls_api post invoice to style outlet
+    $ls_api = new LS_API(['user_name' => $username_2, 'user_pass'  => $password_2, 'base_url' => $base_url_2]);
+
     //get old status
     $old_status     = $order->get_status('value');
 
@@ -88,6 +101,11 @@ function post_invoice_ls_retail(){
         $location_code = get_option('wc_settings_tab_ls_location_code');
         if (!$location_code) {
           echo response(false,'Chưa cài đặt mã kho',[]);
+          exit;
+        }
+        $location_code2 = get_option('wc_settings_tab_ls_location_code2');
+        if (!$location_code2) {
+          echo response(false,'Chưa cài đặt mã kho 2',[]);
           exit;
         }
         $item_no_ship = get_option('admin_dashboard_item_fee_ship');
@@ -133,9 +151,9 @@ function post_invoice_ls_retail(){
         $data_request_payment->VAT_Buyer_Name = $order->get_vat_company_name() == '' ? 'Khách lẻ' : $order->get_formatted_billing_full_name();
         $data_request_payment->VAT_Company_Name = $order->get_vat_company_name();
         $data_request_payment->VAT_Tax_Code = $order->get_vat_company_tax_code();
-        $data_request_payment->VAT_Company_Email = $order->get_vat_company_email();
+        $data_request_payment->VAT_Email = $order->get_vat_company_email();
         $data_request_payment->VAT_Address = $vat_address;
-        $data_request_payment->VAT_Company_Address = $order->get_vat_company_address();
+        $data_request_payment->VAT_Phone_No_ = '';
         $data_request_payment->VAT_Payment_Method = $ls_method_type['vat_payment_method'];
         $data_request_payment->VAT_Bank_Account = '';
         $data_request_payment->Member_Phone = $order->get_billing_phone();
@@ -149,8 +167,10 @@ function post_invoice_ls_retail(){
         //===========================================================
         //===========================================================
         $data_request_transaction_item = (object) ls_transactions_request();
-
         $data_request_transaction = [];
+
+        $data_request_transfer_line_item = (object) ls_request_transfer_line();
+        $data_request_transfer_line = [];
 
         $line_no = 0;
         $line_default = 10000;
@@ -286,6 +306,12 @@ function post_invoice_ls_retail(){
                 );
             }
 
+            $data_request_transfer_line_item->ItemNo = $item_No;
+            $data_request_transfer_line_item->VariantCode = $variant_code;
+            $data_request_transfer_line_item->Quantity = $item_quantity;
+
+            $data_request_transfer_line[] = $data_request_transfer_line_item;
+
         }
 
         //add fee ship
@@ -384,13 +410,46 @@ function post_invoice_ls_retail(){
         $flag_payment = false;
         $flag_transaction = false;
 
-        $response_ls_payment = $ls_api->post_payment_outlet((array)$data_request_payment);
+//        $response_ls_payment = $ls_api->post_payment_outlet((array)$data_request_payment);
+//
+//        if( isset($response_ls_payment->Responcode) && $response_ls_payment->Responcode == 200) $flag_payment = true;
+//
+//        $response_ls_transaction = $ls_api->post_transaction_outlet($data_request_transaction);
+//
+//        if( isset($response_ls_transaction->Responcode) && $response_ls_transaction->Responcode == 200) $flag_transaction = true;
 
-        if( isset($response_ls_payment->Responcode) && $response_ls_payment->Responcode == 200) $flag_payment = true;
 
-        $response_ls_transaction = $ls_api->post_transaction_outlet($data_request_transaction);
+        if($order->get_to_no() == ''){
+            //===========================================================
+            //===========================================================
+            //post_create_transfer_order
+            //===========================================================
+            //===========================================================
 
-        if( isset($response_ls_transaction->Responcode) && $response_ls_transaction->Responcode == 200) $flag_transaction = true;
+            $data_transfer_order = array(
+                'Vietnamese_Description'    => 'TO Online',
+                'Store_to'                  =>  $location_code2,
+                'Store_from'                =>  $location_code,
+                'Order_Date'                =>  date('Y-m-d') . ' ' . date('H:i:s.v'),
+                'TOLines'                   =>  $data_request_transfer_line
+            );
+
+            $rep_transfer_order = $ls_api_2->create_transfer_order($data_transfer_order);
+            if(!isset($rep_transfer_order->code) || $rep_transfer_order->code != 200){
+                write_log($rep_transfer_order);
+            }else{
+                write_log($rep_transfer_order);
+                $order->update_to_no($rep_transfer_order->ListData->No);
+                $order->update_data_transfer_order(json_encode($rep_transfer_order->ListData));
+            }
+
+            //===========================================================
+            //===========================================================
+            //end_create_transfer_order
+            //===========================================================
+            //===========================================================
+        }
+
 
         if ($flag_payment && $flag_transaction)
         {
@@ -414,36 +473,36 @@ function post_invoice_ls_retail(){
             exit;
         }
         else{
-            if (!$flag_payment && !$flag_transaction) {
-                $order->set_log(
-                    'danger',
-                    'post_ls',
-                    'Không thể post header và detail. Header response:' .
-                    json_encode($response_ls_payment) . ' - Detail response: ' .
-                    json_encode($response_ls_transaction));
-                echo response(false, 'Chuyển qua LS Retail không thành công xin kiểm tra lại dữ liệu đơn hàng', []);
-                exit;
-            }
-            if (!$flag_payment && $flag_transaction)
-            {
-                $order->set_ls_status('detail');
-                $order->set_log(
-                    'danger',
-                    'post_ls',
-                    'Post detail thành công, header post lỗi. Header response:' . json_encode($response_ls_payment));
-                echo response(false, 'Đã chuyển được detail, Không gửi được header', []);
-                exit;
-            }
-            if ($flag_payment && !$flag_transaction) {
-                $order->set_ls_status('header');
-                $order->set_log(
-                    'danger',
-                    'post_ls',
-                    'Post header thành công, detail post lỗi. Detail response: ' . json_encode($response_ls_transaction));
-                $order->set_ls_status('no');
-                echo response(false, 'Đã chuyển được detail, Không gửi được header', []);
-                exit;
-            }
+//            if (!$flag_payment && !$flag_transaction) {
+//                $order->set_log(
+//                    'danger',
+//                    'post_ls',
+//                    'Không thể post header và detail. Header response:' .
+//                    json_encode($response_ls_payment) . ' - Detail response: ' .
+//                    json_encode($response_ls_transaction));
+//                echo response(false, 'Chuyển qua LS Retail không thành công xin kiểm tra lại dữ liệu đơn hàng', []);
+//                exit;
+//            }
+//            if (!$flag_payment && $flag_transaction)
+//            {
+//                $order->set_ls_status('detail');
+//                $order->set_log(
+//                    'danger',
+//                    'post_ls',
+//                    'Post detail thành công, header post lỗi. Header response:' . json_encode($response_ls_payment));
+//                echo response(false, 'Đã chuyển được detail, Không gửi được header', []);
+//                exit;
+//            }
+//            if ($flag_payment && !$flag_transaction) {
+//                $order->set_ls_status('header');
+//                $order->set_log(
+//                    'danger',
+//                    'post_ls',
+//                    'Post header thành công, detail post lỗi. Detail response: ' . json_encode($response_ls_transaction));
+//                $order->set_ls_status('no');
+//                echo response(false, 'Đã chuyển được detail, Không gửi được header', []);
+//                exit;
+//            }
         }
 
         echo response(false, 'Xẩy ra lỗi trong quá trình xử lý', []);

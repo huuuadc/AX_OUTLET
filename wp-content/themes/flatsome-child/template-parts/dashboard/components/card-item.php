@@ -2,7 +2,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! $args || !$args['class'] ) {
+if ( !isset($args) || !$args['class'] ) {
     return;
 }
 

@@ -74,6 +74,10 @@ class OMS_ORDER extends WC_Order
             'title' => 'Xóa',
             'class_name' => 'badge-danger'
         ],
+        'return' => [
+            'title' => 'Trả hàng',
+            'class_name' => 'badge-danger'
+        ],
     );
 
     public array $PAYMENT_STATUS = [
@@ -561,6 +565,26 @@ class OMS_ORDER extends WC_Order
     public function get_date_success_delivered()
     {
         return  $this->get_meta('date_success_delivered', true, 'value') ?? '';
+    }
+
+    public function update_to_no($to_no):void
+    {
+        update_post_meta($this->get_id(),'to_no',$to_no);
+    }
+
+    public function get_to_no()
+    {
+        return  $this->get_meta('to_no', true, 'value') ?? '';
+    }
+
+    public function update_data_transfer_order($to_no):void
+    {
+        update_post_meta($this->get_id(),'data_transfer_order',$to_no);
+    }
+
+    public function get_data_transfer_order()
+    {
+        return  $this->get_meta('data_transfer_order', true, 'value') ?? '';
     }
 
 

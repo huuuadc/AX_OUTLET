@@ -41,6 +41,8 @@ class LS_API
         'post_transaction' => '/api/transactions/Transaction_Outlet',
         'post_payment' => '/api/transactions/Payment_Outlet',
 
+        'post_create_transfer_order' => '/api/potos/CreateTransferOrder'
+
     );
 
 
@@ -266,7 +268,6 @@ class LS_API
         }
 
         if (version_compare(phpversion(),'8.0.0') >= 0) {
-//            setcookie($this->LS_TOKEN, base64_encode($ls_token), time() + (1800), "/","/", secure: true,httponly: true ); // 86400 = 1 day  php > 8.
             setcookie($this->LS_TOKEN, base64_encode($ls_token), time() + (1800), "/");
         }
         if (version_compare(phpversion(),'8.0.0') < 0) {
@@ -429,6 +430,14 @@ class LS_API
         return $this->sendRequestToLS($url,[],'POST');
     }
 
+    public function create_transfer_order(array $data = []){
+
+        $url = $this->baseURL . $this->URI['post_create_transfer_order'];
+
+        return $this->sendRequestToLS($url,$data,'POST');
+
+    }
+
 
 }
 
@@ -503,8 +512,8 @@ function ls_payment_request(){
       'VAT_Address'=> '',
       'VAT_Payment_Method'=> '',
       'VAT_Bank_Account'=> '',
-      'VAT_Company_Email'=>'',
-      'VAT_Company_Address'=>'',
+      'VAT_Email'=>'',
+      'VAT_Phone_No_'=>'',
       'Member_Phone'=> '',
       'THENH'=> '',
       'Cash'=> ''
@@ -517,5 +526,23 @@ function ls_request_check_stock_v3(){
         'ItemNo'                    =>              '',
         'VariantCode'               =>              '',
         'BarcodeNo'                 =>              ''
+    );
+}
+
+function ls_request_transfer_order(){
+    return array(
+        'Vietnamese_Description'    =>  '',
+        'Store_to'                  =>  '',
+        'Store_from'                =>  '',
+        'Order_Date'                =>  '',
+        'TOLines'                   =>  []
+    );
+}
+
+function ls_request_transfer_line(){
+    return array(
+        'ItemNo'    =>  '',
+        'VariantCode'                  =>  '',
+        'Quantity'                =>  ''
     );
 }

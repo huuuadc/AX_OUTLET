@@ -167,6 +167,7 @@ class TIKI_API
 
             if ($http_status != 200) {
                 return (object)array(
+                    'success'   => false,
                     'Responcode' => $http_status,
                     'messenger' => 'error http status code: ' . $http_status
                 );
@@ -310,7 +311,7 @@ class TIKI_API
         $rep = $this->sendRequestToTiki($url,$data,'POST');
 
         //Refresh token when invalid token
-        if (!$rep->success && ($rep->errors[0]->code == $this->INVALID_TOKEN || $rep->errors[0]->code == $this->MISSING_TOKEN)){
+        if (!$rep->success){
             $token = $this->get_token();
             $this->ACCESS_TOKEN = $token;
             if(!add_option('tiki_access_token',$token,'','no')){
