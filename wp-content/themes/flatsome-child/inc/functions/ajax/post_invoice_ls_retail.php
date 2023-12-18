@@ -56,7 +56,16 @@ function post_invoice_ls_retail(){
     //
     global $wpdb;
     $order          = new OMS_ORDER($order_id);
-    $ls_api         = new LS_API();
+    //ls_api_2 post SO to Dafc
+    $ls_api_2         = new LS_API();
+
+    $base_url_2                 =   get_option('wc_settings_tab_ls_api_url_2') ?? '';
+    $username_2                 =   get_option('wc_settings_tab_ls_api_username_2') ?? '';
+    $password_2                 =   get_option('wc_settings_tab_ls_api_password_2') ?? '';
+
+    //ls_api post invoice to style outlet
+    $ls_api = new LS_API(['user_name' => $username_2, 'user_pass'  => $password_2, 'base_url' => $base_url_2]);
+
     //get old status
     $old_status     = $order->get_status('value');
 
@@ -70,10 +79,10 @@ function post_invoice_ls_retail(){
         }
     }
     //Check stock với ls
-//    if (!$order->check_stock_ls()){
-//        echo response(false,'Không còn tồn trên ls retail',[]);
-//        exit;
-//    }
+    if (!$order->check_stock_ls()){
+        echo response(false,'Không còn tồn trên ls retail',[]);
+        exit;
+    }
 
     //
     //
@@ -417,10 +426,6 @@ function post_invoice_ls_retail(){
             //===========================================================
             //===========================================================
 
-            $base_url_2                 =   get_option('wc_settings_tab_ls_api_url_2') ?? '';
-            $username_2                 =   get_option('wc_settings_tab_ls_api_username_2') ?? '';
-            $password_2                 =   get_option('wc_settings_tab_ls_api_password_2') ?? '';
-
             $data_transfer_order = array(
                 'Vietnamese_Description'    => 'TO Online',
                 'Store_to'                  =>  $location_code2,
@@ -428,8 +433,6 @@ function post_invoice_ls_retail(){
                 'Order_Date'                =>  date('Y-m-d') . ' ' . date('H:i:s.v'),
                 'TOLines'                   =>  $data_request_transfer_line
             );
-
-            $ls_api_2 = new LS_API(['user_name' => $username_2, 'user_pass'  => $password_2, 'base_url' => $base_url_2]);
 
             $rep_transfer_order = $ls_api_2->create_transfer_order($data_transfer_order);
             if(!isset($rep_transfer_order->code) || $rep_transfer_order->code != 200){

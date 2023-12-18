@@ -268,7 +268,6 @@ class LS_API
         }
 
         if (version_compare(phpversion(),'8.0.0') >= 0) {
-//            setcookie($this->LS_TOKEN, base64_encode($ls_token), time() + (1800), "/","/", secure: true,httponly: true ); // 86400 = 1 day  php > 8.
             setcookie($this->LS_TOKEN, base64_encode($ls_token), time() + (1800), "/");
         }
         if (version_compare(phpversion(),'8.0.0') < 0) {
