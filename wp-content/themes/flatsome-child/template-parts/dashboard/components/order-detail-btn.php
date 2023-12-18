@@ -26,7 +26,8 @@ $order_ax = $args['order'] ?? new OMS_ORDER($order_id);
         <button onclick="send_update_status(<?php echo $order_id?>,'completed')" type="button" class="btn btn-success float-right">
                 <i class="far fa-calendar-check"></i> Giao sàn</button><?php }?>
         <?php if(current_user_can('admin_dashboard_order_post_ls')
-                && $order_ax->get_order_type() == 'website') {?>
+                && $order_ax->get_order_type() == 'website'
+                && !in_array($order_ax->get_status(), [1,'delivered','return'], true)) {?>
         <button onclick="post_invoice_ls_retail(<?php echo $order_id?>)" type="button" class="btn btn-default float-right mr-1">
                 <i class="far fa-calendar-check"></i> Post LS</button><?php }?>
         <?php if(current_user_can('admin_dashboard_order_payment')
@@ -46,11 +47,11 @@ $order_ax = $args['order'] ?? new OMS_ORDER($order_id);
                 && in_array($order_ax->get_status(), [1,'processing'], true)) {?>
         <button onclick="send_update_status(<?php echo $order_id?>,'reject')" type="button" class="btn btn-secondary float-right mr-1" >
                 <i class="fas fa-ban"></i> Từ chối</button><?php }?>
-        <?php if(!current_user_can('admin_dashboard_order_return')
+        <?php if(current_user_can('admin_dashboard_order_return')
                 && in_array($order_ax->get_status(), [1,'delivered'], true)) {?>
         <button onclick="send_update_status(<?php echo $order_id?>,'return')" type="button" class="btn btn-danger float-right mr-1" >
                 <i class="fas fa-times"></i> Trả hàng</button><?php }?>
         <?php if(current_user_can('admin_dashboard_order_cancel')
-                && !in_array($order_ax->get_status(), [1,'return'], true)) {?>
+                && !in_array($order_ax->get_status(), [1,'delivered','return'], true)) {?>
         <button onclick="send_update_status(<?php echo $order_id?>,'cancelled')" type="button" class="btn btn-danger float-right mr-1" >
                 <i class="fas fa-times"></i> Hủy đơn</button><?php }?>
