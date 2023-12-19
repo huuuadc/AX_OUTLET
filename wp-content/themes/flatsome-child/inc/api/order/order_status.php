@@ -60,6 +60,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             //===========================================
 
             global $wpdb;
+            //Post ls
             $ls_api_2         = new LS_API();
 
             $base_url_2                 =   get_option('wc_settings_tab_ls_api_url_2') ?? '';
@@ -283,6 +284,12 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                     );
                 }
 
+                $data_request_transfer_line_item->ItemNo = $item_No;
+                $data_request_transfer_line_item->VariantCode = $variant_code;
+                $data_request_transfer_line_item->Quantity = $item_quantity;
+
+                $data_request_transfer_line[] = $data_request_transfer_line_item;
+
             }
 
             //add fee ship
@@ -424,19 +431,19 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             {
                 $order->set_log('success','post_ls_auto','Thành công');
                 $order->set_ls_status();
-               exit;
+               return true;
             }
             elseif ($flag_payment && $order->get_ls_status() === 'detail')
             {
                 $order->set_log('success','post_ls_auto','Thành công');
                 $order->set_ls_status();
-                exit;
+                return false;
             }
             elseif ($flag_transaction && $order->get_ls_status() === 'header')
             {
                 $order->set_log('success','post_ls_auto','Thành công');
                 $order->set_ls_status();
-               exit;
+                return false;
             }
             else{
                 if (!$flag_payment && !$flag_transaction) {
