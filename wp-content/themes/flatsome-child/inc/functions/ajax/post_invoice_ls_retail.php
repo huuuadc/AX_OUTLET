@@ -410,13 +410,13 @@ function post_invoice_ls_retail(){
         $flag_payment = false;
         $flag_transaction = false;
 
-//        $response_ls_payment = $ls_api->post_payment_outlet((array)$data_request_payment);
-//
-//        if( isset($response_ls_payment->Responcode) && $response_ls_payment->Responcode == 200) $flag_payment = true;
-//
-//        $response_ls_transaction = $ls_api->post_transaction_outlet($data_request_transaction);
-//
-//        if( isset($response_ls_transaction->Responcode) && $response_ls_transaction->Responcode == 200) $flag_transaction = true;
+        $response_ls_payment = $ls_api->post_payment_outlet((array)$data_request_payment);
+
+        if( isset($response_ls_payment->Responcode) && $response_ls_payment->Responcode == 200) $flag_payment = true;
+
+        $response_ls_transaction = $ls_api->post_transaction_outlet($data_request_transaction);
+
+        if( isset($response_ls_transaction->Responcode) && $response_ls_transaction->Responcode == 200) $flag_transaction = true;
 
 
         if($order->get_to_no() == ''){
@@ -435,7 +435,7 @@ function post_invoice_ls_retail(){
             );
 
             $rep_transfer_order = $ls_api_2->create_transfer_order($data_transfer_order);
-            if(!isset($rep_transfer_order->code) || $rep_transfer_order->code != 200){
+            if(!isset($rep_transfer_order->Code) || $rep_transfer_order->Code != '200'){
                 write_log($rep_transfer_order);
             }else{
                 write_log($rep_transfer_order);
@@ -473,36 +473,36 @@ function post_invoice_ls_retail(){
             exit;
         }
         else{
-//            if (!$flag_payment && !$flag_transaction) {
-//                $order->set_log(
-//                    'danger',
-//                    'post_ls',
-//                    'Không thể post header và detail. Header response:' .
-//                    json_encode($response_ls_payment) . ' - Detail response: ' .
-//                    json_encode($response_ls_transaction));
-//                echo response(false, 'Chuyển qua LS Retail không thành công xin kiểm tra lại dữ liệu đơn hàng', []);
-//                exit;
-//            }
-//            if (!$flag_payment && $flag_transaction)
-//            {
-//                $order->set_ls_status('detail');
-//                $order->set_log(
-//                    'danger',
-//                    'post_ls',
-//                    'Post detail thành công, header post lỗi. Header response:' . json_encode($response_ls_payment));
-//                echo response(false, 'Đã chuyển được detail, Không gửi được header', []);
-//                exit;
-//            }
-//            if ($flag_payment && !$flag_transaction) {
-//                $order->set_ls_status('header');
-//                $order->set_log(
-//                    'danger',
-//                    'post_ls',
-//                    'Post header thành công, detail post lỗi. Detail response: ' . json_encode($response_ls_transaction));
-//                $order->set_ls_status('no');
-//                echo response(false, 'Đã chuyển được detail, Không gửi được header', []);
-//                exit;
-//            }
+            if (!$flag_payment && !$flag_transaction) {
+                $order->set_log(
+                    'danger',
+                    'post_ls',
+                    'Không thể post header và detail. Header response:' .
+                    json_encode($response_ls_payment) . ' - Detail response: ' .
+                    json_encode($response_ls_transaction));
+                echo response(false, 'Chuyển qua LS Retail không thành công xin kiểm tra lại dữ liệu đơn hàng', []);
+                exit;
+            }
+            if (!$flag_payment && $flag_transaction)
+            {
+                $order->set_ls_status('detail');
+                $order->set_log(
+                    'danger',
+                    'post_ls',
+                    'Post detail thành công, header post lỗi. Header response:' . json_encode($response_ls_payment));
+                echo response(false, 'Đã chuyển được detail, Không gửi được header', []);
+                exit;
+            }
+            if ($flag_payment && !$flag_transaction) {
+                $order->set_ls_status('header');
+                $order->set_log(
+                    'danger',
+                    'post_ls',
+                    'Post header thành công, detail post lỗi. Detail response: ' . json_encode($response_ls_transaction));
+                $order->set_ls_status('no');
+                echo response(false, 'Đã chuyển được detail, Không gửi được header', []);
+                exit;
+            }
         }
 
         echo response(false, 'Xẩy ra lỗi trong quá trình xử lý', []);
