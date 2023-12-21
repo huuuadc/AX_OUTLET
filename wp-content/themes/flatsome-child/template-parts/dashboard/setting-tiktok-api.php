@@ -108,6 +108,14 @@ else:
         </div>
         <button type="button" onclick="get_tiktok_authorized_shop()" class="btn btn-primary">Authorized shop</button>
 
+        <hr>
+
+        <div class="form-group">
+            <button type="submit" onclick="sync_e_commerce_platform('get_products')" class="btn btn-primary">Get products</button>
+        </div>
+
+
+
     </div>
     <!-- /.card-body -->
 

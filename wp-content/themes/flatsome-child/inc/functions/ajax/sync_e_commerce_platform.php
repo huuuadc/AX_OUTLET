@@ -70,6 +70,16 @@ function sync_e_commerce_platform()
         exit;
     }
 
+    if($_POST['action_payload'] === 'get_products') {
+
+        if($tiktok_api->update_product_stock()) {
+            echo response(true, 'Save success', []);
+        } else {
+            echo response(false,'Non order load',[]);
+        }
+        exit;
+    }
+
     echo response(false,'No action match',[]);
     exit;
 
