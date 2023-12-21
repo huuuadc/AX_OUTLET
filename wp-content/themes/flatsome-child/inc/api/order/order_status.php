@@ -1,6 +1,7 @@
 <?php
 
 use OMS\LS_API;
+use function OMS\ls_request_transfer_line;
 use function OMS\ls_transactions_request;
 use function OMS\ls_payment_request;
 
@@ -59,13 +60,27 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             //===========================================
 
             global $wpdb;
-            $ls_api         = new LS_API();
+            //Post ls
+            $ls_api_2         = new LS_API();
+
+            $base_url_2                 =   get_option('wc_settings_tab_ls_api_url_2') ?? '';
+            $username_2                 =   get_option('wc_settings_tab_ls_api_username_2') ?? '';
+            $password_2                 =   get_option('wc_settings_tab_ls_api_password_2') ?? '';
+
+            //ls_api post invoice to style outlet
+            $ls_api = new LS_API(['user_name' => $username_2, 'user_pass'  => $password_2, 'base_url' => $base_url_2]);
+
             //get old status
             $old_status     = $order->get_status('value');
 
             $location_code = get_option('wc_settings_tab_ls_location_code');
             if (!$location_code) {
                 write_log('No location code');
+                return false;
+            }
+            $location_code2 = get_option('wc_settings_tab_ls_location_code2');
+            if (!$location_code2) {
+                write_log('No location code 2');
                 return false;
             }
             $item_no_ship = get_option('admin_dashboard_item_fee_ship');
@@ -131,8 +146,10 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             //===========================================================
             //===========================================================
             $data_request_transaction_item = (object) ls_transactions_request();
-
             $data_request_transaction = [];
+
+            $data_request_transfer_line_item = (object) ls_request_transfer_line();
+            $data_request_transfer_line = [];
 
             $line_no = 0;
             $line_default = 10000;
@@ -267,6 +284,12 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                     );
                 }
 
+                $data_request_transfer_line_item->ItemNo = $item_No;
+                $data_request_transfer_line_item->VariantCode = $variant_code;
+                $data_request_transfer_line_item->Quantity = $item_quantity;
+
+                $data_request_transfer_line[] = $data_request_transfer_line_item;
+
             }
 
             //add fee ship
@@ -373,23 +396,54 @@ function shipment_order_update_status( WP_REST_Request $request ) {
 
             if( isset($response_ls_transaction->Responcode) && $response_ls_transaction->Responcode == 200) $flag_transaction = true;
 
+            if($order->get_to_no() == ''){
+                //===========================================================
+                //===========================================================
+                //post_create_transfer_order
+                //===========================================================
+                //===========================================================
+
+                $data_transfer_order = array(
+                    'Vietnamese_Description'    => 'TO Online',
+                    'Store_to'                  =>  $location_code2,
+                    'Store_from'                =>  $location_code,
+                    'Order_Date'                =>  date('Y-m-d') . ' ' . date('H:i:s.v'),
+                    'TOLines'                   =>  $data_request_transfer_line
+                );
+
+                $rep_transfer_order = $ls_api_2->create_transfer_order($data_transfer_order);
+                if(!isset($rep_transfer_order->Code) || $rep_transfer_order->Code != '200'){
+                    write_log($rep_transfer_order);
+                }else{
+                    write_log($rep_transfer_order);
+                    $order->update_to_no($rep_transfer_order->ListData->No);
+                    $order->update_data_transfer_order(json_encode($rep_transfer_order->ListData));
+                }
+
+                //===========================================================
+                //===========================================================
+                //end_create_transfer_order
+                //===========================================================
+                //===========================================================
+            }
+
             if ($flag_payment && $flag_transaction)
             {
                 $order->set_log('success','post_ls_auto','Thành công');
                 $order->set_ls_status();
-               exit;
+               return true;
             }
             elseif ($flag_payment && $order->get_ls_status() === 'detail')
             {
                 $order->set_log('success','post_ls_auto','Thành công');
                 $order->set_ls_status();
-                exit;
+                return false;
             }
             elseif ($flag_transaction && $order->get_ls_status() === 'header')
             {
                 $order->set_log('success','post_ls_auto','Thành công');
                 $order->set_ls_status();
-               exit;
+                return false;
             }
             else{
                 if (!$flag_payment && !$flag_transaction) {

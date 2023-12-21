@@ -117,7 +117,6 @@ function logo_login() {
             background-image: url(<?php echo $src; ?>);
             background-repeat: no-repeat;
             background-size: <?php echo $width; ?>px;
-            height: unset;
             width: unset;
         }
     </style>
