@@ -66,7 +66,6 @@ Class Tiktok_Api
     {
 
         try {
-
             $data_request = json_encode($data);
 
             $ch = curl_init($url);
@@ -77,9 +76,9 @@ Class Tiktok_Api
             );
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_request);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            if($data) curl_setopt($ch, CURLOPT_POSTFIELDS, $data_request);
 
             $rep = curl_exec($ch);
             $result = json_decode($rep );
@@ -111,7 +110,6 @@ Class Tiktok_Api
             ];
             $this->log->insert($arg);
             //End write log in to WP rect log;
-
             if ($http_status != 200) {
                 return (object)array(
                     'Responcode' => $http_status,
@@ -294,6 +292,7 @@ Class Tiktok_Api
     {
 
         unset($queries['access_token']);
+        unset($queries['sign']);
         $keys = array_keys($queries);
         sort($keys);
         $input = $path;
@@ -619,6 +618,46 @@ Class Tiktok_Api
         }
 
         return true;
+    }
+
+    public function get_products($page_size = 100 , $next_page_token = '', $body = []){
+
+        $this->queries['page_size'] = $page_size;
+        $this->queries['page_token'] = $next_page_token;
+
+        $url = $this->get_api_url().'/product/202309/products/search?'.$this->get_common_queries();
+        $url.= 'sign='.$this->get_sign_v_202309($this->app_secret,'/product/202309/products/search',$this->queries,$body);
+        $response =  $this->sendRequestToTiktok($url,$body,'POST');
+        write_log($response);
+        if(!isset($response->data) || $response->code != 0) return false;
+        return $response->data;
+    }
+
+    public function update_product_stock($product_id = '0'
+        , $body = [
+
+        ]){
+        $product_id = '1729878544159443115';
+        $body = [
+            'skus'=> [
+                [
+                    'id' => '1729878544159508651',
+                    'inventory' => [
+                        [
+                            'quantity' => 1,
+                            'warehouse_id' => '7309814133517141765'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $url = $this->get_api_url().'/product/202309/products/'.$product_id.'/inventory/update?'.$this->get_common_queries();
+        $url.= 'sign='.$this->get_sign_v_202309($this->app_secret,'/product/202309/products/'.$product_id.'/inventory/update',$this->queries,$body);
+        $response =  $this->sendRequestToTiktok($url,$body,'POST');
+        write_log($response);
+        if(!isset($response->data) || $response->code != 0) return false;
+        return $response->data;
     }
 
 }
