@@ -72,7 +72,7 @@ function sync_e_commerce_platform()
 
     if($_POST['action_payload'] === 'get_products') {
 
-        if($tiktok_api->update_product_stock()) {
+        if(product_tiktok_sync()) {
             echo response(true, 'Save success', []);
         } else {
             echo response(false,'Non order load',[]);
