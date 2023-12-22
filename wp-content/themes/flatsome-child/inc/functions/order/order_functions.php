@@ -108,6 +108,8 @@ function check_stock_ls($items = []): array {
         if($item['Inventory'] < $item['Qty']){
             $data_check[] = $item['ItemName'];
         }
+        write_log($response);
+        write_log($item);
 
     }
 
