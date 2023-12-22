@@ -330,7 +330,7 @@ Class Tiktok_Api
 
     }
 
-    public function get_product_list($page_size = 100, $page_number = 1)
+    public function get_product_v1($page_size = 100, $page_number = 1)
     {
         $url = $this->get_api_url().'/api/products/search?'.$this->get_common_queries();
         $url.= 'sign='.$this->get_sign($this->app_secret,'/api/products/search',$this->queries);
@@ -620,7 +620,7 @@ Class Tiktok_Api
         return true;
     }
 
-    public function get_products($page_size = 100 , $next_page_token = '', $body = []){
+    public function get_products_v2($page_size = 100 , $next_page_token = '', $body = []){
 
         $this->queries['page_size'] = $page_size;
         $this->queries['page_token'] = $next_page_token;
@@ -634,30 +634,14 @@ Class Tiktok_Api
     }
 
     public function update_product_stock($product_id = '0'
-        , $body = [
-
-        ]){
-        $product_id = '1729878544159443115';
-        $body = [
-            'skus'=> [
-                [
-                    'id' => '1729878544159508651',
-                    'inventory' => [
-                        [
-                            'quantity' => 1,
-                            'warehouse_id' => '7309814133517141765'
-                        ]
-                    ]
-                ]
-            ]
-        ];
+        , $body = []){
 
         $url = $this->get_api_url().'/product/202309/products/'.$product_id.'/inventory/update?'.$this->get_common_queries();
         $url.= 'sign='.$this->get_sign_v_202309($this->app_secret,'/product/202309/products/'.$product_id.'/inventory/update',$this->queries,$body);
         $response =  $this->sendRequestToTiktok($url,$body,'POST');
         write_log($response);
         if(!isset($response->data) || $response->code != 0) return false;
-        return $response->data;
+        return true;
     }
 
 }
