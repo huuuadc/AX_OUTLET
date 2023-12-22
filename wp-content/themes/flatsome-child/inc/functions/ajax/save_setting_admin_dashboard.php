@@ -17,13 +17,13 @@ function save_admin_dashboard_setting()
         update_option('admin_dashboard_item_in_page',$post->item_in_page , 'no');
     }
 
-//    if(!add_option('admin_dashboard_footer_print_shipment',$post->footer_print_shipment , '','no')){
-//        update_option('admin_dashboard_footer_print_shipment',$post->footer_print_shipment , 'no');
-//    }
-//
-//    if(!add_option('admin_dashboard_product_return_policy',$post->product_return_policy , '','no')){
-//        update_option('admin_dashboard_product_return_policy',$post->product_return_policy , 'no');
-//    }
+    if(!add_option('admin_dashboard_footer_print_shipment',$post->footer_print_shipment , '','no')){
+        update_option('admin_dashboard_footer_print_shipment',$post->footer_print_shipment , 'no');
+    }
+
+    if(!add_option('admin_dashboard_product_return_policy',$post->product_return_policy , '','no')){
+        update_option('admin_dashboard_product_return_policy',$post->product_return_policy , 'no');
+    }
 
     if(!add_option('admin_dashboard_item_fee_ship',$post->item_fee_ship , '','no')){
         update_option('admin_dashboard_item_fee_ship',$post->item_fee_ship , 'no');
