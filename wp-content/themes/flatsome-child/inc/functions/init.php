@@ -63,3 +63,4 @@ require (__DIR__.'/cron_job/tiktok_cron_job.php');
 require (__DIR__.'/ajax/save_setting_viettel_vinvoice.php');
 require (__DIR__.'/ajax/save_setting_ls_retail.php');
 require (__DIR__.'/class-oms-product.php');
+require (__DIR__.'/product/product_sync_stock.php');
