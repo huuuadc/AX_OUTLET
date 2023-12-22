@@ -99,7 +99,7 @@ function check_stock_ls($items = []): array {
         if($item['BarcodeNo'] != ''){
             foreach ($response->data as $value){
                 if($value->ItemNo == $item['ItemNo']
-                    && ($value->BarcodeNo == $item['BarcodeNo'] || $item['BarcodeNo'] = $value['ItemNo'] . $value['Variant'] ))
+                    && ($value->BarcodeNo == $item['BarcodeNo'] || $item['BarcodeNo'] == $value['ItemNo'] . $value['Variant'] ))
                     $item['Inventory'] = $value->Inventory ?? 0;
                 $arg_data[$key]['Inventory'] = $value->Inventory ?? 0;
             }
