@@ -436,13 +436,13 @@ function woocommerce_PayooVN_init(){
                             $order = new WC_Order($_GET['order_no']);
                             if (!empty($order))
                             {
-                                $res = $order->update_status('cancelled','Payoo');
+                                $res = $order->update_status('failed','Payoo');
                                 WC()->cart->empty_cart();
                             }
                         }
                     }
                     // redirect to thankyou page
-                    $thankyou_page =  add_query_arg('data', $cs, add_query_arg('key', $order->get_order_key(),get_permalink(woocommerce_get_page_id('pay')).'/order-received/'));
+                    $thankyou_page =  add_query_arg('data', $cs, add_query_arg('key', $order->get_order_key(),get_permalink(woocommerce_get_page_id('pay')).'/order-received/'.$order->get_id().'/'));
                     wp_redirect($thankyou_page);
                     exit();
                 }
