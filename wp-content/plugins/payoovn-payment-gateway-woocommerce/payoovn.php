@@ -424,7 +424,10 @@ function woocommerce_PayooVN_init(){
                             if (!empty($order))
                             {
 
-                                $res = $order->update_status('completed','Payoo');
+                                $res = $order->update_status('processing','Payoo');
+                                $new_order = new OMS_ORDER($order->get_id());
+                                $new_order->set_payment_status();
+                                //Update payment completed
                                 WC()->cart->empty_cart();
                             }
                         }
@@ -439,7 +442,7 @@ function woocommerce_PayooVN_init(){
                         }
                     }
                     // redirect to thankyou page
-                    $thankyou_page =  add_query_arg('data', $cs, add_query_arg('key', $order->get_order_key(),get_permalink(woocommerce_get_page_id('pay')).'/order-received/'));
+                    $thankyou_page =  add_query_arg('data', $cs, add_query_arg('key', $order->get_order_key(),get_permalink(woocommerce_get_page_id('pay')).'/order-received/'.$order->get_id().'/'));
                     wp_redirect($thankyou_page);
                     exit();
                 }

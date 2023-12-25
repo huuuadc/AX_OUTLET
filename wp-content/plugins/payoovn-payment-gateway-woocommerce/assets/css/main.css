@@ -1,5 +1,4 @@
 label[for=payment_method_payoo] {
-    display: flex !important;
     align-items: center;
 }
 
@@ -8,14 +7,14 @@ label[for=payment_method_payoo]::before {
 }
 
 .payment_method_payoo .payoo-option {
-    padding-top: 16px;
-    padding-bottom: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
     display: grid;
     border-bottom: 1px solid #E0E0E0;
 }
 
 .payment_method_payoo .payoo-option:first-child {
-    padding-top: 0;
+    padding-top: 8px;
 }
 
 .payment_method_payoo .payoo-method {
