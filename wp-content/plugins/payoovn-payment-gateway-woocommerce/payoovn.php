@@ -424,7 +424,10 @@ function woocommerce_PayooVN_init(){
                             if (!empty($order))
                             {
 
-                                $res = $order->update_status('completed','Payoo');
+                                $res = $order->update_status('processing','Payoo');
+                                $new_order = new OMS_ORDER($order->get_id());
+                                $new_order->set_payment_status();
+                                //Update payment completed
                                 WC()->cart->empty_cart();
                             }
                         }
@@ -433,7 +436,7 @@ function woocommerce_PayooVN_init(){
                             $order = new WC_Order($_GET['order_no']);
                             if (!empty($order))
                             {
-                                $res = $order->update_status('failed','Payoo');
+                                $res = $order->update_status('cancelled','Payoo');
                                 WC()->cart->empty_cart();
                             }
                         }
