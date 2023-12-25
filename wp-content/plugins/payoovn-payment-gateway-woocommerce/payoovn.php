@@ -230,9 +230,10 @@ function woocommerce_PayooVN_init(){
             $html = '<div class="payoo-option">%s %s %s</div>';
             $input = '<input style="position: absolute" id="payoo-option-%method%" type="radio" %ischeck% value="%method%" name="payoo_method">';
 
-            $content = '<div class="payoo-content"><div class="payoo-content-method"> %s %s</div></div>';
-            $label = '<label style="margin-left: 16px;" for="payoo-option-%method%">%title% </label> %icons% ';
-            $image = '<div class="payoo-option-icon"><img class="payoo-checked" height="16" width="16" src="%checked%" /> </div>';
+            $content =  '<div class="payoo-content"><div class="payoo-content-method"> %s %s</div></div>';
+            $label = '<label style="margin-left: 32px;" for="payoo-option-%method%">%title% </label> %icons% ';
+//            $image = '<div class="payoo-option-icon"><img class="payoo-checked" height="16" width="16" src="%checked%" /> </div>';
+            $image = '';
 
             $icons = '';
             if ($option['method'] == 'bank-payment' && $this->get_option('enable_domestic_bank') === "yes") {
