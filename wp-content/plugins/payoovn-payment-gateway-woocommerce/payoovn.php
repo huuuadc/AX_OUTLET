@@ -230,9 +230,10 @@ function woocommerce_PayooVN_init(){
             $html = '<div class="payoo-option">%s %s %s</div>';
             $input = '<input style="position: absolute" id="payoo-option-%method%" type="radio" %ischeck% value="%method%" name="payoo_method">';
 
-            $content = '<div class="payoo-content"><div class="payoo-content-method"> %s %s</div></div>';
-            $label = '<label style="margin-left: 16px;" for="payoo-option-%method%">%title% </label> %icons% ';
-            $image = '<div class="payoo-option-icon"><img class="payoo-checked" height="16" width="16" src="%checked%" /> </div>';
+            $content =  '<div class="payoo-content"><div class="payoo-content-method"> %s %s</div></div>';
+            $label = '<label style="margin-left: 32px;" for="payoo-option-%method%">%title% </label> %icons% ';
+//            $image = '<div class="payoo-option-icon"><img class="payoo-checked" height="16" width="16" src="%checked%" /> </div>';
+            $image = '';
 
             $icons = '';
             if ($option['method'] == 'bank-payment' && $this->get_option('enable_domestic_bank') === "yes") {
@@ -423,7 +424,10 @@ function woocommerce_PayooVN_init(){
                             if (!empty($order))
                             {
 
-                                $res = $order->update_status('completed','Payoo');
+                                $res = $order->update_status('processing','Payoo');
+                                $new_order = new OMS_ORDER($order->get_id());
+                                $new_order->set_payment_status();
+                                //Update payment completed
                                 WC()->cart->empty_cart();
                             }
                         }
@@ -438,7 +442,7 @@ function woocommerce_PayooVN_init(){
                         }
                     }
                     // redirect to thankyou page
-                    $thankyou_page =  add_query_arg('data', $cs, add_query_arg('key', $order->get_order_key(),get_permalink(woocommerce_get_page_id('pay')).'/order-received/'));
+                    $thankyou_page =  add_query_arg('data', $cs, add_query_arg('key', $order->get_order_key(),get_permalink(woocommerce_get_page_id('pay')).'/order-received/'.$order->get_id().'/'));
                     wp_redirect($thankyou_page);
                     exit();
                 }
