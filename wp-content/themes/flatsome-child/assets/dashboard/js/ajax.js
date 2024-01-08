@@ -60,6 +60,9 @@ function save_setting_tiki_api(){
     let tiki_secret_key = $("input[name='secret_key']").val();
     let tiki_secret_client = $("input[name='secret_client']").val();
     let tiki_access_token = $("input[name='access_token']").val();
+    let tiki_shop_id = $("input[name='shop_id']").val();
+    let tiki_platform = $("input[name='platform']").val();
+    let tiki_path_webhook = $("input[name='path_webhook']").val();
 
     $.ajax({
         type: 'POST',
@@ -72,6 +75,9 @@ function save_setting_tiki_api(){
             tiki_secret_key,
             tiki_secret_client,
             tiki_access_token,
+            tiki_shop_id,
+            tiki_platform,
+            tiki_path_webhook,
         },
         beforeSend: function (){
             $('#card_setting_tiki_api').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
@@ -102,7 +108,7 @@ function save_setting_tiki_api(){
  *
  */
 
-function get_access_token_tiki(){
+function tiki_action_ajax(at = ''){
 
     if (!confirm('Are you sure create new token?')) return;
 
@@ -110,22 +116,35 @@ function get_access_token_tiki(){
         type    :   'POST',
         url     :   '/wp-admin/admin-ajax.php',
         data    :   {
-                    action  :   'get_access_token_tiki'
+                    action  :  'get_access_token_tiki',
+                    payload_action : at
         },
         beforeSend  :   function (){
             $('#card_setting_tiki_api').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
         },
         success     :   function (data){
             const rep = JSON.parse(data);
-            $("input[name='access_token']").val(rep.data);
-            $(document).Toasts('create', {
-                class: 'bg-success',
-                title: 'Success',
-                body: `get access token success`,
-                icon: 'fas fa-info-circle',
-                autohide: true,
-                delay: 10000
-            })
+            if(rep.data?.token){
+                $("input[name='access_token']").val(rep.data);
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `get access token success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            }else {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `register webhook success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            }
+
         },
         complete    :    function (){
             $('#card_setting_tiki_api>.overlay').remove()

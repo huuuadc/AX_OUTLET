@@ -9,6 +9,9 @@ class TIKI_API
     private string $CLIENT_ID;
     private string $SECRET_KEY;
     private string $SECRET_CLIENT;
+    private string $SHOP_ID;
+    private string $PLATFORM;
+    private string $PATH_WEBHOOK;
     private string $baseURL;
     private string $baseURLTNSL;
     private object $company;
@@ -79,6 +82,7 @@ class TIKI_API
         'get_quotes'                =>          '/v1/quotes',
         'sync_order'                =>          '/v1/shipments',
         'cancel_order'              =>          '/v1/shipments',
+        'register_webhook'          =>          '/v1/register-webhook'
 
     );
 
@@ -100,6 +104,9 @@ class TIKI_API
         $this->SECRET_KEY       = get_option('tiki_secret_key') ?? '';
         $this->SECRET_CLIENT    = get_option('tiki_secret_client') ?? '';
         $this->ACCESS_TOKEN     = get_option('tiki_access_token') ?? '';
+        $this->SHOP_ID          = get_option('tiki_shop_id') ?? '';
+        $this->PLATFORM         = get_option('tiki_platform') ?? '';
+        $this->PATH_WEBHOOK     = get_option('tiki_path_webhook') ?? '';
         $this->company          = new COMPANY();
         $this->log              = new \WP_REST_API_Log_DB();
 
@@ -366,6 +373,30 @@ class TIKI_API
         $url = $this->baseURLTNSL.$this->URI['sync_order'].'/'.$tracking_id;
 
         return $this->sendRequestToTiki($url,$this->default_cancel,'PUT');
+
+    }
+
+    /**
+     *
+     * @return false|mixed|string[]
+     */
+
+    public function post_register_webhook(){
+
+        $data = [
+            'partner_shop_id'   => $this->SHOP_ID,
+            'platform'          => $this->PLATFORM,
+            'webhook_url'       => $this->PATH_WEBHOOK,
+            'webhook_fee_url'   => $this->PATH_WEBHOOK,
+            'webhook_secret'    => $this->SECRET_CLIENT,
+        ];
+
+        $url = $this->baseURLTNSL . $this->URI['register_webhook'];
+
+        $rep = $this->sendRequestToTiki($url,$data,'POST');
+
+        if (isset($rep->success) && $rep->success == 1) return true;
+        return false;
 
     }
 
