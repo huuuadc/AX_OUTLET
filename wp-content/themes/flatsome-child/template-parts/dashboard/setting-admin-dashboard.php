@@ -13,6 +13,7 @@ $member_card_guest = get_option('admin_dashboard_member_card_guest') ?? '';
 $checked = get_option('admin_dashboard_is_check_stock') ?? '';
 $vat_checked = get_option('admin_dashboard_is_issue_vat') ?? '';
 $sync_checked = get_option('admin_dashboard_is_sync_platform') ?? '';
+$update_price = get_option('admin_dashboard_is_update_price') ?? '';
 
 $item_in_page_arg = [
         '10'    => 10,
@@ -31,6 +32,10 @@ $item_in_page_arg = [
         <h3>Admin dashboard setting</h3>
     </div>
     <div class="card-body">
+        <div class="form-group">
+            <label for="is_update_price">Bật cập nhật giá tự động: </label>
+            <input type="checkbox" class="ml-5" name="is_update_price" id="is_update_price" <?php echo $update_price?>/>
+        </div>
         <div class="form-group">
             <label for="is_sync_platform">Bật đồng bột đơn từ sàn: </label>
             <input type="checkbox" class="ml-5" name="is_sync_platform" id="is_sync_platform" <?php echo $sync_checked?>/>
@@ -71,7 +76,12 @@ $item_in_page_arg = [
                 <?php echo get_option('admin_dashboard_product_return_policy')?>
             </textarea>
         </div>
+        <div class="form-group">
+            <label for="is_save_textarea">Lưu textarea: </label>
+            <input type="checkbox" class="ml-5" name="is_save_textarea" id="is_save_textarea"/>
+        </div>
     </div>
+
     <!-- /.card-body -->
 
     <div class="card-footer">
