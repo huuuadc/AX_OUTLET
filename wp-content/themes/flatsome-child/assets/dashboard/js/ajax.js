@@ -60,6 +60,9 @@ function save_setting_tiki_api(){
     let tiki_secret_key = $("input[name='secret_key']").val();
     let tiki_secret_client = $("input[name='secret_client']").val();
     let tiki_access_token = $("input[name='access_token']").val();
+    let tiki_shop_id = $("input[name='shop_id']").val();
+    let tiki_platform = $("input[name='platform']").val();
+    let tiki_path_webhook = $("input[name='path_webhook']").val();
 
     $.ajax({
         type: 'POST',
@@ -72,6 +75,9 @@ function save_setting_tiki_api(){
             tiki_secret_key,
             tiki_secret_client,
             tiki_access_token,
+            tiki_shop_id,
+            tiki_platform,
+            tiki_path_webhook,
         },
         beforeSend: function (){
             $('#card_setting_tiki_api').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
@@ -102,7 +108,7 @@ function save_setting_tiki_api(){
  *
  */
 
-function get_access_token_tiki(){
+function tiki_action_ajax(at = ''){
 
     if (!confirm('Are you sure create new token?')) return;
 
@@ -110,22 +116,35 @@ function get_access_token_tiki(){
         type    :   'POST',
         url     :   '/wp-admin/admin-ajax.php',
         data    :   {
-                    action  :   'get_access_token_tiki'
+                    action  :  'get_access_token_tiki',
+                    payload_action : at
         },
         beforeSend  :   function (){
             $('#card_setting_tiki_api').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
         },
         success     :   function (data){
             const rep = JSON.parse(data);
-            $("input[name='access_token']").val(rep.data);
-            $(document).Toasts('create', {
-                class: 'bg-success',
-                title: 'Success',
-                body: `get access token success`,
-                icon: 'fas fa-info-circle',
-                autohide: true,
-                delay: 10000
-            })
+            if(rep.data?.token){
+                $("input[name='access_token']").val(rep.data);
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `get access token success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            }else {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    body: `register webhook success`,
+                    icon: 'fas fa-info-circle',
+                    autohide: true,
+                    delay: 10000
+                })
+            }
+
         },
         complete    :    function (){
             $('#card_setting_tiki_api>.overlay').remove()
@@ -432,14 +451,14 @@ function save_admin_dashboard_setting(){
 
     let item_in_page = $('#item_in_page').val()
     let item_fee_ship = $('#item_fee_ship').val()
-    let footer_print_shipment = $('#footer_print_shipment').val()
-    let product_return_policy = $('#product_return_policy').val()
-    // let footer_print_shipment = ''
-    // let product_return_policy = ''
+    let footer_print_shipment = $('#footer_print_shipment').summernote('code');
+    let product_return_policy = $('#product_return_policy').summernote('code');
     let member_card_guest = $('#member_card_guest').val()
     let is_check_stock = $('input[name="is_check_stock"]').is(':checked') ? 'checked': 'nocheck'
     let is_issue_vat = $('input[name="is_issue_vat"]').is(':checked') ? 'checked': 'nocheck'
     let is_sync_platform = $('input[name="is_sync_platform"]').is(':checked') ? 'checked': 'nocheck'
+    let is_update_price = $('input[name="is_update_price"]').is(':checked') ? 'checked': 'nocheck'
+    let is_save_textarea = $('input[name="is_save_textarea"]').is(':checked') ? 'checked': 'nocheck'
 
     $.ajax({
         type:   'POST',
@@ -453,7 +472,9 @@ function save_admin_dashboard_setting(){
             member_card_guest,
             is_check_stock,
             is_issue_vat,
-            is_sync_platform
+            is_sync_platform,
+            is_update_price,
+            is_save_textarea,
         },
         beforeSend: function (){
             $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')
