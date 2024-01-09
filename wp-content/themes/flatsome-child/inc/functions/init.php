@@ -64,3 +64,4 @@ require (__DIR__.'/ajax/save_setting_ls_retail.php');
 require (__DIR__.'/class-oms-product.php');
 require (__DIR__.'/product/product_sync_stock.php');
 require (__DIR__.'/cron_job/init.php');
+require (__DIR__.'/product/slug-export-import.php');
