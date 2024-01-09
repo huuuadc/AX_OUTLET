@@ -451,14 +451,14 @@ function save_admin_dashboard_setting(){
 
     let item_in_page = $('#item_in_page').val()
     let item_fee_ship = $('#item_fee_ship').val()
-    let footer_print_shipment = $('#footer_print_shipment').val()
-    let product_return_policy = $('#product_return_policy').val()
-    // let footer_print_shipment = ''
-    // let product_return_policy = ''
+    let footer_print_shipment = $('#footer_print_shipment').summernote('code');
+    let product_return_policy = $('#product_return_policy').summernote('code');
     let member_card_guest = $('#member_card_guest').val()
     let is_check_stock = $('input[name="is_check_stock"]').is(':checked') ? 'checked': 'nocheck'
     let is_issue_vat = $('input[name="is_issue_vat"]').is(':checked') ? 'checked': 'nocheck'
     let is_sync_platform = $('input[name="is_sync_platform"]').is(':checked') ? 'checked': 'nocheck'
+    let is_update_price = $('input[name="is_update_price"]').is(':checked') ? 'checked': 'nocheck'
+    let is_save_textarea = $('input[name="is_save_textarea"]').is(':checked') ? 'checked': 'nocheck'
 
     $.ajax({
         type:   'POST',
@@ -472,7 +472,9 @@ function save_admin_dashboard_setting(){
             member_card_guest,
             is_check_stock,
             is_issue_vat,
-            is_sync_platform
+            is_sync_platform,
+            is_update_price,
+            is_save_textarea,
         },
         beforeSend: function (){
             $('#card_admin_dashboard').append('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>')

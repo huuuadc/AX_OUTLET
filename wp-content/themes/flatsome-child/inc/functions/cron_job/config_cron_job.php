@@ -46,7 +46,7 @@ function register_schedule_custom_event()
         }
     }
 
-    if (get_option('is_sync_platform') != 'checked') {
+    if (get_option('admin_dashboard_is_update_price') == 'checked') {
         // the actual hook to register new custom schedule
         add_filter('cron_schedules', 'list_custom_schedule');
         // schedule custom event
