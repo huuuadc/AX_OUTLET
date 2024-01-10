@@ -42,6 +42,18 @@ function save_setting_tiki_api()
         update_option('tiki_access_token',$post->tiki_access_token, '','no');
     }
 
+    if(!add_option('tiki_shop_id',$post->tiki_shop_id, '','no')){
+        update_option('tiki_shop_id',$post->tiki_shop_id, '','no');
+    }
+
+    if(!add_option('tiki_platform',$post->tiki_platform, '','no')){
+        update_option('tiki_platform',$post->tiki_platform, '','no');
+    }
+
+    if(!add_option('tiki_path_webhook',$post->tiki_path_webhook, '','no')){
+        update_option('tiki_path_webhook',$post->tiki_path_webhook, '','no');
+    }
+
     $log = new WP_REST_API_Log_DB();
 
     $arg = [
