@@ -38,18 +38,8 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 
 		<?php else : ?>
-    <div class="large-7 col">
 
-    <?php
-    $get_payment_method = $order->get_payment_method();
-    $get_order_id       = $order->get_id();
-    ?>
-    <?php do_action( 'woocommerce_thankyou_' . $get_payment_method, $get_order_id ); ?>
-    <?php do_action( 'woocommerce_thankyou', $get_order_id ); ?>
-
-    </div>
-
-		<div class="large-5 col">
+		<div class="col">
 			<div class="is-well col-inner entry-content">
 				<p class="success-color woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received"><strong><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', esc_html__( 'Thank you. Your order has been received.', 'woocommerce' ), $order ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></strong></p>
 
@@ -92,6 +82,21 @@ defined( 'ABSPATH' ) || exit;
 				<div class="clear"></div>
 			</div>
 		</div>
+        <?php
+        $get_payment_method = $order->get_payment_method();
+        $get_order_id       = $order->get_id();
+        $description = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() . ' TTDH '. $order->get_order_number();
+        ?>
+        <div class="col">
+            <?php if( $get_payment_method =='bacs') : ?>
+                <h4 class="qrcode_caption">Vui lòng quét mã QR theo thông tin bên dưới để hoàn tất đơn hàng</h4>
+                <p><em>Đơn hàng sẽ tự động hủy sau 60 phút nếu chúng tôi chưa nhận được thông tin chuyển khoản</em></p>
+            <?php endif;?>
+            <?php do_action( 'woocommerce_thankyou_' . $get_payment_method, $get_order_id ); ?>
+            <?php do_action( 'woocommerce_thankyou', $get_order_id ); ?>
+            <?php if( $get_payment_method =='bacs') get_viet_qr_code($order->get_total('value'), $description); ?>
+
+        </div>
 
 		<?php endif; ?>
 

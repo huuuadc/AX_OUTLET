@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 }
 
             ?>
-            <?php if( $gateway->id =='bacs') get_viet_qr_code(WC()->cart->get_total('value'), $description); ?>
+            <?php //if( $gateway->id =='bacs') get_viet_qr_code(WC()->cart->get_total('value'), $description); ?>
         </div>
     <?php endif; ?>
 </li>
