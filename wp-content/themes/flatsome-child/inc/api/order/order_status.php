@@ -51,7 +51,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                 $order->update_status('wc-delivered');
             }
             $order->update_status('wc-delivered');
-            $order->update_date_send_shipper($req->timestamp);
+            $order->update_date_success_delivered($req->timestamp);
 
             //===========================================
             //===========================================
