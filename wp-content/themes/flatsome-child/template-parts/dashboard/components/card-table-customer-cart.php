@@ -11,8 +11,6 @@ global $wpdb;
 
     $user = (object)\OMS\ls_user_request();
 
-    var_dump($user->Password);
-
 ?>
 
 <div class="card">
@@ -36,11 +34,12 @@ global $wpdb;
             </thead>
             <tbody>
             <?php foreach ($order_sessions as $order) :
-                $count++;
                 $order_value = maybe_unserialize($order->session_value);
                 $order_customer = maybe_unserialize($order_value['customer']);
                 $carts = isset($order_value['cart']) ? maybe_unserialize($order_value['cart']): [];
                 $customer = $order_customer['id'] == 0 ? new WP_User(): get_user_by('id',$order_customer['id']);
+                if (!$customer->user_login || empty($carts)) continue;
+                $count++;
             ?>
                 <tr>
                     <td><?php echo $count ?></td>
