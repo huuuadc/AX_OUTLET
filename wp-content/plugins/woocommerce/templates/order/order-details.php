@@ -46,7 +46,7 @@ if ( $show_downloads ) {
             display: none !important;
         }
         .cart-container .woocommerce {
-            width: 600px;
+            width: 730px;
             max-width: 100%;
             margin: 0 auto;
             border: solid 1px #ececec;
@@ -54,6 +54,11 @@ if ( $show_downloads ) {
             border-radius: 4px;
             position: relative;
             background-color: #f8f8f8;
+            text-align:center;
+        }
+        .cart-container .woocommerce .qrcode_caption {
+            border-top: solid 1px #ddd;
+            padding-top: 25px;
         }
         .cart-container .woocommerce > .row .large-5 {
             margin-left: auto;
