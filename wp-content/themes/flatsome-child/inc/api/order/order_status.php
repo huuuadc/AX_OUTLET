@@ -50,7 +50,6 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             if($order->get_status() !== 'delivered') {
                 $order->update_status('wc-delivered');
             }
-            $order->update_status('wc-delivered');
             $order->update_date_success_delivered($req->timestamp);
 
             //===========================================
@@ -81,6 +80,12 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             $location_code2 = get_option('wc_settings_tab_ls_location_code2');
             if (!$location_code2) {
                 write_log('No location code 2');
+                return false;
+            }
+
+            $location_code21 = get_option('wc_settings_tab_ls_location_code_2');
+            if (!$location_code21) {
+                write_log('No location code 21');
                 return false;
             }
             $item_no_ship = get_option('admin_dashboard_item_fee_ship');
@@ -117,7 +122,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                 'Người mua không cung cấp' :
                 $order->get_vat_company_address();
 
-            $data_request_payment->Location_Code = $location_code;
+            $data_request_payment->Location_Code = $location_code21;
             $data_request_payment->Transaction_No_ = $order_no;
             $data_request_payment->LineNo = 30000;
             $data_request_payment->Receipt_No_ = $order_no;
@@ -259,7 +264,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                 for($i = 0 ; $i < $item_quantity; $i++){
                     $line_no++;
                     $data_request_transaction[] = array (
-                        'Location_Code'         =>          $location_code,
+                        'Location_Code'         =>          $location_code21,
                         'Receipt_No_'           =>          $order_no,
                         'Transaction_No_'       =>          $order_no,
                         'LineNo'                =>          $line_default + $line_no,
@@ -288,7 +293,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                 $data_request_transfer_line_item->VariantCode = $variant_code;
                 $data_request_transfer_line_item->Quantity = $item_quantity;
 
-                $data_request_transfer_line[] = $data_request_transfer_line_item;
+                $data_request_transfer_line[] = (array)$data_request_transfer_line_item;
 
             }
 
@@ -297,7 +302,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             //send fee ship full price
             if($ship_fee > 0) {
                 $line_no++;
-                $data_request_transaction_item->Location_Code = $location_code;
+                $data_request_transaction_item->Location_Code = $location_code21;
                 $data_request_transaction_item->Receipt_No_ = $order_no;
                 $data_request_transaction_item->Transaction_No_ = $order_no;
                 $data_request_transaction_item->LineNo = $line_default + $line_no;
@@ -358,7 +363,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                 }
 
                 $line_no++;
-                $data_request_transaction_item->Location_Code = $location_code;
+                $data_request_transaction_item->Location_Code = $location_code21;
                 $data_request_transaction_item->Receipt_No_ = $order_no;
                 $data_request_transaction_item->Transaction_No_ = $order_no;
                 $data_request_transaction_item->LineNo = $line_default + $line_no;
