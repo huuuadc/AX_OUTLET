@@ -143,7 +143,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             $data_request_payment->VAT_Address = $vat_address;
             $data_request_payment->VAT_Payment_Method = $ls_method_type['vat_payment_method'];
             $data_request_payment->VAT_Bank_Account = '';
-            $data_request_payment->Member_Phone = $order->get_billing_phone();
+            $data_request_payment->Member_Phone = '0000';
             $data_request_payment->THENH = $order->get_number_card_payment();
             $data_request_payment->Cash = $order->get_total();
 
