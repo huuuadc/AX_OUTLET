@@ -290,7 +290,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                 }
 
                 $data_request_transfer_line_item->ItemNo = $item_No;
-                $data_request_transfer_line_item->VariantCode = $variant_code;
+                $data_request_transfer_line_item->VariantCode = strtoupper($variant_code);
                 $data_request_transfer_line_item->Quantity = $item_quantity;
 
                 $data_request_transfer_line[] = (array)$data_request_transfer_line_item;
