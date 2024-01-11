@@ -180,7 +180,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                 $variation_id = $item['variation_id'];
 
                 $item_No = get_post_meta($product_id, 'offline_id', true);
-                $variant_code = $item->get_meta('pa_size') ?? '';
+                $variant_code = strtoupper($item->get_meta('pa_size')) ?? '';
 
                 //Get list serial_no
                 $list_serial_no = [];
