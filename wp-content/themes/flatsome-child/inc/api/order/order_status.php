@@ -97,11 +97,12 @@ function shipment_order_update_status( WP_REST_Request $request ) {
             //Get member user information
             $rep_member = $ls_api->get_member_information($order->get_billing_phone());
 
-            if((isset($rep_member->Responcode)) && $rep_member->Responcode == 200){
-                $member_card_guest = $rep_member->Model->cardNo ?? get_option('admin_dashboard_member_card_guest') ;
-            }else{
-                $member_card_guest = get_option('admin_dashboard_member_card_guest');
-            }
+//            if((isset($rep_member->Responcode)) && $rep_member->Responcode == 200){
+//                $member_card_guest = $rep_member->Model->cardNo ?? get_option('admin_dashboard_member_card_guest') ;
+//            }else{
+//                $member_card_guest = get_option('admin_dashboard_member_card_guest');
+//            }
+            $member_card_guest = get_option('admin_dashboard_member_card_guest');
             if (!$member_card_guest) {
                 write_log('No member card');
                 return false;
