@@ -102,7 +102,9 @@ function shipment_order_update_status( WP_REST_Request $request ) {
 //            }else{
 //                $member_card_guest = get_option('admin_dashboard_member_card_guest');
 //            }
+
             $member_card_guest = get_option('admin_dashboard_member_card_guest');
+
             if (!$member_card_guest) {
                 write_log('No member card');
                 return false;
