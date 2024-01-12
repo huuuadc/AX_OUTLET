@@ -403,7 +403,8 @@ function order_send_tow_ls(WC_Order $order){
         }
 
         $data_request_transfer_line_item->ItemNo = $item_No;
-        $data_request_transfer_line_item->VariantCode = strtoupper($variant_code);
+        $data_request_transfer_line_item->VariantName = strtoupper($variant_code);
+        $data_request_transfer_line_item->VariantCode = '';
         $data_request_transfer_line_item->Quantity = $item_quantity;
 
         $data_request_transfer_line[] = (array)$data_request_transfer_line_item;
