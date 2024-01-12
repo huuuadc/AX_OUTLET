@@ -41,6 +41,9 @@ class LS_API
         'post_transaction' => '/api/transactions/Transaction_Outlet',
         'post_payment' => '/api/transactions/Payment_Outlet',
 
+        'post_transaction_styleoutlet' => '/api/transactionsstyleoutlet/Transaction_Outlet',
+        'post_payment_styleoutlet' => '/api/transactionsstyleoutlet/Payment_Outlet',
+
         'post_create_transfer_order' => '/api/potos/CreateTransferOrder'
 
     );
@@ -397,16 +400,30 @@ class LS_API
     public function post_transaction_outlet ($data) {
 
         $url = $this->baseURL . $this->URI['post_transaction'];
-        
-        $body = $data;
 
-        return $this->sendRequestToLS($url,$body,'POST');
+        return $this->sendRequestToLS($url,$data,'POST');
 
     }
 
     public function post_payment_outlet ($data) {
 
         $url = $this->baseURL . $this->URI['post_payment'];
+
+        return $this->sendRequestToLS($url,$data,'POST');
+
+    }
+
+    public function post_transaction_styleoutlet ($data) {
+
+        $url = $this->baseURL . $this->URI['post_transaction_styleoutlet'];
+
+        return $this->sendRequestToLS($url,$data,'POST');
+
+    }
+
+    public function post_payment_styleoutlet ($data) {
+
+        $url = $this->baseURL . $this->URI['post_payment_styleoutlet'];
 
         return $this->sendRequestToLS($url,$data,'POST');
 
