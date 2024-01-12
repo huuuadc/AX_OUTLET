@@ -47,7 +47,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
                 $order->update_date_success_delivered($req->timestamp);
             }
 
-//            order_send_tow_ls($order);
+            order_send_tow_ls($order);
 
 
         }
