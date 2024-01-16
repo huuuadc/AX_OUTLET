@@ -17,7 +17,7 @@ function shipment_order_update_status( WP_REST_Request $request ) {
 
     write_log($request->get_body());
 
-//    if(!verify_signature($request->get_body(),$secret_client,$x_signature)) return false;
+    if(!verify_signature($request->get_body(),$secret_client,$x_signature)) return false;
 
     $req = json_decode( $request->get_body());
 
