@@ -468,7 +468,7 @@ function woocommerce_PayooVN_init(){
                     if($order_no != '' && $status == 1) {
                         $order = new WC_Order($order_no);
                         if (!empty($order)) {
-                            $res = $order->update_status('completed','Payoo');
+                            $res = $order->update_status('processing','Payoo');
                             if ($res === true) {
                                 WC()->cart->empty_cart();
                                 ob_clean();
