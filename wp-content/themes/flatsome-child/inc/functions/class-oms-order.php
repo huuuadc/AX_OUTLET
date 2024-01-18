@@ -78,6 +78,10 @@ class OMS_ORDER extends WC_Order
             'title' => 'Trả hàng',
             'class_name' => 'badge-danger'
         ],
+        'failed' => [
+            'title' => 'Đơn hàng lỗi',
+            'class_name' => 'badge-danger'
+        ],
     );
 
     public array $PAYMENT_STATUS = [
