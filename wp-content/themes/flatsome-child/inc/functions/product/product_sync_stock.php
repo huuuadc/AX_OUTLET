@@ -5,17 +5,14 @@ use OMS\Tiktok_Api;
 function product_tiktok_sync():bool
 {
 
-    $tiktok_products = [];
-
     $tiktok_api = new Tiktok_Api();
-
     $flag = true;
-    $flag_update = false;
     $next_page_token = '';
+    $wc_logs = new WC_Logger();
 
     while ($flag){
 
-        $res = $tiktok_api->get_products_v2(1,$next_page_token);
+        $res = $tiktok_api->get_products_v2(50,$next_page_token);
 
         if(isset($res->products)){
             foreach ($res->products as $product){
@@ -24,10 +21,9 @@ function product_tiktok_sync():bool
                     $product_id = wc_get_product_id_by_sku($sku->seller_sku);
                     $product_parent_id = wp_get_post_parent_id($product_id);
                     //Not found product on OMS continue
-                    if($product == 0 && $product_parent_id == 0) {
-                        write_log('Không tim thấy sản phẩm trên OMS');
-                        write_log('Tiktok sku'.$sku->seller_sku);
-                        write_log('Mã trên TIKTOK:' . $product->id);
+                    if($product_id == 0 && !$product_parent_id ) {
+                        $wc_logs->log('info'
+                            ,'Không tim thấy sản phẩm trên OMS. id '. $product->id . ' | Sku: ' . $sku->seller_sku );
                         continue;
                     };
                     if($product_parent_id == 0){
@@ -63,13 +59,14 @@ function product_tiktok_sync():bool
                     $qty_oms = $product_oms->get_stock_quantity() - $remake_qty;
                     $qty_oms = $qty_oms > 0 ? $qty_oms : 0;
                     if($qty_oms <> $sku->inventory[0]->quantity) {
-
-                        write_log('Mã sản phẩm trên OMS' . $product_oms->get_id());
-                        write_log('Số lượng trên OMS:' . $product_oms->get_stock_quantity());
-                        write_log('Số lượng đã đặt trên OMS: '. $remake_qty);
-                        write_log('Mã trên TIKTOK:' . $product->id);
-                        write_log('Id sku trên TIKTOK:' . $product->skus[$key]->id);
-                        write_log('Số lượng trên TIKTOK:' . $product->skus[$key]->inventory[0]->quantity);
+                        $wc_logs->log('info'
+                            ,'Mã sản phẩm trên OMS ' . $product_oms->get_id()
+                            .'|.Số lượng trên OMS: ' . $product_oms->get_stock_quantity()
+                            .'|.Số lượng đã đặt trên OMS: '. $remake_qty
+                            .'|.Mã trên TIKTOK: ' . $product->id
+                            .'|.Id sku trên TIKTOK: ' . $product->skus[$key]->id
+                            .'|.Số lượng trên TIKTOK: ' . $product->skus[$key]->inventory[0]->quantity
+                            .'|.Seller sku: ' . $sku->seller_sku);
 
                         $product->skus[$key]->inventory[0]->quantity = $qty_oms;
                         $flag_update = true;
@@ -89,9 +86,9 @@ function product_tiktok_sync():bool
                     }
 
                     if( $tiktok_api->update_product_stock($product->id,$data)){
-                        write_log('Đã cập nhật');
+                        $wc_logs->log('info','Đã được cập nhật');
                     }else{
-                        write_log('Không cập nhật');
+                        $wc_logs->log('info','Không được cập nhật');
                     }
                 }
 
@@ -102,8 +99,6 @@ function product_tiktok_sync():bool
             $flag = false;
         }
     }
-
-//    write_log($tiktok_products);
 
     return true;
 
