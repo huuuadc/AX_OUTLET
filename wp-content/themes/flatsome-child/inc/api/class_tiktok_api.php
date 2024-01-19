@@ -628,7 +628,6 @@ Class Tiktok_Api
         $url = $this->get_api_url().'/product/202309/products/search?'.$this->get_common_queries();
         $url.= 'sign='.$this->get_sign_v_202309($this->app_secret,'/product/202309/products/search',$this->queries,$body);
         $response =  $this->sendRequestToTiktok($url,$body,'POST');
-        write_log($response);
         if(!isset($response->data) || $response->code != 0) return false;
         return $response->data;
     }
@@ -639,7 +638,6 @@ Class Tiktok_Api
         $url = $this->get_api_url().'/product/202309/products/'.$product_id.'/inventory/update?'.$this->get_common_queries();
         $url.= 'sign='.$this->get_sign_v_202309($this->app_secret,'/product/202309/products/'.$product_id.'/inventory/update',$this->queries,$body);
         $response =  $this->sendRequestToTiktok($url,$body,'POST');
-        write_log($response);
         if(!isset($response->data) || $response->code != 0) return false;
         return true;
     }
