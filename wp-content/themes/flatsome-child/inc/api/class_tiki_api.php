@@ -360,7 +360,7 @@ class TIKI_API
 
         $data = array_merge($this->data_default,$data);
 
-        return $this->sendRequestToTiki($url,$data,'POST');;
+        return $this->sendRequestToTiki($url,$data,'POST');
 
     }
 
