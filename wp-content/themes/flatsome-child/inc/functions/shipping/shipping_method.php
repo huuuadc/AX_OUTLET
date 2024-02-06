@@ -97,14 +97,14 @@ function update_cost_shipping_tiki_tnsl($arg){
 
         $total_weight = WC()->cart->get_cart_contents_weight() * 1000;
 
-        $total_weight = $total_weight == 0 ? 1:$total_weight;
+        $total_weight = $total_weight == 0 ? 1000:$total_weight;
 
 
         $data =  array(
             'package_info' => array(
-                'height'    =>  1,
-                'width'     =>  1,
-                'depth'     =>  1,
+                'height'    =>  20,
+                'width'     =>  20,
+                'depth'     =>  20,
                 'weight'    =>  $total_weight,
                 'total_amount'  => (int)$total_amount
             ),
@@ -144,13 +144,13 @@ function woocommerce_checkout_process_shipping_tiki_tnsl(WC_Order $order)
 
             $total_weight = WC()->cart->get_cart_contents_weight() * 1000;
 
-            $total_weight = $total_weight == 0 ? 1:$total_weight;
+            $total_weight = $total_weight == 0 ? 1000:$total_weight;
 
             $data =  array(
                 'package_info' => array(
-                    'height'    =>  1,
-                    'width'     =>  1,
-                    'depth'     =>  1,
+                    'height'    =>  20,
+                    'width'     =>  20,
+                    'depth'     =>  20,
                     'weight'    =>  $total_weight,
                     'total_amount'  => (int)$total_amount
                 ),
