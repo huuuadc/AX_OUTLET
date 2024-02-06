@@ -5,6 +5,8 @@
     $data_store = WC_Data_Store::load( 'wishlist-item' );
     $items = $data_store->query(
         array(
+            'user_id'     => false,
+            'session_id'  => false,
             'wishlist_id' => 'all',
         )
     );
@@ -25,8 +27,6 @@
 
         $list[$user->user_login][]= $item->get_product_id();
     }
-
-    write_log($list);
 
 ?>
 
