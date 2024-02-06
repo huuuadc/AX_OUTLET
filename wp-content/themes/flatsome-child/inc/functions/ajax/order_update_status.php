@@ -159,9 +159,9 @@ function order_update_status(){
             if ($order->get_payment_method() === 'cod') $cash_on_delivery_amount = $order->get_total('value');
 
             $item_names = [];
-            $total_height = 1;
-            $total_width = 1;
-            $total_depth = 1;
+            $total_height = 20;
+            $total_width = 20;
+            $total_depth = 20;
             $total_weight = $order->get_order_contents_weight() == 0 ? 1 : $order->get_order_contents_weight();
             $total_weight  = $total_weight * 1000;
 
