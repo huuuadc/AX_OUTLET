@@ -45,7 +45,7 @@
             <tr>
                 <th>Số TT</th>
                 <th>Khách hàng</th>
-                <th>Tên Tên khách hàng</th>
+                <th>Nickname - Tên khách hàng</th>
                 <th>Danh sách sản phẩm</th>
             </tr>
             </thead>
@@ -56,7 +56,7 @@
                 <tr>
                     <td><?php echo $count ?></td>
                     <td><?php echo $key ?></td>
-                    <td><?php echo $user->display_name ?></td>
+                    <td><?php echo $user->nickname .' - '. $user->user_firstname .' '. $user->user_lastname ?></td>
                     <td><?php
                         foreach ($values as $value){
                             $product = wc_get_product($value);
